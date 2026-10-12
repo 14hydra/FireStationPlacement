@@ -5,47 +5,121 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>New fire station vs existing — 12 London races</title>
 <style>
-  :root { --panel: rgba(10,14,22,.92); --ok:#3dd68c; --old:#94a3b8; }
+  :root {
+    --panel: rgba(8, 12, 18, .78);
+    --line: rgba(255,255,255,.10);
+    --text: #eef2f7;
+    --muted: #8b95a5;
+    --ok: #3dd68c;
+    --old: #94a3b8;
+    --inc: #f97316;
+  }
   * { box-sizing: border-box; }
-  html, body { margin:0; height:100%; overflow:hidden; background:#000; color:#e8eef7;
-    font-family:"Segoe UI", system-ui, sans-serif; }
+  html, body {
+    margin:0; height:100%; overflow:hidden; background:#000; color:var(--text);
+    font-family: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  }
   #map { position:absolute; inset:0; }
   gmp-map-3d { width:100%; height:100%; }
-  #hud { position:absolute; inset:0; pointer-events:none; z-index:5;
-    display:flex; flex-direction:column; justify-content:space-between; padding:14px 16px; }
-  .top { display:flex; gap:12px; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; }
-  .card { background:var(--panel); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.12);
-    border-radius:14px; padding:12px 14px; box-shadow:0 12px 40px rgba(0,0,0,.45); pointer-events:auto; }
-  .card.main { max-width:520px; }
-  .card h1 { margin:0 0 4px; font-size:15px; font-weight:700; color:#fff; }
-  .sub { font-size:12px; color:#9aa3ad; margin-bottom:10px; line-height:1.4; }
-  .progress { font-size:11px; color:#8b95a5; margin-bottom:8px; letter-spacing:.04em; text-transform:uppercase; }
-  .pills { display:flex; flex-direction:column; gap:8px; }
-  .pill { border-radius:10px; padding:10px 12px; border:1px solid rgba(255,255,255,.10);
-    background:rgba(255,255,255,.03); display:flex; gap:10px; align-items:center; }
-  .pill.winner { border-color:rgba(61,214,140,.45); background:rgba(61,214,140,.08); }
-  .pill .swatch { width:10px; height:36px; border-radius:3px; flex-shrink:0; }
-  .pill .who { font-size:12px; opacity:.85; }
-  .pill .time { font-size:22px; font-weight:700; font-variant-numeric:tabular-nums; line-height:1.1; }
-  .pill .eta { font-size:11px; opacity:.65; margin-top:2px; }
-  .badge { display:inline-block; margin-top:10px; padding:6px 10px; border-radius:999px;
-    background:rgba(61,214,140,.12); color:var(--ok); font-size:12px; font-weight:700;
-    border:1px solid rgba(61,214,140,.35); }
-  .saved-chip { margin-top:8px; font-size:12px; color:#c5cede; }
-  .saved-chip b { color:#fff; }
-  .side { max-width:240px; font-size:12px; color:#c5cede; line-height:1.45; }
-  .side .sw { width:16px; height:4px; border-radius:2px; display:inline-block; margin-right:6px; vertical-align:middle; }
-  .bottom { display:flex; justify-content:space-between; align-items:flex-end; gap:12px; }
+
+  #hud {
+    position:absolute; inset:0; pointer-events:none; z-index:5;
+    display:flex; flex-direction:column; justify-content:space-between;
+    padding:16px 18px; gap:12px;
+  }
+  .bar {
+    pointer-events:auto; background:var(--panel); backdrop-filter:blur(14px);
+    border:1px solid var(--line); border-radius:16px;
+    box-shadow:0 10px 36px rgba(0,0,0,.35);
+  }
+  .top-bar {
+    display:grid; grid-template-columns: minmax(0,1.1fr) minmax(220px,0.9fr);
+    gap:0; overflow:hidden; max-width:960px;
+  }
+  @media (max-width: 720px) {
+    .top-bar { grid-template-columns:1fr; max-width:100%; }
+    .compare { border-left:none !important; border-top:1px solid var(--line); }
+  }
+  .meta { padding:14px 16px 12px; }
+  .progress {
+    font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--muted); margin-bottom:4px;
+  }
+  .meta h1 {
+    margin:0; font-size:16px; font-weight:650; letter-spacing:-.01em; line-height:1.25;
+  }
+  .sub {
+    margin:6px 0 0; font-size:12px; color:var(--muted); line-height:1.4;
+  }
+  .avg-live {
+    margin-top:10px; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
+  }
+  .avg-live .k {
+    font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);
+  }
+  .avg-live .v {
+    font-size:22px; font-weight:750; color:var(--ok); font-variant-numeric:tabular-nums;
+    letter-spacing:-.02em;
+  }
+  .avg-live .note { font-size:11px; color:var(--muted); }
+  .status {
+    display:inline-flex; align-items:center; gap:8px; margin-top:8px;
+    font-size:12px; color:var(--ok); font-weight:600;
+  }
+  .status .dot {
+    width:7px; height:7px; border-radius:50%; background:var(--ok);
+    box-shadow:0 0 0 3px rgba(61,214,140,.18);
+  }
+  .status.idle { color:var(--muted); }
+  .status.idle .dot { background:var(--muted); box-shadow:none; }
+
+  .compare {
+    display:grid; grid-template-columns:1fr 1fr; gap:0;
+    border-left:1px solid var(--line); min-height:100%;
+  }
+  .lane { padding:14px 14px 12px; position:relative; }
+  .lane + .lane { border-left:1px solid var(--line); }
+  .lane.win { background:rgba(61,214,140,.06); }
+  .lane .who {
+    font-size:11px; color:var(--muted); display:flex; align-items:center; gap:7px;
+    margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .lane .swatch { width:8px; height:8px; border-radius:2px; flex-shrink:0; }
+  .lane .time {
+    font-size:28px; font-weight:700; font-variant-numeric:tabular-nums;
+    letter-spacing:-.03em; line-height:1;
+  }
+  .lane .eta { margin-top:4px; font-size:11px; color:var(--muted); }
+  .saved {
+    grid-column:1 / -1; padding:8px 14px 10px;
+    border-top:1px solid var(--line);
+    font-size:12px; color:#c5cede;
+    display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+  }
+  .saved b { color:#fff; font-weight:700; }
+
+  .bottom {
+    display:flex; justify-content:space-between; align-items:flex-end; gap:12px;
+  }
   .controls { pointer-events:auto; display:flex; gap:8px; flex-wrap:wrap; }
-  button { cursor:pointer; border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.12);
-    color:#fff; border-radius:10px; padding:10px 14px; font-weight:600; font-size:13px; }
-  button:hover { background:rgba(255,255,255,.2); }
+  button {
+    cursor:pointer; border:1px solid rgba(255,255,255,.16);
+    background:rgba(255,255,255,.08); color:#fff;
+    border-radius:999px; padding:9px 14px; font-weight:600; font-size:12px;
+  }
+  button:hover { background:rgba(255,255,255,.16); }
   button.primary { background:#14532d; border-color:#22c55e; }
-  button.on { background:#1f6f4a; border-color:#3dd68c; }
-  .hint { font-size:11px; color:#8b95a5; max-width:380px; text-align:right; line-height:1.4; }
-  #err { display:none; position:absolute; left:50%; top:42%; transform:translate(-50%,-50%);
+  button.on { background:rgba(61,214,140,.18); border-color:rgba(61,214,140,.55); color:var(--ok); }
+  .hint {
+    font-size:11px; color:var(--muted); max-width:300px; text-align:right; line-height:1.4;
+  }
+
+  #err {
+    display:none; position:absolute; left:50%; top:42%; transform:translate(-50%,-50%);
     z-index:20; max-width:560px; width:calc(100% - 40px); background:rgba(40,12,12,.94);
-    color:#ffd7d7; border:1px solid #ff6b6b; border-radius:12px; padding:16px 18px; font-size:13px; line-height:1.5; }
+    color:#ffd7d7; border:1px solid #ff6b6b; border-radius:12px; padding:16px 18px;
+    font-size:13px; line-height:1.5;
+  }
   #summary {
     display:none; position:absolute; inset:0; z-index:15; background:rgba(0,0,0,.72);
     align-items:center; justify-content:center; pointer-events:auto;
@@ -53,16 +127,26 @@
   #summary.show { display:flex; }
   #summary .panel {
     background:var(--panel); border:1px solid rgba(255,255,255,.14); border-radius:18px;
-    padding:28px 32px; max-width:520px; width:calc(100% - 40px); box-shadow:0 24px 80px rgba(0,0,0,.55);
+    padding:28px 32px; max-width:520px; width:calc(100% - 40px);
+    box-shadow:0 24px 80px rgba(0,0,0,.55);
   }
   #summary h2 { margin:0 0 6px; font-size:22px; }
-  #summary .big { font-size:42px; font-weight:800; color:var(--ok); font-variant-numeric:tabular-nums; margin:12px 0 4px; }
-  #summary .unit { font-size:14px; color:#9aa3ad; margin-bottom:16px; }
+  #summary .big {
+    font-size:42px; font-weight:800; color:var(--ok);
+    font-variant-numeric:tabular-nums; margin:12px 0 4px;
+  }
+  #summary .unit { font-size:14px; color:var(--muted); margin-bottom:16px; }
   #summary .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0 18px; }
-  #summary .stat { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
-    border-radius:12px; padding:10px 12px; }
-  #summary .stat .k { font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:#8b95a5; }
-  #summary .stat .v { font-size:18px; font-weight:700; margin-top:2px; font-variant-numeric:tabular-nums; }
+  #summary .stat {
+    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+    border-radius:12px; padding:10px 12px;
+  }
+  #summary .stat .k {
+    font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);
+  }
+  #summary .stat .v {
+    font-size:18px; font-weight:700; margin-top:2px; font-variant-numeric:tabular-nums;
+  }
 </style>
 </head>
 <body>
@@ -82,30 +166,31 @@
   </div>
 </div>
 <div id="hud">
-  <div class="top">
-    <div class="card main">
+  <div class="bar top-bar">
+    <div class="meta">
       <div class="progress" id="progress">Race 1 / 12</div>
       <h1 id="title">Firehouse race · London · new station vs existing</h1>
-      <div class="sub">Same firetruck routing · attendance = LFB drive + turnout · green = newly placed station</div>
-      <div class="pills" id="racer-pills"></div>
-      <div class="badge" id="badge">Racing…</div>
-      <div class="saved-chip" id="saved-chip"></div>
+      <div class="sub" id="side-meta">New station vs existing · same firetruck routing</div>
+      <div class="avg-live">
+        <span class="k">Avg time saved</span>
+        <span class="v" id="avg-saved-live">131s</span>
+        <span class="note" id="avg-saved-note">across 12 races</span>
+      </div>
+      <div class="status" id="badge"><span class="dot"></span><span id="badge-text">Racing…</span></div>
     </div>
-    <div class="card side">
-      <div><i class="sw" style="background:#22c55e"></i> New station truck</div>
-      <div style="margin-top:6px"><i class="sw" style="background:#94a3b8"></i> Existing station truck</div>
-      <div style="margin-top:6px"><i class="sw" style="background:#f97316"></i> Incident</div>
-      <div style="margin-top:12px;color:#9aa3ad" id="side-meta"></div>
+    <div>
+      <div class="compare" id="racer-pills"></div>
+      <div class="saved" id="saved-chip"></div>
     </div>
   </div>
   <div class="bottom">
     <div class="controls">
-      <button class="primary" id="btn-replay">Replay race</button>
-      <button id="btn-next">Next race</button>
-      <button class="on" id="btn-camera">Camera</button>
-      <button id="btn-overview">Overview</button>
+      <button class="primary" id="btn-replay">Replay</button>
+      <button id="btn-next">Next</button>
+      <button id="btn-camera">Follow</button>
+      <button class="on" id="btn-overview">Overview</button>
     </div>
-    <div class="hint">Plays 12 examples automatically · average time saved shown at the end</div>
+    <div class="hint">Overview stays fixed · prior finishes fade · avg saved shown from the start</div>
   </div>
 </div>
 
@@ -122,6 +207,7 @@ const EXAMPLES = DATA.examples || [];
 const SUMMARY = DATA.summary || {};
 const raceDurationSec = 26;
 const pauseBetweenMs = 1600;
+const OVERALL_AVG_S = Number(SUMMARY.avg_saved_s) || 0;
 
 function showErr(msg) {
   const el = document.getElementById("err");
@@ -159,7 +245,7 @@ function pointAtTime(coords, modelSec) {
   if (n < 1) return { pos: { lat: 0, lng: 0, altitude: 20 }, hdg: 0, done: true };
   if (n === 1 || modelSec <= 0) {
     const c = coords[0];
-    return { pos: { lat: c[0], lng: c[1], altitude: 22 }, hdg: 0, done: false };
+    return { pos: { lat: c[0], lng: c[1], altitude: 18 }, hdg: 0, done: false };
   }
   const total = coords[n - 1][2] || 1;
   const t = Math.min(total, Math.max(0, modelSec));
@@ -172,7 +258,7 @@ function pointAtTime(coords, modelSec) {
   const pos = {
     lat: lerp(a[0], b[0], local),
     lng: lerp(a[1], b[1], local),
-    altitude: 22,
+    altitude: 18,
   };
   const hdg = bearing({ lat: a[0], lng: a[1] }, { lat: b[0], lng: b[1] });
   return { pos, hdg, done: t >= total - 1e-6 };
@@ -188,10 +274,17 @@ function overviewCamera(coordsList) {
   const spanM = Math.hypot((maxLat - minLat) * 111320, (maxLng - minLng) * 85000);
   return {
     center: { lat: (minLat + maxLat) / 2, lng: (minLng + maxLng) / 2, altitude: 0 },
-    range: Math.max(1200, spanM * 2.1),
-    tilt: 55,
-    heading: 25,
+    range: Math.max(1800, spanM * 2.2),
+    tilt: 48,
+    heading: 20,
   };
+}
+function hexAlpha(hex, a) {
+  const h = String(hex || "#888888").replace("#", "");
+  const full = h.length === 3 ? h.split("").map(c => c + c).join("") : h.padEnd(6, "0").slice(0, 6);
+  const n = parseInt(full, 16);
+  const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  return `rgba(${r},${g},${b},${a})`;
 }
 
 async function main() {
@@ -212,20 +305,27 @@ async function main() {
     return;
   }
 
-  const first = EXAMPLES[0].racers.find(r => r.id === EXAMPLES[0].best_id) || EXAMPLES[0].racers[0];
-  const start = pointAtTime(first.coords, 0);
+  // One fixed overview for the whole session — all race geometries
+  const allCoords = [];
+  for (const ex of EXAMPLES) {
+    for (const r of (ex.racers || [])) allCoords.push(r.coords || []);
+    if (ex.incident) allCoords.push([[ex.incident.lat, ex.incident.lon, 0]]);
+  }
+  const FIXED_OVERVIEW = overviewCamera(allCoords);
+
   const map = new Map3DElement({
-    center: { lat: start.pos.lat, lng: start.pos.lng, altitude: 40 },
-    heading: start.hdg,
-    tilt: 60,
-    range: 900,
+    center: FIXED_OVERVIEW.center,
+    heading: FIXED_OVERVIEW.heading,
+    tilt: FIXED_OVERVIEW.tilt,
+    range: FIXED_OVERVIEW.range,
     mode: "HYBRID",
     gestureHandling: "GREEDY",
   });
   document.getElementById("map").append(map);
 
   let exIdx = 0;
-  let scene = [];
+  let scene = [];       // active race only
+  let ghosts = [];      // faded prior races
   let markers = {};
   let racers = [];
   let bestId = "new_station";
@@ -233,13 +333,60 @@ async function main() {
   let finishedAll = false;
   let advancing = false;
   let t0 = performance.now();
-  let userRange = 900;
+  let userRange = FIXED_OVERVIEW.range;
+  let cameraMode = "overview";
   let cameraTarget = null;
   let modelRate = 1;
   let maxTotalS = 1;
   let chaseIds = [];
+  let overviewPinned = true; // camera already at FIXED_OVERVIEW; never re-cut while overview
 
-  function clearScene() {
+  function setBadge(text, idle = false) {
+    document.getElementById("badge-text").textContent = text;
+    document.getElementById("badge").classList.toggle("idle", idle);
+  }
+
+  function updateAvgHud(completedCount) {
+    // Always show the session average from the start; refine with running mean after finishes
+    const el = document.getElementById("avg-saved-live");
+    const note = document.getElementById("avg-saved-note");
+    if (completedCount <= 0) {
+      el.textContent = Math.round(OVERALL_AVG_S) + "s";
+      note.textContent = `across ${EXAMPLES.length} races`;
+    } else {
+      let sum = 0;
+      for (let i = 0; i < completedCount; i++) sum += Number(EXAMPLES[i].saved_s) || 0;
+      const run = sum / completedCount;
+      el.textContent = Math.round(run) + "s";
+      note.textContent = `so far (${completedCount}/${EXAMPLES.length}) · full set ${Math.round(OVERALL_AVG_S)}s`;
+    }
+  }
+
+  function syncCameraButtons() {
+    const btnCam = document.getElementById("btn-camera");
+    const btnOv = document.getElementById("btn-overview");
+    if (cameraMode === "overview") {
+      btnOv.classList.add("on");
+      btnCam.classList.remove("on");
+      btnCam.textContent = "Follow";
+    } else {
+      btnCam.classList.add("on");
+      btnOv.classList.remove("on");
+      const r = racers.find(x => x.id === cameraTarget);
+      btnCam.textContent = "Follow · " + (r?.group === "new" ? "new" : "existing");
+    }
+  }
+
+  function applyFixedOverview() {
+    map.center = FIXED_OVERVIEW.center;
+    map.heading = FIXED_OVERVIEW.heading;
+    map.tilt = FIXED_OVERVIEW.tilt;
+    map.range = FIXED_OVERVIEW.range;
+    userRange = FIXED_OVERVIEW.range;
+    overviewPinned = true;
+  }
+
+  function clearActiveScene() {
     for (const el of scene) {
       try { map.removeChild(el); } catch (_) {}
     }
@@ -247,35 +394,78 @@ async function main() {
     markers = {};
   }
 
+  function clearGhosts() {
+    for (const el of ghosts) {
+      try { map.removeChild(el); } catch (_) {}
+    }
+    ghosts = [];
+  }
+
+  function archiveCurrentAsGhost(ex) {
+    // Fade prior routes + leave a quiet finish pin (not the same as the live incident)
+    for (const r of (ex.racers || [])) {
+      const poly = new Polyline3DElement({
+        path: toPath(r.coords, 3),
+        strokeColor: hexAlpha(r.color, 0.22),
+        outerColor: "rgba(15,23,42,0.15)",
+        strokeWidth: 3,
+        outerWidth: 0.2,
+        altitudeMode: "RELATIVE_TO_GROUND",
+        drawsOccludedSegments: true,
+      });
+      map.append(poly);
+      ghosts.push(poly);
+    }
+    const inc = ex.incident;
+    if (inc) {
+      const pin = new Marker3DElement({
+        position: { lat: inc.lat, lng: inc.lon, altitude: 10 },
+        altitudeMode: "RELATIVE_TO_GROUND",
+        extruded: false,
+        drawsWhenOccluded: true,
+        label: "·",
+      });
+      map.append(pin);
+      ghosts.push(pin);
+    }
+  }
+
   function buildHudFor(ex) {
     racers = ex.racers || [];
     bestId = ex.best_id || "new_station";
     const pills = document.getElementById("racer-pills");
     pills.innerHTML = "";
-    for (const r of racers) {
-      const pill = document.createElement("div");
-      pill.className = "pill" + (r.id === bestId ? " winner" : "");
-      pill.innerHTML =
-        `<div class="swatch" style="background:${r.color}"></div>` +
-        `<div><div class="who">${r.label}</div>` +
+    const ordered = [
+      ...racers.filter(r => r.group === "new"),
+      ...racers.filter(r => r.group !== "new"),
+    ];
+    for (const r of ordered) {
+      const lane = document.createElement("div");
+      lane.className = "lane" + (r.id === bestId ? " win" : "");
+      const short = r.group === "new" ? "New station" : (ex.old_station?.name || "Existing");
+      lane.innerHTML =
+        `<div class="who"><span class="swatch" style="background:${r.color}"></span>${short}</div>` +
         `<div class="time" id="t-${r.id}">0:00</div>` +
-        `<div class="eta">Attendance ${Number(r.minutes).toFixed(2)} min</div></div>`;
-      pills.appendChild(pill);
+        `<div class="eta">${Number(r.minutes).toFixed(2)} min attendance</div>`;
+      pills.appendChild(lane);
     }
     document.getElementById("progress").textContent =
       `Race ${exIdx + 1} / ${EXAMPLES.length}`;
     document.getElementById("title").textContent =
-      `Firehouse race · ${ex.label || ("Example " + (exIdx + 1))}`;
+      `${ex.label || ("Example " + (exIdx + 1))} · ${ex.incident.borough || "London"}`;
     document.getElementById("saved-chip").innerHTML =
-      `This race saves <b>${Math.round(ex.saved_s)}s</b> (${ex.pct_faster}% faster)`;
-    document.getElementById("side-meta").innerHTML =
-      `<b>${ex.old_station.name}</b> vs new site<br>` +
-      `${ex.incident.borough || ""} · ${ex.incident.date || ""}`;
-    document.getElementById("badge").textContent = "Incident reported · engines mobilised";
+      `<span>This race</span><span><b>${Math.round(ex.saved_s)}s</b> saved · ${ex.pct_faster}% faster</span>`;
+    document.getElementById("side-meta").textContent =
+      `${ex.old_station?.name || "Existing"} vs new site · ${ex.incident.date || ""}`;
+    updateAvgHud(exIdx); // races before this one are completed; overall avg always visible from start
+    setBadge("Engines mobilised");
   }
 
-  function loadExample(i, { autoplay = true } = {}) {
-    clearScene();
+  function loadExample(i, { autoplay = true, archivePrevious = false } = {}) {
+    if (archivePrevious && EXAMPLES[exIdx]) {
+      archiveCurrentAsGhost(EXAMPLES[exIdx]);
+    }
+    clearActiveScene();
     exIdx = ((i % EXAMPLES.length) + EXAMPLES.length) % EXAMPLES.length;
     const ex = EXAMPLES[exIdx];
     buildHudFor(ex);
@@ -284,15 +474,19 @@ async function main() {
     maxTotalS = Math.max(...racers.map(totalS), 1);
     modelRate = maxTotalS / raceDurationSec;
     chaseIds = [bestId, ...racers.filter(r => r.id !== bestId).map(r => r.id)];
+    if (cameraMode === "chase" && !cameraTarget) cameraTarget = chaseIds[0] || null;
+    if (cameraMode === "chase" && cameraTarget && !chaseIds.includes(cameraTarget)) {
+      cameraTarget = chaseIds[0] || null;
+    }
 
     for (const r of racers) {
       const isNew = r.group === "new";
       const poly = new Polyline3DElement({
-        path: toPath(r.coords, isNew ? 10 : 6),
+        path: toPath(r.coords, isNew ? 8 : 5),
         strokeColor: r.color,
-        outerColor: isNew ? "#14532d" : "#334155",
-        strokeWidth: isNew ? 16 : 11,
-        outerWidth: 0.4,
+        outerColor: isNew ? "#14532d" : "#1e293b",
+        strokeWidth: isNew ? 10 : 7,
+        outerWidth: 0.35,
         altitudeMode: "RELATIVE_TO_GROUND",
         drawsOccludedSegments: true,
       });
@@ -301,14 +495,27 @@ async function main() {
     }
 
     const inc = ex.incident, ns = ex.new_station, os = ex.old_station;
+    // Current incident: tall + labeled so it reads differently from faded prior finishes
+    const incMarker = new Marker3DElement({
+      position: { lat: inc.lat, lng: inc.lon, altitude: 48 },
+      altitudeMode: "RELATIVE_TO_GROUND",
+      extruded: true,
+      drawsWhenOccluded: true,
+      label: "FIRE",
+    });
+    map.append(incMarker);
+    scene.push(incMarker);
+
     for (const [lab, lat, lon, alt] of [
-      ["INCIDENT", inc.lat, inc.lon, 40],
-      ["NEW", ns.lat, ns.lon, 30],
-      ["OLD", os.lat, os.lon, 30],
+      ["NEW", ns.lat, ns.lon, 28],
+      ["OLD", os.lat, os.lon, 28],
     ]) {
       const m = new Marker3DElement({
         position: { lat, lng: lon, altitude: alt },
-        altitudeMode: "RELATIVE_TO_GROUND", extruded: true, label: lab, drawsWhenOccluded: true,
+        altitudeMode: "RELATIVE_TO_GROUND",
+        extruded: true,
+        drawsWhenOccluded: true,
+        label: lab,
       });
       map.append(m);
       scene.push(m);
@@ -319,35 +526,29 @@ async function main() {
         position: pointAtTime(r.coords, 0).pos,
         altitudeMode: "RELATIVE_TO_GROUND",
         extruded: true,
-        label: r.group === "new" ? "NEW TRUCK" : "OLD TRUCK",
         drawsWhenOccluded: true,
+        label: r.group === "new" ? "●" : "○",
       });
       map.append(m);
       scene.push(m);
       markers[r.id] = m;
     }
 
-    const overview = overviewCamera(racers.map(r => r.coords));
-    const win = racers.find(r => r.id === bestId) || racers[0];
-    const s0 = pointAtTime(win.coords, 0);
-    map.center = { lat: s0.pos.lat, lng: s0.pos.lng, altitude: 40 };
-    map.heading = s0.hdg;
-    map.tilt = 60;
-    map.range = 900;
-    userRange = 900;
-    cameraTarget = chaseIds[0] || null;
-    document.getElementById("btn-camera").textContent = "Camera: " + (win?.label || "truck");
-    document.getElementById("btn-camera").classList.add("on");
-    document.getElementById("btn-overview").onclick = () => {
+    // Overview: never re-cut to a new framing between races
+    if (cameraMode === "overview") {
       cameraTarget = null;
-      document.getElementById("btn-camera").textContent = "Camera: Free";
-      document.getElementById("btn-camera").classList.remove("on");
-      map.center = overview.center;
-      map.heading = overview.heading;
-      map.tilt = overview.tilt;
-      map.range = overview.range;
-      userRange = overview.range;
-    };
+      if (!overviewPinned) applyFixedOverview();
+    } else {
+      overviewPinned = false;
+      const win = racers.find(r => r.id === cameraTarget) || racers.find(r => r.id === bestId) || racers[0];
+      const s0 = pointAtTime(win.coords, 0);
+      map.center = { lat: s0.pos.lat, lng: s0.pos.lng, altitude: 28 };
+      map.heading = s0.hdg;
+      map.tilt = 55;
+      map.range = Math.min(userRange, 1100);
+      userRange = map.range;
+    }
+    syncCameraButtons();
 
     playing = !!autoplay;
     finishedAll = false;
@@ -359,6 +560,7 @@ async function main() {
   function showSummary() {
     finishedAll = true;
     playing = false;
+    updateAvgHud(EXAMPLES.length);
     const s = SUMMARY;
     document.getElementById("sum-avg").textContent = Math.round(s.avg_saved_s) + "s";
     document.getElementById("sum-avg-min").textContent =
@@ -370,40 +572,52 @@ async function main() {
       <div class="stat"><div class="k">Avg % faster</div><div class="v">${Number(s.avg_pct_faster).toFixed(1)}%</div></div>
       <div class="stat"><div class="k">Total saved (all races)</div><div class="v">${Math.round(s.total_saved_s)}s</div></div>
       <div class="stat"><div class="k">New station wins</div><div class="v">${s.wins} / ${s.n_examples}</div></div>`;
-    document.getElementById("badge").textContent =
-      `Done · avg ${Math.round(s.avg_saved_s)}s saved across ${s.n_examples} races`;
+    setBadge(`Avg ${Math.round(s.avg_saved_s)}s saved · ${s.n_examples} races`, true);
     document.getElementById("summary").classList.add("show");
   }
 
   function goNext({ fromAuto = false } = {}) {
     if (advancing) return;
     if (exIdx >= EXAMPLES.length - 1) {
+      archiveCurrentAsGhost(EXAMPLES[exIdx]);
+      clearActiveScene();
       showSummary();
       return;
     }
     advancing = true;
     const delay = fromAuto ? pauseBetweenMs : 0;
     setTimeout(() => {
-      loadExample(exIdx + 1, { autoplay: true });
+      loadExample(exIdx + 1, { autoplay: true, archivePrevious: true });
     }, delay);
   }
 
   document.getElementById("btn-replay").onclick = () => {
-    loadExample(exIdx, { autoplay: true });
+    loadExample(exIdx, { autoplay: true, archivePrevious: false });
   };
   document.getElementById("btn-next").onclick = () => goNext({ fromAuto: false });
   document.getElementById("btn-camera").onclick = () => {
     if (!chaseIds.length) return;
-    const i = Math.max(0, chaseIds.indexOf(cameraTarget));
-    cameraTarget = chaseIds[(i + 1) % chaseIds.length];
-    const r = racers.find(x => x.id === cameraTarget);
-    const btn = document.getElementById("btn-camera");
-    btn.textContent = "Camera: " + (r?.label || "truck");
-    btn.classList.add("on");
+    overviewPinned = false;
+    if (cameraMode !== "chase") {
+      cameraMode = "chase";
+      cameraTarget = chaseIds[0];
+    } else {
+      const i = Math.max(0, chaseIds.indexOf(cameraTarget));
+      cameraTarget = chaseIds[(i + 1) % chaseIds.length];
+    }
+    syncCameraButtons();
+  };
+  document.getElementById("btn-overview").onclick = () => {
+    cameraMode = "overview";
+    cameraTarget = null;
+    applyFixedOverview();
+    syncCameraButtons();
   };
   document.getElementById("btn-replay-all").onclick = () => {
     document.getElementById("summary").classList.remove("show");
-    loadExample(0, { autoplay: true });
+    clearGhosts();
+    clearActiveScene();
+    loadExample(0, { autoplay: true, archivePrevious: false });
   };
   document.getElementById("btn-close-sum").onclick = () => {
     document.getElementById("summary").classList.remove("show");
@@ -411,10 +625,14 @@ async function main() {
 
   map.addEventListener("wheel", () => {
     setTimeout(() => {
-      if (typeof map.range === "number" && map.range > 80) userRange = map.range;
+      if (typeof map.range === "number" && map.range > 80) {
+        userRange = map.range;
+        if (cameraMode === "overview") overviewPinned = true; // user adjusted; don't snap back
+      }
     }, 0);
   });
 
+  updateAvgHud(0);
   loadExample(0, { autoplay: true });
 
   function tick(now) {
@@ -437,11 +655,11 @@ async function main() {
       if (r.id === bestId && p.done) winnerDone = true;
     }
 
-    if (cameraTarget && poses[cameraTarget]) {
+    if (cameraMode === "chase" && cameraTarget && poses[cameraTarget]) {
       const t = poses[cameraTarget];
-      map.center = { lat: t.pos.lat, lng: t.pos.lng, altitude: 28 };
+      map.center = { lat: t.pos.lat, lng: t.pos.lng, altitude: 24 };
       map.heading = lerpAngle(Number(map.heading) || t.hdg, t.hdg, 0.14);
-      map.tilt = 58;
+      map.tilt = 55;
       map.range = userRange;
     }
 
@@ -449,15 +667,13 @@ async function main() {
     if (allDone) {
       playing = false;
       const ex = EXAMPLES[exIdx];
-      document.getElementById("badge").textContent =
-        `Done · saved ${Math.round(ex.saved_s)}s this race`;
+      updateAvgHud(exIdx + 1);
+      setBadge(`Saved ${Math.round(ex.saved_s)}s this race`, true);
       goNext({ fromAuto: true });
     } else if (winnerDone) {
-      document.getElementById("badge").textContent =
-        "New station arrived · existing truck still en route";
+      setBadge("New station arrived");
     } else if (wall < 2.2) {
-      document.getElementById("badge").textContent =
-        "Incident reported · both engines mobilised";
+      setBadge("Engines mobilised");
     }
   }
   requestAnimationFrame(tick);
