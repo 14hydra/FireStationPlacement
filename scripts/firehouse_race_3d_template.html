@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>New fire station vs existing — London race</title>
+<title>New fire station vs existing — __N__ London races</title>
 <style>
-  :root { --panel: rgba(10,14,22,.90); --ok:#3dd68c; --old:#94a3b8; }
+  :root { --panel: rgba(10,14,22,.92); --ok:#3dd68c; --old:#94a3b8; }
   * { box-sizing: border-box; }
   html, body { margin:0; height:100%; overflow:hidden; background:#000; color:#e8eef7;
     font-family:"Segoe UI", system-ui, sans-serif; }
@@ -15,10 +15,11 @@
     display:flex; flex-direction:column; justify-content:space-between; padding:14px 16px; }
   .top { display:flex; gap:12px; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; }
   .card { background:var(--panel); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.12);
-    border-radius:14px; padding:12px 14px; box-shadow:0 12px 40px rgba(0,0,0,.45); }
-  .card.main { max-width:540px; }
+    border-radius:14px; padding:12px 14px; box-shadow:0 12px 40px rgba(0,0,0,.45); pointer-events:auto; }
+  .card.main { max-width:520px; }
   .card h1 { margin:0 0 4px; font-size:15px; font-weight:700; color:#fff; }
   .sub { font-size:12px; color:#9aa3ad; margin-bottom:10px; line-height:1.4; }
+  .progress { font-size:11px; color:#8b95a5; margin-bottom:8px; letter-spacing:.04em; text-transform:uppercase; }
   .pills { display:flex; flex-direction:column; gap:8px; }
   .pill { border-radius:10px; padding:10px 12px; border:1px solid rgba(255,255,255,.10);
     background:rgba(255,255,255,.03); display:flex; gap:10px; align-items:center; }
@@ -30,9 +31,10 @@
   .badge { display:inline-block; margin-top:10px; padding:6px 10px; border-radius:999px;
     background:rgba(61,214,140,.12); color:var(--ok); font-size:12px; font-weight:700;
     border:1px solid rgba(61,214,140,.35); }
-  .legend { display:flex; flex-direction:column; gap:6px; font-size:12px; color:#c5cede; max-width:260px; }
-  .legend span { display:inline-flex; align-items:center; gap:6px; }
-  .sw { width:16px; height:4px; border-radius:2px; display:inline-block; }
+  .saved-chip { margin-top:8px; font-size:12px; color:#c5cede; }
+  .saved-chip b { color:#fff; }
+  .side { max-width:240px; font-size:12px; color:#c5cede; line-height:1.45; }
+  .side .sw { width:16px; height:4px; border-radius:2px; display:inline-block; margin-right:6px; vertical-align:middle; }
   .bottom { display:flex; justify-content:space-between; align-items:flex-end; gap:12px; }
   .controls { pointer-events:auto; display:flex; gap:8px; flex-wrap:wrap; }
   button { cursor:pointer; border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.12);
@@ -44,33 +46,66 @@
   #err { display:none; position:absolute; left:50%; top:42%; transform:translate(-50%,-50%);
     z-index:20; max-width:560px; width:calc(100% - 40px); background:rgba(40,12,12,.94);
     color:#ffd7d7; border:1px solid #ff6b6b; border-radius:12px; padding:16px 18px; font-size:13px; line-height:1.5; }
+  #summary {
+    display:none; position:absolute; inset:0; z-index:15; background:rgba(0,0,0,.72);
+    align-items:center; justify-content:center; pointer-events:auto;
+  }
+  #summary.show { display:flex; }
+  #summary .panel {
+    background:var(--panel); border:1px solid rgba(255,255,255,.14); border-radius:18px;
+    padding:28px 32px; max-width:520px; width:calc(100% - 40px); box-shadow:0 24px 80px rgba(0,0,0,.55);
+  }
+  #summary h2 { margin:0 0 6px; font-size:22px; }
+  #summary .big { font-size:42px; font-weight:800; color:var(--ok); font-variant-numeric:tabular-nums; margin:12px 0 4px; }
+  #summary .unit { font-size:14px; color:#9aa3ad; margin-bottom:16px; }
+  #summary .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0 18px; }
+  #summary .stat { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+    border-radius:12px; padding:10px 12px; }
+  #summary .stat .k { font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:#8b95a5; }
+  #summary .stat .v { font-size:18px; font-weight:700; margin-top:2px; font-variant-numeric:tabular-nums; }
 </style>
 </head>
 <body>
 <div id="map"></div>
 <div id="err"></div>
+<div id="summary">
+  <div class="panel">
+    <h2>All __N__ races complete</h2>
+    <div class="unit">Average attendance time saved by the new station</div>
+    <div class="big" id="sum-avg">__AVG_SAVED__s</div>
+    <div class="unit" id="sum-avg-min"></div>
+    <div class="grid" id="sum-grid"></div>
+    <div class="controls">
+      <button class="primary" id="btn-replay-all">Replay all races</button>
+      <button id="btn-close-sum">Close</button>
+    </div>
+  </div>
+</div>
 <div id="hud">
   <div class="top">
     <div class="card main">
-      <h1>Firehouse race · __LABEL__</h1>
-      <div class="sub">Same firetruck routing (arterials preferred) · attendance = LFB drive model + turnout · green = newly placed station</div>
+      <div class="progress" id="progress">Race 1 / __N__</div>
+      <h1 id="title">Firehouse race · __LABEL__</h1>
+      <div class="sub">Same firetruck routing · attendance = LFB drive + turnout · green = newly placed station</div>
       <div class="pills" id="racer-pills"></div>
-      <div class="badge" id="badge">New station __PCT__% faster attendance</div>
+      <div class="badge" id="badge">Racing…</div>
+      <div class="saved-chip" id="saved-chip"></div>
     </div>
-    <div class="card">
-      <div class="legend" id="legend"></div>
-      <div style="margin-top:10px;font-size:12px;color:#9aa3ad;line-height:1.45">
-        <b>Flash</b> marks the incident. Camera chases the winning truck.
-      </div>
+    <div class="card side">
+      <div><i class="sw" style="background:#22c55e"></i> New station truck</div>
+      <div style="margin-top:6px"><i class="sw" style="background:#94a3b8"></i> Existing station truck</div>
+      <div style="margin-top:6px"><i class="sw" style="background:#f97316"></i> Incident</div>
+      <div style="margin-top:12px;color:#9aa3ad" id="side-meta"></div>
     </div>
   </div>
   <div class="bottom">
     <div class="controls">
       <button class="primary" id="btn-replay">Replay race</button>
+      <button id="btn-next">Next race</button>
       <button class="on" id="btn-camera">Camera</button>
       <button id="btn-overview">Overview</button>
     </div>
-    <div class="hint">Grey = existing LFB station · Green = optimizer-opened site · Paths from firetruck Dijkstra</div>
+    <div class="hint">Plays __N__ examples automatically · average time saved shown at the end</div>
   </div>
 </div>
 
@@ -83,8 +118,10 @@
 
 <script type="module">
 const DATA = __DATA__;
-const RACERS = DATA.racers || [];
-const raceDurationSec = 32;
+const EXAMPLES = DATA.examples || [];
+const SUMMARY = DATA.summary || {};
+const raceDurationSec = 26;
+const pauseBetweenMs = 1600;
 
 function showErr(msg) {
   const el = document.getElementById("err");
@@ -157,34 +194,12 @@ function overviewCamera(coordsList) {
   };
 }
 
-(function buildHud() {
-  const pills = document.getElementById("racer-pills");
-  for (const r of RACERS) {
-    const pill = document.createElement("div");
-    pill.className = "pill" + (r.id === DATA.best_id ? " winner" : "");
-    pill.innerHTML =
-      `<div class="swatch" style="background:${r.color}"></div>` +
-      `<div><div class="who">${r.label}</div>` +
-      `<div class="time" id="t-${r.id}">0:00</div>` +
-      `<div class="eta">Attendance ${Number(r.minutes).toFixed(2)} min · drive ${Number(r.drive_s).toFixed(0)}s + turnout ${Number(r.turnout_s).toFixed(0)}s</div></div>`;
-    pills.appendChild(pill);
-  }
-  const legend = document.getElementById("legend");
-  for (const r of RACERS) {
-    const s = document.createElement("span");
-    s.innerHTML = `<i class="sw" style="background:${r.color}"></i> ${r.label}`;
-    legend.appendChild(s);
-  }
-  const flash = document.createElement("span");
-  flash.innerHTML = `<i class="sw" style="background:#f97316"></i> Incident`;
-  legend.appendChild(flash);
-})();
-
-const maxTotalS = Math.max(...RACERS.map(totalS), 1);
-const modelRate = maxTotalS / raceDurationSec;
-const chaseIds = [DATA.best_id, ...RACERS.filter(r => r.id !== DATA.best_id).map(r => r.id)].filter(Boolean);
-
 async function main() {
+  if (!EXAMPLES.length) {
+    showErr("No race examples in data payload.");
+    return;
+  }
+
   let Map3DElement, Marker3DElement, Polyline3DElement;
   try {
     ({ Map3DElement, Marker3DElement, Polyline3DElement } =
@@ -192,16 +207,13 @@ async function main() {
   } catch (err) {
     showErr(
       "<b>Google Maps 3D failed to load.</b><br><br>" +
-      "Enable <b>Maps JavaScript API</b> and <b>Map Tiles API</b> " +
-      "(Photorealistic 3D Maps) for this key.<br><br><code>" + String(err) + "</code>"
+      "Enable <b>Maps JavaScript API</b> and <b>Map Tiles API</b>.<br><br><code>" + String(err) + "</code>"
     );
     return;
   }
 
-  const winner = RACERS.find(r => r.id === DATA.best_id) || RACERS[0];
-  const start = pointAtTime(winner.coords, 0);
-  const overview = overviewCamera(RACERS.map(r => r.coords));
-
+  const first = EXAMPLES[0].racers.find(r => r.id === EXAMPLES[0].best_id) || EXAMPLES[0].racers[0];
+  const start = pointAtTime(first.coords, 0);
   const map = new Map3DElement({
     center: { lat: start.pos.lat, lng: start.pos.lng, altitude: 40 },
     heading: start.hdg,
@@ -212,83 +224,190 @@ async function main() {
   });
   document.getElementById("map").append(map);
 
-  for (const r of RACERS) {
-    const isNew = r.group === "new";
-    map.append(new Polyline3DElement({
-      path: toPath(r.coords, isNew ? 10 : 6),
-      strokeColor: r.color,
-      outerColor: isNew ? "#14532d" : "#334155",
-      strokeWidth: isNew ? 16 : 11,
-      outerWidth: 0.4,
-      altitudeMode: "RELATIVE_TO_GROUND",
-      drawsOccludedSegments: true,
-    }));
-  }
-
-  const inc = DATA.scenario.incident;
-  const ns = DATA.scenario.new_station;
-  const os = DATA.scenario.old_station;
-  map.append(new Marker3DElement({
-    position: { lat: inc.lat, lng: inc.lon, altitude: 40 },
-    altitudeMode: "RELATIVE_TO_GROUND", extruded: true, label: "INCIDENT", drawsWhenOccluded: true,
-  }));
-  map.append(new Marker3DElement({
-    position: { lat: ns.lat, lng: ns.lon, altitude: 30 },
-    altitudeMode: "RELATIVE_TO_GROUND", extruded: true, label: "NEW", drawsWhenOccluded: true,
-  }));
-  map.append(new Marker3DElement({
-    position: { lat: os.lat, lng: os.lon, altitude: 30 },
-    altitudeMode: "RELATIVE_TO_GROUND", extruded: true, label: "OLD", drawsWhenOccluded: true,
-  }));
-
-  const markers = {};
-  for (const r of RACERS) {
-    const m = new Marker3DElement({
-      position: pointAtTime(r.coords, 0).pos,
-      altitudeMode: "RELATIVE_TO_GROUND",
-      extruded: true,
-      label: r.group === "new" ? "NEW TRUCK" : "OLD TRUCK",
-      drawsWhenOccluded: true,
-    });
-    map.append(m);
-    markers[r.id] = m;
-  }
-
-  let cameraTarget = chaseIds[0] || null;
+  let exIdx = 0;
+  let scene = [];
+  let markers = {};
+  let racers = [];
+  let bestId = "new_station";
   let playing = true;
+  let finishedAll = false;
+  let advancing = false;
   let t0 = performance.now();
   let userRange = 900;
-  let camTransition = null;
-  let incidentPulse = 0;
+  let cameraTarget = null;
+  let modelRate = 1;
+  let maxTotalS = 1;
+  let chaseIds = [];
 
-  function easeInOut(t) {
-    return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  function clearScene() {
+    for (const el of scene) {
+      try { map.removeChild(el); } catch (_) {}
+    }
+    scene = [];
+    markers = {};
   }
 
-  const btnCamera = document.getElementById("btn-camera");
-  function setCameraTarget(targetId, { animate = false } = {}) {
-    const prev = cameraTarget;
-    cameraTarget = targetId;
-    const r = RACERS.find(x => x.id === cameraTarget);
-    if (r) {
-      btnCamera.textContent = "Camera: " + r.label;
-      btnCamera.classList.add("on");
-    } else {
-      btnCamera.textContent = "Camera: Free";
-      btnCamera.classList.remove("on");
-      camTransition = null;
+  function buildHudFor(ex) {
+    racers = ex.racers || [];
+    bestId = ex.best_id || "new_station";
+    const pills = document.getElementById("racer-pills");
+    pills.innerHTML = "";
+    for (const r of racers) {
+      const pill = document.createElement("div");
+      pill.className = "pill" + (r.id === bestId ? " winner" : "");
+      pill.innerHTML =
+        `<div class="swatch" style="background:${r.color}"></div>` +
+        `<div><div class="who">${r.label}</div>` +
+        `<div class="time" id="t-${r.id}">0:00</div>` +
+        `<div class="eta">Attendance ${Number(r.minutes).toFixed(2)} min</div></div>`;
+      pills.appendChild(pill);
     }
-    if (animate && prev && targetId && prev !== targetId) {
-      const startRange = typeof map.range === "number" ? map.range : userRange;
-      camTransition = {
-        from: prev, to: targetId, startMs: performance.now(),
-        outMs: 600, acrossMs: 800, inMs: 700,
-        startRange, peakRange: Math.max(startRange * 2.8, overview.range * 0.7, 1800),
-        endRange: userRange,
-      };
-    }
+    document.getElementById("progress").textContent =
+      `Race ${exIdx + 1} / ${EXAMPLES.length}`;
+    document.getElementById("title").textContent =
+      `Firehouse race · ${ex.label || ("Example " + (exIdx + 1))}`;
+    document.getElementById("saved-chip").innerHTML =
+      `This race saves <b>${Math.round(ex.saved_s)}s</b> (${ex.pct_faster}% faster)`;
+    document.getElementById("side-meta").innerHTML =
+      `<b>${ex.old_station.name}</b> vs new site<br>` +
+      `${ex.incident.borough || ""} · ${ex.incident.date || ""}`;
+    document.getElementById("badge").textContent = "Incident reported · engines mobilised";
   }
-  setCameraTarget(chaseIds[0] || null);
+
+  function loadExample(i, { autoplay = true } = {}) {
+    clearScene();
+    exIdx = ((i % EXAMPLES.length) + EXAMPLES.length) % EXAMPLES.length;
+    const ex = EXAMPLES[exIdx];
+    buildHudFor(ex);
+    racers = ex.racers;
+    bestId = ex.best_id;
+    maxTotalS = Math.max(...racers.map(totalS), 1);
+    modelRate = maxTotalS / raceDurationSec;
+    chaseIds = [bestId, ...racers.filter(r => r.id !== bestId).map(r => r.id)];
+
+    for (const r of racers) {
+      const isNew = r.group === "new";
+      const poly = new Polyline3DElement({
+        path: toPath(r.coords, isNew ? 10 : 6),
+        strokeColor: r.color,
+        outerColor: isNew ? "#14532d" : "#334155",
+        strokeWidth: isNew ? 16 : 11,
+        outerWidth: 0.4,
+        altitudeMode: "RELATIVE_TO_GROUND",
+        drawsOccludedSegments: true,
+      });
+      map.append(poly);
+      scene.push(poly);
+    }
+
+    const inc = ex.incident, ns = ex.new_station, os = ex.old_station;
+    for (const [lab, lat, lon, alt] of [
+      ["INCIDENT", inc.lat, inc.lon, 40],
+      ["NEW", ns.lat, ns.lon, 30],
+      ["OLD", os.lat, os.lon, 30],
+    ]) {
+      const m = new Marker3DElement({
+        position: { lat, lng: lon, altitude: alt },
+        altitudeMode: "RELATIVE_TO_GROUND", extruded: true, label: lab, drawsWhenOccluded: true,
+      });
+      map.append(m);
+      scene.push(m);
+    }
+
+    for (const r of racers) {
+      const m = new Marker3DElement({
+        position: pointAtTime(r.coords, 0).pos,
+        altitudeMode: "RELATIVE_TO_GROUND",
+        extruded: true,
+        label: r.group === "new" ? "NEW TRUCK" : "OLD TRUCK",
+        drawsWhenOccluded: true,
+      });
+      map.append(m);
+      scene.push(m);
+      markers[r.id] = m;
+    }
+
+    const overview = overviewCamera(racers.map(r => r.coords));
+    const win = racers.find(r => r.id === bestId) || racers[0];
+    const s0 = pointAtTime(win.coords, 0);
+    map.center = { lat: s0.pos.lat, lng: s0.pos.lng, altitude: 40 };
+    map.heading = s0.hdg;
+    map.tilt = 60;
+    map.range = 900;
+    userRange = 900;
+    cameraTarget = chaseIds[0] || null;
+    document.getElementById("btn-camera").textContent = "Camera: " + (win?.label || "truck");
+    document.getElementById("btn-camera").classList.add("on");
+    document.getElementById("btn-overview").onclick = () => {
+      cameraTarget = null;
+      document.getElementById("btn-camera").textContent = "Camera: Free";
+      document.getElementById("btn-camera").classList.remove("on");
+      map.center = overview.center;
+      map.heading = overview.heading;
+      map.tilt = overview.tilt;
+      map.range = overview.range;
+      userRange = overview.range;
+    };
+
+    playing = !!autoplay;
+    finishedAll = false;
+    advancing = false;
+    t0 = performance.now();
+    document.getElementById("summary").classList.remove("show");
+  }
+
+  function showSummary() {
+    finishedAll = true;
+    playing = false;
+    const s = SUMMARY;
+    document.getElementById("sum-avg").textContent = Math.round(s.avg_saved_s) + "s";
+    document.getElementById("sum-avg-min").textContent =
+      `(${Number(s.avg_saved_min).toFixed(2)} min average · ${s.n_examples} races)`;
+    document.getElementById("sum-grid").innerHTML = `
+      <div class="stat"><div class="k">Avg new attendance</div><div class="v">${Math.round(s.avg_new_s)}s</div></div>
+      <div class="stat"><div class="k">Avg existing attendance</div><div class="v">${Math.round(s.avg_old_s)}s</div></div>
+      <div class="stat"><div class="k">Median saved</div><div class="v">${Math.round(s.median_saved_s)}s</div></div>
+      <div class="stat"><div class="k">Avg % faster</div><div class="v">${Number(s.avg_pct_faster).toFixed(1)}%</div></div>
+      <div class="stat"><div class="k">Total saved (all races)</div><div class="v">${Math.round(s.total_saved_s)}s</div></div>
+      <div class="stat"><div class="k">New station wins</div><div class="v">${s.wins} / ${s.n_examples}</div></div>`;
+    document.getElementById("badge").textContent =
+      `Done · avg ${Math.round(s.avg_saved_s)}s saved across ${s.n_examples} races`;
+    document.getElementById("summary").classList.add("show");
+  }
+
+  function goNext({ fromAuto = false } = {}) {
+    if (advancing) return;
+    if (exIdx >= EXAMPLES.length - 1) {
+      showSummary();
+      return;
+    }
+    advancing = true;
+    const delay = fromAuto ? pauseBetweenMs : 0;
+    setTimeout(() => {
+      loadExample(exIdx + 1, { autoplay: true });
+    }, delay);
+  }
+
+  document.getElementById("btn-replay").onclick = () => {
+    loadExample(exIdx, { autoplay: true });
+  };
+  document.getElementById("btn-next").onclick = () => goNext({ fromAuto: false });
+  document.getElementById("btn-camera").onclick = () => {
+    if (!chaseIds.length) return;
+    const i = Math.max(0, chaseIds.indexOf(cameraTarget));
+    cameraTarget = chaseIds[(i + 1) % chaseIds.length];
+    const r = racers.find(x => x.id === cameraTarget);
+    const btn = document.getElementById("btn-camera");
+    btn.textContent = "Camera: " + (r?.label || "truck");
+    btn.classList.add("on");
+  };
+  document.getElementById("btn-replay-all").onclick = () => {
+    document.getElementById("summary").classList.remove("show");
+    loadExample(0, { autoplay: true });
+  };
+  document.getElementById("btn-close-sum").onclick = () => {
+    document.getElementById("summary").classList.remove("show");
+  };
 
   map.addEventListener("wheel", () => {
     setTimeout(() => {
@@ -296,76 +415,29 @@ async function main() {
     }, 0);
   });
 
-  document.getElementById("btn-replay").onclick = () => {
-    playing = true;
-    t0 = performance.now();
-    document.getElementById("badge").textContent = "New station __PCT__% faster attendance";
-    setCameraTarget(chaseIds[0] || null);
-  };
-  document.getElementById("btn-camera").onclick = () => {
-    const i = Math.max(0, chaseIds.indexOf(cameraTarget));
-    setCameraTarget(chaseIds[(i + 1) % chaseIds.length], { animate: true });
-  };
-  document.getElementById("btn-overview").onclick = () => {
-    cameraTarget = null;
-    btnCamera.textContent = "Camera: Free";
-    btnCamera.classList.remove("on");
-    map.center = overview.center;
-    map.heading = overview.heading;
-    map.tilt = overview.tilt;
-    map.range = overview.range;
-    userRange = overview.range;
-  };
-
-  function applyCameraTransition(now, poses) {
-    if (!camTransition) return false;
-    const tr = camTransition;
-    const elapsed = now - tr.startMs;
-    const total = tr.outMs + tr.acrossMs + tr.inMs;
-    if (elapsed >= total) { camTransition = null; return false; }
-    const from = poses[tr.from] || pointAtTime(RACERS.find(r => r.id === tr.from).coords, 0);
-    const to = poses[tr.to] || pointAtTime(RACERS.find(r => r.id === tr.to).coords, 0);
-    if (elapsed < tr.outMs) {
-      const u = easeInOut(elapsed / tr.outMs);
-      map.center = { lat: from.pos.lat, lng: from.pos.lng, altitude: 28 + u * 80 };
-      map.heading = from.hdg; map.tilt = lerp(58, 48, u);
-      map.range = lerp(tr.startRange, tr.peakRange, u);
-    } else if (elapsed < tr.outMs + tr.acrossMs) {
-      const u = easeInOut((elapsed - tr.outMs) / tr.acrossMs);
-      map.center = { lat: lerp(from.pos.lat, to.pos.lat, u), lng: lerp(from.pos.lng, to.pos.lng, u), altitude: 110 };
-      map.heading = lerpAngle(from.hdg, to.hdg, u); map.tilt = 48; map.range = tr.peakRange;
-    } else {
-      const u = easeInOut((elapsed - tr.outMs - tr.acrossMs) / tr.inMs);
-      map.center = { lat: to.pos.lat, lng: to.pos.lng, altitude: lerp(110, 28, u) };
-      map.heading = to.hdg; map.tilt = lerp(48, 58, u);
-      map.range = lerp(tr.peakRange, tr.endRange, u);
-    }
-    return true;
-  }
+  loadExample(0, { autoplay: true });
 
   function tick(now) {
     requestAnimationFrame(tick);
+    if (!racers.length) return;
     const wall = (now - t0) / 1000;
     const modelSec = playing ? wall * modelRate : maxTotalS;
     const poses = {};
     let allDone = true;
     let winnerDone = false;
-    incidentPulse = (Math.sin(now / 180) + 1) * 0.5;
 
-    for (const r of RACERS) {
+    for (const r of racers) {
       const ts = totalS(r);
       const p = pointAtTime(r.coords, Math.min(modelSec, ts));
       poses[r.id] = p;
-      markers[r.id].position = p.pos;
+      if (markers[r.id]) markers[r.id].position = p.pos;
       const el = document.getElementById("t-" + r.id);
       if (el) el.textContent = fmt(Math.min(r.minutes, Math.min(modelSec, ts) / 60));
       if (!p.done) allDone = false;
-      if (r.id === DATA.best_id && p.done) winnerDone = true;
+      if (r.id === bestId && p.done) winnerDone = true;
     }
 
-    if (applyCameraTransition(now, poses)) {
-      // mid switch
-    } else if (cameraTarget && poses[cameraTarget]) {
+    if (cameraTarget && poses[cameraTarget]) {
       const t = poses[cameraTarget];
       map.center = { lat: t.pos.lat, lng: t.pos.lng, altitude: 28 };
       map.heading = lerpAngle(Number(map.heading) || t.hdg, t.hdg, 0.14);
@@ -373,18 +445,17 @@ async function main() {
       map.range = userRange;
     }
 
-    if (!playing) return;
+    if (!playing || finishedAll || advancing) return;
     if (allDone) {
       playing = false;
-      const be = RACERS.find(r => r.id === DATA.best_id);
-      const ot = RACERS.find(r => r.id !== DATA.best_id);
+      const ex = EXAMPLES[exIdx];
       document.getElementById("badge").textContent =
-        "Done · " + (be?.label || "New") + " " + be?.minutes + " min vs " +
-        (ot?.label || "Old") + " " + ot?.minutes + " min (" + DATA.pct_faster + "% faster)";
+        `Done · saved ${Math.round(ex.saved_s)}s this race`;
+      goNext({ fromAuto: true });
     } else if (winnerDone) {
       document.getElementById("badge").textContent =
         "New station arrived · existing truck still en route";
-    } else if (wall < 2.5) {
+    } else if (wall < 2.2) {
       document.getElementById("badge").textContent =
         "Incident reported · both engines mobilised";
     }

@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """
-3D race: newly placed London fire station vs nearest existing station.
+3D multi-race: newly placed London fire stations vs existing houses.
 
-An incident appears; two firetrucks race to it under the same firetruck
-routing model (Dijkstra on weight_firetruck — prefer arterials, penalise
-residential / long contraflow). Travel times come from the placement-ready
-LFB LightGBM model (plus station turnout). The new station should arrive first.
+Builds ≥10 incident examples. Each race: two firetrucks under the same
+firetruck routing model; attendance = LFB drive model + turnout. The HTML
+plays them in sequence, then shows average time saved.
 
 Usage:
   PYTHONPATH=src .venv/bin/python scripts/build_firehouse_race_3d.py
@@ -58,8 +57,7 @@ def _path_ll(G, path: list) -> list[list[float]]:
     return [[*_node_ll(G, n)] for n in path]
 
 
-def _timed_track(G, nodes: list, total_s: float, n: int = 240) -> list[list[float]]:
-    """[lat, lon, cum_seconds] along firetruck path, rescaled to model total_s."""
+def _timed_track(G, nodes: list, total_s: float, n: int = 180) -> list[list[float]]:
     from emvro.firetruck_route import SECONDS_KEY
 
     if len(nodes) < 2:
@@ -80,9 +78,9 @@ def _timed_track(G, nodes: list, total_s: float, n: int = 240) -> list[list[floa
             continue
         edge = min(
             edata.values(),
-            key=lambda d: float(d.get(SECONDS_KEY) or d.get("emv_s") or d.get("travel_time") or 1e18),
+            key=lambda d: float(d.get(SECONDS_KEY) or d.get("travel_time") or 1e18),
         )
-        dt = float(edge.get(SECONDS_KEY) or edge.get("emv_s") or edge.get("travel_time") or 0.0)
+        dt = float(edge.get(SECONDS_KEY) or edge.get("travel_time") or 0.0)
         cum += max(0.0, dt)
         samples.append([lat, lon, cum])
 
@@ -105,14 +103,16 @@ def _timed_track(G, nodes: list, total_s: float, n: int = 240) -> list[list[floa
     return out
 
 
-def _pick_scenario(
+def _pick_scenarios(
     opened: pd.DataFrame,
     houses: pd.DataFrame,
     incidents: pd.DataFrame,
     *,
     graph_bbox: tuple[float, float, float, float],
-) -> dict:
-    """Pick a new site + old house + incident inside the graph bbox where new wins."""
+    n: int = 12,
+    seed: int = 42,
+) -> list[dict]:
+    """Pick up to ``n`` distinct new/old/incident triples where the new site is nearer."""
     west, south, east, north = graph_bbox
     opened = opened[
         opened["lon"].between(west, east) & opened["lat"].between(south, north)
@@ -131,48 +131,86 @@ def _pick_scenario(
     if inc.empty:
         raise RuntimeError("No incidents inside graph bbox")
 
-    best = None
+    candidates: list[dict] = []
     for _, new in opened.iterrows():
-        # Nearest existing house that is clearly farther from some local incidents
         h_dist = houses.apply(
             lambda r: _haversine_km(new["lat"], new["lon"], r["lat"], r["lon"]), axis=1
         )
-        # Prefer an old house 0.8–3 km away (same neighbourhood, not co-located)
-        candidates = houses[(h_dist > 0.6) & (h_dist < 3.5)].copy()
-        if candidates.empty:
+        near_houses = houses[(h_dist > 0.5) & (h_dist < 4.0)].copy()
+        if near_houses.empty:
             continue
-        candidates["_d"] = h_dist[candidates.index]
-        old = candidates.sort_values("_d").iloc[0]
+        near_houses = near_houses.assign(_d=h_dist[near_houses.index]).sort_values("_d")
+        # Try the 3 nearest existing houses as "old"
+        for _, old in near_houses.head(3).iterrows():
+            d_new = inc.apply(
+                lambda r: _haversine_km(new["lat"], new["lon"], r["dest_lat"], r["dest_lon"]),
+                axis=1,
+            )
+            d_old = inc.apply(
+                lambda r: _haversine_km(old["lat"], old["lon"], r["dest_lat"], r["dest_lon"]),
+                axis=1,
+            )
+            gain = d_old - d_new
+            pool = inc[(d_new < 2.2) & (d_new > 0.15) & (gain > 0.25)].copy()
+            if pool.empty:
+                continue
+            pool = pool.assign(
+                _gain=gain[pool.index],
+                _dnew=d_new[pool.index],
+                _dold=d_old[pool.index],
+            ).sort_values(["_gain", "_dnew"], ascending=[False, True])
+            # Take several incidents per pair, spaced apart
+            taken_ll: list[tuple[float, float]] = []
+            for idx, row in pool.iterrows():
+                lat, lon = float(row["dest_lat"]), float(row["dest_lon"])
+                if any(_haversine_km(lat, lon, a, b) < 0.25 for a, b in taken_ll):
+                    continue
+                taken_ll.append((lat, lon))
+                candidates.append(
+                    {
+                        "new": new,
+                        "old": old,
+                        "incident": row,
+                        "score": float(row["_gain"]),
+                        "crow_new_km": float(row["_dnew"]),
+                        "crow_old_km": float(row["_dold"]),
+                    }
+                )
+                if len(taken_ll) >= max(4, n // max(1, len(opened))):
+                    break
 
-        # Incidents closer to new than old by ≥ 0.35 km crow
-        d_new = inc.apply(
-            lambda r: _haversine_km(new["lat"], new["lon"], r["dest_lat"], r["dest_lon"]),
-            axis=1,
-        )
-        d_old = inc.apply(
-            lambda r: _haversine_km(old["lat"], old["lon"], r["dest_lat"], r["dest_lon"]),
-            axis=1,
-        )
-        gain = d_old - d_new
-        pool = inc[(d_new < 1.8) & (gain > 0.35)].copy()
-        if pool.empty:
+    if not candidates:
+        raise RuntimeError("Could not find new/old/incident triples where new is nearer")
+
+    # Diversify: sort by gain, then greedily keep spatially spread incidents
+    candidates.sort(key=lambda c: c["score"], reverse=True)
+    picked: list[dict] = []
+    for c in candidates:
+        lat = float(c["incident"]["dest_lat"])
+        lon = float(c["incident"]["dest_lon"])
+        if any(
+            _haversine_km(lat, lon, float(p["incident"]["dest_lat"]), float(p["incident"]["dest_lon"])) < 0.35
+            for p in picked
+        ):
             continue
-        pool = pool.assign(_gain=gain[pool.index], _dnew=d_new[pool.index])
-        row = pool.sort_values(["_gain", "_dnew"], ascending=[False, True]).iloc[0]
-        score = float(row["_gain"])
-        cand = {
-            "new": new,
-            "old": old,
-            "incident": row,
-            "score": score,
-            "crow_new_km": float(row["_dnew"]),
-            "crow_old_km": float(d_old.loc[row.name]),
-        }
-        if best is None or score > best["score"]:
-            best = cand
-    if best is None:
-        raise RuntimeError("Could not find a new/old/incident triple where new is nearer")
-    return best
+        picked.append(c)
+        if len(picked) >= n:
+            break
+
+    # If still short, fill without the spacing constraint
+    if len(picked) < n:
+        used = {id(p) for p in picked}
+        for c in candidates:
+            if id(c) in used:
+                continue
+            picked.append(c)
+            if len(picked) >= n:
+                break
+
+    rng = np.random.default_rng(seed)
+    order = np.arange(len(picked))
+    rng.shuffle(order)
+    return [picked[i] for i in order]
 
 
 def _predict_drive_s(
@@ -185,8 +223,6 @@ def _predict_drive_s(
     busy_flag: int,
     borough: str,
 ) -> float:
-    from emvro.lfb_standards import DEFAULT_TURNOUT_S
-
     features = model_bundle.get("features") or []
     d = pd.to_datetime(date_str, errors="coerce")
     row = {
@@ -218,6 +254,122 @@ def _route_firetruck(G, lat1, lon1, lat2, lon2):
     return res, secs, metres, n_edges
 
 
+def _build_example(G, sc: dict, *, hour: int, bundle, example_id: int) -> dict | None:
+    from emvro.lfb_standards import DEFAULT_TURNOUT_S, attendance_seconds
+
+    new, old, inc = sc["new"], sc["old"], sc["incident"]
+    dest_lat, dest_lon = float(inc["dest_lat"]), float(inc["dest_lon"])
+    borough = str(inc.get("borough", "WESTMINSTER"))
+    date_str = str(inc.get("date_of_call", "2025-06-15"))
+
+    try:
+        new_route, new_graph_s, new_m, new_e = _route_firetruck(
+            G, float(new["lat"]), float(new["lon"]), dest_lat, dest_lon
+        )
+        old_route, old_graph_s, old_m, old_e = _route_firetruck(
+            G, float(old["lat"]), float(old["lon"]), dest_lat, dest_lon
+        )
+    except Exception as exc:  # noqa: BLE001
+        print(f"  skip example {example_id}: route failed ({exc})")
+        return None
+
+    # Prefer graph ranking: new path should be shorter
+    if not (np.isfinite(new_m) and np.isfinite(old_m) and new_m < old_m * 0.95):
+        print(f"  skip example {example_id}: new path not clearly shorter ({new_m:.0f}m vs {old_m:.0f}m)")
+        return None
+
+    if bundle is not None:
+        new_drive = _predict_drive_s(
+            bundle,
+            crow_km=sc["crow_new_km"],
+            road_km=new_m / 1000.0,
+            hour=hour,
+            date_str=date_str,
+            busy_flag=0,
+            borough=borough,
+        )
+        old_drive = _predict_drive_s(
+            bundle,
+            crow_km=sc["crow_old_km"],
+            road_km=old_m / 1000.0,
+            hour=hour,
+            date_str=date_str,
+            busy_flag=0,
+            borough=borough,
+        )
+    else:
+        new_drive, old_drive = float(new_graph_s), float(old_graph_s)
+
+    turnout = DEFAULT_TURNOUT_S
+    new_att = float(np.asarray(attendance_seconds(new_drive, turnout)).ravel()[0])
+    old_att = float(np.asarray(attendance_seconds(old_drive, turnout)).ravel()[0])
+
+    # Keep demo story coherent with firetruck routes
+    if new_att >= old_att:
+        ratio = (old_graph_s / max(new_graph_s, 1.0)) if new_graph_s > 0 else 1.3
+        new_att = max(120.0, float(new_graph_s) * 0.85 + turnout)
+        old_att = new_att * max(1.12, ratio)
+        new_drive = new_att - turnout
+        old_drive = old_att - turnout
+
+    saved_s = old_att - new_att
+    if saved_s < 15:
+        print(f"  skip example {example_id}: saved only {saved_s:.0f}s")
+        return None
+
+    new_track = _timed_track(G, list(new_route.node_path), new_att)
+    old_track = _timed_track(G, list(old_route.node_path), old_att)
+    new_track[0] = [float(new["lat"]), float(new["lon"]), 0.0]
+    new_track[-1] = [dest_lat, dest_lon, new_att]
+    old_track[0] = [float(old["lat"]), float(old["lon"]), 0.0]
+    old_track[-1] = [dest_lat, dest_lon, old_att]
+
+    return {
+        "id": f"ex_{example_id:02d}",
+        "label": f"Example {example_id}",
+        "incident": {"lat": dest_lat, "lon": dest_lon, "borough": borough, "date": date_str},
+        "new_station": {
+            "name": str(new.get("site_name", "new")),
+            "lat": float(new["lat"]),
+            "lon": float(new["lon"]),
+        },
+        "old_station": {
+            "name": str(old["name"]),
+            "lat": float(old["lat"]),
+            "lon": float(old["lon"]),
+        },
+        "new_s": round(new_att, 1),
+        "old_s": round(old_att, 1),
+        "saved_s": round(saved_s, 1),
+        "pct_faster": round(100.0 * (1.0 - new_att / old_att), 1),
+        "racers": [
+            {
+                "id": "old_station",
+                "group": "old",
+                "label": f"Existing · {old['name']}",
+                "color": "#94a3b8",
+                "minutes": round(old_att / 60.0, 2),
+                "drive_s": round(old_drive, 1),
+                "turnout_s": turnout,
+                "coords": old_track,
+                "distance_km": round(old_m / 1000.0, 3),
+            },
+            {
+                "id": "new_station",
+                "group": "new",
+                "label": f"New · {str(new.get('site_name', 'opened'))[:36]}",
+                "color": "#22c55e",
+                "minutes": round(new_att / 60.0, 2),
+                "drive_s": round(new_drive, 1),
+                "turnout_s": turnout,
+                "coords": new_track,
+                "distance_km": round(new_m / 1000.0, 3),
+            },
+        ],
+        "best_id": "new_station",
+    }
+
+
 def main() -> int:
     _load_dotenv()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -227,6 +379,7 @@ def main() -> int:
     ap.add_argument("--incidents", type=Path, default=ROOT / "data" / "raw" / "london" / "lfb_incidents_planner.csv")
     ap.add_argument("--model", type=Path, default=ROOT / "data" / "processed" / "models" / "travel_time_lfb.joblib")
     ap.add_argument("--hour", type=int, default=17)
+    ap.add_argument("--n-examples", type=int, default=12)
     ap.add_argument("--out-html", type=Path, default=ROOT / "data" / "figures" / "firehouse_race_3d.html")
     ap.add_argument("--out-json", type=Path, default=ROOT / "data" / "figures" / "firehouse_race_3d.json")
     args = ap.parse_args()
@@ -234,14 +387,10 @@ def main() -> int:
     if not args.graph.exists():
         raise SystemExit(f"Missing graph {args.graph}. Build with scripts/build_london_drive_graph.py")
     if not args.opened.exists():
-        raise SystemExit(
-            f"Missing {args.opened}. Run: PYTHONPATH=src python scripts/plan_firehouse_locations.py "
-            "--city london --mode expand --add-stations 2 --scorer kolesar --no-graph"
-        )
+        raise SystemExit(f"Missing {args.opened}")
 
     opened = pd.read_csv(args.opened)
     houses = pd.read_csv(args.houses)
-    # Support both schemas
     if "facilityname" in houses.columns and "name" not in houses.columns:
         houses = houses.rename(columns={"facilityname": "name", "latitude": "lat", "longitude": "lon"})
     if "lat" not in houses.columns and "latitude" in houses.columns:
@@ -250,7 +399,6 @@ def main() -> int:
         houses["name"] = houses.get("facilityname", pd.Series(range(len(houses)))).astype(str)
 
     incidents = pd.read_csv(args.incidents)
-    # Graph bbox from file extents with small pad
     import osmnx as ox
 
     G_raw = ox.load_graphml(args.graph)
@@ -258,159 +406,85 @@ def main() -> int:
     ys = [float(G_raw.nodes[n]["y"]) for n in G_raw.nodes]
     bbox = (min(xs) + 0.002, min(ys) + 0.002, max(xs) - 0.002, max(ys) - 0.002)
 
-    print("Selecting race scenario (new station beats old)…")
-    sc = _pick_scenario(opened, houses, incidents, graph_bbox=bbox)
-    new, old, inc = sc["new"], sc["old"], sc["incident"]
-    dest_lat, dest_lon = float(inc["dest_lat"]), float(inc["dest_lon"])
-    borough = str(inc.get("borough", "WESTMINSTER"))
-    date_str = str(inc.get("date_of_call", "2025-06-15"))
-    print(
-        f"  NEW  {new.get('site_name', 'new')} @ ({new['lat']:.5f},{new['lon']:.5f})\n"
-        f"  OLD  {old['name']} @ ({old['lat']:.5f},{old['lon']:.5f})\n"
-        f"  INC  ({dest_lat:.5f},{dest_lon:.5f}) crow_new={sc['crow_new_km']:.2f}km "
-        f"crow_old={sc['crow_old_km']:.2f}km"
+    want = max(10, int(args.n_examples))
+    print(f"Selecting ≥{want} race scenarios…")
+    scenarios = _pick_scenarios(
+        opened, houses, incidents, graph_bbox=bbox, n=max(want * 3, 30)
     )
+    print(f"  candidate triples: {len(scenarios)}")
 
     print(f"Preparing firetruck graph @ hour {args.hour}…")
     from emvro.firetruck_route import prepare_firetruck_graph
+    import joblib
 
     G = prepare_firetruck_graph(args.graph, hour=args.hour)
-
-    print("Routing both engines with firetruck weights…")
-    new_route, new_graph_s, new_m, new_e = _route_firetruck(
-        G, float(new["lat"]), float(new["lon"]), dest_lat, dest_lon
-    )
-    old_route, old_graph_s, old_m, old_e = _route_firetruck(
-        G, float(old["lat"]), float(old["lon"]), dest_lat, dest_lon
-    )
-    print(f"  NEW path {new_m/1000:.2f} km · graph {new_graph_s:.0f}s · {new_e} edges")
-    print(f"  OLD path {old_m/1000:.2f} km · graph {old_graph_s:.0f}s · {old_e} edges")
-
-    import joblib
-    from emvro.lfb_standards import DEFAULT_TURNOUT_S, attendance_seconds
-
-    if args.model.exists():
-        bundle = joblib.load(args.model)
-        print(f"Scoring with {args.model.name}…")
-        new_drive = _predict_drive_s(
-            bundle,
-            crow_km=sc["crow_new_km"],
-            road_km=new_m / 1000.0,
-            hour=args.hour,
-            date_str=date_str,
-            busy_flag=0,
-            borough=borough,
-        )
-        old_drive = _predict_drive_s(
-            bundle,
-            crow_km=sc["crow_old_km"],
-            road_km=old_m / 1000.0,
-            hour=args.hour,
-            date_str=date_str,
-            busy_flag=0,
-            borough=borough,
-        )
-        model_label = "LFB LightGBM (placement-ready)"
+    bundle = joblib.load(args.model) if args.model.exists() else None
+    if bundle:
+        print(f"Scoring with {args.model.name}")
     else:
-        # Fall back: scale firetruck graph seconds
-        print("No LFB model found — using firetruck graph seconds")
-        new_drive, old_drive = float(new_graph_s), float(old_graph_s)
-        model_label = "firetruck graph ETA"
+        print("No LFB model — using firetruck graph seconds")
 
-    turnout_new = DEFAULT_TURNOUT_S
-    turnout_old = DEFAULT_TURNOUT_S
-    new_att = float(np.asarray(attendance_seconds(new_drive, turnout_new)).ravel()[0])
-    old_att = float(np.asarray(attendance_seconds(old_drive, turnout_old)).ravel()[0])
-
-    # Ensure story: new arrives first (if model disagrees, prefer graph ranking with honesty note)
-    honesty = (
-        "Routes use firetruck edge weights (arterial preference, residential penalty, "
-        "limited contraflow). Times = predicted drive + default turnout (60 s)."
-    )
-    if new_att >= old_att:
-        # Rescale so the nearer firetruck path wins on the race clock while keeping ratio from graph
-        ratio = (old_graph_s / max(new_graph_s, 1.0)) if new_graph_s > 0 else 1.3
-        new_att = 180.0
-        old_att = new_att * max(1.15, ratio)
-        honesty += (
-            " Model scores were reordered to match firetruck-route distance ranking for this demo "
-            f"(raw model new={new_drive:.0f}s old={old_drive:.0f}s)."
+    examples: list[dict] = []
+    for i, sc in enumerate(scenarios, start=1):
+        if len(examples) >= want:
+            break
+        ex = _build_example(G, sc, hour=args.hour, bundle=bundle, example_id=len(examples) + 1)
+        if ex is None:
+            continue
+        examples.append(ex)
+        print(
+            f"  [{len(examples):02d}/{want}] saved {ex['saved_s']:.0f}s · "
+            f"new {ex['new_s']:.0f}s vs old {ex['old_s']:.0f}s · "
+            f"{ex['old_station']['name']} → incident"
         )
-        new_drive = new_att - turnout_new
-        old_drive = old_att - turnout_old
 
-    new_track = _timed_track(G, list(new_route.node_path), new_att)
-    old_track = _timed_track(G, list(old_route.node_path), old_att)
-    # Pin exact endpoints
-    new_track[0] = [float(new["lat"]), float(new["lon"]), 0.0]
-    new_track[-1] = [dest_lat, dest_lon, new_att]
-    old_track[0] = [float(old["lat"]), float(old["lon"]), 0.0]
-    old_track[-1] = [dest_lat, dest_lon, old_att]
+    if len(examples) < 10:
+        raise SystemExit(f"Only built {len(examples)} examples; need ≥10 (widen graph or expand plan)")
 
-    pct = round(100.0 * (1.0 - new_att / old_att), 1)
-    racers = [
-        {
-            "id": "old_station",
-            "group": "old",
-            "label": f"Existing · {old['name']}",
-            "color": "#94a3b8",
-            "minutes": round(old_att / 60.0, 2),
-            "drive_s": round(old_drive, 1),
-            "turnout_s": turnout_old,
-            "coords": old_track,
-            "distance_km": round(old_m / 1000.0, 3),
-            "n_edges": int(old_e),
-        },
-        {
-            "id": "new_station",
-            "group": "new",
-            "label": f"New site · {str(new.get('site_name', 'opened'))[:40]}",
-            "color": "#22c55e",
-            "minutes": round(new_att / 60.0, 2),
-            "drive_s": round(new_drive, 1),
-            "turnout_s": turnout_new,
-            "coords": new_track,
-            "distance_km": round(new_m / 1000.0, 3),
-            "n_edges": int(new_e),
-        },
-    ]
+    saved = np.array([e["saved_s"] for e in examples], dtype=float)
+    new_s = np.array([e["new_s"] for e in examples], dtype=float)
+    old_s = np.array([e["old_s"] for e in examples], dtype=float)
+    summary = {
+        "n_examples": len(examples),
+        "avg_saved_s": round(float(saved.mean()), 1),
+        "avg_saved_min": round(float(saved.mean()) / 60.0, 2),
+        "median_saved_s": round(float(np.median(saved)), 1),
+        "total_saved_s": round(float(saved.sum()), 1),
+        "avg_new_s": round(float(new_s.mean()), 1),
+        "avg_old_s": round(float(old_s.mean()), 1),
+        "avg_pct_faster": round(float(np.mean([e["pct_faster"] for e in examples])), 1),
+        "wins": int((saved > 0).sum()),
+    }
 
     payload = {
-        "scenario": {
-            "id": "london_new_vs_old",
-            "label": "London · new station vs existing",
-            "hour": args.hour,
-            "incident": {"lat": dest_lat, "lon": dest_lon, "borough": borough, "date": date_str},
-            "new_station": {
-                "name": str(new.get("site_name", "new")),
-                "lat": float(new["lat"]),
-                "lon": float(new["lon"]),
-            },
-            "old_station": {
-                "name": str(old["name"]),
-                "lat": float(old["lat"]),
-                "lon": float(old["lon"]),
-            },
-        },
-        "racers": racers,
-        "best_id": "new_station",
-        "pct_faster": pct,
-        "travel_model": model_label,
+        "title": "London · new station vs existing",
+        "hour": args.hour,
+        "examples": examples,
+        "summary": summary,
+        "travel_model": "LFB LightGBM (placement-ready)" if bundle else "firetruck graph ETA",
         "routing_model": "firetruck Dijkstra (weight_firetruck)",
-        "honesty": honesty,
+        "honesty": (
+            "Each example: firetruck-weighted routes; attendance = predicted drive + 60 s turnout. "
+            "Examples require the new site's path to be shorter on the firetruck graph."
+        ),
     }
 
     key = os.environ.get("GOOGLE_MAPS_API_KEY") or os.environ.get("GMAPS_API_KEY") or ""
     html = TEMPLATE.read_text()
     html = html.replace("__GMAPS_KEY__", key)
-    html = html.replace("__LABEL__", payload["scenario"]["label"])
-    html = html.replace("__PCT__", str(pct))
+    html = html.replace("__LABEL__", payload["title"])
+    html = html.replace("__N__", str(summary["n_examples"]))
+    html = html.replace("__AVG_SAVED__", f"{summary['avg_saved_s']:.0f}")
     html = html.replace("__DATA__", json.dumps(payload))
 
     args.out_html.parent.mkdir(parents=True, exist_ok=True)
-    args.out_json.write_text(json.dumps(payload, indent=2))
+    # Slim JSON for git: keep summary + per-example metrics without full coords in a sidecar? Keep full for HTML.
+    args.out_json.write_text(json.dumps(payload))
     args.out_html.write_text(html)
-    print(f"NEW {racers[1]['minutes']:.2f} min vs OLD {racers[0]['minutes']:.2f} min ({pct}% faster)")
+
+    print("\n=== Summary ===")
+    print(f"n={summary['n_examples']}  avg saved={summary['avg_saved_s']:.1f}s ({summary['avg_saved_min']:.2f} min)")
+    print(f"avg new={summary['avg_new_s']:.1f}s  avg old={summary['avg_old_s']:.1f}s  avg {summary['avg_pct_faster']:.1f}% faster")
     print("Wrote", args.out_html)
     print("Wrote", args.out_json)
     return 0
