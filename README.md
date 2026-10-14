@@ -52,7 +52,7 @@ alone. The planner still uses `DEFAULT_TURNOUT_S` (60 s) for hypothetical sites.
 
 | # | Model | Role | Status |
 |---|---|---|---|
-| 1 | **Travel-time LightGBM, no station IDs** — gradient-boosted trees, 4-seed average | Predict driving time to any point from any site | **EXISTS** (`train_travel_time_lfb.py`): mobilisation `TravelTimeSeconds`, real station origins, road distance (+ street attrs when graph present); held-out 2025 MAE ≈ **72 s** crow-proxy / **64.2 s** with road graph per teammate run; full OS NGD street attrs still **PLANNED** |
+| 1 | **Travel-time LightGBM, no station IDs** — gradient-boosted trees, 4-seed average | Predict driving time to any point from any site | **EXISTS** (`train_travel_time_lfb.py`, `emvro.travel_time_model`): mobilisation `TravelTimeSeconds`, real station origins, road distance, route street features, fastest route, incident type, destination history; held-out 2025 MAE **57.6 s** (62.4 s on stations held out of training) vs Kolesar 68.7 s; OS NGD street attrs **PLANNED** |
 | 2 | **Route model** with learned segment speeds | Dijkstra under learned EMV edge speeds; FOI GPS when available | Shortest-distance routing on directed London graph **EXISTS** (`emvro.road_distance`); firetruck weights + race viz **EXIST**; learned speeds scaffold **EXISTS** (`segment_speeds.py`); FOI **PLANNED** |
 | 3 | **Placement on a directed street graph** | redesign / replace / expand station sets | All three modes **EXISTS**; Kolesar/crow scorers **EXIST**; model-1 scoring in planner **PLANNED** |
 Details: [`docs/travel_time_training.md`](docs/travel_time_training.md),
@@ -106,7 +106,7 @@ fetches them; see [`docs/datasets.md`](docs/datasets.md).
 | Street features along each route | `src/emvro/route_features.py` |
 | Initial data analysis + street feature impact | `scripts/analyze_london.py` → `data/figures/london_eda/` |
 
-Still **PLANNED**: street characteristics in the main trainer (measured in `docs/london_eda.md`), OS NGD download,
+Still **PLANNED**: OS NGD download,
 SHAP/ablations, leave-one-firehouse-out CV, pre-2014 LFB ingest, planner scoring with
 the LightGBM model.
 
@@ -126,8 +126,9 @@ python scripts/download_datasets.py
 PYTHONPATH=src python scripts/build_lfb_planner_incidents.py
 python scripts/build_london_firehouses.py
 python scripts/build_lfb_travel_training.py      # builds the road graph on first run
+python scripts/fetch_london_weather.py
 
-# 3. Travel-time model
+# 3. Travel-time model (LightGBM; ~5 h with all checks, --quick for the model only)
 python scripts/train_travel_time_lfb.py
 
 # 4. Incident density map -> data/figures/london_incident_density.html

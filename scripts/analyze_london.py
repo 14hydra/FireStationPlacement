@@ -47,7 +47,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from emvro.kolesar import fit_kolesar  # noqa: E402
 from emvro.route_features import ROUTE_FEATURES  # noqa: E402
-import train_travel_time_lfb as T  # noqa: E402
+from emvro import travel_time_model as T  # noqa: E402
 
 RAW = ROOT / "data" / "raw" / "london"
 OUT = ROOT / "data" / "figures" / "london_eda"
@@ -231,27 +231,25 @@ def fig_monthly(d, w):
 # --------------------------------------------------------------------------- #
 
 
-def features(df, cats, street: list[str]):
-    x = T.add_features(df, cats)
-    for f in street:
-        x[f] = df[f].to_numpy()
-    return x
+def features(df, cats, street: list[str], kol):
+    """Base features (distance, time, context) plus, when ``street`` is non-empty, the street group."""
+    return T.build_features(df, ["base", "street"] if street else ["base"], kolesar=kol, cat_maps=cats)
 
 
 def fit_one(x, y, seed=42):
     m = T.make_regressor(seed)
-    m.fit(x, y, categorical_feature=["borough_code"])
+    m.fit(x, y, categorical_feature=[c for c in T.CATEGORICAL if c in x.columns])
     return m
 
 
 def street_impact(d, w, kol_road):
     tr = d[d.cal_year.between(2021, 2024)].reset_index(drop=True)
     te = d[d.cal_year == 2025].reset_index(drop=True)
-    cats = sorted(tr["borough"].astype(str).str.upper().unique())
+    cats = T.category_maps(tr)
     ytr, yte = tr["drive_s"].to_numpy(), te["drive_s"].to_numpy()
     street = list(ROUTE_FEATURES)
-    xtr_b, xte_b = features(tr, cats, []), features(te, cats, [])
-    xtr, xte = features(tr, cats, street), features(te, cats, street)
+    xtr_b, xte_b = features(tr, cats, [], kol_road), features(te, cats, [], kol_road)
+    xtr, xte = features(tr, cats, street, kol_road), features(te, cats, street, kol_road)
     clip = lambda p: np.clip(p, *T.DRIVE_CLIP_S)  # noqa: E731
     mae = lambda p: float(np.abs(clip(p) - yte).mean())  # noqa: E731
 

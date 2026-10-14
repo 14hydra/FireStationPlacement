@@ -213,9 +213,28 @@ def _pick_scenarios(
     return [picked[i] for i in order]
 
 
+_FEATURE_ROUTER = None
+
+
+def _feature_router():
+    """Full-London router for the travel-time model's route features (built once)."""
+    global _FEATURE_ROUTER
+    if _FEATURE_ROUTER is None:
+        from emvro.road_distance import load_or_build_graph
+        from emvro.route_features import RouteFeatureRouter, edge_feature_table
+
+        G = load_or_build_graph()
+        _FEATURE_ROUTER = RouteFeatureRouter(G, edge_feature_table(G))
+    return _FEATURE_ROUTER
+
+
 def _predict_drive_s(
     model_bundle: dict,
     *,
+    start_lat: float,
+    start_lon: float,
+    dest_lat: float,
+    dest_lon: float,
     crow_km: float,
     road_km: float | None,
     hour: int,
@@ -223,6 +242,28 @@ def _predict_drive_s(
     busy_flag: int,
     borough: str,
 ) -> float:
+    """Predicted driving seconds from the LightGBM bundle.
+
+    v3 bundles (``feature_groups``) get the full feature set via
+    ``emvro.travel_time_model.predict``: route street characteristics, fastest route
+    and main-road access on the full London graph, destination history. A new site is
+    treated as a home-station first pump on a structure-fire call.
+    """
+    if "feature_groups" in model_bundle:
+        from emvro.travel_time_model import predict
+
+        r = _feature_router()
+        ends = ([start_lat], [start_lon], [dest_lat], [dest_lon])
+        trip = pd.concat([r.route_features(*ends), r.route_context(*ends)], axis=1)
+        trip = trip.assign(
+            road_km=r.road_km(*ends), crow_km=float(crow_km), date_of_call=date_str, hour_of_call=int(hour),
+            busy_flag=int(busy_flag), borough=str(borough).upper(), pump_order=1, dest_exact=1,
+            deployed_from_location="Home Station", incident_group="Fire", property_category="Dwelling",
+            dest_lat=dest_lat, dest_lon=dest_lon,
+        )
+        return float(predict(model_bundle, trip)[0])
+
+    # Older bundles: distance + time features only.
     features = model_bundle.get("features") or []
     d = pd.to_datetime(date_str, errors="coerce")
     row = {
@@ -281,6 +322,10 @@ def _build_example(G, sc: dict, *, hour: int, bundle, example_id: int) -> dict |
     if bundle is not None:
         new_drive = _predict_drive_s(
             bundle,
+            start_lat=float(new["lat"]),
+            start_lon=float(new["lon"]),
+            dest_lat=dest_lat,
+            dest_lon=dest_lon,
             crow_km=sc["crow_new_km"],
             road_km=new_m / 1000.0,
             hour=hour,
@@ -290,6 +335,10 @@ def _build_example(G, sc: dict, *, hour: int, bundle, example_id: int) -> dict |
         )
         old_drive = _predict_drive_s(
             bundle,
+            start_lat=float(old["lat"]),
+            start_lon=float(old["lon"]),
+            dest_lat=dest_lat,
+            dest_lon=dest_lon,
             crow_km=sc["crow_old_km"],
             road_km=old_m / 1000.0,
             hour=hour,

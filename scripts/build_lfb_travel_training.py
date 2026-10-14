@@ -16,7 +16,9 @@ Sources (London Datastore, Open Government Licence):
     shortest legal route from station to incident, one-way streets respected.
   - Street characteristics along that route (emvro.route_features): road class
     shares, one-way / 20 mph / bus-lane shares, lanes, signals, traffic calming,
-    crossings, give-way signs, junctions, turns and roundabouts per km.
+    crossings, give-way signs, junctions, turns and roundabouts per km; plus the
+    fastest route at posted speed limits and each end's distance to a main road.
+  - Incident type (IncidentGroup, PropertyCategory) from the incident records.
 
 Kept trips: the engine left from an LFB station (DeployedFromLocation is Home
 Station or Other Station), was not already out on the road ("On outside duty
@@ -54,7 +56,7 @@ MOB_COLS = [
 ]
 INC_COLS = [
     "IncidentNumber", "DateOfCall", "IncGeo_BoroughName", "IncidentStationGround",
-    "Easting_m", "Northing_m", "Easting_rounded", "Northing_rounded",
+    "IncidentGroup", "PropertyCategory", "Easting_m", "Northing_m", "Easting_rounded", "Northing_rounded",
 ]
 
 
@@ -82,6 +84,8 @@ def load_incidents() -> pd.DataFrame:
             "date_of_call": pd.to_datetime(inc["DateOfCall"], errors="coerce", dayfirst=False).dt.date,
             "borough": inc["IncGeo_BoroughName"].astype(str).str.upper(),
             "station_ground": inc["IncidentStationGround"],
+            "incident_group": inc["IncidentGroup"],
+            "property_category": inc["PropertyCategory"],
             "dest_lat": lat,
             "dest_lon": lon,
             "dest_exact": pd.to_numeric(inc["Easting_m"], errors="coerce").notna().to_numpy(),
@@ -153,7 +157,9 @@ def main() -> int:
             print("NOTE: london_drive.graphml missing — using crow×1.25 as road_km proxy (no street features)")
         from emvro.route_features import ROUTE_FEATURES
 
-        street = pd.DataFrame({c: np.nan for c in ROUTE_FEATURES}, index=df.index)
+        from emvro.route_features import CONTEXT_FEATURES
+
+        street = pd.DataFrame({c: np.nan for c in ROUTE_FEATURES + CONTEXT_FEATURES}, index=df.index)
     else:
         from emvro.road_distance import load_or_build_graph
         from emvro.route_features import RouteFeatureRouter, edge_feature_table
@@ -164,7 +170,8 @@ def main() -> int:
         df = df[np.isfinite(df["road_km"])].reset_index(drop=True)
         counts["routable_on_road_graph"] = len(df)
         counts["road_km_source"] = "osm_shortest_path"
-        street = router.route_features(df["start_lat"], df["start_lon"], df["dest_lat"], df["dest_lon"])
+        ends = (df["start_lat"], df["start_lon"], df["dest_lat"], df["dest_lon"])
+        street = pd.concat([router.route_features(*ends), router.route_context(*ends)], axis=1)
 
     mobilised = pd.to_datetime(df["DateAndTimeMobilised"], format="%d/%m/%Y %H:%M", errors="coerce")
     out = pd.DataFrame(
@@ -178,6 +185,8 @@ def main() -> int:
             "deployed_from_station": df["DeployedFromStation_Name"],
             "deployed_from_location": df["DeployedFromLocation"],
             "pump_order": df["PumpOrder"],
+            "incident_group": df["incident_group"],
+            "property_category": df["property_category"],
             # Engine came from outside the incident's own station ground (own engine busy / further away).
             "busy_flag": (df["DeployedFromStation_Name"] != df["station_ground"]).astype(int),
             "start_lat": df["start_lat"],

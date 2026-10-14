@@ -53,6 +53,12 @@ ROUTE_FEATURES = (
        "signals_per_km", "calming_per_km", "crossings_per_km", "give_way_per_km",
        "junctions_per_km", "turns_per_km", "sharp_turns_per_km", "roundabouts_per_km"]
 )
+# Trip-level route context from RouteFeatureRouter.route_context: the fastest route at
+# posted speed limits (vs the shortest-distance route above), and how far each end is
+# from a main road (A road / trunk / motorway).
+CONTEXT_FEATURES = ["fastest_route_s", "fastest_route_km", "origin_main_road_km", "dest_main_road_km"]
+# Speed used when an edge has no maxspeed tag (mph), by road class.
+DEFAULT_MPH = {"major": 40, "primary": 30, "secondary": 30, "tertiary": 30, "residential": 20, "minor": 20}
 
 
 def _first(x):
@@ -174,6 +180,29 @@ class RouteFeatureRouter(RoadRouter):
         self.edge_vals = pd.DataFrame(cols)
         self.bearing_start = e["bearing_start"].to_numpy()
         self.bearing_end = e["bearing_end"].to_numpy()
+        # Free-flow seconds per edge at the posted limit (class default when untagged).
+        mph = e["maxspeed_mph"].fillna(e["road_class"].map(DEFAULT_MPH)).clip(lower=5)
+        self.edge_time = L / (mph.to_numpy() * 0.44704)
+        self.csr_time = csr_matrix((self.edge_time, (e["ui"], e["vi"])), shape=(n, n))
+        main = e["road_class"].isin(["major", "primary"])
+        self.main_nodes = np.unique(np.r_[e.loc[main, "ui"], e.loc[main, "vi"]])
+
+    @staticmethod
+    def _ancestor_sums(pred: np.ndarray, vals: np.ndarray) -> np.ndarray:
+        """Sum of per-node values (each node's incoming tree edge) from the root to every node.
+
+        Pointer jumping: after k passes each node holds the sum over its 2^k nearest ancestors.
+        """
+        nodes = np.arange(len(pred))
+        P = np.where(pred >= 0, pred, nodes)
+        S = vals
+        while True:
+            S = S + S[P] * (P != nodes).reshape((-1,) + (1,) * (S.ndim - 1))
+            P_next = P[P]
+            if np.array_equal(P_next, P):
+                break
+            P = P_next
+        return S
 
     def _tree_sums(self, origin: int) -> tuple[pd.DataFrame, np.ndarray]:
         """Feature sums from ``origin`` to every node along its shortest-distance tree."""
@@ -195,14 +224,7 @@ class RouteFeatureRouter(RoadRouter):
         angle = np.minimum(diff, 360 - diff)
         vals[turn_ok, -2] = angle > 45
         vals[turn_ok, -1] = angle > 120
-        # Pointer jumping: after k passes each node holds the sum over its 2^k nearest ancestors' edges.
-        S, P = vals, parent
-        while True:
-            S = S + S[P] * (P != nodes)[:, None]
-            P_next = P[P]
-            if np.array_equal(P_next, P):
-                break
-            P = P_next
+        S = self._ancestor_sums(pred, vals)
         cols = list(self.edge_vals.columns) + ["n_turns", "n_sharp_turns"]
         return pd.DataFrame(S, columns=cols), dist
 
@@ -235,3 +257,31 @@ class RouteFeatureRouter(RoadRouter):
         out["sharp_turns_per_km"] = sums["n_sharp_turns"] / km
         out["roundabouts_per_km"] = sums["n_roundabout"] / km
         return out[ROUTE_FEATURES].reset_index(drop=True)
+
+    def route_context(self, start_lat, start_lon, dest_lat, dest_lon) -> pd.DataFrame:
+        """CONTEXT_FEATURES for each trip (rows aligned with the inputs)."""
+        from scipy.sparse.csgraph import dijkstra
+        from sklearn.neighbors import BallTree
+
+        s_idx, _ = self.snap(np.asarray(start_lat), np.asarray(start_lon))
+        d_idx, _ = self.snap(np.asarray(dest_lat), np.asarray(dest_lon))
+        n = len(self.nodes)
+        out = pd.DataFrame(index=np.arange(len(s_idx)), columns=CONTEXT_FEATURES, dtype=float)
+        L = self.edge_vals["len_total"].to_numpy()
+        for o in np.unique(s_idx):
+            t, pred = dijkstra(self.csr_time, directed=True, indices=o, return_predecessors=True)
+            has = pred >= 0
+            eid = np.zeros(n, dtype=int)
+            eid[has] = np.asarray(self.edge_id[pred[has], np.flatnonzero(has)]).ravel()
+            length = np.zeros(n)
+            length[has] = L[eid[has] - 1]
+            km = self._ancestor_sums(pred, length) / 1000
+            mask = s_idx == o
+            out.loc[mask, "fastest_route_s"] = t[d_idx[mask]]
+            out.loc[mask, "fastest_route_km"] = km[d_idx[mask]]
+        tree = BallTree(np.radians(np.c_[self.node_lat[self.main_nodes], self.node_lon[self.main_nodes]]),
+                        metric="haversine")
+        for col, lat, lon in [("origin_main_road_km", start_lat, start_lon), ("dest_main_road_km", dest_lat, dest_lon)]:
+            dist, _ = tree.query(np.radians(np.c_[np.asarray(lat), np.asarray(lon)]), k=1)
+            out[col] = dist[:, 0] * 6371.0088
+        return out

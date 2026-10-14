@@ -13,6 +13,7 @@ All raw files live in `data/raw/london/` and are not in git.
 | Engine trips | **LFB mobilisation records** (London Datastore, OGL): one row per engine sent; `DeployedFromStation_Name`, `DeployedFromLocation` (Home Station / Other Station), `TurnoutTimeSeconds`, `TravelTimeSeconds`, `DelayCode_Description`, `PumpOrder` | `lfb_mobilisations_2021_2024.csv`, `lfb_mobilisations_2025.csv` | **EXISTS** |
 | Station locations | OpenStreetMap `amenity=fire_station`, name-matched to the 102 LFB stations; 8 pinned to specific OSM features (`OSM_OVERRIDES`) | `london_firehouses.csv` (built by `scripts/build_london_firehouses.py`) | **EXISTS** |
 | Street network | OpenStreetMap, Geofabrik Greater London extract, filtered to drivable roads (osmnx "drive" rules) | `greater-london-latest.osm.pbf` → `london_drive.graphml` (built by `emvro.road_distance`) | **EXISTS** |
+| Weather | Open-Meteo archive, hourly, central London (no key) | `data/processed/weather_hourly_london.csv` (built by `scripts/fetch_london_weather.py`) | **EXISTS** |
 | Street detail | **Ordnance Survey NGD** road links (width, speed limit, class) | — | **PLANNED** |
 | Pre-2014 incidents | LFB incident records 2009–2017 (London Datastore) | — | **PLANNED** (2014 closure test) |
 | GPS traces | FOI request to LFB | — | **PLANNED / not obtained** |
@@ -22,7 +23,7 @@ All raw files live in `data/raw/london/` and are not in git.
 | Table | Built by | Contents |
 |---|---|---|
 | `data/raw/london/lfb_incidents_planner.csv` | `scripts/build_lfb_planner_incidents.py` | One row per incident (2024+): lat/lon, attendance, station ground, deployed station, `busy_flag`. Demand for the planner. |
-| `data/processed/lfb_travel_training.csv` | `scripts/build_lfb_travel_training.py` | One row per engine trip (1,024,833 rows, 2021 → 2026): real station origin, incident location, `crow_km`, `road_km`, `drive_s` = `TravelTimeSeconds`. Training data for the travel-time model. |
+| `data/processed/lfb_travel_training.csv` | `scripts/build_lfb_travel_training.py` | One row per engine trip (1,024,833 rows, 2021 → 2026): real station origin, incident location, `crow_km`, `road_km`, route street features, fastest route, main-road access, incident type, `drive_s` = `TravelTimeSeconds`. Training data for the travel-time model. |
 
 The training set keeps trips where the engine left from an LFB station, was not already
 out on the road ("On outside duty when mobilised"), had a correct address, and drove

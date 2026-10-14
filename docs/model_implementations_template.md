@@ -139,17 +139,18 @@ scored on held-out 2025 LFB calls.
 ---
 
 ### [LD-07] LFB driving-time model (LightGBM, no station IDs)
-- **Date:** 2026-10-04
-- **Status:** active (road distance + context features); street characteristics **planned**
+- **Date:** 2026-10-04 (v3: 2026-10-12)
+- **Status:** active
 - **Family:** LFB travel-time
 - **Label / target:** recorded driving time (`TravelTimeSeconds`, LFB mobilisation records); origin = real station building the engine left from (OSM)
 - **Holdout:** train 2021–2024 (701k trips), test 2025 (201k trips)
-- **Features:** road_km (shortest legal route, one-ways respected), crow_km, hour/dow/month, rush/night, busy_flag, borough (label); **no station IDs**
-- **Model / algorithm:** LightGBM (L1) predicting drive time directly, 4 seeds averaged; no Kolesar prior (changed 2026-10-04)
+- **Features (44):** base (road / straight km, circuity, Kolesar prior as input, time, busy, pump order, borough), route street characteristics, fastest route at posted limits + main-road access, incident type / home station, destination history (300 m / 1 km, out-of-fold); **no station IDs** (`emvro.travel_time_model`)
+- **Model / algorithm:** LightGBM (L1), mean of 4 seeds; 255 leaves, 2,110 trees chosen by early stopping on 2024; weather tested and left out
 - **Train script:** `scripts/train_travel_time_lfb.py` → `data/processed/models/travel_time_lfb.joblib`
 - **Baselines:** median, crow@32kph, road@35kph, Kolesar on crow and road distance (**EXISTS**); linear / NN **planned**
-- **Headline metrics:** 2025 MAE **64.2 s** (LightGBM with road distance) vs Kolesar on road distance 68.7 s / median 111.9 s. Steps (2026-10-05): real station origin 72.8 → 67.9 s; + shortest legal road distance (one-way streets respected) 67.9 → 64.2 s
-- **Ablations / interpretability:** ablations and SHAP **planned**
+- **Headline metrics:** 2025 MAE **57.6 s** vs Kolesar on road distance 68.7 s / median 111.9 s; on stations held out of training **62.4 s** (Kolesar 68.7 s)
+- **vs previous:** real origin 72.8 → 67.9 s; + road distance → 64.2 s; + base context + street features → 60.1 s; + fastest route → 59.6 s; weather no gain; + incident type → 59.1 s; + destination history → 58.9 s; drop weather + tuned → 57.8 s; 4 seeds → 57.6 s
+- **Ablations / interpretability:** feature ladder + new-station check in the trainer; SHAP / street effects in `docs/london_eda.md`
 - **Docs:** `docs/travel_time_training.md`
 
 ---
@@ -185,7 +186,8 @@ scored on held-out 2025 LFB calls.
 
 | Entry | Holdout | MAE |
 |---|---|---|
-| LightGBM, real origin + road distance [LD-07] | 2025 (201k trips) | **64.2 s** |
+| LightGBM v3 [LD-07] | 2025 (201k trips) | **57.6 s** |
+| LightGBM v3, stations held out of training [LD-07] | 2025 | 62.4 s |
 | Kolesar on road distance [LD-01] | 2025 | 68.7 s |
 | Kolesar on straight-line distance [LD-01] | 2025 | 71.4 s |
 | Constant guess (training median) | 2025 | 111.9 s |
