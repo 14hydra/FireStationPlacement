@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build LFB incident extract for firehouse location planning (Google Doc schema).
+Build LFB incident extract for fire station location planning (Google Doc schema).
 
 Reads ``data/raw/london/lfb_incidents_2024_onwards.csv`` (or optional xlsx) and
 writes ``data/raw/london/lfb_incidents_planner.csv``.

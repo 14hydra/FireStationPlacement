@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>London Fire Brigade: A Day Live</title>
+<script src="https://unpkg.com/deck.gl@9.1.14/dist.min.js"></script>
+<style>
+  :root {
+    --bg: #0d0f12; --panel: rgba(16, 19, 24, 0.86); --line: rgba(255,255,255,0.10);
+    --ink: #f1f0ec; --ink2: #a9a8a2; --ink3: #74736e;
+    --engine: #40c8ff; --traffic: #ff8c28; --home: #3cc896; --some: #ffbe3c; --none: #ff4646;
+    --fire: #ff5a4a; --special: #aa82ff; --false: #a8a8a8;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink);
+    font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow: hidden; }
+  #map { position: absolute; inset: 0; }
+  .panel { position: absolute; background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  #hud { top: 14px; left: 14px; width: 300px; padding: 14px 16px; }
+  #hud h1 { font-size: 15px; margin: 0; letter-spacing: .01em; }
+  #hud .date { color: var(--ink2); font-size: 12px; margin-top: 2px; }
+  #clock { font: 600 44px/1 ui-monospace, SFMono-Regular, Menlo, monospace; margin: 12px 0 4px;
+    font-variant-numeric: tabular-nums; }
+  #phase { color: var(--ink2); font-size: 12px; min-height: 17px; }
+  .controls { display: flex; gap: 6px; margin-top: 10px; }
+  button { background: rgba(255,255,255,0.07); color: var(--ink); border: 1px solid var(--line); border-radius: 7px;
+    padding: 6px 10px; font: inherit; cursor: pointer; }
+  button:hover { background: rgba(255,255,255,0.14); }
+  button.on { background: var(--ink); color: #111; border-color: var(--ink); }
+  #play { min-width: 44px; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+  .stat { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 8px 10px; }
+  .stat b { display: block; font-size: 22px; font-variant-numeric: tabular-nums; }
+  .stat span { color: var(--ink2); font-size: 11px; }
+  .stat.alert b { color: var(--none); }
+  #speedbox { margin-top: 12px; }
+  #speedbox .row { display: flex; justify-content: space-between; color: var(--ink2); font-size: 11.5px; }
+  .gauge { height: 7px; border-radius: 4px; background: rgba(255,255,255,0.08); margin-top: 5px; overflow: hidden; }
+  .gauge div { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--traffic), var(--home));
+    transition: width .4s; }
+  #nohome { margin-top: 12px; font-size: 11.5px; color: var(--ink2); min-height: 32px; }
+  #nohome b { color: var(--none); font-weight: 600; }
+  #rightcol { position: absolute; top: 14px; right: 14px; bottom: 120px; width: 300px; display: flex;
+    flex-direction: column; gap: 10px; pointer-events: none; }
+  #rightcol .panel { position: static; pointer-events: auto; }
+  #legend { padding: 12px 14px; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; }
+  #legend .col { min-width: 0; }
+  #legend h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink3); margin: 0 0 6px; }
+  #legend h2:not(:first-child) { margin-top: 12px; }
+  .key { display: flex; align-items: center; gap: 8px; margin: 4px 0; color: var(--ink2); }
+  .dot { width: 11px; height: 11px; border-radius: 50%; flex: none; }
+  .bar { width: 22px; height: 4px; border-radius: 2px; flex: none; }
+  #timeline { left: 14px; right: 14px; bottom: 14px; height: 92px; padding: 8px 12px 6px; }
+  #timeline .lbl { display: flex; justify-content: space-between; color: var(--ink2); font-size: 11.5px; }
+  #tl { width: 100%; height: 62px; display: block; cursor: pointer; margin-top: 4px; }
+  #feed { padding: 10px 12px; font-size: 11.5px; overflow: hidden; flex: 0 1 auto; }
+  #feed h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink3); margin: 0 0 6px; }
+  .call { display: grid; grid-template-columns: 40px 10px 1fr; gap: 6px; align-items: start; padding: 4px 0;
+    border-top: 1px solid var(--line); color: var(--ink2); animation: fadein .5s; }
+  .call:first-of-type { border-top: none; }
+  .call .t { font-variant-numeric: tabular-nums; color: var(--ink); }
+  .call .d { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; }
+  .call b { color: var(--ink); font-weight: 600; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; } }
+  #about { position: absolute; left: 330px; bottom: 116px; max-width: 360px; font-size: 10.5px; color: var(--ink3);
+    text-align: right; text-shadow: 0 0 4px #000; }
+  @media (max-width: 760px) {
+    #rightcol { display: none; }
+    #hud { width: auto; right: 14px; padding: 10px 12px; }
+    #clock { font-size: 30px; margin: 6px 0 2px; }
+    #speedbox, #nohome, #phase { display: none; }
+    .stat b { font-size: 17px; }
+    .stats { margin-top: 8px; gap: 6px; }
+
+  }
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div id="hud" class="panel">
+  <h1>London Fire Brigade: a day, live</h1>
+  <div class="date" id="date"></div>
+  <div id="clock">00:00</div>
+  <div id="phase"></div>
+  <div class="controls">
+    <button id="play" title="Play / pause (space)">❚❚</button>
+    <button data-speed="60">1 min/s</button>
+    <button data-speed="300" class="on">5 min/s</button>
+    <button data-speed="900">15 min/s</button>
+  </div>
+  <div class="stats">
+    <div class="stat"><b id="s-out">0</b><span>engines out right now</span></div>
+    <div class="stat"><b id="s-calls">0</b><span>incidents so far today</span></div>
+    <div class="stat" id="s-none-box"><b id="s-none">0</b><span>stations with no engine at home</span></div>
+    <div class="stat"><b id="s-traffic">0</b><span>engines held up by traffic or calming today</span></div>
+  </div>
+  <div id="speedbox">
+    <div class="row"><span>Typical engine road speed this hour</span><b id="s-speed">–</b></div>
+    <div class="gauge"><div id="g-speed"></div></div>
+  </div>
+  <div id="nohome"></div>
+</div>
+
+<div id="rightcol">
+<div id="legend" class="panel">
+  <div class="col">
+  <h2>Fire engines</h2>
+  <div class="key"><span class="bar" style="background:var(--engine)"></span>to incident</div>
+  <div class="key"><span class="bar" style="background:var(--traffic)"></span>held up by traffic</div>
+  <div class="key"><span class="bar" style="background:#6b8296"></span>returning</div>
+  <div class="key"><span class="dot" style="background:#fff"></span>at incident</div>
+  <h2>Incidents</h2>
+  <div class="key"><span class="dot" style="background:var(--fire)"></span>fire</div>
+  <div class="key"><span class="dot" style="background:var(--special)"></span>special service</div>
+  <div class="key"><span class="dot" style="background:var(--false)"></span>false alarm</div>
+  </div>
+  <div class="col">
+  <h2>Stations</h2>
+  <div class="key"><span class="dot" style="background:var(--home)"></span>all engines home</div>
+  <div class="key"><span class="dot" style="background:var(--some)"></span>some out</div>
+  <div class="key"><span class="dot" style="background:var(--none)"></span>none at home</div>
+  <div class="key" style="color:var(--ink3);font-size:11px">Bigger = 2 engines. Hover a station.</div>
+  <div style="color:var(--ink3);font-size:10.5px;margin-top:8px;line-height:1.35">Real LFB mobilisation records.
+    Routes are the shortest legal road routes, not the streets driven. Tiles © Esri.</div>
+  </div>
+</div>
+<div id="feed" class="panel"><h2>Latest calls</h2><div id="calls"></div></div>
+</div>
+
+<div id="timeline" class="panel">
+  <div class="lbl"><span>Engines out across the day (click or drag to jump)</span><span id="tl-peak"></span></div>
+  <canvas id="tl"></canvas>
+</div>
+
+
+<script>
+const D = __DATA__;
+const C = {
+  engine: [64, 200, 255], traffic: [255, 140, 40], back: [107, 130, 150],
+  home: [60, 200, 150], some: [255, 190, 60], none: [255, 70, 70],
+  group: { "Fire": [255, 90, 74], "Special Service": [170, 130, 255], "False Alarm": [168, 168, 168] },
+};
+const DAY = 86400;
+document.getElementById("date").textContent = D.date;
+
+// ---------- precompute ---------------------------------------------------------------
+const trips = D.trips;
+const paths = [];
+for (const t of trips) {
+  paths.push({ p: t.out.p, ts: t.out.t, color: t.delay ? C.traffic : C.engine, w: 3.2, trip: t });
+  paths.push({ p: t.back.p, ts: t.back.t, color: C.back, w: 2, trip: t });
+}
+const stationByName = Object.fromEntries(D.stations.map(s => [s.name, { ...s, calls: 0 }]));
+for (const t of trips) stationByName[t.home] && stationByName[t.home].calls++;
+const incidents = {};
+for (const t of trips) {
+  const i = incidents[t.inc] || (incidents[t.inc] = { ll: t.inc_ll, group: t.group, prop: t.prop,
+    borough: t.borough, t0: t.t[0], t1: t.t[3], engines: 0 });
+  i.t0 = Math.min(i.t0, t.t[0]); i.t1 = Math.max(i.t1, t.t[3]); i.engines++;
+}
+const incList = Object.values(incidents).sort((a, b) => a.t0 - b.t0);
+const byHome = {};
+for (const t of trips) (byHome[t.home] = byHome[t.home] || []).push(t);
+
+// engines out per minute for the timeline
+const outPerMin = new Float32Array(1440);
+for (const t of trips) {
+  for (let m = Math.max(0, Math.floor(t.t[0] / 60)); m < Math.min(1440, Math.ceil(t.t[4] / 60)); m++) outPerMin[m]++;
+}
+const peakMin = outPerMin.indexOf(Math.max(...outPerMin));
+document.getElementById("tl-peak").textContent =
+  `peak: ${Math.max(...outPerMin)} engines out at ${fmt(peakMin * 60)} · ${D.n_incidents} incidents`;
+
+function fmt(s) { s = Math.max(0, Math.min(DAY - 1, s)); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60);
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`; }
+
+function lerpPos(p, ts, time) {
+  if (time <= ts[0]) return p[0];
+  if (time >= ts[ts.length - 1]) return p[p.length - 1];
+  let lo = 0, hi = ts.length - 1;
+  while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (ts[mid] <= time) lo = mid; else hi = mid; }
+  const f = (time - ts[lo]) / Math.max(1e-6, ts[hi] - ts[lo]);
+  return [p[lo][0] + f * (p[hi][0] - p[lo][0]), p[lo][1] + f * (p[hi][1] - p[lo][1])];
+}
+
+// ---------- state ----------------------------------------------------------------------
+let time = 6 * 3600, speed = 300, playing = true, last = performance.now();
+
+function stationState(time) {
+  const out = [];
+  for (const s of D.stations) {
+    const n = (byHome[s.name] || []).filter(t => t.t[0] <= time && time < t.t[4]).length;
+    out.push({ ...s, out: Math.min(n, s.engines), calls: stationByName[s.name].calls });
+  }
+  return out;
+}
+
+// ---------- layers -----------------------------------------------------------------------
+const tiles = (id, url, opacity) => new deck.TileLayer({
+  id, data: url, minZoom: 0, maxZoom: 16, tileSize: 256, opacity,
+  renderSubLayers: props => {
+    const [[w, s], [e, n]] = props.tile.boundingBox;
+    return new deck.BitmapLayer(props, { data: null, image: props.data, bounds: [w, s, e, n] });
+  },
+});
+const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/";
+const baseLayers = [
+  tiles("base", ESRI + "World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}", 1),
+];
+const labelLayer = tiles("labels", ESRI + "World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}", 0.55);
+
+function layers() {
+  const st = stationState(time);
+  const active = trips.filter(t => t.t[1] <= time && time < t.t[4]);
+  const heads = [], onScene = [];
+  for (const t of active) {
+    if (time < t.t[2]) heads.push({ pos: lerpPos(t.out.p, t.out.t, time), c: t.delay ? C.traffic : C.engine });
+    else if (time < t.t[3]) onScene.push({ pos: t.inc_ll });
+    else heads.push({ pos: lerpPos(t.back.p, t.back.t, time), c: C.back });
+  }
+  const pulses = incList.filter(i => i.t0 <= time && time < i.t0 + 900);
+  const live = incList.filter(i => i.t0 <= time && time < i.t1);
+  const blink = 0.5 + 0.5 * Math.sin(performance.now() / 160);
+  return [
+    ...baseLayers,
+    new deck.ScatterplotLayer({  // incident pulses: expanding ring for 15 minutes after the call
+      id: "pulse", data: pulses, getPosition: d => d.ll, radiusUnits: "pixels", stroked: true, filled: false,
+      getRadius: d => 6 + 34 * (time - d.t0) / 900, lineWidthMinPixels: 2,
+      getLineColor: d => [...(C.group[d.group] || C.group["False Alarm"]), 255 * (1 - (time - d.t0) / 900)],
+      updateTriggers: { getRadius: time, getLineColor: time },
+    }),
+    new deck.ScatterplotLayer({
+      id: "incidents", data: live, getPosition: d => d.ll, radiusUnits: "pixels", getRadius: 4.5,
+      getFillColor: d => C.group[d.group] || C.group["False Alarm"],
+    }),
+    new deck.TripsLayer({
+      id: "trips", data: paths, getPath: d => d.p, getTimestamps: d => d.ts, getColor: d => d.color,
+      getWidth: d => d.w, widthUnits: "pixels", capRounded: true, jointRounded: true,
+      trailLength: 420, fadeTrail: true, currentTime: time, opacity: 0.9,
+    }),
+    new deck.ScatterplotLayer({
+      id: "heads", data: heads, getPosition: d => d.pos, radiusUnits: "pixels", getRadius: 3.2,
+      getFillColor: d => d.c, updateTriggers: { getPosition: time },
+    }),
+    new deck.ScatterplotLayer({
+      id: "onscene", data: onScene, getPosition: d => d.pos, radiusUnits: "pixels", getRadius: 3.4,
+      getFillColor: [255, 255, 255], stroked: true, getLineColor: [255, 255, 255, 90], lineWidthMinPixels: 5,
+    }),
+    new deck.ScatterplotLayer({  // stations
+      id: "stations", data: st, pickable: true, getPosition: d => d.ll, radiusUnits: "pixels",
+      getRadius: d => d.engines >= 2 ? 8.5 : 6.5, stroked: true, lineWidthMinPixels: 1.5,
+      getFillColor: d => d.out === 0 ? [...C.home, 210] : d.out >= d.engines ? [...C.none, 230] : [...C.some, 230],
+      getLineColor: [10, 12, 14, 255],
+      updateTriggers: { getFillColor: time },
+    }),
+    new deck.ScatterplotLayer({  // red halo on stations with no engine at home
+      id: "nohome", data: st.filter(d => d.out >= d.engines), getPosition: d => d.ll, radiusUnits: "pixels",
+      getRadius: d => 14 + 6 * blink, stroked: true, filled: false, lineWidthMinPixels: 2,
+      getLineColor: [...C.none, 200 * blink + 40], updateTriggers: { getRadius: blink, getLineColor: blink },
+    }),
+    new deck.TextLayer({  // label big incidents (4+ engines) while they are live
+      id: "big", data: live.filter(d => d.engines >= 4), getPosition: d => d.ll,
+      getText: d => `${d.engines} engines`, getSize: 12, getColor: [255, 255, 255, 235],
+      getPixelOffset: [0, -16], fontWeight: 700, outlineWidth: 3, outlineColor: [13, 15, 18, 255],
+      fontSettings: { sdf: true }, characterSet: "auto",
+    }),
+    labelLayer,
+  ];
+}
+
+const map = new deck.Deck({
+  parent: document.getElementById("map"),
+  initialViewState: { longitude: -0.12, latitude: innerWidth < 760 ? 51.47 : 51.495,
+                      zoom: innerWidth < 760 ? 8.8 : 9.75, pitch: 0, bearing: 0 },
+  controller: true,
+  layers: layers(),
+  getTooltip: ({ object, layer }) => layer && layer.id === "stations" && object && {
+    html: `<b>${object.name}</b><br>${object.engines} engine${object.engines > 1 ? "s" : ""} · ` +
+          `${object.out} out now<br>${object.calls} engine trips today`,
+    style: { background: "rgba(16,19,24,.95)", color: "#f1f0ec", borderRadius: "8px", fontSize: "12px",
+             padding: "8px 10px", border: "1px solid rgba(255,255,255,.12)" },
+  },
+});
+
+// ---------- HUD ----------------------------------------------------------------------------
+const el = id => document.getElementById(id);
+const maxSpeed = Math.max(...D.speed_by_hour);
+function phase(h) {
+  if (h >= 0 && h < 6) return "Night: crews asleep, turnout slower, roads clear";
+  if (h >= 7 && h < 10) return "Morning rush hour";
+  if (h >= 16 && h < 20) return "Evening rush: London's busiest hours for fire engines";
+  if (h >= 20) return "Evening";
+  if (h < 7) return "Early morning";
+  return "Daytime";
+}
+function hud() {
+  el("clock").textContent = fmt(time);
+  const h = Math.floor(time / 3600) % 24;
+  el("phase").textContent = phase(h);
+  const st = stationState(time);
+  el("s-out").textContent = trips.filter(t => t.t[0] <= time && time < t.t[4]).length;
+  el("s-calls").textContent = incList.filter(i => i.t0 <= time).length;
+  const none = st.filter(s => s.out >= s.engines);
+  el("s-none").textContent = none.length;
+  el("s-none-box").classList.toggle("alert", none.length > 0);
+  el("s-traffic").textContent = trips.filter(t => t.delay && t.t[0] <= time).length;
+  const v = D.speed_by_hour[h];
+  el("s-speed").textContent = `${v} km/h`;
+  el("g-speed").style.width = `${100 * v / maxSpeed}%`;
+  el("nohome").innerHTML = none.length
+    ? `No engine at home: <b>${none.slice(0, 8).map(s => s.name).join(", ")}</b>${none.length > 8 ? ` +${none.length - 8} more` : ""}`
+    : "Every station has an engine at home.";
+  const recent = incList.filter(i => i.t0 <= time).slice(-4).reverse();
+  const html = recent.map(i => {
+    const c = C.group[i.group] || C.group["False Alarm"];
+    return `<div class="call"><span class="t">${fmt(i.t0)}</span><span class="d" style="background:rgb(${c})"></span>` +
+           `<span><b>${i.group}</b> · ${i.prop.split("(")[0].trim().toLowerCase()}<br>${i.borough} · ` +
+           `${i.engines} engine${i.engines > 1 ? "s" : ""}</span></div>`;
+  }).join("");
+  if (el("calls").dataset.key !== String(recent.length && recent[0].t0)) {
+    el("calls").innerHTML = html;
+    el("calls").dataset.key = String(recent.length && recent[0].t0);
+  }
+  drawTimeline();
+}
+
+// ---------- timeline ------------------------------------------------------------------------
+const cv = el("tl"), ctx = cv.getContext("2d");
+function drawTimeline() {
+  const dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
+  if (cv.width !== w * dpr) { cv.width = w * dpr; cv.height = h * dpr; }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  const top = 4, bot = h - 14, max = Math.max(...outPerMin) || 1;
+  ctx.fillStyle = "rgba(255,255,255,0.05)";
+  for (let hr = 7; hr < 10; hr++) ctx.fillRect(w * hr / 24, top, w / 24, bot - top);
+  for (let hr = 16; hr < 20; hr++) ctx.fillRect(w * hr / 24, top, w / 24, bot - top);
+  const cut = Math.floor(time / 60);
+  for (const [from, to, col] of [[0, cut, "rgba(64,200,255,0.75)"], [cut, 1440, "rgba(64,200,255,0.18)"]]) {
+    ctx.beginPath(); ctx.moveTo(w * from / 1440, bot);
+    for (let m = from; m <= Math.min(to, 1439); m++) ctx.lineTo(w * m / 1440, bot - (bot - top) * outPerMin[m] / max);
+    ctx.lineTo(w * Math.min(to, 1439) / 1440, bot); ctx.closePath(); ctx.fillStyle = col; ctx.fill();
+  }
+  ctx.fillStyle = "#a9a8a2"; ctx.font = "10px -apple-system, sans-serif"; ctx.textAlign = "center";
+  for (let hr = 0; hr <= 24; hr += (w < 500 ? 6 : 3)) ctx.fillText(String(hr % 24).padStart(2, "0") + ":00", Math.min(w - 16, Math.max(16, w * hr / 24)), h - 2);
+  const x = w * time / DAY;
+  ctx.fillStyle = "#f1f0ec"; ctx.fillRect(x - 1, top - 2, 2, bot - top + 4);
+}
+let dragging = false;
+const seek = e => { const r = cv.getBoundingClientRect(); time = DAY * Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)); };
+cv.addEventListener("pointerdown", e => {
+  seek(e); dragging = true;
+  try { cv.setPointerCapture(e.pointerId); } catch (_) { /* synthetic / touch-less clicks */ }
+});
+window.addEventListener("pointerup", () => dragging = false);
+cv.addEventListener("pointermove", e => dragging && seek(e));
+cv.addEventListener("pointerup", () => dragging = false);
+
+// ---------- controls + loop -------------------------------------------------------------------
+el("play").onclick = () => { playing = !playing; el("play").textContent = playing ? "❚❚" : "▶"; };
+document.addEventListener("keydown", e => { if (e.code === "Space") { e.preventDefault(); el("play").click(); } });
+document.querySelectorAll("[data-speed]").forEach(b => b.onclick = () => {
+  speed = +b.dataset.speed;
+  document.querySelectorAll("[data-speed]").forEach(x => x.classList.toggle("on", x === b));
+});
+let lastHud = 0;
+function frame(now) {
+  const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  if (playing && !dragging) time = (time + dt * speed) % DAY;
+  map.setProps({ layers: layers() });
+  if (now - lastHud > 120) { hud(); lastHud = now; }
+  requestAnimationFrame(frame);
+}
+hud();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

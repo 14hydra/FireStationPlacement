@@ -523,7 +523,7 @@ def main():
 
     df = _load(args.incidents)
     map_path, summary = build_map(df, args.out)
-    (args.out / "viz_summary.json").write_text(json.dumps(summary, indent=2) + "\n")
+    (args.out / "incident_density_summary.json").write_text(json.dumps(summary, indent=2) + "\n")
     print(json.dumps(summary, indent=2))
     print("Open map:", map_path)
 

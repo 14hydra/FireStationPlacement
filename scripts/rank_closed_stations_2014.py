@@ -26,10 +26,10 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from emvro.kolesar import fit_kolesar  # noqa: E402
-from emvro.lfb_standards import DEFAULT_TURNOUT_S, FIRST_ENGINE_P90_S, FIRST_ENGINE_AVG_S  # noqa: E402
-from emvro.london_closures_2014 import CLOSED_2014_APPROX_COORDS  # noqa: E402
-from emvro.london_eval import haversine_km, load_london, nearest_station_km  # noqa: E402
+from firestation.kolesar import fit_kolesar  # noqa: E402
+from firestation.lfb_standards import DEFAULT_TURNOUT_S, FIRST_ENGINE_P90_S, FIRST_ENGINE_AVG_S  # noqa: E402
+from firestation.london_closures_2014 import CLOSED_2014_APPROX_COORDS  # noqa: E402
+from firestation.london_eval import haversine_km, load_london, nearest_station_km  # noqa: E402
 
 OUT = ROOT / "data" / "figures" / "london_2014_closure_validation" / "closed_station_ranking.csv"
 

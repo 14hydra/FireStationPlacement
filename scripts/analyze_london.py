@@ -45,9 +45,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from emvro.kolesar import fit_kolesar  # noqa: E402
-from emvro.route_features import ROUTE_FEATURES  # noqa: E402
-from emvro import travel_time_model as T  # noqa: E402
+from firestation.kolesar import fit_kolesar  # noqa: E402
+from firestation.route_features import ROUTE_FEATURES  # noqa: E402
+from firestation import travel_time_model as T  # noqa: E402
 
 RAW = ROOT / "data" / "raw" / "london"
 OUT = ROOT / "data" / "figures" / "london_eda"

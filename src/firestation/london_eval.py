@@ -1,7 +1,7 @@
 """Shared helpers for London (LFB) closure validation / ranking / training scripts.
 
 Crow-fly (haversine) distances, nearest-station lookups, and loading of the
-planner incident table joined to firehouse start coordinates.
+planner incident table joined to fire station start coordinates.
 """
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ from typing import Optional, Sequence
 import numpy as np
 import pandas as pd
 
-from .cities import get_city, load_firehouses
+from .cities import get_city, load_fire_stations
 from .kolesar import KolesarModel
 from .lfb_standards import DEFAULT_TURNOUT_S
 
@@ -47,13 +47,13 @@ def predicted_attendance_s(model: KolesarModel, crow_km: np.ndarray, turnout_s: 
 def load_london(
     years: Optional[Sequence[int]] = None, max_rows: Optional[int] = None
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Return (firehouses, planner incidents with start_lat/start_lon/crow_km).
+    """Return (fire_stations, planner incidents with start_lat/start_lon/crow_km).
 
     Start coords come from ``deployed_from_station`` (fallback ``station_ground``).
     Incidents with no matching station or crow_km outside (0, MAX_CROW_KM] are dropped.
     """
     spec = get_city("london")
-    fh = load_firehouses(spec)
+    fh = load_fire_stations(spec)
     inc = pd.read_csv(spec.incidents_path)
     if years is not None:
         inc = inc[inc["cal_year"].isin([int(y) for y in years])]

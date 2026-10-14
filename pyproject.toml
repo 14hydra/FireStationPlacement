@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "emvro"
+name = "fire-station-placement"
 version = "0.1.0"
 description = "London Fire Brigade station placement with a learned travel-time model (ASI)"
 readme = "README.md"

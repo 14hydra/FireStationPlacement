@@ -1,0 +1,3481 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_a349f89dc71b230b9a8c53a4977b5af2 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+    <div style="position:fixed;top:12px;left:56px;z-index:9999;background:rgba(255,255,255,.96);padding:12px 14px;
+      border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.2);font:12px -apple-system,Segoe UI,sans-serif;color:#222;
+      max-width:300px">
+      <div style="font-weight:700;font-size:14px;margin-bottom:4px">How busy is each fire station? (2025)</div>
+      <div style="margin-bottom:6px">Colour = % of engine time out on calls</div>
+      <div><span style="display:inline-block;width:26px;height:10px;background:#cde2fb"></span><span style="display:inline-block;width:26px;height:10px;background:#9ec5f4"></span><span style="display:inline-block;width:26px;height:10px;background:#6da7ec"></span><span style="display:inline-block;width:26px;height:10px;background:#3987e5"></span><span style="display:inline-block;width:26px;height:10px;background:#256abf"></span><span style="display:inline-block;width:26px;height:10px;background:#184f95"></span><span style="display:inline-block;width:26px;height:10px;background:#0d366b"></span></div>
+      <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#555">
+        <span>0%</span><span>16%</span></div>
+      <div style="margin-top:6px">Circle size = calls per day. Click a station for details.</div>
+      <div style="margin-top:6px;font-size:10.5px;color:#666">Source: LFB mobilisation records. Busy = mobilised
+        until leaving the scene + drive back.</div>
+    </div>
+    
+            <div class="folium-map" id="map_a349f89dc71b230b9a8c53a4977b5af2" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_a349f89dc71b230b9a8c53a4977b5af2 = L.map(
+                "map_a349f89dc71b230b9a8c53a4977b5af2",
+                {
+                    center: [51.49, -0.12],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+
+            
+
+        
+    
+            var tile_layer_580e0db78ae0af5ba146b7f71c196986 = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 16,
+  "noWrap": false,
+  "attribution": "Tiles \u0026copy; Esri",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_580e0db78ae0af5ba146b7f71c196986.addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+            var circle_marker_c433763763aba10c5ecf601311218868 = L.circleMarker(
+                [51.51246085, -0.1300890958229078],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#184f95", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.648002382370132, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_81ad34c8f4b460400c501c1bdede1154 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f8ef0b0e837e5c516358d36d0e4b20b0 = $(`<div id="html_f8ef0b0e837e5c516358d36d0e4b20b0" style="width: 100.0%; height: 100.0%;"><b>Soho</b> (2 engines)<br>Utilisation: <b>13.2%</b><br>Every engine out: 5.6% of the year<br>Own-area calls answered by another station: 26%<br>Calls: 15.5/day · engine-hours 6.3/day<br>Median job 18 min</div>`)[0];
+                popup_81ad34c8f4b460400c501c1bdede1154.setContent(html_f8ef0b0e837e5c516358d36d0e4b20b0);
+            
+        
+
+        circle_marker_c433763763aba10c5ecf601311218868.bindPopup(popup_81ad34c8f4b460400c501c1bdede1154)
+        ;
+
+        
+    
+    
+            circle_marker_c433763763aba10c5ecf601311218868.bindTooltip(
+                `<div>
+                     Soho: 13% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b32c7971baf2200f1d785e0fe1028591 = L.circleMarker(
+                [51.520072299999995, -0.1833189410368907],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.830421881949597, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_b99c1520fd1b929c6116838204346413 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d23dbbe597b136e5576ac9e5d4c465f4 = $(`<div id="html_d23dbbe597b136e5576ac9e5d4c465f4" style="width: 100.0%; height: 100.0%;"><b>Paddington</b> (2 engines)<br>Utilisation: <b>10.8%</b><br>Every engine out: 4.8% of the year<br>Own-area calls answered by another station: 28%<br>Calls: 12.7/day · engine-hours 5.2/day<br>Median job 18 min</div>`)[0];
+                popup_b99c1520fd1b929c6116838204346413.setContent(html_d23dbbe597b136e5576ac9e5d4c465f4);
+            
+        
+
+        circle_marker_b32c7971baf2200f1d785e0fe1028591.bindPopup(popup_b99c1520fd1b929c6116838204346413)
+        ;
+
+        
+    
+    
+            circle_marker_b32c7971baf2200f1d785e0fe1028591.bindTooltip(
+                `<div>
+                     Paddington: 11% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ff16755f887a669442b16d93d429db8c = L.circleMarker(
+                [51.49281255, -0.1212760753291227],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.679090985016677, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_a5191e6ae1b516ac10eaf162698241f7 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_64dfcc01a9e5bdf2c174ce554806017a = $(`<div id="html_64dfcc01a9e5bdf2c174ce554806017a" style="width: 100.0%; height: 100.0%;"><b>Lambeth</b> (2 engines)<br>Utilisation: <b>11.3%</b><br>Every engine out: 4.7% of the year<br>Own-area calls answered by another station: 24%<br>Calls: 12.2/day · engine-hours 5.4/day<br>Median job 19 min</div>`)[0];
+                popup_a5191e6ae1b516ac10eaf162698241f7.setContent(html_64dfcc01a9e5bdf2c174ce554806017a);
+            
+        
+
+        circle_marker_ff16755f887a669442b16d93d429db8c.bindPopup(popup_a5191e6ae1b516ac10eaf162698241f7)
+        ;
+
+        
+    
+    
+            circle_marker_ff16755f887a669442b16d93d429db8c.bindTooltip(
+                `<div>
+                     Lambeth: 11% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_bfbe7c782dc788c92a5df69c7cc5e3ed = L.circleMarker(
+                [51.52183735, -0.212041205723519],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.670452112909535, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_56cbb6a2d309fa2f52d17271c946c1b3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2e58116722c08541021d7d02beb57878 = $(`<div id="html_2e58116722c08541021d7d02beb57878" style="width: 100.0%; height: 100.0%;"><b>North Kensington</b> (2 engines)<br>Utilisation: <b>10.3%</b><br>Every engine out: 4.6% of the year<br>Own-area calls answered by another station: 25%<br>Calls: 12.2/day · engine-hours 4.9/day<br>Median job 17 min</div>`)[0];
+                popup_56cbb6a2d309fa2f52d17271c946c1b3.setContent(html_2e58116722c08541021d7d02beb57878);
+            
+        
+
+        circle_marker_bfbe7c782dc788c92a5df69c7cc5e3ed.bindPopup(popup_56cbb6a2d309fa2f52d17271c946c1b3)
+        ;
+
+        
+    
+    
+            circle_marker_bfbe7c782dc788c92a5df69c7cc5e3ed.bindTooltip(
+                `<div>
+                     North Kensington: 10% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7be37cecac64d1757381c4bc66a6e1c9 = L.circleMarker(
+                [51.4960867, -0.224293537625646],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.156198577610308, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_686dfdb4bd9a9a110fbe78aff4767866 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f974b2d10c24f1edc8863f264e606a0e = $(`<div id="html_f974b2d10c24f1edc8863f264e606a0e" style="width: 100.0%; height: 100.0%;"><b>Hammersmith</b> (2 engines)<br>Utilisation: <b>9.4%</b><br>Every engine out: 3.8% of the year<br>Own-area calls answered by another station: 28%<br>Calls: 10.6/day · engine-hours 4.5/day<br>Median job 19 min</div>`)[0];
+                popup_686dfdb4bd9a9a110fbe78aff4767866.setContent(html_f974b2d10c24f1edc8863f264e606a0e);
+            
+        
+
+        circle_marker_7be37cecac64d1757381c4bc66a6e1c9.bindPopup(popup_686dfdb4bd9a9a110fbe78aff4767866)
+        ;
+
+        
+    
+    
+            circle_marker_7be37cecac64d1757381c4bc66a6e1c9.bindTooltip(
+                `<div>
+                     Hammersmith: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d8ec097cadbdfca65cd40b156c6c78cc = L.circleMarker(
+                [51.55170105, -0.192796697170743],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.145999934823198, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_b52b76a37f01f4aed67be4e0c588eeb1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e9882ba35cf2699afe9b7f08310f867c = $(`<div id="html_e9882ba35cf2699afe9b7f08310f867c" style="width: 100.0%; height: 100.0%;"><b>West Hampstead</b> (2 engines)<br>Utilisation: <b>10.3%</b><br>Every engine out: 4.1% of the year<br>Own-area calls answered by another station: 25%<br>Calls: 10.6/day · engine-hours 5.0/day<br>Median job 21 min</div>`)[0];
+                popup_b52b76a37f01f4aed67be4e0c588eeb1.setContent(html_e9882ba35cf2699afe9b7f08310f867c);
+            
+        
+
+        circle_marker_d8ec097cadbdfca65cd40b156c6c78cc.bindPopup(popup_b52b76a37f01f4aed67be4e0c588eeb1)
+        ;
+
+        
+    
+    
+            circle_marker_d8ec097cadbdfca65cd40b156c6c78cc.bindTooltip(
+                `<div>
+                     West Hampstead: 10% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_bed0b51061fb75d1b7d5598cc9c048b2 = L.circleMarker(
+                [51.463738, -0.1094055],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.10039165425652, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_0d77aad363eb605009817763836a7c27 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_5ca48cc3a1270ee15c3ceaae2cad8354 = $(`<div id="html_5ca48cc3a1270ee15c3ceaae2cad8354" style="width: 100.0%; height: 100.0%;"><b>Brixton</b> (2 engines)<br>Utilisation: <b>8.5%</b><br>Every engine out: 3.3% of the year<br>Own-area calls answered by another station: 22%<br>Calls: 10.4/day · engine-hours 4.1/day<br>Median job 17 min</div>`)[0];
+                popup_0d77aad363eb605009817763836a7c27.setContent(html_5ca48cc3a1270ee15c3ceaae2cad8354);
+            
+        
+
+        circle_marker_bed0b51061fb75d1b7d5598cc9c048b2.bindPopup(popup_0d77aad363eb605009817763836a7c27)
+        ;
+
+        
+    
+    
+            circle_marker_bed0b51061fb75d1b7d5598cc9c048b2.bindTooltip(
+                `<div>
+                     Brixton: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d1d036091100d2ed3993151082b92b5e = L.circleMarker(
+                [51.55283145, -0.1417072245645472],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.038492989386565, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_6ca8f9541742c34e448e0f49a64ff398 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ecd80eac33bf18e0e7275255c5e371b3 = $(`<div id="html_ecd80eac33bf18e0e7275255c5e371b3" style="width: 100.0%; height: 100.0%;"><b>Kentish Town</b> (2 engines)<br>Utilisation: <b>8.8%</b><br>Every engine out: 3.1% of the year<br>Own-area calls answered by another station: 25%<br>Calls: 10.2/day · engine-hours 4.2/day<br>Median job 19 min</div>`)[0];
+                popup_6ca8f9541742c34e448e0f49a64ff398.setContent(html_ecd80eac33bf18e0e7275255c5e371b3);
+            
+        
+
+        circle_marker_d1d036091100d2ed3993151082b92b5e.bindPopup(popup_6ca8f9541742c34e448e0f49a64ff398)
+        ;
+
+        
+    
+    
+            circle_marker_d1d036091100d2ed3993151082b92b5e.bindTooltip(
+                `<div>
+                     Kentish Town: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d598243016cff2e3b9c6512426108f6a = L.circleMarker(
+                [51.52775695, -0.1306108099453524],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#0d366b", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.823255961621857, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_a1ca43eabea1b1e00073f2d5cdc85aa0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6f139b0ad506746afc90c6cbcb6c9bed = $(`<div id="html_6f139b0ad506746afc90c6cbcb6c9bed" style="width: 100.0%; height: 100.0%;"><b>Euston</b> (1 engine)<br>Utilisation: <b>16.2%</b><br>Every engine out: 16.2% of the year<br>Own-area calls answered by another station: 39%<br>Calls: 9.6/day · engine-hours 3.9/day<br>Median job 19 min</div>`)[0];
+                popup_a1ca43eabea1b1e00073f2d5cdc85aa0.setContent(html_6f139b0ad506746afc90c6cbcb6c9bed);
+            
+        
+
+        circle_marker_d598243016cff2e3b9c6512426108f6a.bindPopup(popup_a1ca43eabea1b1e00073f2d5cdc85aa0)
+        ;
+
+        
+    
+    
+            circle_marker_d598243016cff2e3b9c6512426108f6a.bindTooltip(
+                `<div>
+                     Euston: 16% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_23d15ead4890ba4397c9215a2912297c = L.circleMarker(
+                [51.59230965, -0.0718471337316405],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.787207951788567, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_d8eb7a7f2d11e4ffbcafb8d32315a506 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2e6e98d441d279bed141cc0926a03919 = $(`<div id="html_2e6e98d441d279bed141cc0926a03919" style="width: 100.0%; height: 100.0%;"><b>Tottenham</b> (2 engines)<br>Utilisation: <b>9.2%</b><br>Every engine out: 3.6% of the year<br>Own-area calls answered by another station: 24%<br>Calls: 9.5/day · engine-hours 4.4/day<br>Median job 21 min</div>`)[0];
+                popup_d8eb7a7f2d11e4ffbcafb8d32315a506.setContent(html_2e6e98d441d279bed141cc0926a03919);
+            
+        
+
+        circle_marker_23d15ead4890ba4397c9215a2912297c.bindPopup(popup_d8eb7a7f2d11e4ffbcafb8d32315a506)
+        ;
+
+        
+    
+    
+            circle_marker_23d15ead4890ba4397c9215a2912297c.bindTooltip(
+                `<div>
+                     Tottenham: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a7773dac67ea488fe2952334cfd1824d = L.circleMarker(
+                [51.369216050000006, -0.1055356617454408],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.477307067702988, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_246c83a230b73d8e0c8379afcedf3162 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8ce7cabea02e9e21b5b73f2573d9fa5a = $(`<div id="html_8ce7cabea02e9e21b5b73f2573d9fa5a" style="width: 100.0%; height: 100.0%;"><b>Croydon</b> (2 engines)<br>Utilisation: <b>8.4%</b><br>Every engine out: 3.3% of the year<br>Own-area calls answered by another station: 17%<br>Calls: 8.7/day · engine-hours 4.1/day<br>Median job 20 min</div>`)[0];
+                popup_246c83a230b73d8e0c8379afcedf3162.setContent(html_8ce7cabea02e9e21b5b73f2573d9fa5a);
+            
+        
+
+        circle_marker_a7773dac67ea488fe2952334cfd1824d.bindPopup(popup_246c83a230b73d8e0c8379afcedf3162)
+        ;
+
+        
+    
+    
+            circle_marker_a7773dac67ea488fe2952334cfd1824d.bindTooltip(
+                `<div>
+                     Croydon: 8% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_939a2d0b9d8318a37afec62745112c70 = L.circleMarker(
+                [51.56257215, -0.0768660185166992],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.359546809045309, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_185880ed346dd32b9b6ed22094a1a0cc = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4758f7bc6d0a05ae0e4fed35158616ce = $(`<div id="html_4758f7bc6d0a05ae0e4fed35158616ce" style="width: 100.0%; height: 100.0%;"><b>Stoke Newington</b> (2 engines)<br>Utilisation: <b>7.6%</b><br>Every engine out: 1.9% of the year<br>Own-area calls answered by another station: 27%<br>Calls: 8.4/day · engine-hours 3.7/day<br>Median job 20 min</div>`)[0];
+                popup_185880ed346dd32b9b6ed22094a1a0cc.setContent(html_4758f7bc6d0a05ae0e4fed35158616ce);
+            
+        
+
+        circle_marker_939a2d0b9d8318a37afec62745112c70.bindPopup(popup_185880ed346dd32b9b6ed22094a1a0cc)
+        ;
+
+        
+    
+    
+            circle_marker_939a2d0b9d8318a37afec62745112c70.bindTooltip(
+                `<div>
+                     Stoke Newington: 8% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_99ca4797f0c8a5c6508e478f47ce45e9 = L.circleMarker(
+                [51.4872478, -0.1703650504527192],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#184f95", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.351200943495453, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_5850521256874add34249ca09ec9bd34 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2e2728a0f4a45e588aa94659451548e9 = $(`<div id="html_2e2728a0f4a45e588aa94659451548e9" style="width: 100.0%; height: 100.0%;"><b>Chelsea</b> (1 engine)<br>Utilisation: <b>13.6%</b><br>Every engine out: 13.6% of the year<br>Own-area calls answered by another station: 33%<br>Calls: 8.3/day · engine-hours 3.3/day<br>Median job 17 min</div>`)[0];
+                popup_5850521256874add34249ca09ec9bd34.setContent(html_2e2728a0f4a45e588aa94659451548e9);
+            
+        
+
+        circle_marker_99ca4797f0c8a5c6508e478f47ce45e9.bindPopup(popup_5850521256874add34249ca09ec9bd34)
+        ;
+
+        
+    
+    
+            circle_marker_99ca4797f0c8a5c6508e478f47ce45e9.bindTooltip(
+                `<div>
+                     Chelsea: 14% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0e9de6e7aa181444667c05adf4126149 = L.circleMarker(
+                [51.562220100000005, 0.0900462500705925],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.275588713310501, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_e315e571b2dc9d550e334f0fa93ab2c0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7bc56368208831f51f7f82aebfb38880 = $(`<div id="html_7bc56368208831f51f7f82aebfb38880" style="width: 100.0%; height: 100.0%;"><b>Ilford</b> (2 engines)<br>Utilisation: <b>8.3%</b><br>Every engine out: 3.0% of the year<br>Own-area calls answered by another station: 21%<br>Calls: 8.1/day · engine-hours 4.0/day<br>Median job 22 min</div>`)[0];
+                popup_e315e571b2dc9d550e334f0fa93ab2c0.setContent(html_7bc56368208831f51f7f82aebfb38880);
+            
+        
+
+        circle_marker_0e9de6e7aa181444667c05adf4126149.bindPopup(popup_e315e571b2dc9d550e334f0fa93ab2c0)
+        ;
+
+        
+    
+    
+            circle_marker_0e9de6e7aa181444667c05adf4126149.bindTooltip(
+                `<div>
+                     Ilford: 8% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_949d24db4168a70438e1b86a4db1a0df = L.circleMarker(
+                [51.5266217, -0.0854857815774265],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#184f95", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.251242068362117, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_dde604f635d3dfa8886494ed134c5dd6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_9e3cc7168088d5ba2cede8c7b7780bc0 = $(`<div id="html_9e3cc7168088d5ba2cede8c7b7780bc0" style="width: 100.0%; height: 100.0%;"><b>Shoreditch</b> (1 engine)<br>Utilisation: <b>13.7%</b><br>Every engine out: 13.7% of the year<br>Own-area calls answered by another station: 37%<br>Calls: 8.1/day · engine-hours 3.3/day<br>Median job 18 min</div>`)[0];
+                popup_dde604f635d3dfa8886494ed134c5dd6.setContent(html_9e3cc7168088d5ba2cede8c7b7780bc0);
+            
+        
+
+        circle_marker_949d24db4168a70438e1b86a4db1a0df.bindPopup(popup_dde604f635d3dfa8886494ed134c5dd6)
+        ;
+
+        
+    
+    
+            circle_marker_949d24db4168a70438e1b86a4db1a0df.bindTooltip(
+                `<div>
+                     Shoreditch: 14% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_971c02a3588a646f7a9e17225de380bb = L.circleMarker(
+                [51.50295535, -0.1901176722364718],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#184f95", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.0375900118081, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_27c0e83ef21d6c930d9f8a66dbca4f50 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_9bb03be309711caa34be18d99532d035 = $(`<div id="html_9bb03be309711caa34be18d99532d035" style="width: 100.0%; height: 100.0%;"><b>Kensington</b> (1 engine)<br>Utilisation: <b>12.6%</b><br>Every engine out: 12.6% of the year<br>Own-area calls answered by another station: 38%<br>Calls: 7.5/day · engine-hours 3.0/day<br>Median job 18 min</div>`)[0];
+                popup_27c0e83ef21d6c930d9f8a66dbca4f50.setContent(html_9bb03be309711caa34be18d99532d035);
+            
+        
+
+        circle_marker_971c02a3588a646f7a9e17225de380bb.bindPopup(popup_27c0e83ef21d6c930d9f8a66dbca4f50)
+        ;
+
+        
+    
+    
+            circle_marker_971c02a3588a646f7a9e17225de380bb.bindTooltip(
+                `<div>
+                     Kensington: 13% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a8b05fcc53d4cc89ad000c18983d8d42 = L.circleMarker(
+                [51.42590975, -0.1054584646052626],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.035393326266295, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_8d06420ebe23028c91a19ce2b9c36a14 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_da846474258f24af7f29ab3a00539196 = $(`<div id="html_da846474258f24af7f29ab3a00539196" style="width: 100.0%; height: 100.0%;"><b>West Norwood</b> (2 engines)<br>Utilisation: <b>7.3%</b><br>Every engine out: 2.5% of the year<br>Own-area calls answered by another station: 34%<br>Calls: 7.5/day · engine-hours 3.5/day<br>Median job 21 min</div>`)[0];
+                popup_8d06420ebe23028c91a19ce2b9c36a14.setContent(html_da846474258f24af7f29ab3a00539196);
+            
+        
+
+        circle_marker_a8b05fcc53d4cc89ad000c18983d8d42.bindPopup(popup_8d06420ebe23028c91a19ce2b9c36a14)
+        ;
+
+        
+    
+    
+            circle_marker_a8b05fcc53d4cc89ad000c18983d8d42.bindTooltip(
+                `<div>
+                     West Norwood: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4528e043dd074894dd4312b1be33469a = L.circleMarker(
+                [51.54865169999999, -0.0439337508623871],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.026598577220728, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_a3aabfe4e054b0725382077645d6630b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_aedd977f70f281c5fd86d3f7c44d49d3 = $(`<div id="html_aedd977f70f281c5fd86d3f7c44d49d3" style="width: 100.0%; height: 100.0%;"><b>Homerton</b> (2 engines)<br>Utilisation: <b>7.7%</b><br>Every engine out: 2.1% of the year<br>Own-area calls answered by another station: 26%<br>Calls: 7.5/day · engine-hours 3.7/day<br>Median job 22 min</div>`)[0];
+                popup_a3aabfe4e054b0725382077645d6630b.setContent(html_aedd977f70f281c5fd86d3f7c44d49d3);
+            
+        
+
+        circle_marker_4528e043dd074894dd4312b1be33469a.bindPopup(popup_a3aabfe4e054b0725382077645d6630b)
+        ;
+
+        
+    
+    
+            circle_marker_4528e043dd074894dd4312b1be33469a.bindTooltip(
+                `<div>
+                     Homerton: 8% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c58835b87f1ab73c531bdec5de51d8d9 = L.circleMarker(
+                [51.487451, 0.0915120200894747],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.99129048234482, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_7a8f93f01f673c7be184936ebc3a9016 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_bc89c36220592811240e530307b8e6d1 = $(`<div id="html_bc89c36220592811240e530307b8e6d1" style="width: 100.0%; height: 100.0%;"><b>Plumstead</b> (2 engines)<br>Utilisation: <b>8.0%</b><br>Every engine out: 3.2% of the year<br>Own-area calls answered by another station: 16%<br>Calls: 7.4/day · engine-hours 3.9/day<br>Median job 23 min</div>`)[0];
+                popup_7a8f93f01f673c7be184936ebc3a9016.setContent(html_bc89c36220592811240e530307b8e6d1);
+            
+        
+
+        circle_marker_c58835b87f1ab73c531bdec5de51d8d9.bindPopup(popup_7a8f93f01f673c7be184936ebc3a9016)
+        ;
+
+        
+    
+    
+            circle_marker_c58835b87f1ab73c531bdec5de51d8d9.bindTooltip(
+                `<div>
+                     Plumstead: 8% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9024f310b53be62d34b67774130e5a72 = L.circleMarker(
+                [51.55946845, 0.1570281714646305],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.974667985273037, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_9607b601f9296a8d662079f8241789e0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_17c122f967976b3d4bd6f7be99e823a9 = $(`<div id="html_17c122f967976b3d4bd6f7be99e823a9" style="width: 100.0%; height: 100.0%;"><b>Dagenham</b> (2 engines)<br>Utilisation: <b>8.6%</b><br>Every engine out: 3.0% of the year<br>Own-area calls answered by another station: 29%<br>Calls: 7.4/day · engine-hours 4.1/day<br>Median job 25 min</div>`)[0];
+                popup_9607b601f9296a8d662079f8241789e0.setContent(html_17c122f967976b3d4bd6f7be99e823a9);
+            
+        
+
+        circle_marker_9024f310b53be62d34b67774130e5a72.bindPopup(popup_9607b601f9296a8d662079f8241789e0)
+        ;
+
+        
+    
+    
+            circle_marker_9024f310b53be62d34b67774130e5a72.bindTooltip(
+                `<div>
+                     Dagenham: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_36dbdba8a463588219623da8f201c4f4 = L.circleMarker(
+                [51.4378035, -0.1627606180986193],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.91219774633603, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_26dbe4f66e7c594b3c3287bedbc5bf8b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_19e23f3fa8af01d49471a4490033be7f = $(`<div id="html_19e23f3fa8af01d49471a4490033be7f" style="width: 100.0%; height: 100.0%;"><b>Tooting</b> (2 engines)<br>Utilisation: <b>6.2%</b><br>Every engine out: 2.3% of the year<br>Own-area calls answered by another station: 23%<br>Calls: 7.2/day · engine-hours 3.0/day<br>Median job 18 min</div>`)[0];
+                popup_26dbe4f66e7c594b3c3287bedbc5bf8b.setContent(html_19e23f3fa8af01d49471a4490033be7f);
+            
+        
+
+        circle_marker_36dbdba8a463588219623da8f201c4f4.bindPopup(popup_26dbe4f66e7c594b3c3287bedbc5bf8b)
+        ;
+
+        
+    
+    
+            circle_marker_36dbdba8a463588219623da8f201c4f4.bindTooltip(
+                `<div>
+                     Tooting: 6% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7254801cbcbb29c90871e281aa0c15dd = L.circleMarker(
+                [51.52787645, -0.0532636626069591],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#184f95", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.899849080958106, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_b29b7947c758aa35291b137236ba6ad5 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b91b1eb39ef830707e1ced0d5edf50d8 = $(`<div id="html_b91b1eb39ef830707e1ced0d5edf50d8" style="width: 100.0%; height: 100.0%;"><b>Bethnal Green</b> (1 engine)<br>Utilisation: <b>13.0%</b><br>Every engine out: 13.0% of the year<br>Own-area calls answered by another station: 34%<br>Calls: 7.2/day · engine-hours 3.1/day<br>Median job 20 min</div>`)[0];
+                popup_b29b7947c758aa35291b137236ba6ad5.setContent(html_b91b1eb39ef830707e1ced0d5edf50d8);
+            
+        
+
+        circle_marker_7254801cbcbb29c90871e281aa0c15dd.bindPopup(popup_b29b7947c758aa35291b137236ba6ad5)
+        ;
+
+        
+    
+    
+            circle_marker_7254801cbcbb29c90871e281aa0c15dd.bindTooltip(
+                `<div>
+                     Bethnal Green: 13% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c24eb6b78efbc1f58bbce6c4295c5cd9 = L.circleMarker(
+                [51.5402671, -0.1023069299975422],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#0d366b", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.855857622342835, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_1917b06cfa852ee6ac53d0f13160b78a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f25180ed22e7c761bd46f4b9f25ec501 = $(`<div id="html_f25180ed22e7c761bd46f4b9f25ec501" style="width: 100.0%; height: 100.0%;"><b>Islington</b> (1 engine)<br>Utilisation: <b>13.9%</b><br>Every engine out: 13.9% of the year<br>Own-area calls answered by another station: 43%<br>Calls: 7.1/day · engine-hours 3.3/day<br>Median job 21 min</div>`)[0];
+                popup_1917b06cfa852ee6ac53d0f13160b78a.setContent(html_f25180ed22e7c761bd46f4b9f25ec501);
+            
+        
+
+        circle_marker_c24eb6b78efbc1f58bbce6c4295c5cd9.bindPopup(popup_1917b06cfa852ee6ac53d0f13160b78a)
+        ;
+
+        
+    
+    
+            circle_marker_c24eb6b78efbc1f58bbce6c4295c5cd9.bindTooltip(
+                `<div>
+                     Islington: 14% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_af5d436f4853dac48cd9d93cf6709be0 = L.circleMarker(
+                [51.47791755, -0.2009176151088025],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#184f95", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.852459967503655, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_7353d0099bd150977c6f5e8ce8af0186 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d6b310b6f41723f7166b78d0f768da19 = $(`<div id="html_d6b310b6f41723f7166b78d0f768da19" style="width: 100.0%; height: 100.0%;"><b>Fulham</b> (1 engine)<br>Utilisation: <b>12.4%</b><br>Every engine out: 12.4% of the year<br>Own-area calls answered by another station: 32%<br>Calls: 7.1/day · engine-hours 3.0/day<br>Median job 19 min</div>`)[0];
+                popup_7353d0099bd150977c6f5e8ce8af0186.setContent(html_d6b310b6f41723f7166b78d0f768da19);
+            
+        
+
+        circle_marker_af5d436f4853dac48cd9d93cf6709be0.bindPopup(popup_7353d0099bd150977c6f5e8ce8af0186)
+        ;
+
+        
+    
+    
+            circle_marker_af5d436f4853dac48cd9d93cf6709be0.bindTooltip(
+                `<div>
+                     Fulham: 12% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_93901b2a788bb402fe866043614918b9 = L.circleMarker(
+                [51.4067832, -0.1215921420954122],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.839984987783295, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_4188ecfb134e84f14dfef208d5cbb421 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e086726c49c725b13502d13e7c95ce7d = $(`<div id="html_e086726c49c725b13502d13e7c95ce7d" style="width: 100.0%; height: 100.0%;"><b>Norbury</b> (2 engines)<br>Utilisation: <b>6.8%</b><br>Every engine out: 2.7% of the year<br>Own-area calls answered by another station: 27%<br>Calls: 7.0/day · engine-hours 3.3/day<br>Median job 20 min</div>`)[0];
+                popup_4188ecfb134e84f14dfef208d5cbb421.setContent(html_e086726c49c725b13502d13e7c95ce7d);
+            
+        
+
+        circle_marker_93901b2a788bb402fe866043614918b9.bindPopup(popup_4188ecfb134e84f14dfef208d5cbb421)
+        ;
+
+        
+    
+    
+            circle_marker_93901b2a788bb402fe866043614918b9.bindTooltip(
+                `<div>
+                     Norbury: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cf5cca9a337dc4f11d390869921b66cd = L.circleMarker(
+                [51.5153048, -0.0691888717611473],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#184f95", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.740364171541543, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_4b1255394bbe1034fc36dbff123c4c5e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e4834a2ae77821186f01c82693cc62b1 = $(`<div id="html_e4834a2ae77821186f01c82693cc62b1" style="width: 100.0%; height: 100.0%;"><b>Whitechapel</b> (1 engine)<br>Utilisation: <b>12.0%</b><br>Every engine out: 12.0% of the year<br>Own-area calls answered by another station: 36%<br>Calls: 6.8/day · engine-hours 2.9/day<br>Median job 20 min</div>`)[0];
+                popup_4b1255394bbe1034fc36dbff123c4c5e.setContent(html_e4834a2ae77821186f01c82693cc62b1);
+            
+        
+
+        circle_marker_cf5cca9a337dc4f11d390869921b66cd.bindPopup(popup_4b1255394bbe1034fc36dbff123c4c5e)
+        ;
+
+        
+    
+    
+            circle_marker_cf5cca9a337dc4f11d390869921b66cd.bindTooltip(
+                `<div>
+                     Whitechapel: 12% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5ef4b55318ef117b38fbbc77d6985f2d = L.circleMarker(
+                [51.511274099999994, -0.3744259889421966],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.688151588446875, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_715fad993c69e87d57e4f3d9f1100373 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0dc13892ac642613b3fe2cceb6e9812c = $(`<div id="html_0dc13892ac642613b3fe2cceb6e9812c" style="width: 100.0%; height: 100.0%;"><b>Southall</b> (2 engines)<br>Utilisation: <b>7.1%</b><br>Every engine out: 2.6% of the year<br>Own-area calls answered by another station: 26%<br>Calls: 6.7/day · engine-hours 3.4/day<br>Median job 23 min</div>`)[0];
+                popup_715fad993c69e87d57e4f3d9f1100373.setContent(html_0dc13892ac642613b3fe2cceb6e9812c);
+            
+        
+
+        circle_marker_5ef4b55318ef117b38fbbc77d6985f2d.bindPopup(popup_715fad993c69e87d57e4f3d9f1100373)
+        ;
+
+        
+    
+    
+            circle_marker_5ef4b55318ef117b38fbbc77d6985f2d.bindTooltip(
+                `<div>
+                     Southall: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7137e30e838f391db102833e137aad11 = L.circleMarker(
+                [51.58972495, -0.0288444693923726],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.683487256716626, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_4a2a2e96694211ea8abd984edc7aa0f4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_10c5bd76a091e6b04c07853e67f789e0 = $(`<div id="html_10c5bd76a091e6b04c07853e67f789e0" style="width: 100.0%; height: 100.0%;"><b>Walthamstow</b> (2 engines)<br>Utilisation: <b>7.2%</b><br>Every engine out: 2.6% of the year<br>Own-area calls answered by another station: 20%<br>Calls: 6.7/day · engine-hours 3.4/day<br>Median job 24 min</div>`)[0];
+                popup_4a2a2e96694211ea8abd984edc7aa0f4.setContent(html_10c5bd76a091e6b04c07853e67f789e0);
+            
+        
+
+        circle_marker_7137e30e838f391db102833e137aad11.bindPopup(popup_4a2a2e96694211ea8abd984edc7aa0f4)
+        ;
+
+        
+    
+    
+            circle_marker_7137e30e838f391db102833e137aad11.bindTooltip(
+                `<div>
+                     Walthamstow: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_109abee14d6d8abc68c8a0402c0b5e1b = L.circleMarker(
+                [51.5888473, -0.2286435],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.579885598080953, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_bededa2d194fe418f14505191f379ab4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4343a9a251211f9fd304266aa6b87015 = $(`<div id="html_4343a9a251211f9fd304266aa6b87015" style="width: 100.0%; height: 100.0%;"><b>Hendon</b> (2 engines)<br>Utilisation: <b>7.0%</b><br>Every engine out: 2.6% of the year<br>Own-area calls answered by another station: 22%<br>Calls: 6.4/day · engine-hours 3.4/day<br>Median job 24 min</div>`)[0];
+                popup_bededa2d194fe418f14505191f379ab4.setContent(html_4343a9a251211f9fd304266aa6b87015);
+            
+        
+
+        circle_marker_109abee14d6d8abc68c8a0402c0b5e1b.bindPopup(popup_bededa2d194fe418f14505191f379ab4)
+        ;
+
+        
+    
+    
+            circle_marker_109abee14d6d8abc68c8a0402c0b5e1b.bindTooltip(
+                `<div>
+                     Hendon: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fad774e17ae71d1468b87f83752e7972 = L.circleMarker(
+                [51.58652805, -0.1272021246958989],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.541732086680838, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_300a022d0d97253296aba2f39f8855c6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7c599db75c0fc4e742e91d4a4b1f9847 = $(`<div id="html_7c599db75c0fc4e742e91d4a4b1f9847" style="width: 100.0%; height: 100.0%;"><b>Hornsey</b> (2 engines)<br>Utilisation: <b>6.0%</b><br>Every engine out: 2.1% of the year<br>Own-area calls answered by another station: 28%<br>Calls: 6.3/day · engine-hours 2.9/day<br>Median job 21 min</div>`)[0];
+                popup_300a022d0d97253296aba2f39f8855c6.setContent(html_7c599db75c0fc4e742e91d4a4b1f9847);
+            
+        
+
+        circle_marker_fad774e17ae71d1468b87f83752e7972.bindPopup(popup_300a022d0d97253296aba2f39f8855c6)
+        ;
+
+        
+    
+    
+            circle_marker_fad774e17ae71d1468b87f83752e7972.bindTooltip(
+                `<div>
+                     Hornsey: 6% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1a1ee5428e564249ff88e4568f5a252d = L.circleMarker(
+                [51.510035, -0.0901008],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.539338766730442, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_dabf2b7ee48278cc6f09000f19f5efe6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ac3df5fe9bcfcd2758e612bb68af7aa8 = $(`<div id="html_ac3df5fe9bcfcd2758e612bb68af7aa8" style="width: 100.0%; height: 100.0%;"><b>Dowgate</b> (1 engine)<br>Utilisation: <b>11.3%</b><br>Every engine out: 11.3% of the year<br>Own-area calls answered by another station: 38%<br>Calls: 6.3/day · engine-hours 2.7/day<br>Median job 19 min</div>`)[0];
+                popup_dabf2b7ee48278cc6f09000f19f5efe6.setContent(html_ac3df5fe9bcfcd2758e612bb68af7aa8);
+            
+        
+
+        circle_marker_1a1ee5428e564249ff88e4568f5a252d.bindPopup(popup_dabf2b7ee48278cc6f09000f19f5efe6)
+        ;
+
+        
+    
+    
+            circle_marker_1a1ee5428e564249ff88e4568f5a252d.bindTooltip(
+                `<div>
+                     Dowgate: 11% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_18499f259c77f9649a1a6509c39d0b57 = L.circleMarker(
+                [51.5615714, -0.1159426867900488],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#184f95", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.517752172859515, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_85f7b0bd2703996157480e535bbb27c9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_abf52401a66a1981ec3f1b12d254106e = $(`<div id="html_abf52401a66a1981ec3f1b12d254106e" style="width: 100.0%; height: 100.0%;"><b>Holloway</b> (1 engine)<br>Utilisation: <b>12.0%</b><br>Every engine out: 12.0% of the year<br>Own-area calls answered by another station: 40%<br>Calls: 6.3/day · engine-hours 2.9/day<br>Median job 21 min</div>`)[0];
+                popup_85f7b0bd2703996157480e535bbb27c9.setContent(html_abf52401a66a1981ec3f1b12d254106e);
+            
+        
+
+        circle_marker_18499f259c77f9649a1a6509c39d0b57.bindPopup(popup_85f7b0bd2703996157480e535bbb27c9)
+        ;
+
+        
+    
+    
+            circle_marker_18499f259c77f9649a1a6509c39d0b57.bindTooltip(
+                `<div>
+                     Holloway: 12% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_599ddfa219082ca22b9df323fb6f59e0 = L.circleMarker(
+                [51.510921, -0.0146520704560918],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#184f95", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.482795007648052, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_bec307131560c5d50fe2bc374828f2b1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e3a630d289721968e30b5388a73c587c = $(`<div id="html_e3a630d289721968e30b5388a73c587c" style="width: 100.0%; height: 100.0%;"><b>Poplar</b> (1 engine)<br>Utilisation: <b>12.2%</b><br>Every engine out: 12.2% of the year<br>Own-area calls answered by another station: 37%<br>Calls: 6.2/day · engine-hours 2.9/day<br>Median job 22 min</div>`)[0];
+                popup_bec307131560c5d50fe2bc374828f2b1.setContent(html_e3a630d289721968e30b5388a73c587c);
+            
+        
+
+        circle_marker_599ddfa219082ca22b9df323fb6f59e0.bindPopup(popup_bec307131560c5d50fe2bc374828f2b1)
+        ;
+
+        
+    
+    
+            circle_marker_599ddfa219082ca22b9df323fb6f59e0.bindTooltip(
+                `<div>
+                     Poplar: 12% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e4467bb113dbb20acb98ec101fb6b428 = L.circleMarker(
+                [51.5546449, -0.3595665275568182],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.476745358881258, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_8fd1a5fbec6db24e89150aecb1b5f5cf = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_26b34f6352b5bc011b354689bd764801 = $(`<div id="html_26b34f6352b5bc011b354689bd764801" style="width: 100.0%; height: 100.0%;"><b>Northolt</b> (2 engines)<br>Utilisation: <b>6.7%</b><br>Every engine out: 2.4% of the year<br>Own-area calls answered by another station: 21%<br>Calls: 6.2/day · engine-hours 3.2/day<br>Median job 24 min</div>`)[0];
+                popup_8fd1a5fbec6db24e89150aecb1b5f5cf.setContent(html_26b34f6352b5bc011b354689bd764801);
+            
+        
+
+        circle_marker_e4467bb113dbb20acb98ec101fb6b428.bindPopup(popup_8fd1a5fbec6db24e89150aecb1b5f5cf)
+        ;
+
+        
+    
+    
+            circle_marker_e4467bb113dbb20acb98ec101fb6b428.bindTooltip(
+                `<div>
+                     Northolt: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_80b7ded2c383c91181520c84a1650824 = L.circleMarker(
+                [51.54375, 0.011128787625757],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#184f95", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.470689020239076, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_949413fe03e88f6359f34588c4612d31 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_5a0f5832023ec77b1109e767c2e05796 = $(`<div id="html_5a0f5832023ec77b1109e767c2e05796" style="width: 100.0%; height: 100.0%;"><b>Stratford</b> (1 engine)<br>Utilisation: <b>12.0%</b><br>Every engine out: 12.0% of the year<br>Own-area calls answered by another station: 40%<br>Calls: 6.2/day · engine-hours 2.9/day<br>Median job 21 min</div>`)[0];
+                popup_949413fe03e88f6359f34588c4612d31.setContent(html_5a0f5832023ec77b1109e767c2e05796);
+            
+        
+
+        circle_marker_80b7ded2c383c91181520c84a1650824.bindPopup(popup_949413fe03e88f6359f34588c4612d31)
+        ;
+
+        
+    
+    
+            circle_marker_80b7ded2c383c91181520c84a1650824.bindTooltip(
+                `<div>
+                     Stratford: 12% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c4ad4611485587fa5e0fa3eb0c571416 = L.circleMarker(
+                [51.4738848, -0.07797625],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.401166794288622, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_4d3f9739999bf9b9f36fb18a77e59581 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_58eaf246f2e96f1a8a5158c630a6f41c = $(`<div id="html_58eaf246f2e96f1a8a5158c630a6f41c" style="width: 100.0%; height: 100.0%;"><b>Peckham</b> (1 engine)<br>Utilisation: <b>10.8%</b><br>Every engine out: 10.8% of the year<br>Own-area calls answered by another station: 33%<br>Calls: 6.0/day · engine-hours 2.6/day<br>Median job 18 min</div>`)[0];
+                popup_4d3f9739999bf9b9f36fb18a77e59581.setContent(html_58eaf246f2e96f1a8a5158c630a6f41c);
+            
+        
+
+        circle_marker_c4ad4611485587fa5e0fa3eb0c571416.bindPopup(popup_4d3f9739999bf9b9f36fb18a77e59581)
+        ;
+
+        
+    
+    
+            circle_marker_c4ad4611485587fa5e0fa3eb0c571416.bindTooltip(
+                `<div>
+                     Peckham: 11% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_45c7e841dc0d08cb5eae76196f2641c8 = L.circleMarker(
+                [51.46492985, -0.1408792937483196],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.358030715728022, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_3c3a755c24ee3762170140dc0ae03bbb = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f8813ca23d43985670bb4b39c5d0a86d = $(`<div id="html_f8813ca23d43985670bb4b39c5d0a86d" style="width: 100.0%; height: 100.0%;"><b>Clapham</b> (1 engine)<br>Utilisation: <b>10.3%</b><br>Every engine out: 10.3% of the year<br>Own-area calls answered by another station: 34%<br>Calls: 5.9/day · engine-hours 2.5/day<br>Median job 18 min</div>`)[0];
+                popup_3c3a755c24ee3762170140dc0ae03bbb.setContent(html_f8813ca23d43985670bb4b39c5d0a86d);
+            
+        
+
+        circle_marker_45c7e841dc0d08cb5eae76196f2641c8.bindPopup(popup_3c3a755c24ee3762170140dc0ae03bbb)
+        ;
+
+        
+    
+    
+            circle_marker_45c7e841dc0d08cb5eae76196f2641c8.bindTooltip(
+                `<div>
+                     Clapham: 10% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c7bbf6753b1fb33eb79bffed6e277ca7 = L.circleMarker(
+                [51.53000055, 0.0888736549390424],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.351840036923928, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_ceda89760060444f031a70fbc509daea = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c38e948281643ddbdaccac20c2913191 = $(`<div id="html_c38e948281643ddbdaccac20c2913191" style="width: 100.0%; height: 100.0%;"><b>Barking</b> (2 engines)<br>Utilisation: <b>6.3%</b><br>Every engine out: 2.0% of the year<br>Own-area calls answered by another station: 29%<br>Calls: 5.9/day · engine-hours 3.0/day<br>Median job 23 min</div>`)[0];
+                popup_ceda89760060444f031a70fbc509daea.setContent(html_c38e948281643ddbdaccac20c2913191);
+            
+        
+
+        circle_marker_c7bbf6753b1fb33eb79bffed6e277ca7.bindPopup(popup_ceda89760060444f031a70fbc509daea)
+        ;
+
+        
+    
+    
+            circle_marker_c7bbf6753b1fb33eb79bffed6e277ca7.bindTooltip(
+                `<div>
+                     Barking: 6% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_635c38f957d705564b3baf719c1466f2 = L.circleMarker(
+                [51.4606344, -0.4138852634195626],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.339437146469269, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_ea041a780806dc34d3766bb1dfa2724f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7c70eda744c113a2e0120c9085252800 = $(`<div id="html_7c70eda744c113a2e0120c9085252800" style="width: 100.0%; height: 100.0%;"><b>Feltham</b> (2 engines)<br>Utilisation: <b>7.0%</b><br>Every engine out: 2.6% of the year<br>Own-area calls answered by another station: 22%<br>Calls: 5.9/day · engine-hours 3.3/day<br>Median job 26 min</div>`)[0];
+                popup_ea041a780806dc34d3766bb1dfa2724f.setContent(html_7c70eda744c113a2e0120c9085252800);
+            
+        
+
+        circle_marker_635c38f957d705564b3baf719c1466f2.bindPopup(popup_ea041a780806dc34d3766bb1dfa2724f)
+        ;
+
+        
+    
+    
+            circle_marker_635c38f957d705564b3baf719c1466f2.bindTooltip(
+                `<div>
+                     Feltham: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c2e30263da8bcc8d52e448625e29934a = L.circleMarker(
+                [51.5319982, -0.4520808892082451],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.31454453002737, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_279779af71e901fa742b5b5e8f4bccb7 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d0bdb214297822a03fe6216d119fe9d8 = $(`<div id="html_d0bdb214297822a03fe6216d119fe9d8" style="width: 100.0%; height: 100.0%;"><b>Hillingdon</b> (2 engines)<br>Utilisation: <b>6.4%</b><br>Every engine out: 2.1% of the year<br>Own-area calls answered by another station: 18%<br>Calls: 5.8/day · engine-hours 3.1/day<br>Median job 23 min</div>`)[0];
+                popup_279779af71e901fa742b5b5e8f4bccb7.setContent(html_d0bdb214297822a03fe6216d119fe9d8);
+            
+        
+
+        circle_marker_c2e30263da8bcc8d52e448625e29934a.bindPopup(popup_279779af71e901fa742b5b5e8f4bccb7)
+        ;
+
+        
+    
+    
+            circle_marker_c2e30263da8bcc8d52e448625e29934a.bindTooltip(
+                `<div>
+                     Hillingdon: 6% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_41637fca97083609037a43412cc4e09b = L.circleMarker(
+                [51.5209984, 0.0324907696420734],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#184f95", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.304554775837744, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_717187d3020ebe1a53179e8eafb16a86 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0bcac3b76a44321458f6bf5d64fb5e54 = $(`<div id="html_0bcac3b76a44321458f6bf5d64fb5e54" style="width: 100.0%; height: 100.0%;"><b>Plaistow</b> (1 engine)<br>Utilisation: <b>12.0%</b><br>Every engine out: 12.0% of the year<br>Own-area calls answered by another station: 41%<br>Calls: 5.8/day · engine-hours 2.9/day<br>Median job 22 min</div>`)[0];
+                popup_717187d3020ebe1a53179e8eafb16a86.setContent(html_0bcac3b76a44321458f6bf5d64fb5e54);
+            
+        
+
+        circle_marker_41637fca97083609037a43412cc4e09b.bindPopup(popup_717187d3020ebe1a53179e8eafb16a86)
+        ;
+
+        
+    
+    
+            circle_marker_41637fca97083609037a43412cc4e09b.bindTooltip(
+                `<div>
+                     Plaistow: 12% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_17dbdf7b5a1a671a5002e82fd8a7962f = L.circleMarker(
+                [51.3688755, -0.2109095530614245],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.263146618589218, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_7a90fc7fac55c56b249b7a1441d2ff99 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c893fb32086e9708662a763511033d4c = $(`<div id="html_c893fb32086e9708662a763511033d4c" style="width: 100.0%; height: 100.0%;"><b>Sutton</b> (2 engines)<br>Utilisation: <b>5.3%</b><br>Every engine out: 2.0% of the year<br>Own-area calls answered by another station: 13%<br>Calls: 5.7/day · engine-hours 2.5/day<br>Median job 19 min</div>`)[0];
+                popup_7a90fc7fac55c56b249b7a1441d2ff99.setContent(html_c893fb32086e9708662a763511033d4c);
+            
+        
+
+        circle_marker_17dbdf7b5a1a671a5002e82fd8a7962f.bindPopup(popup_7a90fc7fac55c56b249b7a1441d2ff99)
+        ;
+
+        
+    
+    
+            circle_marker_17dbdf7b5a1a671a5002e82fd8a7962f.bindTooltip(
+                `<div>
+                     Sutton: 5% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f423d4e9b00b261a048d9154dc1947cb = L.circleMarker(
+                [51.47502, -0.3431990961907811],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.253059121786684, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_4d9a4d9516eea77236c27120653e93d8 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7a0e20ac2d071eb9495e67fdec5b5294 = $(`<div id="html_7a0e20ac2d071eb9495e67fdec5b5294" style="width: 100.0%; height: 100.0%;"><b>Heston</b> (2 engines)<br>Utilisation: <b>6.3%</b><br>Every engine out: 2.4% of the year<br>Own-area calls answered by another station: 22%<br>Calls: 5.7/day · engine-hours 3.0/day<br>Median job 24 min</div>`)[0];
+                popup_4d9a4d9516eea77236c27120653e93d8.setContent(html_7a0e20ac2d071eb9495e67fdec5b5294);
+            
+        
+
+        circle_marker_f423d4e9b00b261a048d9154dc1947cb.bindPopup(popup_4d9a4d9516eea77236c27120653e93d8)
+        ;
+
+        
+    
+    
+            circle_marker_f423d4e9b00b261a048d9154dc1947cb.bindTooltip(
+                `<div>
+                     Heston: 6% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0d0636585941df0ebfeab5b6b929f3a6 = L.circleMarker(
+                [51.45640225, -0.2014031947589517],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.237891450699898, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_d36475e65304e60fc39aa0d81940e8d6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_fe06e5a2d9ccc7816b79f4968b757e70 = $(`<div id="html_fe06e5a2d9ccc7816b79f4968b757e70" style="width: 100.0%; height: 100.0%;"><b>Wandsworth</b> (1 engine)<br>Utilisation: <b>10.3%</b><br>Every engine out: 10.3% of the year<br>Own-area calls answered by another station: 28%<br>Calls: 5.7/day · engine-hours 2.5/day<br>Median job 20 min</div>`)[0];
+                popup_d36475e65304e60fc39aa0d81940e8d6.setContent(html_fe06e5a2d9ccc7816b79f4968b757e70);
+            
+        
+
+        circle_marker_0d0636585941df0ebfeab5b6b929f3a6.bindPopup(popup_d36475e65304e60fc39aa0d81940e8d6)
+        ;
+
+        
+    
+    
+            circle_marker_0d0636585941df0ebfeab5b6b929f3a6.bindTooltip(
+                `<div>
+                     Wandsworth: 10% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a1283c71fb0e41945f05144d48d63b56 = L.circleMarker(
+                [51.55169655, -0.3040197283283985],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.235359233268513, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_43b9c574055eab0d611e6caf8a68fa41 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_106670e8ee822466fea507d1508f2165 = $(`<div id="html_106670e8ee822466fea507d1508f2165" style="width: 100.0%; height: 100.0%;"><b>Wembley</b> (2 engines)<br>Utilisation: <b>6.9%</b><br>Every engine out: 2.3% of the year<br>Own-area calls answered by another station: 22%<br>Calls: 5.7/day · engine-hours 3.3/day<br>Median job 26 min</div>`)[0];
+                popup_43b9c574055eab0d611e6caf8a68fa41.setContent(html_106670e8ee822466fea507d1508f2165);
+            
+        
+
+        circle_marker_a1283c71fb0e41945f05144d48d63b56.bindPopup(popup_43b9c574055eab0d611e6caf8a68fa41)
+        ;
+
+        
+    
+    
+            circle_marker_a1283c71fb0e41945f05144d48d63b56.bindTooltip(
+                `<div>
+                     Wembley: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a0c3a2bab7b4945d9e49bb77d4af695a = L.circleMarker(
+                [51.48697755, 0.0222960967435707],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.22014013353077, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_157d05078afe443ba95e0e5ef51718e0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_25332cfe3fb36a2f0ce8c3a6556b54c7 = $(`<div id="html_25332cfe3fb36a2f0ce8c3a6556b54c7" style="width: 100.0%; height: 100.0%;"><b>East Greenwich</b> (2 engines)<br>Utilisation: <b>6.0%</b><br>Every engine out: 2.2% of the year<br>Own-area calls answered by another station: 23%<br>Calls: 5.6/day · engine-hours 2.9/day<br>Median job 24 min</div>`)[0];
+                popup_157d05078afe443ba95e0e5ef51718e0.setContent(html_25332cfe3fb36a2f0ce8c3a6556b54c7);
+            
+        
+
+        circle_marker_a0c3a2bab7b4945d9e49bb77d4af695a.bindPopup(popup_157d05078afe443ba95e0e5ef51718e0)
+        ;
+
+        
+    
+    
+            circle_marker_a0c3a2bab7b4945d9e49bb77d4af695a.bindTooltip(
+                `<div>
+                     East Greenwich: 6% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0b64fa1c9198e0aad76180ab1f4cc034 = L.circleMarker(
+                [51.48713365, -0.0734971739043401],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.207423573512395, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_76ca710a8893df05603eed3d3873f338 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_724f159cfd5b58a22b2fc88e2778955f = $(`<div id="html_724f159cfd5b58a22b2fc88e2778955f" style="width: 100.0%; height: 100.0%;"><b>Old Kent Road</b> (1 engine)<br>Utilisation: <b>10.1%</b><br>Every engine out: 10.1% of the year<br>Own-area calls answered by another station: 39%<br>Calls: 5.6/day · engine-hours 2.4/day<br>Median job 20 min</div>`)[0];
+                popup_76ca710a8893df05603eed3d3873f338.setContent(html_724f159cfd5b58a22b2fc88e2778955f);
+            
+        
+
+        circle_marker_0b64fa1c9198e0aad76180ab1f4cc034.bindPopup(popup_76ca710a8893df05603eed3d3873f338)
+        ;
+
+        
+    
+    
+            circle_marker_0b64fa1c9198e0aad76180ab1f4cc034.bindTooltip(
+                `<div>
+                     Old Kent Road: 10% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_79f4f5b366ffbb6e76787cbaf990ab08 = L.circleMarker(
+                [51.5979575, -0.1792936720326938],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.166520251276417, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_3235834c7884d85fa9be4318a162ce75 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f6481ec92cb35d087ff09f51ab5ffd81 = $(`<div id="html_f6481ec92cb35d087ff09f51ab5ffd81" style="width: 100.0%; height: 100.0%;"><b>Finchley</b> (2 engines)<br>Utilisation: <b>5.9%</b><br>Every engine out: 2.1% of the year<br>Own-area calls answered by another station: 22%<br>Calls: 5.5/day · engine-hours 2.8/day<br>Median job 23 min</div>`)[0];
+                popup_3235834c7884d85fa9be4318a162ce75.setContent(html_f6481ec92cb35d087ff09f51ab5ffd81);
+            
+        
+
+        circle_marker_79f4f5b366ffbb6e76787cbaf990ab08.bindPopup(popup_3235834c7884d85fa9be4318a162ce75)
+        ;
+
+        
+    
+    
+            circle_marker_79f4f5b366ffbb6e76787cbaf990ab08.bindTooltip(
+                `<div>
+                     Finchley: 6% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ad5093df91879b49622a2fee60a497c2 = L.circleMarker(
+                [51.6602193, -0.05189325],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.152384738463411, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_eae5765f2756544d9c1ca62c0c72a34b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f7233b863f9c02b7a1087357f08db5df = $(`<div id="html_f7233b863f9c02b7a1087357f08db5df" style="width: 100.0%; height: 100.0%;"><b>Enfield</b> (2 engines)<br>Utilisation: <b>6.2%</b><br>Every engine out: 2.4% of the year<br>Own-area calls answered by another station: 12%<br>Calls: 5.5/day · engine-hours 3.0/day<br>Median job 24 min</div>`)[0];
+                popup_eae5765f2756544d9c1ca62c0c72a34b.setContent(html_f7233b863f9c02b7a1087357f08db5df);
+            
+        
+
+        circle_marker_ad5093df91879b49622a2fee60a497c2.bindPopup(popup_eae5765f2756544d9c1ca62c0c72a34b)
+        ;
+
+        
+    
+    
+            circle_marker_ad5093df91879b49622a2fee60a497c2.bindTooltip(
+                `<div>
+                     Enfield: 6% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1e5692bc2a35fb94d91875a217b95661 = L.circleMarker(
+                [51.60366915, -0.2976070250672114],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.144658088669749, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_e3bdb0e109dc5f15e60d06d55faf1704 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e2f074750b599bf57483fde91f42de0f = $(`<div id="html_e2f074750b599bf57483fde91f42de0f" style="width: 100.0%; height: 100.0%;"><b>Stanmore</b> (2 engines)<br>Utilisation: <b>5.9%</b><br>Every engine out: 2.1% of the year<br>Own-area calls answered by another station: 31%<br>Calls: 5.5/day · engine-hours 2.8/day<br>Median job 22 min</div>`)[0];
+                popup_e3bdb0e109dc5f15e60d06d55faf1704.setContent(html_e2f074750b599bf57483fde91f42de0f);
+            
+        
+
+        circle_marker_1e5692bc2a35fb94d91875a217b95661.bindPopup(popup_e3bdb0e109dc5f15e60d06d55faf1704)
+        ;
+
+        
+    
+    
+            circle_marker_1e5692bc2a35fb94d91875a217b95661.bindTooltip(
+                `<div>
+                     Stanmore: 6% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d144d026930357cc041062310a4e7b7d = L.circleMarker(
+                [51.4570297, -0.0131157201655826],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.061506625014779, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_3a11f9503db22872157e17b097f80700 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_aece083076f8f7a9ca92bffb986da96d = $(`<div id="html_aece083076f8f7a9ca92bffb986da96d" style="width: 100.0%; height: 100.0%;"><b>Lewisham</b> (1 engine)<br>Utilisation: <b>9.3%</b><br>Every engine out: 9.3% of the year<br>Own-area calls answered by another station: 33%<br>Calls: 5.3/day · engine-hours 2.2/day<br>Median job 19 min</div>`)[0];
+                popup_3a11f9503db22872157e17b097f80700.setContent(html_aece083076f8f7a9ca92bffb986da96d);
+            
+        
+
+        circle_marker_d144d026930357cc041062310a4e7b7d.bindPopup(popup_3a11f9503db22872157e17b097f80700)
+        ;
+
+        
+    
+    
+            circle_marker_d144d026930357cc041062310a4e7b7d.bindTooltip(
+                `<div>
+                     Lewisham: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_060994caecd369ba06a6e3194109505d = L.circleMarker(
+                [51.5443512, -0.2367436977388931],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.049703639751057, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_c8740af50382c00ab899f93a36dbad43 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e48b3d3a05e4b2086ed6493a1c40e023 = $(`<div id="html_e48b3d3a05e4b2086ed6493a1c40e023" style="width: 100.0%; height: 100.0%;"><b>Willesden</b> (1 engine)<br>Utilisation: <b>10.3%</b><br>Every engine out: 10.3% of the year<br>Own-area calls answered by another station: 35%<br>Calls: 5.3/day · engine-hours 2.5/day<br>Median job 21 min</div>`)[0];
+                popup_c8740af50382c00ab899f93a36dbad43.setContent(html_e48b3d3a05e4b2086ed6493a1c40e023);
+            
+        
+
+        circle_marker_060994caecd369ba06a6e3194109505d.bindPopup(popup_c8740af50382c00ab899f93a36dbad43)
+        ;
+
+        
+    
+    
+            circle_marker_060994caecd369ba06a6e3194109505d.bindTooltip(
+                `<div>
+                     Willesden: 10% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7c52080d50af617e29f5153a80251c18 = L.circleMarker(
+                [51.62723145, -0.0690767018132989],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.036556771206797, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_3fd57b13a5446b7db13d540887dfa6aa = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_23f8f1bc2029bd2105b2d78e6d04fe2f = $(`<div id="html_23f8f1bc2029bd2105b2d78e6d04fe2f" style="width: 100.0%; height: 100.0%;"><b>Edmonton</b> (2 engines)<br>Utilisation: <b>5.9%</b><br>Every engine out: 1.9% of the year<br>Own-area calls answered by another station: 30%<br>Calls: 5.2/day · engine-hours 2.8/day<br>Median job 24 min</div>`)[0];
+                popup_3fd57b13a5446b7db13d540887dfa6aa.setContent(html_23f8f1bc2029bd2105b2d78e6d04fe2f);
+            
+        
+
+        circle_marker_7c52080d50af617e29f5153a80251c18.bindPopup(popup_3fd57b13a5446b7db13d540887dfa6aa)
+        ;
+
+        
+    
+    
+            circle_marker_7c52080d50af617e29f5153a80251c18.bindTooltip(
+                `<div>
+                     Edmonton: 6% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_94d4fe76c1e339fe1da7a5e69c594480 = L.circleMarker(
+                [51.407038, 0.0171208318825317],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.012805519674806, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_4f0b75247da74f17983a3f4670acecd2 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_32b1d0743722acdb3885d80d74fb231f = $(`<div id="html_32b1d0743722acdb3885d80d74fb231f" style="width: 100.0%; height: 100.0%;"><b>Bromley</b> (2 engines)<br>Utilisation: <b>5.2%</b><br>Every engine out: 1.6% of the year<br>Own-area calls answered by another station: 18%<br>Calls: 5.2/day · engine-hours 2.5/day<br>Median job 22 min</div>`)[0];
+                popup_4f0b75247da74f17983a3f4670acecd2.setContent(html_32b1d0743722acdb3885d80d74fb231f);
+            
+        
+
+        circle_marker_94d4fe76c1e339fe1da7a5e69c594480.bindPopup(popup_4f0b75247da74f17983a3f4670acecd2)
+        ;
+
+        
+    
+    
+            circle_marker_94d4fe76c1e339fe1da7a5e69c594480.bindTooltip(
+                `<div>
+                     Bromley: 5% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4043afc31a2b780f160bb40b920d37ce = L.circleMarker(
+                [51.4735264, -0.0493004024826299],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.996908633386342, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_a6ff75c9c801b87c288c01eca6e1630f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c069bf5238647eeb0179f337861267b6 = $(`<div id="html_c069bf5238647eeb0179f337861267b6" style="width: 100.0%; height: 100.0%;"><b>New Cross</b> (1 engine)<br>Utilisation: <b>9.8%</b><br>Every engine out: 9.8% of the year<br>Own-area calls answered by another station: 37%<br>Calls: 5.2/day · engine-hours 2.4/day<br>Median job 20 min</div>`)[0];
+                popup_a6ff75c9c801b87c288c01eca6e1630f.setContent(html_c069bf5238647eeb0179f337861267b6);
+            
+        
+
+        circle_marker_4043afc31a2b780f160bb40b920d37ce.bindPopup(popup_a6ff75c9c801b87c288c01eca6e1630f)
+        ;
+
+        
+    
+    
+            circle_marker_4043afc31a2b780f160bb40b920d37ce.bindTooltip(
+                `<div>
+                     New Cross: 10% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b5a3038f50cfac16ca94aec3a9a37f2c = L.circleMarker(
+                [51.5233978, 0.0568595461331539],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.94489081835782, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_619bc61e5160e5a62b07b3bdf7e9affe = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4369f556ea9ff6505d146b3f91496cf2 = $(`<div id="html_4369f556ea9ff6505d146b3f91496cf2" style="width: 100.0%; height: 100.0%;"><b>East Ham</b> (1 engine)<br>Utilisation: <b>10.4%</b><br>Every engine out: 10.4% of the year<br>Own-area calls answered by another station: 40%<br>Calls: 5.1/day · engine-hours 2.5/day<br>Median job 21 min</div>`)[0];
+                popup_619bc61e5160e5a62b07b3bdf7e9affe.setContent(html_4369f556ea9ff6505d146b3f91496cf2);
+            
+        
+
+        circle_marker_b5a3038f50cfac16ca94aec3a9a37f2c.bindPopup(popup_619bc61e5160e5a62b07b3bdf7e9affe)
+        ;
+
+        
+    
+    
+            circle_marker_b5a3038f50cfac16ca94aec3a9a37f2c.bindTooltip(
+                `<div>
+                     East Ham: 10% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4f944446f8a0c39b1b538e7163f85dda = L.circleMarker(
+                [51.507054, -0.2769203061884447],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.892319952798257, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_6dbb163d025663cf0338d7615cb98119 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a3b3b45af635ac706fec7059a9986b8d = $(`<div id="html_a3b3b45af635ac706fec7059a9986b8d" style="width: 100.0%; height: 100.0%;"><b>Acton</b> (1 engine)<br>Utilisation: <b>10.2%</b><br>Every engine out: 10.2% of the year<br>Own-area calls answered by another station: 32%<br>Calls: 4.9/day · engine-hours 2.5/day<br>Median job 21 min</div>`)[0];
+                popup_6dbb163d025663cf0338d7615cb98119.setContent(html_a3b3b45af635ac706fec7059a9986b8d);
+            
+        
+
+        circle_marker_4f944446f8a0c39b1b538e7163f85dda.bindPopup(popup_6dbb163d025663cf0338d7615cb98119)
+        ;
+
+        
+    
+    
+            circle_marker_4f944446f8a0c39b1b538e7163f85dda.bindTooltip(
+                `<div>
+                     Acton: 10% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_51ac50d91d1489279e9cd73e18f6197b = L.circleMarker(
+                [51.4672269, -0.1694003932299012],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.873310033738004, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_82d6ae0c3c6c053c55b644e3917612d2 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_71e8eecce28be60a8bd27251ad5c07cc = $(`<div id="html_71e8eecce28be60a8bd27251ad5c07cc" style="width: 100.0%; height: 100.0%;"><b>Battersea</b> (1 engine)<br>Utilisation: <b>9.1%</b><br>Every engine out: 9.1% of the year<br>Own-area calls answered by another station: 35%<br>Calls: 4.9/day · engine-hours 2.2/day<br>Median job 20 min</div>`)[0];
+                popup_82d6ae0c3c6c053c55b644e3917612d2.setContent(html_71e8eecce28be60a8bd27251ad5c07cc);
+            
+        
+
+        circle_marker_51ac50d91d1489279e9cd73e18f6197b.bindPopup(popup_82d6ae0c3c6c053c55b644e3917612d2)
+        ;
+
+        
+    
+    
+            circle_marker_51ac50d91d1489279e9cd73e18f6197b.bindTooltip(
+                `<div>
+                     Battersea: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_91e511a95b4ba36122e6fcd00476bc14 = L.circleMarker(
+                [51.5108626, -0.0557891963357072],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.830950443937592, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_5e42ba5aea65d9f2516d1c0115c8d911 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ccaf5951f0edf0fc909a956309eb54df = $(`<div id="html_ccaf5951f0edf0fc909a956309eb54df" style="width: 100.0%; height: 100.0%;"><b>Shadwell</b> (1 engine)<br>Utilisation: <b>9.1%</b><br>Every engine out: 9.1% of the year<br>Own-area calls answered by another station: 38%<br>Calls: 4.8/day · engine-hours 2.2/day<br>Median job 20 min</div>`)[0];
+                popup_5e42ba5aea65d9f2516d1c0115c8d911.setContent(html_ccaf5951f0edf0fc909a956309eb54df);
+            
+        
+
+        circle_marker_91e511a95b4ba36122e6fcd00476bc14.bindPopup(popup_5e42ba5aea65d9f2516d1c0115c8d911)
+        ;
+
+        
+    
+    
+            circle_marker_91e511a95b4ba36122e6fcd00476bc14.bindTooltip(
+                `<div>
+                     Shadwell: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_798ba90f272ab49c5383f71e0badfd9f = L.circleMarker(
+                [51.3857831, -0.0621930777407106],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.829577819831483, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_acf03e931677ab5368d56d18e4f8dbf8 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_22dc3d022c7d9eb6f48b484daeba3c66 = $(`<div id="html_22dc3d022c7d9eb6f48b484daeba3c66" style="width: 100.0%; height: 100.0%;"><b>Woodside</b> (1 engine)<br>Utilisation: <b>9.7%</b><br>Every engine out: 9.7% of the year<br>Own-area calls answered by another station: 34%<br>Calls: 4.8/day · engine-hours 2.3/day<br>Median job 22 min</div>`)[0];
+                popup_acf03e931677ab5368d56d18e4f8dbf8.setContent(html_22dc3d022c7d9eb6f48b484daeba3c66);
+            
+        
+
+        circle_marker_798ba90f272ab49c5383f71e0badfd9f.bindPopup(popup_acf03e931677ab5368d56d18e4f8dbf8)
+        ;
+
+        
+    
+    
+            circle_marker_798ba90f272ab49c5383f71e0badfd9f.bindTooltip(
+                `<div>
+                     Woodside: 10% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cc2651d7c749e03f040dc07253592178 = L.circleMarker(
+                [51.47385895, -0.013655847633136],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.759049058919803, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_49efac436399f3f09227248a08d510d9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_751413c1e3815ce161579f136d163f44 = $(`<div id="html_751413c1e3815ce161579f136d163f44" style="width: 100.0%; height: 100.0%;"><b>Greenwich</b> (1 engine)<br>Utilisation: <b>9.2%</b><br>Every engine out: 9.2% of the year<br>Own-area calls answered by another station: 34%<br>Calls: 4.7/day · engine-hours 2.2/day<br>Median job 21 min</div>`)[0];
+                popup_49efac436399f3f09227248a08d510d9.setContent(html_751413c1e3815ce161579f136d163f44);
+            
+        
+
+        circle_marker_cc2651d7c749e03f040dc07253592178.bindPopup(popup_49efac436399f3f09227248a08d510d9)
+        ;
+
+        
+    
+    
+            circle_marker_cc2651d7c749e03f040dc07253592178.bindTooltip(
+                `<div>
+                     Greenwich: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cd3bdb84418406bc68e17224daed80ec = L.circleMarker(
+                [51.56061125, 0.008677359734444],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.70017195838154, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_2a31c53a545fa3fef3e289e867d7a726 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b601b4380a9a5c679fcb48cff9702045 = $(`<div id="html_b601b4380a9a5c679fcb48cff9702045" style="width: 100.0%; height: 100.0%;"><b>Leytonstone</b> (1 engine)<br>Utilisation: <b>8.9%</b><br>Every engine out: 8.9% of the year<br>Own-area calls answered by another station: 38%<br>Calls: 4.6/day · engine-hours 2.1/day<br>Median job 22 min</div>`)[0];
+                popup_2a31c53a545fa3fef3e289e867d7a726.setContent(html_b601b4380a9a5c679fcb48cff9702045);
+            
+        
+
+        circle_marker_cd3bdb84418406bc68e17224daed80ec.bindPopup(popup_2a31c53a545fa3fef3e289e867d7a726)
+        ;
+
+        
+    
+    
+            circle_marker_cd3bdb84418406bc68e17224daed80ec.bindTooltip(
+                `<div>
+                     Leytonstone: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_faeefa07888f062c7e6bcb943a9d785b = L.circleMarker(
+                [51.4428876, -0.0450111],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.681798038864164, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_d639680f3d9b325dd39dcf3d80fd3f93 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_89c308acf70e603a0d3fa85585137d14 = $(`<div id="html_89c308acf70e603a0d3fa85585137d14" style="width: 100.0%; height: 100.0%;"><b>Forest Hill</b> (1 engine)<br>Utilisation: <b>9.5%</b><br>Every engine out: 9.5% of the year<br>Own-area calls answered by another station: 27%<br>Calls: 4.5/day · engine-hours 2.3/day<br>Median job 22 min</div>`)[0];
+                popup_d639680f3d9b325dd39dcf3d80fd3f93.setContent(html_89c308acf70e603a0d3fa85585137d14);
+            
+        
+
+        circle_marker_faeefa07888f062c7e6bcb943a9d785b.bindPopup(popup_d639680f3d9b325dd39dcf3d80fd3f93)
+        ;
+
+        
+    
+    
+            circle_marker_faeefa07888f062c7e6bcb943a9d785b.bindTooltip(
+                `<div>
+                     Forest Hill: 10% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3481b131524c2f0547a561158393b734 = L.circleMarker(
+                [51.408058049999994, -0.0342898308077814],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.67329340325179, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_71dd0c488cc3111124c7e5e0a4e5d3d9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_aaf0474ce7d3249df514acdf612fc7ce = $(`<div id="html_aaf0474ce7d3249df514acdf612fc7ce" style="width: 100.0%; height: 100.0%;"><b>Beckenham</b> (1 engine)<br>Utilisation: <b>8.6%</b><br>Every engine out: 8.6% of the year<br>Own-area calls answered by another station: 38%<br>Calls: 4.5/day · engine-hours 2.1/day<br>Median job 21 min</div>`)[0];
+                popup_71dd0c488cc3111124c7e5e0a4e5d3d9.setContent(html_aaf0474ce7d3249df514acdf612fc7ce);
+            
+        
+
+        circle_marker_3481b131524c2f0547a561158393b734.bindPopup(popup_71dd0c488cc3111124c7e5e0a4e5d3d9)
+        ;
+
+        
+    
+    
+            circle_marker_3481b131524c2f0547a561158393b734.bindTooltip(
+                `<div>
+                     Beckenham: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_aa12b87c3a0f960946bf74a4a12568c6 = L.circleMarker(
+                [51.51208625, -0.3139067419956537],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#256abf", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.62193697164544, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_004e5d916e37846ba65a2b1514a7da2c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ed435ee4a1e0b994ea7d1adeb4349a37 = $(`<div id="html_ed435ee4a1e0b994ea7d1adeb4349a37" style="width: 100.0%; height: 100.0%;"><b>Ealing</b> (1 engine)<br>Utilisation: <b>9.4%</b><br>Every engine out: 9.4% of the year<br>Own-area calls answered by another station: 25%<br>Calls: 4.4/day · engine-hours 2.3/day<br>Median job 23 min</div>`)[0];
+                popup_004e5d916e37846ba65a2b1514a7da2c.setContent(html_ed435ee4a1e0b994ea7d1adeb4349a37);
+            
+        
+
+        circle_marker_aa12b87c3a0f960946bf74a4a12568c6.bindPopup(popup_004e5d916e37846ba65a2b1514a7da2c)
+        ;
+
+        
+    
+    
+            circle_marker_aa12b87c3a0f960946bf74a4a12568c6.bindTooltip(
+                `<div>
+                     Ealing: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8930829b40af044d08455b650b90b7e7 = L.circleMarker(
+                [51.5008984, -0.0707950071742421],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.58593442174525, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_05cf4f908a2a120df25df0912da5e094 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_60a0e4d570e191fd5f1088add21d01c7 = $(`<div id="html_60a0e4d570e191fd5f1088add21d01c7" style="width: 100.0%; height: 100.0%;"><b>Dockhead</b> (1 engine)<br>Utilisation: <b>8.4%</b><br>Every engine out: 8.4% of the year<br>Own-area calls answered by another station: 33%<br>Calls: 4.3/day · engine-hours 2.0/day<br>Median job 21 min</div>`)[0];
+                popup_05cf4f908a2a120df25df0912da5e094.setContent(html_60a0e4d570e191fd5f1088add21d01c7);
+            
+        
+
+        circle_marker_8930829b40af044d08455b650b90b7e7.bindPopup(popup_05cf4f908a2a120df25df0912da5e094)
+        ;
+
+        
+    
+    
+            circle_marker_8930829b40af044d08455b650b90b7e7.bindTooltip(
+                `<div>
+                     Dockhead: 8% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_41c43dfe92fd63872d0ef146225cf61c = L.circleMarker(
+                [51.49060455, -0.2690538141204884],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.53358849671364, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_5dd9ca0c48e6b57ac5fc2ace145131b0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_178b007d0d6dff3484dbf13fb0ad4023 = $(`<div id="html_178b007d0d6dff3484dbf13fb0ad4023" style="width: 100.0%; height: 100.0%;"><b>Chiswick</b> (1 engine)<br>Utilisation: <b>8.7%</b><br>Every engine out: 8.7% of the year<br>Own-area calls answered by another station: 35%<br>Calls: 4.2/day · engine-hours 2.1/day<br>Median job 23 min</div>`)[0];
+                popup_5dd9ca0c48e6b57ac5fc2ace145131b0.setContent(html_178b007d0d6dff3484dbf13fb0ad4023);
+            
+        
+
+        circle_marker_41c43dfe92fd63872d0ef146225cf61c.bindPopup(popup_5dd9ca0c48e6b57ac5fc2ace145131b0)
+        ;
+
+        
+    
+    
+            circle_marker_41c43dfe92fd63872d0ef146225cf61c.bindTooltip(
+                `<div>
+                     Chiswick: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_99d995d6b19f39ede21cd6b4b29f24e4 = L.circleMarker(
+                [51.59096095, -0.3663798847978869],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.470260940561786, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_6ff5dc0e40cad9b3e34f323e5411ef99 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f30be6cdc3c2dbbbf42a299433718d83 = $(`<div id="html_f30be6cdc3c2dbbbf42a299433718d83" style="width: 100.0%; height: 100.0%;"><b>Harrow</b> (1 engine)<br>Utilisation: <b>8.6%</b><br>Every engine out: 8.6% of the year<br>Own-area calls answered by another station: 25%<br>Calls: 4.1/day · engine-hours 2.1/day<br>Median job 22 min</div>`)[0];
+                popup_6ff5dc0e40cad9b3e34f323e5411ef99.setContent(html_f30be6cdc3c2dbbbf42a299433718d83);
+            
+        
+
+        circle_marker_99d995d6b19f39ede21cd6b4b29f24e4.bindPopup(popup_6ff5dc0e40cad9b3e34f323e5411ef99)
+        ;
+
+        
+    
+    
+            circle_marker_99d995d6b19f39ede21cd6b4b29f24e4.bindTooltip(
+                `<div>
+                     Harrow: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_47bdc7277675b4d91e018eb249e370ec = L.circleMarker(
+                [51.43516065, -0.3475775313157903],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.443483762230429, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_435d18b139f734918b36f3a3d4268027 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f4219eea1eea71439c7afbe179d3afd8 = $(`<div id="html_f4219eea1eea71439c7afbe179d3afd8" style="width: 100.0%; height: 100.0%;"><b>Twickenham</b> (2 engines)<br>Utilisation: <b>4.8%</b><br>Every engine out: 1.8% of the year<br>Own-area calls answered by another station: 29%<br>Calls: 4.1/day · engine-hours 2.3/day<br>Median job 25 min</div>`)[0];
+                popup_435d18b139f734918b36f3a3d4268027.setContent(html_f4219eea1eea71439c7afbe179d3afd8);
+            
+        
+
+        circle_marker_47bdc7277675b4d91e018eb249e370ec.bindPopup(popup_435d18b139f734918b36f3a3d4268027)
+        ;
+
+        
+    
+    
+            circle_marker_47bdc7277675b4d91e018eb249e370ec.bindTooltip(
+                `<div>
+                     Twickenham: 5% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_656ae5c52598bd0129772c3ecd796ac7 = L.circleMarker(
+                [51.45664085, 0.012513473521701],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.437511335119616, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_1bf652cff7e5c030024116bb3e01eef5 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_075522cc7e85aa039c418ecbf3ee5f9c = $(`<div id="html_075522cc7e85aa039c418ecbf3ee5f9c" style="width: 100.0%; height: 100.0%;"><b>Lee Green</b> (1 engine)<br>Utilisation: <b>8.3%</b><br>Every engine out: 8.3% of the year<br>Own-area calls answered by another station: 32%<br>Calls: 4.1/day · engine-hours 2.0/day<br>Median job 21 min</div>`)[0];
+                popup_1bf652cff7e5c030024116bb3e01eef5.setContent(html_075522cc7e85aa039c418ecbf3ee5f9c);
+            
+        
+
+        circle_marker_656ae5c52598bd0129772c3ecd796ac7.bindPopup(popup_1bf652cff7e5c030024116bb3e01eef5)
+        ;
+
+        
+    
+    
+            circle_marker_656ae5c52598bd0129772c3ecd796ac7.bindTooltip(
+                `<div>
+                     Lee Green: 8% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_05b52fe38e7a9ce8de794d785dd7632d = L.circleMarker(
+                [51.4268951, 0.0945067633431096],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9ec5f4", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.383393318686036, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_a0625b643679f0070db82eca6398a7fc = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4fbba7cd8b2fa78ebdd15e3bc6ab6186 = $(`<div id="html_4fbba7cd8b2fa78ebdd15e3bc6ab6186" style="width: 100.0%; height: 100.0%;"><b>Sidcup</b> (2 engines)<br>Utilisation: <b>4.5%</b><br>Every engine out: 1.4% of the year<br>Own-area calls answered by another station: 18%<br>Calls: 4.0/day · engine-hours 2.1/day<br>Median job 25 min</div>`)[0];
+                popup_a0625b643679f0070db82eca6398a7fc.setContent(html_4fbba7cd8b2fa78ebdd15e3bc6ab6186);
+            
+        
+
+        circle_marker_05b52fe38e7a9ce8de794d785dd7632d.bindPopup(popup_a0625b643679f0070db82eca6398a7fc)
+        ;
+
+        
+    
+    
+            circle_marker_05b52fe38e7a9ce8de794d785dd7632d.bindTooltip(
+                `<div>
+                     Sidcup: 4% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fb496ed4a4255610a0e48f826d707883 = L.circleMarker(
+                [51.4848576, -0.0338287628551537],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.372792593811551, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_a25b0357ce93290e17bd7bc324c172d6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4b0e5bd6a2aef55dd2e09e8e13f6fa5c = $(`<div id="html_4b0e5bd6a2aef55dd2e09e8e13f6fa5c" style="width: 100.0%; height: 100.0%;"><b>Deptford</b> (1 engine)<br>Utilisation: <b>7.4%</b><br>Every engine out: 7.4% of the year<br>Own-area calls answered by another station: 29%<br>Calls: 4.0/day · engine-hours 1.8/day<br>Median job 20 min</div>`)[0];
+                popup_a25b0357ce93290e17bd7bc324c172d6.setContent(html_4b0e5bd6a2aef55dd2e09e8e13f6fa5c);
+            
+        
+
+        circle_marker_fb496ed4a4255610a0e48f826d707883.bindPopup(popup_a25b0357ce93290e17bd7bc324c172d6)
+        ;
+
+        
+    
+    
+            circle_marker_fb496ed4a4255610a0e48f826d707883.bindTooltip(
+                `<div>
+                     Deptford: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_43f3893f9cfab179b7a5a739d7dce071 = L.circleMarker(
+                [51.6305411, -0.1273731499984277],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.363685761447258, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_b08eae26d53dd490751a0f06d47f97b0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c2ee9e7ca7f870d8ea470e396695024d = $(`<div id="html_c2ee9e7ca7f870d8ea470e396695024d" style="width: 100.0%; height: 100.0%;"><b>Southgate</b> (1 engine)<br>Utilisation: <b>8.5%</b><br>Every engine out: 8.5% of the year<br>Own-area calls answered by another station: 26%<br>Calls: 3.9/day · engine-hours 2.0/day<br>Median job 24 min</div>`)[0];
+                popup_b08eae26d53dd490751a0f06d47f97b0.setContent(html_c2ee9e7ca7f870d8ea470e396695024d);
+            
+        
+
+        circle_marker_43f3893f9cfab179b7a5a739d7dce071.bindPopup(popup_b08eae26d53dd490751a0f06d47f97b0)
+        ;
+
+        
+    
+    
+            circle_marker_43f3893f9cfab179b7a5a739d7dce071.bindTooltip(
+                `<div>
+                     Southgate: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f46f260be7059093df4bcb83c30bb89e = L.circleMarker(
+                [51.41557195, -0.1975643455628843],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.360645924253921, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_f15f90dd52fd7be5ac4732a0164104df = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f13df1e2fa3b0dac2e8f16059593860d = $(`<div id="html_f13df1e2fa3b0dac2e8f16059593860d" style="width: 100.0%; height: 100.0%;"><b>Wimbledon</b> (1 engine)<br>Utilisation: <b>7.8%</b><br>Every engine out: 7.8% of the year<br>Own-area calls answered by another station: 26%<br>Calls: 3.9/day · engine-hours 1.9/day<br>Median job 21 min</div>`)[0];
+                popup_f15f90dd52fd7be5ac4732a0164104df.setContent(html_f13df1e2fa3b0dac2e8f16059593860d);
+            
+        
+
+        circle_marker_f46f260be7059093df4bcb83c30bb89e.bindPopup(popup_f15f90dd52fd7be5ac4732a0164104df)
+        ;
+
+        
+    
+    
+            circle_marker_f46f260be7059093df4bcb83c30bb89e.bindTooltip(
+                `<div>
+                     Wimbledon: 8% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_60597c9358dcf28afd62c2251c9fcbc6 = L.circleMarker(
+                [51.56309865, -0.0167733359643747],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.310179095538427, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_c73a4b412ed324d946cda87e9d78fc10 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_94ac9c9d5aa82ec611de886863a88fc4 = $(`<div id="html_94ac9c9d5aa82ec611de886863a88fc4" style="width: 100.0%; height: 100.0%;"><b>Leyton</b> (1 engine)<br>Utilisation: <b>7.7%</b><br>Every engine out: 7.7% of the year<br>Own-area calls answered by another station: 30%<br>Calls: 3.8/day · engine-hours 1.8/day<br>Median job 22 min</div>`)[0];
+                popup_c73a4b412ed324d946cda87e9d78fc10.setContent(html_94ac9c9d5aa82ec611de886863a88fc4);
+            
+        
+
+        circle_marker_60597c9358dcf28afd62c2251c9fcbc6.bindPopup(popup_c73a4b412ed324d946cda87e9d78fc10)
+        ;
+
+        
+    
+    
+            circle_marker_60597c9358dcf28afd62c2251c9fcbc6.bindTooltip(
+                `<div>
+                     Leyton: 8% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a1a62189fcbe0549ba946e485746302a = L.circleMarker(
+                [51.37233395, 0.1107023454309018],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9ec5f4", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.259114320433364, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_849c2d7a83549cbc50a3e20434f26c8b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2d04dacbf7635b328ce485e96ac85800 = $(`<div id="html_2d04dacbf7635b328ce485e96ac85800" style="width: 100.0%; height: 100.0%;"><b>Orpington</b> (2 engines)<br>Utilisation: <b>4.3%</b><br>Every engine out: 1.3% of the year<br>Own-area calls answered by another station: 13%<br>Calls: 3.7/day · engine-hours 2.1/day<br>Median job 25 min</div>`)[0];
+                popup_849c2d7a83549cbc50a3e20434f26c8b.setContent(html_2d04dacbf7635b328ce485e96ac85800);
+            
+        
+
+        circle_marker_a1a62189fcbe0549ba946e485746302a.bindPopup(popup_849c2d7a83549cbc50a3e20434f26c8b)
+        ;
+
+        
+    
+    
+            circle_marker_a1a62189fcbe0549ba946e485746302a.bindTooltip(
+                `<div>
+                     Orpington: 4% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_77fa0d4870ffca19b08f18583632b364 = L.circleMarker(
+                [51.5357937, -0.264824544196401],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.237264560881716, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_42bf6825ab23e9e605a1c087652b9a98 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a9f031b68ea386020bb5da537cbbc6ea = $(`<div id="html_a9f031b68ea386020bb5da537cbbc6ea" style="width: 100.0%; height: 100.0%;"><b>Park Royal</b> (1 engine)<br>Utilisation: <b>8.6%</b><br>Every engine out: 8.6% of the year<br>Own-area calls answered by another station: 38%<br>Calls: 3.7/day · engine-hours 2.1/day<br>Median job 25 min</div>`)[0];
+                popup_42bf6825ab23e9e605a1c087652b9a98.setContent(html_a9f031b68ea386020bb5da537cbbc6ea);
+            
+        
+
+        circle_marker_77fa0d4870ffca19b08f18583632b364.bindPopup(popup_42bf6825ab23e9e605a1c087652b9a98)
+        ;
+
+        
+    
+    
+            circle_marker_77fa0d4870ffca19b08f18583632b364.bindTooltip(
+                `<div>
+                     Park Royal: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_98bbd64919426179c72dfb92728c240f = L.circleMarker(
+                [51.3622744, -0.1482993],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.183725808873668, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_bda99fc7baea3d4098275700f4fbe261 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7eb011d7a0c2839395fb0d52e0fa6d54 = $(`<div id="html_7eb011d7a0c2839395fb0d52e0fa6d54" style="width: 100.0%; height: 100.0%;"><b>Wallington</b> (1 engine)<br>Utilisation: <b>7.1%</b><br>Every engine out: 7.1% of the year<br>Own-area calls answered by another station: 26%<br>Calls: 3.6/day · engine-hours 1.7/day<br>Median job 21 min</div>`)[0];
+                popup_bda99fc7baea3d4098275700f4fbe261.setContent(html_7eb011d7a0c2839395fb0d52e0fa6d54);
+            
+        
+
+        circle_marker_98bbd64919426179c72dfb92728c240f.bindPopup(popup_bda99fc7baea3d4098275700f4fbe261)
+        ;
+
+        
+    
+    
+            circle_marker_98bbd64919426179c72dfb92728c240f.bindTooltip(
+                `<div>
+                     Wallington: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7d4b33e8078d0c3a6a991c57a13f4731 = L.circleMarker(
+                [51.3972598, -0.1728234450853488],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.150312746096487, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_70369524575bc8931a93ac795d9c6a8c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_39ac3965aa769c274c88ae851e086f41 = $(`<div id="html_39ac3965aa769c274c88ae851e086f41" style="width: 100.0%; height: 100.0%;"><b>Mitcham</b> (1 engine)<br>Utilisation: <b>7.2%</b><br>Every engine out: 7.2% of the year<br>Own-area calls answered by another station: 35%<br>Calls: 3.6/day · engine-hours 1.7/day<br>Median job 21 min</div>`)[0];
+                popup_70369524575bc8931a93ac795d9c6a8c.setContent(html_39ac3965aa769c274c88ae851e086f41);
+            
+        
+
+        circle_marker_7d4b33e8078d0c3a6a991c57a13f4731.bindPopup(popup_70369524575bc8931a93ac795d9c6a8c)
+        ;
+
+        
+    
+    
+            circle_marker_7d4b33e8078d0c3a6a991c57a13f4731.bindTooltip(
+                `<div>
+                     Mitcham: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_190a0f3b0cdbb7fca679ab5573382c70 = L.circleMarker(
+                [51.50081445, -0.0255593731203916],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.123065756555032, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_7552ffbe4dee34b203b7f883b4ace7d4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c2a7ffad7e8d2ebaf650a6fcd521dd7a = $(`<div id="html_c2a7ffad7e8d2ebaf650a6fcd521dd7a" style="width: 100.0%; height: 100.0%;"><b>Millwall</b> (1 engine)<br>Utilisation: <b>7.8%</b><br>Every engine out: 7.8% of the year<br>Own-area calls answered by another station: 29%<br>Calls: 3.5/day · engine-hours 1.9/day<br>Median job 23 min</div>`)[0];
+                popup_7552ffbe4dee34b203b7f883b4ace7d4.setContent(html_c2a7ffad7e8d2ebaf650a6fcd521dd7a);
+            
+        
+
+        circle_marker_190a0f3b0cdbb7fca679ab5573382c70.bindPopup(popup_7552ffbe4dee34b203b7f883b4ace7d4)
+        ;
+
+        
+    
+    
+            circle_marker_190a0f3b0cdbb7fca679ab5573382c70.bindTooltip(
+                `<div>
+                     Millwall: 8% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c6c4446d621091c7de7d727fb6e9dcfd = L.circleMarker(
+                [51.4674072, -0.2848567753177973],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.097256014616987, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_65f75d283a61f0b16884d7bd76a92dfd = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3f6df07ddf5dc84fd772b11de22ed1fa = $(`<div id="html_3f6df07ddf5dc84fd772b11de22ed1fa" style="width: 100.0%; height: 100.0%;"><b>Richmond</b> (1 engine)<br>Utilisation: <b>7.6%</b><br>Every engine out: 7.6% of the year<br>Own-area calls answered by another station: 27%<br>Calls: 3.5/day · engine-hours 1.8/day<br>Median job 24 min</div>`)[0];
+                popup_65f75d283a61f0b16884d7bd76a92dfd.setContent(html_3f6df07ddf5dc84fd772b11de22ed1fa);
+            
+        
+
+        circle_marker_c6c4446d621091c7de7d727fb6e9dcfd.bindPopup(popup_65f75d283a61f0b16884d7bd76a92dfd)
+        ;
+
+        
+    
+    
+            circle_marker_c6c4446d621091c7de7d727fb6e9dcfd.bindTooltip(
+                `<div>
+                     Richmond: 8% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fa6b9b6fe81f7550707b72a51a7f11ae = L.circleMarker(
+                [51.49438, -0.4316736479820627],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.089157062213687, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_4282fa93e874df534392394756773a8d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_eeef82957a7740074c7b889f3021eeea = $(`<div id="html_eeef82957a7740074c7b889f3021eeea" style="width: 100.0%; height: 100.0%;"><b>Hayes</b> (1 engine)<br>Utilisation: <b>8.7%</b><br>Every engine out: 8.7% of the year<br>Own-area calls answered by another station: 43%<br>Calls: 3.5/day · engine-hours 2.1/day<br>Median job 27 min</div>`)[0];
+                popup_4282fa93e874df534392394756773a8d.setContent(html_eeef82957a7740074c7b889f3021eeea);
+            
+        
+
+        circle_marker_fa6b9b6fe81f7550707b72a51a7f11ae.bindPopup(popup_4282fa93e874df534392394756773a8d)
+        ;
+
+        
+    
+    
+            circle_marker_fa6b9b6fe81f7550707b72a51a7f11ae.bindTooltip(
+                `<div>
+                     Hayes: 9% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_718e25ddc9d682f109bb63228180379c = L.circleMarker(
+                [51.4506963, 0.0594040645005442],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.02871882146989, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_572c3fc5c5bf822587c38c8535724d9f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_702630b6e19593b07f9e349cb4367e49 = $(`<div id="html_702630b6e19593b07f9e349cb4367e49" style="width: 100.0%; height: 100.0%;"><b>Eltham</b> (1 engine)<br>Utilisation: <b>6.9%</b><br>Every engine out: 6.9% of the year<br>Own-area calls answered by another station: 35%<br>Calls: 3.4/day · engine-hours 1.7/day<br>Median job 23 min</div>`)[0];
+                popup_572c3fc5c5bf822587c38c8535724d9f.setContent(html_702630b6e19593b07f9e349cb4367e49);
+            
+        
+
+        circle_marker_718e25ddc9d682f109bb63228180379c.bindPopup(popup_572c3fc5c5bf822587c38c8535724d9f)
+        ;
+
+        
+    
+    
+            circle_marker_718e25ddc9d682f109bb63228180379c.bindTooltip(
+                `<div>
+                     Eltham: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b6f666c41c8e64ac9423edd976421b2a = L.circleMarker(
+                [51.485523400000005, 0.156541794689897],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.989026042422296, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_b9bf8401305cc3386d8535bc7330553a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_68a93e256952ca06013019638c8ee832 = $(`<div id="html_68a93e256952ca06013019638c8ee832" style="width: 100.0%; height: 100.0%;"><b>Erith</b> (1 engine)<br>Utilisation: <b>6.6%</b><br>Every engine out: 6.6% of the year<br>Own-area calls answered by another station: 35%<br>Calls: 3.3/day · engine-hours 1.6/day<br>Median job 22 min</div>`)[0];
+                popup_b9bf8401305cc3386d8535bc7330553a.setContent(html_68a93e256952ca06013019638c8ee832);
+            
+        
+
+        circle_marker_b6f666c41c8e64ac9423edd976421b2a.bindPopup(popup_b9bf8401305cc3386d8535bc7330553a)
+        ;
+
+        
+    
+    
+            circle_marker_b6f666c41c8e64ac9423edd976421b2a.bindTooltip(
+                `<div>
+                     Erith: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cc05b66803178fd086fe72d683575da1 = L.circleMarker(
+                [51.46116425, 0.1536625307820576],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3987e5", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.958995306339279, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_d953338555352400ed2c911e5ca539f8 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0425df718793af528ea8983acd6edeb8 = $(`<div id="html_0425df718793af528ea8983acd6edeb8" style="width: 100.0%; height: 100.0%;"><b>Bexley</b> (1 engine)<br>Utilisation: <b>7.2%</b><br>Every engine out: 7.2% of the year<br>Own-area calls answered by another station: 28%<br>Calls: 3.2/day · engine-hours 1.7/day<br>Median job 23 min</div>`)[0];
+                popup_d953338555352400ed2c911e5ca539f8.setContent(html_0425df718793af528ea8983acd6edeb8);
+            
+        
+
+        circle_marker_cc05b66803178fd086fe72d683575da1.bindPopup(popup_d953338555352400ed2c911e5ca539f8)
+        ;
+
+        
+    
+    
+            circle_marker_cc05b66803178fd086fe72d683575da1.bindTooltip(
+                `<div>
+                     Bexley: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_77e036de0402b88081709f46ab593b58 = L.circleMarker(
+                [51.60954165, 0.0239671628839159],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.903338928983819, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_27100448f4059007714679df757cfe8f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_5fcf902d20f0c96bd33655643915dafa = $(`<div id="html_5fcf902d20f0c96bd33655643915dafa" style="width: 100.0%; height: 100.0%;"><b>Woodford</b> (1 engine)<br>Utilisation: <b>6.6%</b><br>Every engine out: 6.6% of the year<br>Own-area calls answered by another station: 28%<br>Calls: 3.1/day · engine-hours 1.6/day<br>Median job 22 min</div>`)[0];
+                popup_27100448f4059007714679df757cfe8f.setContent(html_5fcf902d20f0c96bd33655643915dafa);
+            
+        
+
+        circle_marker_77e036de0402b88081709f46ab593b58.bindPopup(popup_27100448f4059007714679df757cfe8f)
+        ;
+
+        
+    
+    
+            circle_marker_77e036de0402b88081709f46ab593b58.bindTooltip(
+                `<div>
+                     Woodford: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_37d564a30fe1c3c06c13b82c6cb0bc27 = L.circleMarker(
+                [51.61499645, -0.2432100393349606],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.801802024058722, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_a2f447b440cd6cb4b475f157bb13c9ec = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2bd26595f01e65809d29df41fc4f3b6b = $(`<div id="html_2bd26595f01e65809d29df41fc4f3b6b" style="width: 100.0%; height: 100.0%;"><b>Mill Hill</b> (1 engine)<br>Utilisation: <b>6.6%</b><br>Every engine out: 6.6% of the year<br>Own-area calls answered by another station: 42%<br>Calls: 3.0/day · engine-hours 1.6/day<br>Median job 24 min</div>`)[0];
+                popup_a2f447b440cd6cb4b475f157bb13c9ec.setContent(html_2bd26595f01e65809d29df41fc4f3b6b);
+            
+        
+
+        circle_marker_37d564a30fe1c3c06c13b82c6cb0bc27.bindPopup(popup_a2f447b440cd6cb4b475f157bb13c9ec)
+        ;
+
+        
+    
+    
+            circle_marker_37d564a30fe1c3c06c13b82c6cb0bc27.bindTooltip(
+                `<div>
+                     Mill Hill: 7% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9d1f678aaa8f241bff2da66b0d800380 = L.circleMarker(
+                [51.429441, -0.3065912404057513],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9ec5f4", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.779062723545767, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_a6ee7a037bef0d3544fcd8871b7a6d55 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c08697bd4b2f3550cf7c710be2221d3a = $(`<div id="html_c08697bd4b2f3550cf7c710be2221d3a" style="width: 100.0%; height: 100.0%;"><b>Kingston</b> (2 engines)<br>Utilisation: <b>3.1%</b><br>Every engine out: 0.6% of the year<br>Own-area calls answered by another station: 33%<br>Calls: 3.0/day · engine-hours 1.5/day<br>Median job 23 min</div>`)[0];
+                popup_a6ee7a037bef0d3544fcd8871b7a6d55.setContent(html_c08697bd4b2f3550cf7c710be2221d3a);
+            
+        
+
+        circle_marker_9d1f678aaa8f241bff2da66b0d800380.bindPopup(popup_a6ee7a037bef0d3544fcd8871b7a6d55)
+        ;
+
+        
+    
+    
+            circle_marker_9d1f678aaa8f241bff2da66b0d800380.bindTooltip(
+                `<div>
+                     Kingston: 3% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ade96bc374d64116d3dae8326961ba18 = L.circleMarker(
+                [51.56451135, 0.2205802941206759],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.777307876586253, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_79e35ecf8e2d3ce77e525f2cae84ed6d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6d2030c461563e1fece309bace4a94e1 = $(`<div id="html_6d2030c461563e1fece309bace4a94e1" style="width: 100.0%; height: 100.0%;"><b>Hornchurch</b> (1 engine)<br>Utilisation: <b>6.5%</b><br>Every engine out: 6.5% of the year<br>Own-area calls answered by another station: 29%<br>Calls: 2.9/day · engine-hours 1.6/day<br>Median job 24 min</div>`)[0];
+                popup_79e35ecf8e2d3ce77e525f2cae84ed6d.setContent(html_6d2030c461563e1fece309bace4a94e1);
+            
+        
+
+        circle_marker_ade96bc374d64116d3dae8326961ba18.bindPopup(popup_79e35ecf8e2d3ce77e525f2cae84ed6d)
+        ;
+
+        
+    
+    
+            circle_marker_ade96bc374d64116d3dae8326961ba18.bindTooltip(
+                `<div>
+                     Hornchurch: 6% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8b71ece297e43e8f40e7cb48d5335969 = L.circleMarker(
+                [51.39901785, -0.245331458018544],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.765001046043989, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_9c215c065386a97df7ba66d4c09d2de3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e9cad999a381b23cd2dd477f04fedc6d = $(`<div id="html_e9cad999a381b23cd2dd477f04fedc6d" style="width: 100.0%; height: 100.0%;"><b>New Malden</b> (1 engine)<br>Utilisation: <b>5.8%</b><br>Every engine out: 5.8% of the year<br>Own-area calls answered by another station: 27%<br>Calls: 2.9/day · engine-hours 1.4/day<br>Median job 21 min</div>`)[0];
+                popup_9c215c065386a97df7ba66d4c09d2de3.setContent(html_e9cad999a381b23cd2dd477f04fedc6d);
+            
+        
+
+        circle_marker_8b71ece297e43e8f40e7cb48d5335969.bindPopup(popup_9c215c065386a97df7ba66d4c09d2de3)
+        ;
+
+        
+    
+    
+            circle_marker_8b71ece297e43e8f40e7cb48d5335969.bindTooltip(
+                `<div>
+                     New Malden: 6% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_efb2d60490b86c8b35293c4e597d8f77 = L.circleMarker(
+                [51.59367685, 0.1811242124324326],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.717150182525863, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_0a82f031c36c67479f778e205bfe3f81 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a98ae4f98969c90e3111ca37dee31f68 = $(`<div id="html_a98ae4f98969c90e3111ca37dee31f68" style="width: 100.0%; height: 100.0%;"><b>Romford</b> (1 engine)<br>Utilisation: <b>5.6%</b><br>Every engine out: 5.6% of the year<br>Own-area calls answered by another station: 28%<br>Calls: 2.9/day · engine-hours 1.4/day<br>Median job 22 min</div>`)[0];
+                popup_0a82f031c36c67479f778e205bfe3f81.setContent(html_a98ae4f98969c90e3111ca37dee31f68);
+            
+        
+
+        circle_marker_efb2d60490b86c8b35293c4e597d8f77.bindPopup(popup_0a82f031c36c67479f778e205bfe3f81)
+        ;
+
+        
+    
+    
+            circle_marker_efb2d60490b86c8b35293c4e597d8f77.bindTooltip(
+                `<div>
+                     Romford: 6% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_40381d19b090a71afd830ff70aa18b17 = L.circleMarker(
+                [51.3922391, -0.2980315164452493],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.652373969959587, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_18a23ffbed5c1d8075397eb2b3f34ea1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_43aa722401f9bc22fca0eecd97a94542 = $(`<div id="html_43aa722401f9bc22fca0eecd97a94542" style="width: 100.0%; height: 100.0%;"><b>Surbiton</b> (1 engine)<br>Utilisation: <b>5.4%</b><br>Every engine out: 5.4% of the year<br>Own-area calls answered by another station: 22%<br>Calls: 2.8/day · engine-hours 1.3/day<br>Median job 21 min</div>`)[0];
+                popup_18a23ffbed5c1d8075397eb2b3f34ea1.setContent(html_43aa722401f9bc22fca0eecd97a94542);
+            
+        
+
+        circle_marker_40381d19b090a71afd830ff70aa18b17.bindPopup(popup_18a23ffbed5c1d8075397eb2b3f34ea1)
+        ;
+
+        
+    
+    
+            circle_marker_40381d19b090a71afd830ff70aa18b17.bindTooltip(
+                `<div>
+                     Surbiton: 5% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3fb7429876e514166a73ed9a12e7a94e = L.circleMarker(
+                [51.647254649999994, -0.1859670751536085],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.6505582234044365, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_a9b6825be89ae9f8d6296177dd287014 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_577904d5a2f3253dd8d3e7c30ed26449 = $(`<div id="html_577904d5a2f3253dd8d3e7c30ed26449" style="width: 100.0%; height: 100.0%;"><b>Barnet</b> (1 engine)<br>Utilisation: <b>5.3%</b><br>Every engine out: 5.3% of the year<br>Own-area calls answered by another station: 26%<br>Calls: 2.8/day · engine-hours 1.3/day<br>Median job 21 min</div>`)[0];
+                popup_a9b6825be89ae9f8d6296177dd287014.setContent(html_577904d5a2f3253dd8d3e7c30ed26449);
+            
+        
+
+        circle_marker_3fb7429876e514166a73ed9a12e7a94e.bindPopup(popup_a9b6825be89ae9f8d6296177dd287014)
+        ;
+
+        
+    
+    
+            circle_marker_3fb7429876e514166a73ed9a12e7a94e.bindTooltip(
+                `<div>
+                     Barnet: 5% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_80bfccf940ced9a9488d3ad91e326921 = L.circleMarker(
+                [51.3519192, -0.0236213420691161],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9ec5f4", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.586427993620486, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_d5293c2d9ddcb509e0da07b3d9501e9b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_59b49d26471d5660634749f66b9c1f27 = $(`<div id="html_59b49d26471d5660634749f66b9c1f27" style="width: 100.0%; height: 100.0%;"><b>Addington</b> (2 engines)<br>Utilisation: <b>3.1%</b><br>Every engine out: 0.9% of the year<br>Own-area calls answered by another station: 18%<br>Calls: 2.7/day · engine-hours 1.5/day<br>Median job 25 min</div>`)[0];
+                popup_d5293c2d9ddcb509e0da07b3d9501e9b.setContent(html_59b49d26471d5660634749f66b9c1f27);
+            
+        
+
+        circle_marker_80bfccf940ced9a9488d3ad91e326921.bindPopup(popup_d5293c2d9ddcb509e0da07b3d9501e9b)
+        ;
+
+        
+    
+    
+            circle_marker_80bfccf940ced9a9488d3ad91e326921.bindTooltip(
+                `<div>
+                     Addington: 3% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1612916f73f1841d46e5212f19f78776 = L.circleMarker(
+                [51.48022665, -0.4590324166476678],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.528653746157871, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_1cf140b9aaa08e2f95af77b0856e2225 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b899db0c37c260bb6325ee7d92433279 = $(`<div id="html_b899db0c37c260bb6325ee7d92433279" style="width: 100.0%; height: 100.0%;"><b>Heathrow</b> (1 engine)<br>Utilisation: <b>6.5%</b><br>Every engine out: 6.5% of the year<br>Own-area calls answered by another station: 40%<br>Calls: 2.6/day · engine-hours 1.6/day<br>Median job 28 min</div>`)[0];
+                popup_1cf140b9aaa08e2f95af77b0856e2225.setContent(html_b899db0c37c260bb6325ee7d92433279);
+            
+        
+
+        circle_marker_1612916f73f1841d46e5212f19f78776.bindPopup(popup_1cf140b9aaa08e2f95af77b0856e2225)
+        ;
+
+        
+    
+    
+            circle_marker_1612916f73f1841d46e5212f19f78776.bindTooltip(
+                `<div>
+                     Heathrow: 6% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_bca6b077489098f2d1c83fbef4c3ae21 = L.circleMarker(
+                [51.5983747, 0.2235413607554786],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.488972844097431, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_825830505e76207b6a579d278f0c377f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_375279de291093e47eeb0c665e915944 = $(`<div id="html_375279de291093e47eeb0c665e915944" style="width: 100.0%; height: 100.0%;"><b>Harold Hill</b> (1 engine)<br>Utilisation: <b>5.5%</b><br>Every engine out: 5.5% of the year<br>Own-area calls answered by another station: 19%<br>Calls: 2.5/day · engine-hours 1.3/day<br>Median job 24 min</div>`)[0];
+                popup_825830505e76207b6a579d278f0c377f.setContent(html_375279de291093e47eeb0c665e915944);
+            
+        
+
+        circle_marker_bca6b077489098f2d1c83fbef4c3ae21.bindPopup(popup_825830505e76207b6a579d278f0c377f)
+        ;
+
+        
+    
+    
+            circle_marker_bca6b077489098f2d1c83fbef4c3ae21.bindTooltip(
+                `<div>
+                     Harold Hill: 6% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c7ca894675538466487a58da57745137 = L.circleMarker(
+                [51.33182495, -0.125150449999989],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.471827910639567, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_de18da5de58188f61a813bea7801ef9c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_dafa5122068a6b9cdb361494be83628a = $(`<div id="html_dafa5122068a6b9cdb361494be83628a" style="width: 100.0%; height: 100.0%;"><b>Purley</b> (1 engine)<br>Utilisation: <b>5.3%</b><br>Every engine out: 5.3% of the year<br>Own-area calls answered by another station: 17%<br>Calls: 2.5/day · engine-hours 1.3/day<br>Median job 23 min</div>`)[0];
+                popup_de18da5de58188f61a813bea7801ef9c.setContent(html_dafa5122068a6b9cdb361494be83628a);
+            
+        
+
+        circle_marker_c7ca894675538466487a58da57745137.bindPopup(popup_de18da5de58188f61a813bea7801ef9c)
+        ;
+
+        
+    
+    
+            circle_marker_c7ca894675538466487a58da57745137.bindTooltip(
+                `<div>
+                     Purley: 5% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b45ffe115169684ee98c10a9b5770401 = L.circleMarker(
+                [51.5883815, -0.4367001982307689],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.431489951562037, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_7730c4cf96151d113fc4a8e546e53618 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4dc82857a2d263a06ff3a862aa5cb475 = $(`<div id="html_4dc82857a2d263a06ff3a862aa5cb475" style="width: 100.0%; height: 100.0%;"><b>Ruislip</b> (1 engine)<br>Utilisation: <b>5.4%</b><br>Every engine out: 5.4% of the year<br>Own-area calls answered by another station: 35%<br>Calls: 2.4/day · engine-hours 1.3/day<br>Median job 23 min</div>`)[0];
+                popup_7730c4cf96151d113fc4a8e546e53618.setContent(html_4dc82857a2d263a06ff3a862aa5cb475);
+            
+        
+
+        circle_marker_b45ffe115169684ee98c10a9b5770401.bindPopup(popup_7730c4cf96151d113fc4a8e546e53618)
+        ;
+
+        
+    
+    
+            circle_marker_b45ffe115169684ee98c10a9b5770401.bindTooltip(
+                `<div>
+                     Ruislip: 5% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7beab404b914011f95aa69a9bc624564 = L.circleMarker(
+                [51.6296127, -0.0047711],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.414056358925231, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_36742cebb41f924ead72aa26017f6e0f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_36b2bc64d3cc90fd56c4d5be5a808a74 = $(`<div id="html_36b2bc64d3cc90fd56c4d5be5a808a74" style="width: 100.0%; height: 100.0%;"><b>Chingford</b> (1 engine)<br>Utilisation: <b>5.2%</b><br>Every engine out: 5.2% of the year<br>Own-area calls answered by another station: 28%<br>Calls: 2.4/day · engine-hours 1.2/day<br>Median job 24 min</div>`)[0];
+                popup_36742cebb41f924ead72aa26017f6e0f.setContent(html_36b2bc64d3cc90fd56c4d5be5a808a74);
+            
+        
+
+        circle_marker_7beab404b914011f95aa69a9bc624564.bindPopup(popup_36742cebb41f924ead72aa26017f6e0f)
+        ;
+
+        
+    
+    
+            circle_marker_7beab404b914011f95aa69a9bc624564.bindTooltip(
+                `<div>
+                     Chingford: 5% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5619cd05758dcaae7395ce95f2702969 = L.circleMarker(
+                [51.60617575, 0.1043983327517823],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9ec5f4", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.0357685041779625, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_56a26e9906416cbcca95a156d67050dc = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_360f3696a546b9bd9621a15c6b4bbf76 = $(`<div id="html_360f3696a546b9bd9621a15c6b4bbf76" style="width: 100.0%; height: 100.0%;"><b>Hainault</b> (1 engine)<br>Utilisation: <b>4.6%</b><br>Every engine out: 4.6% of the year<br>Own-area calls answered by another station: 30%<br>Calls: 1.9/day · engine-hours 1.1/day<br>Median job 26 min</div>`)[0];
+                popup_56a26e9906416cbcca95a156d67050dc.setContent(html_360f3696a546b9bd9621a15c6b4bbf76);
+            
+        
+
+        circle_marker_5619cd05758dcaae7395ce95f2702969.bindPopup(popup_56a26e9906416cbcca95a156d67050dc)
+        ;
+
+        
+    
+    
+            circle_marker_5619cd05758dcaae7395ce95f2702969.bindTooltip(
+                `<div>
+                     Hainault: 5% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ceb745d0120f2b6f771c76662d99ea29 = L.circleMarker(
+                [51.50593515, 0.2203615409801693],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#6da7ec", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.789942799040476, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_e02b5154f4960bdd5e002ea5c1e12f1f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_dc49a1f0ea58879c595cd9c239e62a2b = $(`<div id="html_dc49a1f0ea58879c595cd9c239e62a2b" style="width: 100.0%; height: 100.0%;"><b>Wennington</b> (1 engine)<br>Utilisation: <b>4.7%</b><br>Every engine out: 4.7% of the year<br>Own-area calls answered by another station: 34%<br>Calls: 1.6/day · engine-hours 1.1/day<br>Median job 31 min</div>`)[0];
+                popup_e02b5154f4960bdd5e002ea5c1e12f1f.setContent(html_dc49a1f0ea58879c595cd9c239e62a2b);
+            
+        
+
+        circle_marker_ceb745d0120f2b6f771c76662d99ea29.bindPopup(popup_e02b5154f4960bdd5e002ea5c1e12f1f)
+        ;
+
+        
+    
+    
+            circle_marker_ceb745d0120f2b6f771c76662d99ea29.bindTooltip(
+                `<div>
+                     Wennington: 5% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6913fa4259b75193dde3fb1fc0c6abe3 = L.circleMarker(
+                [51.313615, 0.0341143511908675],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#cde2fb", "fillOpacity": 0.92, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5.899156265436824, "stroke": true, "weight": 1.5}
+            ).addTo(map_a349f89dc71b230b9a8c53a4977b5af2);
+        
+    
+        var popup_74dc575982a0b6abbb6aeafcc89cc811 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c1e2d0b140e4fd36625913a9501c83d1 = $(`<div id="html_c1e2d0b140e4fd36625913a9501c83d1" style="width: 100.0%; height: 100.0%;"><b>Biggin Hill</b> (1 engine)<br>Utilisation: <b>2.1%</b><br>Every engine out: 2.1% of the year<br>Own-area calls answered by another station: 24%<br>Calls: 0.7/day · engine-hours 0.5/day<br>Median job 28 min</div>`)[0];
+                popup_74dc575982a0b6abbb6aeafcc89cc811.setContent(html_c1e2d0b140e4fd36625913a9501c83d1);
+            
+        
+
+        circle_marker_6913fa4259b75193dde3fb1fc0c6abe3.bindPopup(popup_74dc575982a0b6abbb6aeafcc89cc811)
+        ;
+
+        
+    
+    
+            circle_marker_6913fa4259b75193dde3fb1fc0c6abe3.bindTooltip(
+                `<div>
+                     Biggin Hill: 2% utilised
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+</script>
+</html>

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Build a London OSM drive graph for firetruck routing / race demos.
+"""Build a London OSM drive graph for fire engine routing / race demos.
 
 Default: central London bbox covering expand-plan sites around Westminster.
-Use --full to build Greater London via Geofabrik PBF (emvro.road_distance).
+Use --full to build Greater London via Geofabrik PBF (firestation.road_distance).
 
   PYTHONPATH=src .venv/bin/python scripts/build_london_drive_graph.py
   PYTHONPATH=src .venv/bin/python scripts/build_london_drive_graph.py --full
@@ -49,7 +49,7 @@ def main() -> int:
     args = ap.parse_args()
 
     if args.full:
-        from emvro.road_distance import GRAPH_PATH, load_or_build_graph
+        from firestation.road_distance import GRAPH_PATH, load_or_build_graph
 
         out = args.out or GRAPH_PATH
         G = load_or_build_graph(out)

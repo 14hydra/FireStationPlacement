@@ -1,7 +1,7 @@
-"""Lightweight firetruck routing on an OSM drive GraphML (no NYC/weather deps).
+"""Lightweight fire engine routing on an OSM drive GraphML (no NYC/weather deps).
 
 Prefers arterials, penalises residential/service, and blocks long contraflow —
-same policy as the former ``emvro.routing.firetruck`` overlay, but self-contained
+same policy as the former ``firestation.routing.fire_engine`` overlay, but self-contained
 for the London-only tree.
 """
 
@@ -13,8 +13,8 @@ from typing import Any
 import networkx as nx
 import osmnx as ox
 
-WEIGHT_KEY = "weight_firetruck"
-SECONDS_KEY = "firetruck_s"
+WEIGHT_KEY = "weight_fire_engine"
+SECONDS_KEY = "fire_engine_s"
 MAX_CONTRAFLOW_M = 80.0
 CONTRAFLOW_EXTRA_S = 12.0
 RESIDENTIAL_PENALTY = 1.12
@@ -48,7 +48,7 @@ def _base_seconds(data: dict) -> float:
     return (length / 1000.0) / kph * 3600.0
 
 
-def annotate_firetruck_costs(G: nx.MultiDiGraph) -> dict[str, Any]:
+def annotate_fire_engine_costs(G: nx.MultiDiGraph) -> dict[str, Any]:
     n_blocked = n_contra = n_res = n_dead = 0
     for _u, _v, _k, data in G.edges(keys=True, data=True):
         length = float(data.get("length") or data.get("length_m") or 0.0)
@@ -93,15 +93,15 @@ def annotate_firetruck_costs(G: nx.MultiDiGraph) -> dict[str, Any]:
         "deadend_penalized": n_dead,
         "weight_key": WEIGHT_KEY,
     }
-    G.graph["firetruck_routing"] = stats
+    G.graph["fire_engine_routing"] = stats
     return stats
 
 
-def prepare_firetruck_graph(graph_path: Path | str, *, hour: int = 17) -> nx.MultiDiGraph:
-    """Load GraphML and annotate firetruck edge weights. ``hour`` reserved for traffic priors."""
+def prepare_fire_engine_graph(graph_path: Path | str, *, hour: int = 17) -> nx.MultiDiGraph:
+    """Load GraphML and annotate fire engine edge weights. ``hour`` reserved for traffic priors."""
     del hour  # reserved
     G = ox.load_graphml(Path(graph_path))
-    annotate_firetruck_costs(G)
+    annotate_fire_engine_costs(G)
     return G
 
 
@@ -109,7 +109,7 @@ def nearest_node(G: nx.MultiDiGraph, lon: float, lat: float):
     return ox.distance.nearest_nodes(G, float(lon), float(lat))
 
 
-def firetruck_route_latlon(G, lon1: float, lat1: float, lon2: float, lat2: float):
+def fire_engine_route_latlon(G, lon1: float, lat1: float, lon2: float, lat2: float):
     o = nearest_node(G, lon1, lat1)
     d = nearest_node(G, lon2, lat2)
     try:
@@ -133,7 +133,7 @@ def firetruck_route_latlon(G, lon1: float, lat1: float, lon2: float, lat2: float
     return r
 
 
-def path_firetruck_stats(G, path) -> tuple[float, float, int]:
+def path_fire_engine_stats(G, path) -> tuple[float, float, int]:
     if len(path) < 2:
         return float("nan"), float("nan"), 0
     total_t = total_d = 0.0

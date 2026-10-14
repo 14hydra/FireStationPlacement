@@ -4,7 +4,7 @@ Placement-ready London (LFB) driving-time model: gradient-boosted decision trees
 
 Target: TravelTimeSeconds (leave station → arrive), 30–1200 s.
 Model:  LightGBM, averaged over 4 seeds, on placement-safe features (no station IDs).
-        Features are built by emvro.travel_time_model.build_features (see its docstring
+        Features are built by firestation.travel_time_model.build_features (see its docstring
         for the groups: base, street, context, weather, incident, dest).
 
 What this script reports (all on held-out 2025 trips, trained on 2021–2024):
@@ -38,8 +38,8 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from emvro.kolesar import fit_kolesar  # noqa: E402
-from emvro.travel_time_model import (  # noqa: E402
+from firestation.kolesar import fit_kolesar  # noqa: E402
+from firestation.travel_time_model import (  # noqa: E402
     CATEGORICAL,
     DRIVE_CLIP_S,
     DestinationHistory,
@@ -234,7 +234,7 @@ def main() -> int:
             "driven route. Weather is city-centre hourly. busy_flag, pump_order, incident type and "
             "from_home are known historically; for new sites use typical values (pump_order=1, "
             "from_home=1, expected busy rate). Destination history uses training trips only "
-            "(out-of-fold for training rows). Use emvro.travel_time_model.predict(bundle, trips)."
+            "(out-of-fold for training rows). Use firestation.travel_time_model.predict(bundle, trips)."
         ),
     }
     import joblib

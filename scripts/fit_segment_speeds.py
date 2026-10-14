@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Scaffold: fit a per-segment speed model (width, lanes, maxspeed, road type, hour)
-from an OSM drive graph. See emvro.segment_speeds for the Zhan et al.-style idea.
+from an OSM drive graph. See firestation.segment_speeds for the Zhan et al.-style idea.
 
 If data/raw/london/london_drive.graphml does not exist this prints what is
 needed + a JSON stub plan and exits 0. If it exists (or --graph is given), it
@@ -27,9 +27,9 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from emvro.kolesar import KolesarModel  # noqa: E402
-from emvro.london_eval import haversine_km  # noqa: E402
-from emvro.segment_speeds import (  # noqa: E402
+from firestation.kolesar import KolesarModel  # noqa: E402
+from firestation.london_eval import haversine_km  # noqa: E402
+from firestation.segment_speeds import (  # noqa: E402
     SegmentSpeedModel,
     feature_names,
     route_features,
@@ -50,7 +50,7 @@ def stub_plan(graph_path: Path) -> dict:
             "width, lanes, maxspeed, highway; save to the path above (graphml).",
             "Route-level targets: LFB start station -> incident OD with observed drive seconds "
             "(data/raw/london/lfb_incidents_planner.csv minus ~60 s turnout).",
-            "Then run the iterative Dijkstra re-route fit (emvro.segment_speeds.iterative_reroute_fit).",
+            "Then run the iterative Dijkstra re-route fit (firestation.segment_speeds.iterative_reroute_fit).",
         ],
         "model": "SegmentSpeedModel: slowness(s/km) = w . [1, 3600/maxspeed, lanes, width, road_type onehots, rush, sin/cos hour]",
         "features": feature_names(),
@@ -105,8 +105,8 @@ def main() -> int:
 
     # Kolesar target curve (LFB-fit if possible else the London default)
     try:
-        from emvro.kolesar import fit_kolesar
-        from emvro.london_eval import load_london
+        from firestation.kolesar import fit_kolesar
+        from firestation.london_eval import load_london
 
         _, inc = load_london(years=[2024])
         kol = fit_kolesar(inc["crow_km"], inc["drive_s"])

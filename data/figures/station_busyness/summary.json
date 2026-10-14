@@ -1,0 +1,20 @@
+{
+  "year": 2025,
+  "stations": 102,
+  "median_utilisation_pct": 7.8,
+  "busiest": {
+    "Euston": 16.2,
+    "Islington": 13.9,
+    "Shoreditch": 13.7,
+    "Chelsea": 13.6,
+    "Soho": 13.2
+  },
+  "quietest": {
+    "Sidcup": 4.5,
+    "Orpington": 4.3,
+    "Kingston": 3.1,
+    "Addington": 3.1,
+    "Biggin Hill": 2.1
+  },
+  "corr_utilisation_vs_covered_by_other": 0.52
+}

@@ -8,12 +8,12 @@ judged against LFB first-engine KPIs (mean <= 6 min, > 90 % within 10 min).
 Demand comes from --demand-years, held-out scoring from --eval-years.
 
 Examples:
-  PYTHONPATH=src python scripts/plan_firehouse_locations.py --demo --mode expand --add-stations 2
-  PYTHONPATH=src python scripts/plan_firehouse_locations.py \\
+  PYTHONPATH=src python scripts/plan_fire_station_locations.py --demo --mode expand --add-stations 2
+  PYTHONPATH=src python scripts/plan_fire_station_locations.py \\
       --city london --mode redesign
-  PYTHONPATH=src python scripts/plan_firehouse_locations.py \\
+  PYTHONPATH=src python scripts/plan_fire_station_locations.py \\
       --city london --mode replace --replace 10
-  PYTHONPATH=src python scripts/plan_firehouse_locations.py \\
+  PYTHONPATH=src python scripts/plan_fire_station_locations.py \\
       --city london --mode expand --add-stations 3 --use-busy
 """
 
@@ -30,15 +30,15 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from emvro.cities import (  # noqa: E402
+from firestation.cities import (  # noqa: E402
     custom_city,
     get_city,
     list_cities,
-    load_firehouses,
+    load_fire_stations,
     load_incidents,
     with_overrides,
 )
-from emvro.firehouse_location import demo_inputs, run_firehouse_plan  # noqa: E402
+from firestation.fire_station_location import demo_inputs, run_fire_station_plan  # noqa: E402
 
 
 def _write_map(result, out: Path, threshold_min: float) -> Path:
@@ -53,7 +53,7 @@ def _write_map(result, out: Path, threshold_min: float) -> Path:
     candidates = result.candidates
     center = [float(cells["lat"].mean()), float(cells["lon"].mean())]
     # Never use tiles.openstreetmap.org — OSM's volunteer CDN 403s Folium apps
-    # (osm.wiki/Blocked). Match patrol/visualize_data: Esri default + Carto fallbacks.
+    # (osm.wiki/Blocked). Match patrol/plot_incident_density: Esri default + Carto fallbacks.
     m = folium.Map(location=center, zoom_start=11, tiles=None)
     folium.TileLayer(
         tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
@@ -113,7 +113,7 @@ def _write_map(result, out: Path, threshold_min: float) -> Path:
 
     # Kept existing (subtle)
     kept = selected[selected["is_existing"] == True] if "is_existing" in selected.columns else selected.iloc[0:0]
-    fg_kept = folium.FeatureGroup(name="Kept firehouses", show=False)
+    fg_kept = folium.FeatureGroup(name="Kept fire stations", show=False)
     for _, row in kept.iterrows():
         folium.CircleMarker(
             [row["lat"], row["lon"]],
@@ -127,7 +127,7 @@ def _write_map(result, out: Path, threshold_min: float) -> Path:
     fg_kept.add_to(m)
 
     if len(closed):
-        fg_c = folium.FeatureGroup(name="Closed firehouses", show=True)
+        fg_c = folium.FeatureGroup(name="Closed fire stations", show=True)
         for _, row in closed.iterrows():
             folium.Marker(
                 [row["lat"], row["lon"]],
@@ -160,14 +160,14 @@ def _write_map(result, out: Path, threshold_min: float) -> Path:
 
     s = result.summary
     plan = s["plan"]
-    cur = s["baselines"]["current_firehouses"]
+    cur = s["baselines"]["current_fire_stations"]
     delta = s.get("delta_vs_current_s")
     delta_txt = f"{delta:.0f} s" if delta is not None else "—"
     panel = f"""
     <div style="position:fixed;top:12px;left:12px;z-index:9999;background:rgba(255,255,255,0.96);
          padding:12px 14px;border:1px solid #888;border-radius:10px;font:13px/1.45 system-ui,sans-serif;
          width:380px;max-width:92vw;box-shadow:0 4px 14px rgba(0,0,0,.18);">
-      <div style="font-weight:700;">Firehouse location plan</div>
+      <div style="font-weight:700;">Fire station location plan</div>
       <div style="color:#555;font-size:12px;margin:4px 0 8px;">
         {s['city_id']} · mode=<b>{s['mode']}</b> · {s['objective']}
       </div>
@@ -193,7 +193,7 @@ def _write_map(result, out: Path, threshold_min: float) -> Path:
 
 
 def _write_figures(result, out_dir: Path, threshold_min: float) -> list[Path]:
-    """Static comparison charts for the firehouse plan."""
+    """Static comparison charts for the fire station plan."""
     import matplotlib.pyplot as plt
 
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -208,8 +208,8 @@ def _write_figures(result, out_dir: Path, threshold_min: float) -> list[Path]:
 
     # --- 01 metrics bars ---
     labels = ["Current"]
-    et = [baselines["current_firehouses"]["expected_response_s"] / 60]
-    cov = [100 * baselines["current_firehouses"]["coverage_share_within_threshold"]]
+    et = [baselines["current_fire_stations"]["expected_response_s"] / 60]
+    cov = [100 * baselines["current_fire_stations"]["coverage_share_within_threshold"]]
     colors = ["#7f8c8d"]
     for key in ("random_replace", "random_expand"):
         if key in baselines:
@@ -236,7 +236,7 @@ def _write_figures(result, out_dir: Path, threshold_min: float) -> list[Path]:
     ax.set_ylim(0, 105)
     for b, v in zip(bars, cov):
         ax.text(b.get_x() + b.get_width() / 2, min(v + 1.5, 102), f"{v:.1f}%", ha="center", fontsize=9)
-    fig.suptitle("Firehouse plan vs baselines", fontsize=13, fontweight="600", y=1.02)
+    fig.suptitle("Fire station plan vs baselines", fontsize=13, fontweight="600", y=1.02)
     fig.tight_layout()
     path = out_dir / "01_metrics_comparison.png"
     fig.savefig(path, dpi=160, bbox_inches="tight")
@@ -379,10 +379,10 @@ def main():
     p.add_argument("--demand-years", type=str, default="2024", help="Comma list of cal_years for demand")
     p.add_argument("--eval-years", type=str, default="2025", help="Comma list of cal_years for held-out scoring")
     p.add_argument("--use-busy", action="store_true", help="Blend next-nearest engine by station busy rate")
-    p.add_argument("--firehouses", type=Path, default=None)
+    p.add_argument("--fire-stations", type=Path, default=None)
     p.add_argument("--incidents", type=Path, default=None)
     p.add_argument("--max-incidents", type=int, default=200_000)
-    p.add_argument("--out-dir", type=Path, default=ROOT / "data" / "figures" / "firehouse_plan")
+    p.add_argument("--out-dir", type=Path, default=ROOT / "data" / "figures" / "fire_station_plan")
     p.add_argument("--demo", action="store_true", help="Synthetic city (no data files needed)")
     p.add_argument("--seed", type=int, default=42)
     args = p.parse_args()
@@ -403,10 +403,10 @@ def main():
         print(f"Demo city: {len(houses)} houses, {len(incidents)} incidents")
     else:
         if args.city.lower() in {"custom"}:
-            if not args.firehouses or not args.incidents:
-                p.error("custom city requires --firehouses and --incidents")
+            if not args.fire_stations or not args.incidents:
+                p.error("custom city requires --fire-stations and --incidents")
             spec = custom_city(
-                firehouses=args.firehouses,
+                fire_stations=args.fire_stations,
                 incidents=args.incidents,
             )
         else:
@@ -416,7 +416,7 @@ def main():
                 p.error(str(e))
             spec = with_overrides(
                 spec,
-                firehouses=args.firehouses,
+                fire_stations=args.fire_stations,
                 incidents=args.incidents,
             )
         try:
@@ -424,8 +424,8 @@ def main():
         except FileNotFoundError as e:
             p.error(str(e))
         city_id = spec.id
-        houses = load_firehouses(spec)
-        # LFB planner CSV: load demand + eval years whole; run_firehouse_plan splits
+        houses = load_fire_stations(spec)
+        # LFB planner CSV: load demand + eval years whole; run_fire_station_plan splits
         # them and caps each split at --max-incidents.
         is_lfb = spec.meta.get("standards") == "lfb"
         incidents = load_incidents(
@@ -435,9 +435,9 @@ def main():
         )
         if args.n_houses is None and args.mode == "redesign":
             args.n_houses = len(houses)
-        print(f"City {spec.name}: {len(houses)} firehouses, {len(incidents):,} demand rows")
+        print(f"City {spec.name}: {len(houses)} fire stations, {len(incidents):,} demand rows")
 
-    result = run_firehouse_plan(
+    result = run_fire_station_plan(
         city_id=city_id,
         houses=houses,
         incidents=incidents,
@@ -458,13 +458,13 @@ def main():
     )
 
     # Write artifacts
-    result.selected.to_csv(args.out_dir / "planned_firehouses.csv", index=False)
+    result.selected.to_csv(args.out_dir / "planned_fire_stations.csv", index=False)
     result.cells.to_csv(args.out_dir / "demand_cells.csv", index=False)
     result.candidates.to_csv(args.out_dir / "candidates.csv", index=False)
     if len(result.closed):
-        result.closed.to_csv(args.out_dir / "closed_firehouses.csv", index=False)
+        result.closed.to_csv(args.out_dir / "closed_fire_stations.csv", index=False)
     if len(result.opened):
-        result.opened.to_csv(args.out_dir / "opened_firehouses.csv", index=False)
+        result.opened.to_csv(args.out_dir / "opened_fire_stations.csv", index=False)
     (args.out_dir / "summary.json").write_text(json.dumps(result.summary, indent=2) + "\n")
 
     try:
@@ -475,7 +475,7 @@ def main():
         print("Figures skipped:", exc)
 
     try:
-        map_path = _write_map(result, args.out_dir / "firehouse_plan_map.html", args.threshold_min)
+        map_path = _write_map(result, args.out_dir / "fire_station_plan_map.html", args.threshold_min)
         print("Map ->", map_path)
     except Exception as exc:  # noqa: BLE001
         print("Map skipped:", exc)

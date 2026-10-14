@@ -10,11 +10,11 @@ Sources (London Datastore, Open Government Licence):
     arriving), recorded separately from turnout.
   - Incident records (data/raw/london/lfb_incidents_*.csv): incident location
     and the station ground it falls in.
-  - Station locations (data/raw/london/london_firehouses.csv, built by
-    scripts/build_london_firehouses.py): the real station buildings.
-  - London drive graph (OpenStreetMap, emvro.road_distance): road_km is the
+  - Station locations (data/raw/london/london_fire_stations.csv, built by
+    scripts/build_london_fire_stations.py): the real station buildings.
+  - London drive graph (OpenStreetMap, firestation.road_distance): road_km is the
     shortest legal route from station to incident, one-way streets respected.
-  - Street characteristics along that route (emvro.route_features): road class
+  - Street characteristics along that route (firestation.route_features): road class
     shares, one-way / 20 mph / bus-lane shares, lanes, signals, traffic calming,
     crossings, give-way signs, junctions, turns and roundabouts per km; plus the
     fastest route at posted speed limits and each end's distance to a main road.
@@ -104,7 +104,7 @@ def load_mobilisations() -> pd.DataFrame:
 
 
 def _load_stations() -> pd.DataFrame:
-    path = RAW / "london_firehouses.csv"
+    path = RAW / "london_fire_stations.csv"
     s = pd.read_csv(path)
     if "name" not in s.columns and "facilityname" in s.columns:
         s = s.rename(columns={"facilityname": "name", "latitude": "lat", "longitude": "lon"})
@@ -155,14 +155,14 @@ def main() -> int:
         counts["road_km_source"] = "crow_x1.25_proxy"
         if not args.crow_only:
             print("NOTE: london_drive.graphml missing — using crow×1.25 as road_km proxy (no street features)")
-        from emvro.route_features import ROUTE_FEATURES
+        from firestation.route_features import ROUTE_FEATURES
 
-        from emvro.route_features import CONTEXT_FEATURES
+        from firestation.route_features import CONTEXT_FEATURES
 
         street = pd.DataFrame({c: np.nan for c in ROUTE_FEATURES + CONTEXT_FEATURES}, index=df.index)
     else:
-        from emvro.road_distance import load_or_build_graph
-        from emvro.route_features import RouteFeatureRouter, edge_feature_table
+        from firestation.road_distance import load_or_build_graph
+        from firestation.route_features import RouteFeatureRouter, edge_feature_table
 
         G = load_or_build_graph()
         router = RouteFeatureRouter(G, edge_feature_table(G))

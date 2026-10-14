@@ -11,8 +11,8 @@ All raw files live in `data/raw/london/` and are not in git.
 |---|---|---|---|
 | Incidents | **LFB incident records** (London Datastore, OGL): location (BNG `Easting_m`/`Northing_m`, always `Easting_rounded`/`Northing_rounded` to 50 m), `IncidentStationGround`, `FirstPumpArriving_AttendanceTime`, deployed station for 1st/2nd pump | `lfb_incidents_2018_2023.csv`, `lfb_incidents_2024_onwards.csv` | **EXISTS** |
 | Engine trips | **LFB mobilisation records** (London Datastore, OGL): one row per engine sent; `DeployedFromStation_Name`, `DeployedFromLocation` (Home Station / Other Station), `TurnoutTimeSeconds`, `TravelTimeSeconds`, `DelayCode_Description`, `PumpOrder` | `lfb_mobilisations_2021_2024.csv`, `lfb_mobilisations_2025.csv` | **EXISTS** |
-| Station locations | OpenStreetMap `amenity=fire_station`, name-matched to the 102 LFB stations; 8 pinned to specific OSM features (`OSM_OVERRIDES`) | `london_firehouses.csv` (built by `scripts/build_london_firehouses.py`) | **EXISTS** |
-| Street network | OpenStreetMap, Geofabrik Greater London extract, filtered to drivable roads (osmnx "drive" rules) | `greater-london-latest.osm.pbf` → `london_drive.graphml` (built by `emvro.road_distance`) | **EXISTS** |
+| Station locations | OpenStreetMap `amenity=fire_station`, name-matched to the 102 LFB stations; 8 pinned to specific OSM features (`OSM_OVERRIDES`) | `london_fire_stations.csv` (built by `scripts/build_london_fire_stations.py`) | **EXISTS** |
+| Street network | OpenStreetMap, Geofabrik Greater London extract, filtered to drivable roads (osmnx "drive" rules) | `greater-london-latest.osm.pbf` → `london_drive.graphml` (built by `firestation.road_distance`) | **EXISTS** |
 | Weather | Open-Meteo archive, hourly, central London (no key) | `data/processed/weather_hourly_london.csv` (built by `scripts/fetch_london_weather.py`) | **EXISTS** |
 | Street detail | **Ordnance Survey NGD** road links (width, speed limit, class) | — | **PLANNED** |
 | Pre-2014 incidents | LFB incident records 2009–2017 (London Datastore) | — | **PLANNED** (2014 closure test) |
@@ -35,4 +35,4 @@ out on the road ("On outside duty when mobilised"), had a correct address, and d
   engine actually left from, so every trip's origin is known.
 - `busy_flag` (`deployed ≠ station ground`) marks engines sent from outside the
   incident's own station area.
-- Standards: first engine mean ≤ 6 min, > 90 % within 10 min (`emvro.lfb_standards`).
+- Standards: first engine mean ≤ 6 min, > 90 % within 10 min (`firestation.lfb_standards`).
