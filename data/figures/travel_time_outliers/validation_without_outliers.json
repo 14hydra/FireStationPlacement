@@ -1,0 +1,102 @@
+{
+  "test_year": 2025,
+  "model": "travel_time_lfb.joblib",
+  "outlier_definition_primary": {
+    "speed_kph_lt": 8,
+    "speed_kph_gt": 70,
+    "drive_s_gt": 900,
+    "road_km_lt_and_drive_s_gt": [
+      0.5,
+      240
+    ],
+    "circuity_gt": 3.0
+  },
+  "metrics": {
+    "all_trips": {
+      "n": 200624,
+      "mae_s": 60.18,
+      "medae_s": 37.13,
+      "bias_s": -19.87,
+      "p90_ae_s": 134.93,
+      "p95_ae_s": 195.99,
+      "kept_pct": 100.0,
+      "dropped": 0
+    },
+    "no_outliers_primary": {
+      "n": 191166,
+      "mae_s": 53.72,
+      "medae_s": 35.71,
+      "bias_s": -20.53,
+      "p90_ae_s": 119.03,
+      "p95_ae_s": 167.26,
+      "kept_pct": 95.29,
+      "dropped": 9458
+    },
+    "no_impossible_speed": {
+      "n": 194528,
+      "mae_s": 55.5,
+      "medae_s": 35.86,
+      "bias_s": -22.55,
+      "p90_ae_s": 121.59,
+      "p95_ae_s": 174.08,
+      "kept_pct": 96.96,
+      "dropped": 6096
+    },
+    "no_drive_gt_600": {
+      "n": 191929,
+      "mae_s": 51.63,
+      "medae_s": 35.42,
+      "bias_s": -9.67,
+      "p90_ae_s": 115.93,
+      "p95_ae_s": 159.29,
+      "kept_pct": 95.67,
+      "dropped": 8695
+    },
+    "no_drive_gt_900": {
+      "n": 199632,
+      "mae_s": 57.97,
+      "medae_s": 36.9,
+      "bias_s": -17.47,
+      "p90_ae_s": 131.45,
+      "p95_ae_s": 188.28,
+      "kept_pct": 99.51,
+      "dropped": 992
+    },
+    "non_busy_only": {
+      "n": 107466,
+      "mae_s": 51.99,
+      "medae_s": 32.19,
+      "bias_s": -19.55,
+      "p90_ae_s": 112.31,
+      "p95_ae_s": 166.59,
+      "kept_pct": 53.57,
+      "dropped": 93158
+    },
+    "pump1_only": {
+      "n": 125969,
+      "mae_s": 55.06,
+      "medae_s": 34.35,
+      "bias_s": -16.55,
+      "p90_ae_s": 122.62,
+      "p95_ae_s": 178.73,
+      "kept_pct": 62.79,
+      "dropped": 74655
+    },
+    "clean_core": {
+      "n": 84548,
+      "mae_s": 44.06,
+      "medae_s": 30.16,
+      "bias_s": -16.18,
+      "p90_ae_s": 93.62,
+      "p95_ae_s": 132.8,
+      "kept_pct": 42.14,
+      "dropped": 116076
+    }
+  },
+  "headline": {
+    "mae_all_s": 60.18,
+    "mae_without_outliers_s": 53.72,
+    "delta_s": 6.46,
+    "dropped_pct": 4.71
+  }
+}
