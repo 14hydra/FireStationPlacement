@@ -401,8 +401,28 @@ async function main() {
     ghosts = [];
   }
 
+  function tinyPip(lat, lon, color) {
+    // Marker3DElement is always a full-size pin — use a short polyline stub instead
+    const d = 0.00012; // ~13 m
+    return new Polyline3DElement({
+      path: [
+        { lat: lat - d, lng: lon, altitude: 4 },
+        { lat: lat + d, lng: lon, altitude: 4 },
+        { lat, lng: lon, altitude: 4 },
+        { lat, lng: lon - d, altitude: 4 },
+        { lat, lng: lon + d, altitude: 4 },
+      ],
+      strokeColor: hexAlpha(color || "#f97316", 0.45),
+      outerColor: "rgba(0,0,0,0.1)",
+      strokeWidth: 2.5,
+      outerWidth: 0.15,
+      altitudeMode: "RELATIVE_TO_GROUND",
+      drawsOccludedSegments: true,
+    });
+  }
+
   function archiveCurrentAsGhost(ex) {
-    // Fade prior routes + leave a quiet finish pin (not the same as the live incident)
+    // Fade prior routes + tiny finish pip (not a full Marker3D pin)
     for (const r of (ex.racers || [])) {
       const poly = new Polyline3DElement({
         path: toPath(r.coords, 3),
@@ -418,15 +438,9 @@ async function main() {
     }
     const inc = ex.incident;
     if (inc) {
-      const pin = new Marker3DElement({
-        position: { lat: inc.lat, lng: inc.lon, altitude: 10 },
-        altitudeMode: "RELATIVE_TO_GROUND",
-        extruded: false,
-        drawsWhenOccluded: true,
-        label: "·",
-      });
-      map.append(pin);
-      ghosts.push(pin);
+      const pip = tinyPip(inc.lat, inc.lon, "#fb923c");
+      map.append(pip);
+      ghosts.push(pip);
     }
   }
 
