@@ -2,13 +2,13 @@
 """
 3D multi-race: newly placed London fire stations vs existing houses.
 
-Builds ≥10 incident examples. Each race: two firetrucks under the same
-firetruck routing model; attendance = LFB drive model + turnout. The HTML
+Builds ≥10 incident examples. Each race: two fire engines under the same
+fire engine routing model; attendance = LFB drive model + turnout. The HTML
 plays them in sequence, then shows average time saved.
 
 Usage:
-  PYTHONPATH=src .venv/bin/python scripts/build_firehouse_race_3d.py
-  open data/figures/firehouse_race_3d.html
+  PYTHONPATH=src .venv/bin/python scripts/build_fire_station_race_3d.py
+  open data/figures/fire_station_race_3d.html
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-TEMPLATE = Path(__file__).with_name("firehouse_race_3d_template.html")
+TEMPLATE = Path(__file__).with_name("fire_station_race_3d_template.html")
 
 
 def _load_dotenv() -> None:
@@ -58,7 +58,7 @@ def _path_ll(G, path: list) -> list[list[float]]:
 
 
 def _timed_track(G, nodes: list, total_s: float, n: int = 180) -> list[list[float]]:
-    from emvro.firetruck_route import SECONDS_KEY
+    from firestation.fire_engine_route import SECONDS_KEY
 
     if len(nodes) < 2:
         ll = _path_ll(G, nodes)
@@ -220,8 +220,8 @@ def _feature_router():
     """Full-London router for the travel-time model's route features (built once)."""
     global _FEATURE_ROUTER
     if _FEATURE_ROUTER is None:
-        from emvro.road_distance import load_or_build_graph
-        from emvro.route_features import RouteFeatureRouter, edge_feature_table
+        from firestation.road_distance import load_or_build_graph
+        from firestation.route_features import RouteFeatureRouter, edge_feature_table
 
         G = load_or_build_graph()
         _FEATURE_ROUTER = RouteFeatureRouter(G, edge_feature_table(G))
@@ -245,12 +245,12 @@ def _predict_drive_s(
     """Predicted driving seconds from the LightGBM bundle.
 
     v3 bundles (``feature_groups``) get the full feature set via
-    ``emvro.travel_time_model.predict``: route street characteristics, fastest route
+    ``firestation.travel_time_model.predict``: route street characteristics, fastest route
     and main-road access on the full London graph, destination history. A new site is
     treated as a home-station first pump on a structure-fire call.
     """
     if "feature_groups" in model_bundle:
-        from emvro.travel_time_model import predict
+        from firestation.travel_time_model import predict
 
         r = _feature_router()
         ends = ([start_lat], [start_lon], [dest_lat], [dest_lon])
@@ -285,18 +285,18 @@ def _predict_drive_s(
     return float(np.clip(pred, clip[0], clip[1]))
 
 
-def _route_firetruck(G, lat1, lon1, lat2, lon2):
-    from emvro.firetruck_route import firetruck_route_latlon, path_firetruck_stats
+def _route_fire_engine(G, lat1, lon1, lat2, lon2):
+    from firestation.fire_engine_route import fire_engine_route_latlon, path_fire_engine_stats
 
-    res = firetruck_route_latlon(G, lon1, lat1, lon2, lat2)
+    res = fire_engine_route_latlon(G, lon1, lat1, lon2, lat2)
     if not res.ok or not res.node_path:
-        raise RuntimeError(f"firetruck route failed: {res.meta}")
-    secs, metres, n_edges = path_firetruck_stats(G, res.node_path)
+        raise RuntimeError(f"fire engine route failed: {res.meta}")
+    secs, metres, n_edges = path_fire_engine_stats(G, res.node_path)
     return res, secs, metres, n_edges
 
 
 def _build_example(G, sc: dict, *, hour: int, bundle, example_id: int) -> dict | None:
-    from emvro.lfb_standards import DEFAULT_TURNOUT_S, attendance_seconds
+    from firestation.lfb_standards import DEFAULT_TURNOUT_S, attendance_seconds
 
     new, old, inc = sc["new"], sc["old"], sc["incident"]
     dest_lat, dest_lon = float(inc["dest_lat"]), float(inc["dest_lon"])
@@ -304,10 +304,10 @@ def _build_example(G, sc: dict, *, hour: int, bundle, example_id: int) -> dict |
     date_str = str(inc.get("date_of_call", "2025-06-15"))
 
     try:
-        new_route, new_graph_s, new_m, new_e = _route_firetruck(
+        new_route, new_graph_s, new_m, new_e = _route_fire_engine(
             G, float(new["lat"]), float(new["lon"]), dest_lat, dest_lon
         )
-        old_route, old_graph_s, old_m, old_e = _route_firetruck(
+        old_route, old_graph_s, old_m, old_e = _route_fire_engine(
             G, float(old["lat"]), float(old["lon"]), dest_lat, dest_lon
         )
     except Exception as exc:  # noqa: BLE001
@@ -353,7 +353,7 @@ def _build_example(G, sc: dict, *, hour: int, bundle, example_id: int) -> dict |
     new_att = float(np.asarray(attendance_seconds(new_drive, turnout)).ravel()[0])
     old_att = float(np.asarray(attendance_seconds(old_drive, turnout)).ravel()[0])
 
-    # Keep demo story coherent with firetruck routes
+    # Keep demo story coherent with fire engine routes
     if new_att >= old_att:
         ratio = (old_graph_s / max(new_graph_s, 1.0)) if new_graph_s > 0 else 1.3
         new_att = max(120.0, float(new_graph_s) * 0.85 + turnout)
@@ -423,14 +423,14 @@ def main() -> int:
     _load_dotenv()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--graph", type=Path, default=ROOT / "data" / "raw" / "london" / "london_drive_central.graphml")
-    ap.add_argument("--opened", type=Path, default=ROOT / "data" / "figures" / "firehouse_plan_london_expand" / "opened_firehouses.csv")
-    ap.add_argument("--houses", type=Path, default=ROOT / "data" / "raw" / "london" / "london_firehouses.csv")
+    ap.add_argument("--opened", type=Path, default=ROOT / "data" / "figures" / "fire_station_plan_london_expand" / "opened_fire_stations.csv")
+    ap.add_argument("--houses", type=Path, default=ROOT / "data" / "raw" / "london" / "london_fire_stations.csv")
     ap.add_argument("--incidents", type=Path, default=ROOT / "data" / "raw" / "london" / "lfb_incidents_planner.csv")
     ap.add_argument("--model", type=Path, default=ROOT / "data" / "processed" / "models" / "travel_time_lfb.joblib")
     ap.add_argument("--hour", type=int, default=17)
     ap.add_argument("--n-examples", type=int, default=12)
-    ap.add_argument("--out-html", type=Path, default=ROOT / "data" / "figures" / "firehouse_race_3d.html")
-    ap.add_argument("--out-json", type=Path, default=ROOT / "data" / "figures" / "firehouse_race_3d.json")
+    ap.add_argument("--out-html", type=Path, default=ROOT / "data" / "figures" / "fire_station_race_3d.html")
+    ap.add_argument("--out-json", type=Path, default=ROOT / "data" / "figures" / "fire_station_race_3d.json")
     args = ap.parse_args()
 
     if not args.graph.exists():
@@ -462,16 +462,16 @@ def main() -> int:
     )
     print(f"  candidate triples: {len(scenarios)}")
 
-    print(f"Preparing firetruck graph @ hour {args.hour}…")
-    from emvro.firetruck_route import prepare_firetruck_graph
+    print(f"Preparing fire engine graph @ hour {args.hour}…")
+    from firestation.fire_engine_route import prepare_fire_engine_graph
     import joblib
 
-    G = prepare_firetruck_graph(args.graph, hour=args.hour)
+    G = prepare_fire_engine_graph(args.graph, hour=args.hour)
     bundle = joblib.load(args.model) if args.model.exists() else None
     if bundle:
         print(f"Scoring with {args.model.name}")
     else:
-        print("No LFB model — using firetruck graph seconds")
+        print("No LFB model — using fire engine graph seconds")
 
     examples: list[dict] = []
     for i, sc in enumerate(scenarios, start=1):
@@ -510,11 +510,11 @@ def main() -> int:
         "hour": args.hour,
         "examples": examples,
         "summary": summary,
-        "travel_model": "LFB LightGBM (placement-ready)" if bundle else "firetruck graph ETA",
-        "routing_model": "firetruck Dijkstra (weight_firetruck)",
+        "travel_model": "LFB LightGBM (placement-ready)" if bundle else "fire engine graph ETA",
+        "routing_model": "fire engine Dijkstra (weight_fire_engine)",
         "honesty": (
-            "Each example: firetruck-weighted routes; attendance = predicted drive + 60 s turnout. "
-            "Examples require the new site's path to be shorter on the firetruck graph."
+            "Each example: fire_engine-weighted routes; attendance = predicted drive + 60 s turnout. "
+            "Examples require the new site's path to be shorter on the fire engine graph."
         ),
     }
 

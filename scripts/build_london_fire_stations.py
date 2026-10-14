@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build data/raw/london/london_firehouses.csv: the real location of every London
+Build data/raw/london/london_fire_stations.csv: the real location of every London
 Fire Brigade station, from OpenStreetMap (amenity=fire_station).
 
 Each LFB station name used in the incident / mobilisation data is matched to an
@@ -13,7 +13,7 @@ landed within ~100 m of the OSM building).
 The coordinate is a point inside the station building's footprint (or the OSM
 node), so it is the station itself, not the centre of its station ground.
 
-Run:  .venv/bin/python scripts/build_london_firehouses.py
+Run:  .venv/bin/python scripts/build_london_fire_stations.py
 """
 
 from __future__ import annotations
@@ -106,7 +106,7 @@ def match(osm: pd.DataFrame, names: list[str]) -> pd.DataFrame:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--planner", type=Path, default=RAW / "lfb_incidents_planner.csv")
-    ap.add_argument("--out", type=Path, default=RAW / "london_firehouses.csv")
+    ap.add_argument("--out", type=Path, default=RAW / "london_fire_stations.csv")
     args = ap.parse_args()
 
     ground = station_ground_centroids(args.planner)

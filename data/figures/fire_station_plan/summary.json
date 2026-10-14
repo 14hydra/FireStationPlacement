@@ -10,7 +10,7 @@
     2025
   ],
   "use_busy": true,
-  "n_existing_firehouses": 102,
+  "n_existing_fire_stations": 102,
   "n_candidates": 182,
   "n_demand_cells": 1759,
   "n_incidents": 20000,
@@ -50,8 +50,8 @@
     }
   },
   "baselines": {
-    "current_firehouses": {
-      "label": "current_firehouses",
+    "current_fire_stations": {
+      "label": "current_fire_stations",
       "n_posts": 102,
       "expected_response_s": 333.5,
       "median_response_s": 311.6,

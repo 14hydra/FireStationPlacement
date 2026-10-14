@@ -1,4 +1,4 @@
-"""Optimal firehouse facility location (London LFB primary).
+"""Optimal fire station facility location (London LFB primary).
 
 Places or relocates fire stations so the first engine reaches historical
 demand fast enough to meet the LFB standards. The scored quantity is
@@ -6,7 +6,7 @@ demand fast enough to meet the LFB standards. The scored quantity is
     attendance(station s -> cell j) = predicted_drive(s, j) + turnout(s)
 
 and is judged against the LFB first-engine KPIs (mean <= 6 min, > 90 % within
-10 min; ``emvro.lfb_standards.score_first_engine``). Travel-only scoring (no
+10 min; ``firestation.lfb_standards.score_first_engine``). Travel-only scoring (no
 turnout) was WRONG for LFB: public attendance is mobilise -> arrive, so drive
 alone understates response and misses the 6/10-minute standards.
 
@@ -61,11 +61,11 @@ def build_house_candidates(
     *,
     demand_candidates: int = 80,
 ) -> pd.DataFrame:
-    """Existing firehouses + top demand centroids as relocatable sites."""
+    """Existing fire stations + top demand centroids as relocatable sites."""
     existing = pd.DataFrame(
         {
             "site_name": houses["facilityname"].astype(str),
-            "layer": "existing_firehouse",
+            "layer": "existing_fire_station",
             "lon": houses["lon"].astype(float),
             "lat": houses["lat"].astype(float),
             "is_existing": True,
@@ -88,7 +88,7 @@ def build_house_candidates(
             "lat": enriched["lat"].astype(float),
         }
     )
-    out["is_existing"] = out["layer"].eq("existing_firehouse")
+    out["is_existing"] = out["layer"].eq("existing_fire_station")
     if "borough" in enriched.columns:
         out["borough"] = enriched["borough"]
     return out.reset_index(drop=True)
@@ -528,7 +528,7 @@ def _split_years(
 
 
 @dataclass
-class FirehousePlanResult:
+class FireStationPlanResult:
     mode: str
     city_id: str
     candidates: pd.DataFrame
@@ -542,7 +542,7 @@ class FirehousePlanResult:
     summary: dict[str, Any]
 
 
-def run_firehouse_plan(
+def run_fire_station_plan(
     *,
     city_id: str,
     houses: pd.DataFrame,
@@ -562,7 +562,7 @@ def run_firehouse_plan(
     demand_years: Sequence[int] | None = None,
     eval_years: Sequence[int] | None = None,
     use_busy: bool = False,
-) -> FirehousePlanResult:
+) -> FireStationPlanResult:
     """End-to-end facility location for one city.
 
     Response = drive (``scorer``) + turnout. ``turnout_s``: scalar (all sites), a
@@ -635,10 +635,10 @@ def run_firehouse_plan(
     cur_sel = existing_idx
     cur_resp = posture_response(A, cur_sel, busy_p) if cur_sel else np.full(len(cells), np.nan)
     cur_metrics = posture_metrics(
-        cur_resp, weights, threshold_s=threshold_s, label="current_firehouses", n_posts=len(cur_sel)
+        cur_resp, weights, threshold_s=threshold_s, label="current_fire_stations", n_posts=len(cur_sel)
     )
     cur_metrics["lfb_first_engine"] = score_first_engine(cur_resp, weights)
-    baselines = {"current_firehouses": cur_metrics}
+    baselines = {"current_fire_stations": cur_metrics}
 
     closed_df = pd.DataFrame()
     opened_df = pd.DataFrame()
@@ -647,7 +647,7 @@ def run_firehouse_plan(
     if mode == "redesign":
         k = int(n_houses) if n_houses is not None else len(existing_idx)
         k = max(1, min(k, len(candidates)))
-        print(f"Redesign: placing k={k} firehouses…")
+        print(f"Redesign: placing k={k} fire stations…")
         res = plan_redesign(A, weights, k, objective=objective, threshold_s=threshold_s)
         selected_idx = res.indices
         plan_value = res.value
@@ -661,7 +661,7 @@ def run_firehouse_plan(
         r = int(replace_r)
         if r <= 0:
             raise ValueError("--replace must be > 0 for mode=replace")
-        print(f"Replace: relocating r={r} of {len(existing_idx)} firehouses…")
+        print(f"Replace: relocating r={r} of {len(existing_idx)} fire stations…")
         res = plan_replace(
             A, weights, existing_idx,
             replace_r=r, new_pool=new_pool, objective=objective, threshold_s=threshold_s,
@@ -756,7 +756,7 @@ def run_firehouse_plan(
         "demand_years": [int(y) for y in (demand_years or [])] if has_years else [],
         "eval_years": [int(y) for y in (eval_years or [])] if has_years else [],
         "use_busy": bool(busy_p is not None),
-        "n_existing_firehouses": len(existing_idx),
+        "n_existing_fire_stations": len(existing_idx),
         "n_candidates": len(candidates),
         "n_demand_cells": len(cells),
         "n_incidents": int(len(incidents)),
@@ -783,7 +783,7 @@ def run_firehouse_plan(
         ),
     }
 
-    return FirehousePlanResult(
+    return FireStationPlanResult(
         mode=mode,
         city_id=city_id,
         candidates=candidates,

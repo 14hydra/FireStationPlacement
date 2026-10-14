@@ -1,8 +1,8 @@
-"""City registry for firehouse planning.
+"""City registry for fire station planning.
 
 The study city is London (LFB). Other cities can be planned with
 ``custom_city`` / ``--city custom`` and explicit ``--incidents`` /
-``--firehouses`` paths.
+``--fire-stations`` paths.
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ class CitySpec:
     id: str
     name: str
     bbox: tuple[float, float, float, float]  # west, south, east, north
-    firehouses_path: Path | None = None
+    fire_stations_path: Path | None = None
     incidents_path: Path | None = None
     graph_path: Path | None = None
     hybrid_model_path: Path | None = None
@@ -34,8 +34,8 @@ class CitySpec:
 
     def require_paths(self, *, need_graph: bool = True) -> None:
         missing = []
-        if self.firehouses_path is None or not Path(self.firehouses_path).exists():
-            missing.append("firehouses")
+        if self.fire_stations_path is None or not Path(self.fire_stations_path).exists():
+            missing.append("fire_stations")
         if self.incidents_path is None or not Path(self.incidents_path).exists():
             missing.append("incidents")
         if need_graph and (self.graph_path is None or not Path(self.graph_path).exists()):
@@ -43,7 +43,7 @@ class CitySpec:
         if missing:
             raise FileNotFoundError(
                 f"City {self.id!r} is missing data for: {', '.join(missing)}. "
-                f"Pass --firehouses / --incidents / --graph, or add files under data/."
+                f"Pass --fire-stations / --incidents / --graph, or add files under data/."
             )
 
 
@@ -61,7 +61,7 @@ def _london_spec(root: Path = ROOT) -> CitySpec:
         id="london",
         name="London",
         bbox=(-0.50, 51.28, 0.35, 51.70),
-        firehouses_path=_first_existing(raw / "london_firehouses.csv"),
+        fire_stations_path=_first_existing(raw / "london_fire_stations.csv"),
         incidents_path=_first_existing(
             raw / "lfb_incidents_planner.csv",
             raw / "lfb_incidents_2024_onwards.csv",
@@ -73,7 +73,7 @@ def _london_spec(root: Path = ROOT) -> CitySpec:
         notes=(
             "Study city (LFB). Planner CSV has attendance seconds "
             "(mobilise→arrive), station_ground, deployed_from, busy_flag, cal_year. "
-            "Drive graph built by emvro.road_distance."
+            "Drive graph built by firestation.road_distance."
         ),
         meta={
             "demand_lat": "dest_lat",
@@ -100,7 +100,7 @@ def get_city(city_id: str, *, root: Path = ROOT) -> CitySpec:
     if builder is None:
         raise KeyError(
             f"Unknown city {city_id!r}. Known: {list_cities()}. "
-            "For a custom city pass --city custom with --firehouses/--incidents/--graph."
+            "For a custom city pass --city custom with --fire-stations/--incidents/--graph."
         )
     return builder(root)
 
@@ -109,20 +109,20 @@ def custom_city(
     *,
     city_id: str = "custom",
     name: str | None = None,
-    firehouses: Path,
+    fire_stations: Path,
     incidents: Path,
     graph: Path | None = None,
     hybrid_model: Path | None = None,
     bbox: tuple[float, float, float, float] | None = None,
     center: tuple[float, float] | None = None,
 ) -> CitySpec:
-    fh = Path(firehouses)
+    fh = Path(fire_stations)
     inc = Path(incidents)
     return CitySpec(
         id=city_id,
         name=name or city_id,
         bbox=bbox or (-180.0, -90.0, 180.0, 90.0),
-        firehouses_path=fh,
+        fire_stations_path=fh,
         incidents_path=inc,
         graph_path=Path(graph) if graph else None,
         hybrid_model_path=Path(hybrid_model) if hybrid_model else None,
@@ -131,17 +131,17 @@ def custom_city(
     )
 
 
-def load_firehouses(spec: CitySpec) -> pd.DataFrame:
-    """Normalize firehouse table to facilityname, lat, lon [, borough]."""
-    if spec.firehouses_path is None:
-        raise FileNotFoundError(f"No firehouses path for city {spec.id}")
-    path = Path(spec.firehouses_path)
+def load_fire_stations(spec: CitySpec) -> pd.DataFrame:
+    """Normalize fire station table to facilityname, lat, lon [, borough]."""
+    if spec.fire_stations_path is None:
+        raise FileNotFoundError(f"No fire stations path for city {spec.id}")
+    path = Path(spec.fire_stations_path)
     df = pd.read_csv(path)
     # latitude/longitude column names
     if "latitude" in df.columns and "longitude" in df.columns:
         out = pd.DataFrame(
             {
-                "facilityname": df.get("facilityname", df.get("name", "firehouse")).astype(str),
+                "facilityname": df.get("facilityname", df.get("name", "fire_station")).astype(str),
                 "lat": pd.to_numeric(df["latitude"], errors="coerce"),
                 "lon": pd.to_numeric(df["longitude"], errors="coerce"),
                 "borough": df["borough"].astype(str) if "borough" in df.columns else None,
@@ -150,14 +150,14 @@ def load_firehouses(spec: CitySpec) -> pd.DataFrame:
     elif "lat" in df.columns and "lon" in df.columns:
         out = pd.DataFrame(
             {
-                "facilityname": df.get("facilityname", df.get("name", "firehouse")).astype(str),
+                "facilityname": df.get("facilityname", df.get("name", "fire_station")).astype(str),
                 "lat": pd.to_numeric(df["lat"], errors="coerce"),
                 "lon": pd.to_numeric(df["lon"], errors="coerce"),
                 "borough": df["borough"].astype(str) if "borough" in df.columns else None,
             }
         )
     else:
-        raise ValueError(f"Firehouses file needs lat/lon or latitude/longitude: {path}")
+        raise ValueError(f"Fire stations file needs lat/lon or latitude/longitude: {path}")
     out = out.dropna(subset=["lat", "lon"]).drop_duplicates(subset=["lat", "lon"]).reset_index(drop=True)
     out.insert(0, "house_id", out.index.astype(int))
     return out
@@ -260,14 +260,14 @@ def load_incidents(
 def with_overrides(
     spec: CitySpec,
     *,
-    firehouses: Path | None = None,
+    fire_stations: Path | None = None,
     incidents: Path | None = None,
     graph: Path | None = None,
     hybrid_model: Path | None = None,
 ) -> CitySpec:
     kw = {}
-    if firehouses is not None:
-        kw["firehouses_path"] = Path(firehouses)
+    if fire_stations is not None:
+        kw["fire_stations_path"] = Path(fire_stations)
     if incidents is not None:
         kw["incidents_path"] = Path(incidents)
     if graph is not None:

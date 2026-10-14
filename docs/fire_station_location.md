@@ -14,7 +14,7 @@ placement on held-out **2025** LFB calls, once attendance = drive + turnout?
 
 | KPI | Target | Code |
 |---|---|---|
-| First engine, mean attendance | **≤ 6 min** | `emvro.lfb_standards.FIRST_ENGINE_AVG_S` |
+| First engine, mean attendance | **≤ 6 min** | `firestation.lfb_standards.FIRST_ENGINE_AVG_S` |
 | First engine, share within 10 min | **> 90 %** | `FIRST_ENGINE_P90_S`, `FIRST_ENGINE_TARGET_SHARE` |
 | Second engine (secondary) | mean ≤ 8 min; 95 % within 12 min | `SECOND_ENGINE_*` |
 
@@ -35,7 +35,7 @@ attendance(station s → incident i) = predicted_drive(s, i) + turnout(s)
   mobilisation data is **PLANNED** when ingested.
 - The planner fits/scores **drive** via the chosen scorer, then adds turnout:
   default `DEFAULT_TURNOUT_S = 60 s` for new sites; existing houses get a
-  Kolesar-residual estimate when data allow (**EXISTS** in `run_firehouse_plan`).
+  Kolesar-residual estimate when data allow (**EXISTS** in `run_fire_station_plan`).
 - `lfb_standards.attendance_seconds(drive_s, turnout_s)` implements the sum (**EXISTS**).
 
 ## Modes
@@ -55,8 +55,8 @@ nodes. Objectives: p-median `response_time` or max-cover `coverage`.
 | Scorer | Travel time from… | Status |
 |---|---|---|
 | **crow** | Haversine surrogate at a flat speed with a 1.3 detour factor | **EXISTS** (`--scorer crow`) |
-| **Kolesar** | Piecewise `T = a + b√d` / `c + e·d` on distance; refit on London trips (`emvro.kolesar`) | **EXISTS** (`--scorer kolesar`) |
-| **Road** | Shortest legal route on the directed London drive graph (`emvro.road_distance`) | Routing **EXISTS**; planner scorer **PLANNED** |
+| **Kolesar** | Piecewise `T = a + b√d` / `c + e·d` on distance; refit on London trips (`firestation.kolesar`) | **EXISTS** (`--scorer kolesar`) |
+| **Road** | Shortest legal route on the directed London drive graph (`firestation.road_distance`) | Routing **EXISTS**; planner scorer **PLANNED** |
 | **ML (street-aware)** | LightGBM travel-time model (`docs/travel_time_training.md`) | Model **EXISTS**; planner scorer **PLANNED** |
 
 Default scorer: **kolesar**.
@@ -69,13 +69,13 @@ Default scorer: **kolesar**.
 | Evaluation (held-out) | **2025** | **EXISTS** via `--demand-years` / `--eval-years` |
 
 CLI defaults: `--demand-years 2024`, `--eval-years 2025`. When `cal_year` is present
-in the planner CSV, `run_firehouse_plan` builds the demand grid from demand years and
+in the planner CSV, `run_fire_station_plan` builds the demand grid from demand years and
 reports eval KPIs on eval-year incidents (**EXISTS**). Non-LFB cities still use
 `--max-incidents` subsampling without year split.
 
 ## Busy engines
 
-LFB's first pump is often not from the home station. `emvro.busy_engines` marks
+LFB's first pump is often not from the home station. `firestation.busy_engines` marks
 **busy** when `FirstPumpArriving_DeployedFromStation != IncidentStationGround`
 (**EXISTS**). `build_lfb_planner_incidents.py` writes `busy_flag` and deploy columns.
 
@@ -90,7 +90,7 @@ closest-appliance mobilisation.
 
 ## Validation
 
-1. **2014 ten-station closures** — list in `emvro.london_closures_2014` (**EXISTS**).
+1. **2014 ten-station closures** — list in `firestation.london_closures_2014` (**EXISTS**).
    `scripts/validate_london_2014_closures.py` and `scripts/rank_closed_stations_2014.py`
    run counterfactuals on **today's network** with approximate closed-station coords
    (**EXISTS**). True pre-2014 train → post-2014 test needs older LFB extracts
@@ -108,34 +108,34 @@ Defaults: `--city london`, `--threshold-min 10`, year split as above.
 PYTHONPATH=src python scripts/build_lfb_planner_incidents.py
 
 # Redesign / replace / expand (Kolesar scorer)
-PYTHONPATH=src python scripts/plan_firehouse_locations.py \
+PYTHONPATH=src python scripts/plan_fire_station_locations.py \
   --city london --mode redesign --demand-years 2024 --eval-years 2025
-PYTHONPATH=src python scripts/plan_firehouse_locations.py \
+PYTHONPATH=src python scripts/plan_fire_station_locations.py \
   --city london --mode replace --replace 10
-PYTHONPATH=src python scripts/plan_firehouse_locations.py \
+PYTHONPATH=src python scripts/plan_fire_station_locations.py \
   --city london --mode expand --add-stations 2
 
 # Optional busy blend in reported metrics only
-PYTHONPATH=src python scripts/plan_firehouse_locations.py \
+PYTHONPATH=src python scripts/plan_fire_station_locations.py \
   --city london --mode expand --add-stations 3 --use-busy
 
 # Synthetic smoke test
-PYTHONPATH=src python scripts/plan_firehouse_locations.py --demo
+PYTHONPATH=src python scripts/plan_fire_station_locations.py --demo
 
 # 2014 closure scaffolds (today's-data approximation)
 PYTHONPATH=src python scripts/validate_london_2014_closures.py
 PYTHONPATH=src python scripts/rank_closed_stations_2014.py
 
 # Custom city
-PYTHONPATH=src python scripts/plan_firehouse_locations.py \
-  --city custom --firehouses path/houses.csv --incidents path/incidents.csv \
+PYTHONPATH=src python scripts/plan_fire_station_locations.py \
+  --city custom --fire-stations path/houses.csv --incidents path/incidents.csv \
   --mode redesign --n-houses 20
 ```
 
-`london` in `emvro.cities` uses `data/raw/london/london_firehouses.csv` and
+`london` in `firestation.cities` uses `data/raw/london/london_fire_stations.csv` and
 `lfb_incidents_planner.csv`.
 
-## Outputs (`data/figures/firehouse_plan/`)
+## Outputs (`data/figures/fire_station_plan/`)
 
 | File | Content |
 |---|---|
@@ -144,9 +144,9 @@ PYTHONPATH=src python scripts/plan_firehouse_locations.py \
 | `03_response_surface_map.png` | Before/after response surfaces |
 | `04_relocations.png` | Closed → opened moves |
 | `05_site_demand_share.png` | Top sites by assigned demand |
-| `firehouse_plan_map.html` | Interactive Folium map |
-| `planned_firehouses.csv` | Selected sites + assigned demand share |
-| `closed_firehouses.csv` / `opened_firehouses.csv` | Replace-mode moves |
+| `fire_station_plan_map.html` | Interactive Folium map |
+| `planned_fire_stations.csv` | Selected sites + assigned demand share |
+| `closed_fire_stations.csv` / `opened_fire_stations.csv` | Replace-mode moves |
 | `demand_cells.csv` | Grid cells with planned / current response |
 | `candidates.csv` | Full candidate pool |
 | `summary.json` | Metrics, `lfb_first_engine`, `demand_years`, `eval_years`, `eval`, honesty text |
@@ -164,13 +164,13 @@ PYTHONPATH=src python scripts/plan_firehouse_locations.py \
 
 | Piece | Path |
 |---|---|
-| City registry (London + custom) | `src/emvro/cities.py` |
-| Planner (redesign, replace, expand) | `src/emvro/firehouse_location.py` |
-| Demand grid, p-median / max-cover selection | `src/emvro/facility.py` |
-| Kolesar model | `src/emvro/kolesar.py` |
-| LFB standards + attendance sum | `src/emvro/lfb_standards.py` |
-| Busy-engine rates | `src/emvro/busy_engines.py` |
-| 2014 closures | `src/emvro/london_closures_2014.py` |
+| City registry (London + custom) | `src/firestation/cities.py` |
+| Planner (redesign, replace, expand) | `src/firestation/fire_station_location.py` |
+| Demand grid, p-median / max-cover selection | `src/firestation/facility.py` |
+| Kolesar model | `src/firestation/kolesar.py` |
+| LFB standards + attendance sum | `src/firestation/lfb_standards.py` |
+| Busy-engine rates | `src/firestation/busy_engines.py` |
+| 2014 closures | `src/firestation/london_closures_2014.py` |
 | LFB planner CSV | `scripts/build_lfb_planner_incidents.py` |
 | 2014 validation scaffolds | `scripts/validate_london_2014_closures.py`, `scripts/rank_closed_stations_2014.py` |
-| CLI | `scripts/plan_firehouse_locations.py` |
+| CLI | `scripts/plan_fire_station_locations.py` |

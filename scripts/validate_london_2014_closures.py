@@ -3,7 +3,7 @@
 Validation-plan scaffold: London 2014 closures, using TODAY's data only.
 
 What this does
-  1. Loads current London firehouses + planner incidents; reports which of the
+  1. Loads current London fire stations + planner incidents; reports which of the
      ten CLOSED_2014 stations still appear by name (most will not).
   2. Counterfactual closure test on 2025 eval incidents (<= 40k sample):
        * CURRENT network (post-closure stations) vs
@@ -38,14 +38,14 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from emvro.kolesar import fit_kolesar  # noqa: E402
-from emvro.lfb_standards import DEFAULT_TURNOUT_S, score_first_engine  # noqa: E402
-from emvro.london_closures_2014 import (  # noqa: E402
+from firestation.kolesar import fit_kolesar  # noqa: E402
+from firestation.lfb_standards import DEFAULT_TURNOUT_S, score_first_engine  # noqa: E402
+from firestation.london_closures_2014 import (  # noqa: E402
     CLOSED_2014,
     CLOSED_2014_APPROX_COORDS,
     match_closed,
 )
-from emvro.london_eval import haversine_km, load_london, nearest_station_km  # noqa: E402
+from firestation.london_eval import haversine_km, load_london, nearest_station_km  # noqa: E402
 
 OUT_DIR = ROOT / "data" / "figures" / "london_2014_closure_validation"
 
@@ -71,12 +71,12 @@ def main() -> int:
     tr = inc[(inc.cal_year == args.train_year) & (inc.busy_flag == 0)]
     ev_all = inc[inc.cal_year == args.eval_year]
     ev = ev_all.sample(min(args.max_eval, len(ev_all)), random_state=42).reset_index(drop=True)
-    print(f"firehouses={len(fh)}  train(non-busy {args.train_year})={len(tr):,}  "
+    print(f"fire_stations={len(fh)}  train(non-busy {args.train_year})={len(tr):,}  "
           f"eval {args.eval_year}: {len(ev_all):,} (sampled {len(ev):,})")
 
     # 1) name match status
     matches = match_closed(fh["facilityname"].tolist())
-    print("\n[1] CLOSED_2014 presence in today's firehouse list (match_closed):")
+    print("\n[1] CLOSED_2014 presence in today's fire station list (match_closed):")
     for name in CLOSED_2014:
         hit = [k for k, v in matches.items() if v == name]
         print(f"    {name:<14} {'STILL LISTED as ' + ', '.join(hit) if hit else 'not in current list (closed)'}")
@@ -146,7 +146,7 @@ def main() -> int:
           "; ".join(f"{r['closed']}->{r['removed_station']} ({r['km']:.1f} km)" for r in near_removed))
 
     summary = {
-        "n_firehouses_current": int(len(fh)),
+        "n_fire_stations_current": int(len(fh)),
         "closed_2014_name_matches_in_current_list": {k: v for k, v in matches.items()},
         "stations_removed_by_name": name_removed,
         "stations_removed_by_proximity_to_approx_coords": near_removed,

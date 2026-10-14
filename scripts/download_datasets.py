@@ -10,7 +10,7 @@ Geofabrik (OpenStreetMap, ODbL):
 Existing files are skipped unless --force. Then build the derived tables:
 
   python scripts/build_lfb_planner_incidents.py
-  python scripts/build_london_firehouses.py
+  python scripts/build_london_fire_stations.py
   python scripts/build_lfb_travel_training.py
 
 Run:  .venv/bin/python scripts/download_datasets.py
