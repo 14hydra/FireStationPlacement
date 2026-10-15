@@ -61,7 +61,10 @@ def _london_spec(root: Path = ROOT) -> CitySpec:
         id="london",
         name="London",
         bbox=(-0.50, 51.28, 0.35, 51.70),
-        fire_stations_path=_first_existing(raw / "london_fire_stations.csv"),
+        fire_stations_path=_first_existing(
+            raw / "london_fire_stations.csv",
+            raw / "london_firehouses.csv",
+        ),
         incidents_path=_first_existing(
             raw / "lfb_incidents_planner.csv",
             raw / "lfb_incidents_2024_onwards.csv",

@@ -1,0 +1,165 @@
+{
+  "city_id": "london",
+  "mode": "resize",
+  "objective": "response_time",
+  "scorer": "kolesar",
+  "demand_years": [
+    2024
+  ],
+  "eval_years": [
+    2025
+  ],
+  "use_busy": true,
+  "n_existing_fire_stations": 102,
+  "n_candidates": 102,
+  "n_demand_cells": 1889,
+  "n_incidents": 50037,
+  "n_incidents_dropped_far": 300,
+  "n_selected": 102,
+  "n_closed": 0,
+  "n_opened": 0,
+  "threshold_min": 10.0,
+  "total_pumps_baseline": 142,
+  "total_pumps_plan": 142,
+  "plan": {
+    "label": "plan_resize",
+    "n_posts": 102,
+    "expected_response_s": 305.3,
+    "median_response_s": 301.6,
+    "p90_response_s": 376.5,
+    "worst_cell_response_s": 716.3,
+    "coverage_share_within_threshold": 0.9998,
+    "threshold_s": 600.0,
+    "demand_cells": 1889,
+    "objective_value": 305.3345361237668,
+    "lfb_first_engine": {
+      "mean_s": 305.3345361237668,
+      "p90_s": 376.51090437114124,
+      "share_within_6min": 0.8440953694266243,
+      "share_within_10min": 0.9997801626796171,
+      "meets_avg_6": true,
+      "meets_90pct_10": true,
+      "passes": true
+    },
+    "total_pumps": 142,
+    "lfb_first_engine_eval": {
+      "mean_s": 308.40382559522,
+      "p90_s": 381.06087875057125,
+      "share_within_6min": 0.830825817713312,
+      "share_within_10min": 0.9995428286438636,
+      "meets_avg_6": true,
+      "meets_90pct_10": true,
+      "passes": true
+    }
+  },
+  "baselines": {
+    "current_fire_stations": {
+      "label": "current_fire_stations",
+      "n_posts": 102,
+      "expected_response_s": 306.7,
+      "median_response_s": 301.6,
+      "p90_response_s": 375.5,
+      "worst_cell_response_s": 716.3,
+      "coverage_share_within_threshold": 0.9998,
+      "threshold_s": 600.0,
+      "demand_cells": 1889,
+      "lfb_first_engine": {
+        "mean_s": 306.67082029145126,
+        "p90_s": 375.53529087124735,
+        "share_within_6min": 0.8507704298818874,
+        "share_within_10min": 0.9997801626796171,
+        "meets_avg_6": true,
+        "meets_90pct_10": true,
+        "passes": true
+      },
+      "total_pumps": 142,
+      "lfb_first_engine_eval": {
+        "mean_s": 309.61530525944596,
+        "p90_s": 380.6768423688677,
+        "share_within_6min": 0.8378704127010514,
+        "share_within_10min": 0.9995428286438636,
+        "meets_avg_6": true,
+        "meets_90pct_10": true,
+        "passes": true
+      }
+    }
+  },
+  "eval": {
+    "years": [
+      2025
+    ],
+    "n_incidents": 48122,
+    "snap_median_km": 0.307,
+    "snap_p95_km": 0.541,
+    "current": {
+      "mean_s": 309.61530525944596,
+      "p90_s": 380.6768423688677,
+      "share_within_6min": 0.8378704127010514,
+      "share_within_10min": 0.9995428286438636,
+      "meets_avg_6": true,
+      "meets_90pct_10": true,
+      "passes": true
+    },
+    "plan": {
+      "mean_s": 308.40382559522,
+      "p90_s": 381.06087875057125,
+      "share_within_6min": 0.830825817713312,
+      "share_within_10min": 0.9995428286438636,
+      "meets_avg_6": true,
+      "meets_90pct_10": true,
+      "passes": true
+    },
+    "observed_attendance": {
+      "mean_s": 339.0663521881884,
+      "p90_s": 519.0,
+      "share_within_6min": 0.6471468351273846,
+      "share_within_10min": 0.9433523128714517,
+      "meets_avg_6": true,
+      "meets_90pct_10": true,
+      "passes": true
+    }
+  },
+  "delta_vs_current_s": -1.4,
+  "travel": {
+    "scorer": "kolesar",
+    "surrogate_speed_kph": 28.0,
+    "kolesar": {
+      "a": 41.12989657500518,
+      "b": 165.60803587025217,
+      "c": 151.5979311513361,
+      "e": 67.7977642025334,
+      "breakpoint_km": 1.3861054758092508
+    },
+    "kolesar_fit": {
+      "source": "fit_house_to_dest_crow_km",
+      "n_pairs": 35736,
+      "turnout_removed_s": 60.0
+    },
+    "turnout": {
+      "source": "estimated_station_prior",
+      "default_s": 60.0,
+      "n_existing_with_prior": 102,
+      "existing_min_s": 30.0,
+      "existing_median_s": 51.730631185074444,
+      "existing_max_s": 102.50837409306689
+    },
+    "pumps": {
+      "baseline_total": 142,
+      "n_two_plus": 40,
+      "min_pumps": 1,
+      "max_pumps": 3
+    },
+    "busy": {
+      "used": true,
+      "capacity_scaled": true,
+      "mean_existing_busy_prob": 0.28
+    }
+  },
+  "total_pumps": 142,
+  "n_moves": 9,
+  "min_pumps": 1,
+  "max_pumps": 3,
+  "n_upgraded": 9,
+  "n_downgraded": 9,
+  "honesty": "Response = predicted drive + station turnout (LFB attendance is mobilise->arrive; travel-only scoring was wrong). Judged on LFB first-engine KPIs: mean <= 6 min, > 90% within 10 min. Drive comes from the chosen scorer (kolesar); new sites use the default turnout prior, existing houses a per-station estimate when available. Discrete candidates (existing houses + demand centroids); house sites are station-ground centroids, not surveyed. No land, zoning or staffing constraints. Station size (n_pumps) defaults from LFB two-pump inference (~40 stations with a second appliance). resize mode reallocates a fixed pump budget under a capacity-scaled busy model; other modes keep baseline pumps unless overridden. Busy blend applies when use_busy=True or mode=resize (location optimisation still uses nearest engine)."
+}

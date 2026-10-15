@@ -15,6 +15,8 @@ Examples:
       --city london --mode replace --replace 10
   PYTHONPATH=src python scripts/plan_fire_station_locations.py \\
       --city london --mode expand --add-stations 3 --use-busy
+  PYTHONPATH=src python scripts/plan_fire_station_locations.py \\
+      --city london --mode resize --total-pumps 142
 """
 
 from __future__ import annotations
@@ -39,6 +41,7 @@ from firestation.cities import (  # noqa: E402
     with_overrides,
 )
 from firestation.fire_station_location import demo_inputs, run_fire_station_plan  # noqa: E402
+from firestation.station_capacity import load_pump_overrides  # noqa: E402
 
 
 def _write_map(result, out: Path, threshold_min: float) -> Path:
@@ -367,10 +370,17 @@ def _write_figures(result, out_dir: Path, threshold_min: float) -> list[Path]:
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--city", type=str, default="london", help=f"City id ({', '.join(list_cities())}) or custom")
-    p.add_argument("--mode", choices=["redesign", "replace", "expand"], default="redesign")
+    p.add_argument("--mode", choices=["redesign", "replace", "expand", "resize"], default="redesign")
     p.add_argument("--n-houses", type=int, default=None, help="Fleet size for redesign (default=current count)")
     p.add_argument("--replace", type=int, default=10, help="How many houses to relocate in replace mode")
     p.add_argument("--add-stations", type=int, default=1, help="New stations to open in expand mode")
+    p.add_argument("--total-pumps", type=int, default=None,
+                   help="Pump budget for resize mode (default=current inferred total ~142)")
+    p.add_argument("--min-pumps", type=int, default=1, help="Min engines per station in resize")
+    p.add_argument("--max-pumps", type=int, default=3, help="Max engines per station in resize")
+    p.add_argument("--pumps-csv", type=Path, default=None,
+                   help="Optional CSV (station,n_pumps) overriding inferred pump counts")
+    p.add_argument("--new-site-pumps", type=int, default=1, help="Default pumps for newly opened sites")
     p.add_argument("--cell-km", type=float, default=0.9)
     p.add_argument("--demand-candidates", type=int, default=80)
     p.add_argument("--objective", choices=["response_time", "coverage"], default="response_time")
@@ -386,6 +396,8 @@ def main():
     p.add_argument("--demo", action="store_true", help="Synthetic city (no data files needed)")
     p.add_argument("--seed", type=int, default=42)
     args = p.parse_args()
+    if args.mode == "resize" and args.out_dir == ROOT / "data" / "figures" / "fire_station_plan":
+        args.out_dir = ROOT / "data" / "figures" / "fire_station_plan_resize"
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -437,6 +449,7 @@ def main():
             args.n_houses = len(houses)
         print(f"City {spec.name}: {len(houses)} fire stations, {len(incidents):,} demand rows")
 
+    pump_map = load_pump_overrides(args.pumps_csv) or None
     result = run_fire_station_plan(
         city_id=city_id,
         houses=houses,
@@ -454,7 +467,12 @@ def main():
         scorer=scorer,
         demand_years=demand_years,
         eval_years=eval_years,
-        use_busy=args.use_busy,
+        use_busy=args.use_busy or args.mode == "resize",
+        pumps=pump_map,
+        total_pumps=args.total_pumps,
+        min_pumps=args.min_pumps,
+        max_pumps=args.max_pumps,
+        new_site_pumps=args.new_site_pumps,
     )
 
     # Write artifacts

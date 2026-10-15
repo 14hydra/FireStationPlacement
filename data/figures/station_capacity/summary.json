@@ -1,0 +1,14 @@
+{
+  "n_stations": 102,
+  "n_pumps_total": 142,
+  "n_two_pump": 40,
+  "n_named_two_pump_list": 25,
+  "demand_years": [
+    2024,
+    2025
+  ],
+  "n_incidents": 98458,
+  "mean_incidents_per_pump": 733.0,
+  "corr_incidents_vs_pumps": 0.315,
+  "honesty": "Pump counts: top ~40 stations by home multi-dispatch in mobilisation records (matches LFB's ~40 two-pump stations), always including the named LFB org-chart list. Demand = incidents by station_ground in the planner extract for the listed years."
+}

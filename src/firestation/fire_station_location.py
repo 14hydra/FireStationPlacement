@@ -25,6 +25,9 @@ Modes
 ``replace``  - keep ``n - r`` current houses; jointly swap out ``r`` existing
                for ``r`` new candidates (constant fleet size).
 ``expand``   - keep ALL current houses; greedily open ``m`` new ones.
+``resize``   - keep ALL current house *locations*; reallocate ``total_pumps``
+               across stations (1–3 engines each) under a capacity-aware busy
+               model (``firestation.station_capacity``).
 
 No land cost, zoning, staffing or borough-boundary constraints.
 """
@@ -50,9 +53,16 @@ from .facility import (
     posture_metrics,
     select_posts,
 )
+from .station_capacity import (
+    DEFAULT_TOTAL_PUMPS,
+    capacity_busy_prob,
+    default_pump_table,
+    plan_resize_capacity,
+    resolve_pump_vector,
+)
 
 SCORERS = ("kolesar", "crow")
-MODES = ("redesign", "replace", "expand")
+MODES = ("redesign", "replace", "expand", "resize")
 
 
 def build_house_candidates(
@@ -562,6 +572,11 @@ def run_fire_station_plan(
     demand_years: Sequence[int] | None = None,
     eval_years: Sequence[int] | None = None,
     use_busy: bool = False,
+    pumps: Mapping[str, int] | None = None,
+    total_pumps: int | None = None,
+    min_pumps: int = 1,
+    max_pumps: int = 3,
+    new_site_pumps: int = 1,
 ) -> FireStationPlanResult:
     """End-to-end facility location for one city.
 
@@ -570,6 +585,9 @@ def run_fire_station_plan(
     from LFB attendance residuals; new sites get ``DEFAULT_TURNOUT_S``).
     ``demand_years`` builds the demand grid; ``eval_years`` (if present in the data)
     re-scores current vs plan on held-out incidents snapped to demand cells.
+    ``pumps`` / ``total_pumps`` control per-station engine counts (``resize`` mode
+    reallocates a fixed pump budget; other modes attach ``n_pumps`` for reporting
+    and optional busy scaling when ``use_busy`` is set).
     """
     if mode not in MODES:
         raise ValueError(f"mode must be {'|'.join(MODES)}, got {mode!r}")
@@ -588,13 +606,29 @@ def run_fire_station_plan(
             eval_inc = eval_inc.sample(max_incident_rows, random_state=seed).reset_index(drop=True)
 
     cells = build_demand_grid(incidents, lat_col="dest_lat", lon_col="dest_lon", cell_km=cell_km)
-    candidates = build_house_candidates(houses, cells, demand_candidates=demand_candidates)
+    # resize only needs existing sites — skip demand-cell candidates for speed
+    demand_cand = 0 if mode == "resize" else demand_candidates
+    candidates = build_house_candidates(houses, cells, demand_candidates=demand_cand)
     weights = cells["weight"].to_numpy(dtype=float)
     threshold_s = float(threshold_min) * 60.0
 
     existing_idx = candidates.index[candidates["is_existing"]].tolist()
     if not existing_idx:
         existing_idx = [i for i in range(len(houses)) if i < len(candidates)]
+
+    # --- pump / engine capacity per site -----------------------------------
+    if pumps is None:
+        pump_df = default_pump_table(houses)
+        pumps = {str(r.station): int(r.n_pumps) for r in pump_df.itertuples()}
+    baseline_pumps = resolve_pump_vector(
+        candidates, pumps=pumps, default_pumps=1, new_site_pumps=new_site_pumps
+    )
+    candidates["n_pumps_baseline"] = baseline_pumps
+    print(
+        f"Pumps: {int(baseline_pumps[candidates['is_existing'].to_numpy()].sum())} on "
+        f"{int(candidates['is_existing'].sum())} existing stations "
+        f"({int((baseline_pumps[candidates['is_existing'].to_numpy()] >= 2).sum())} with ≥2)"
+    )
 
     # --- Kolesar drive model (scorer + turnout prior) -----------------------
     kmodel, kmeta, pairs = fit_scorer_kolesar(incidents, houses, seed=seed)
@@ -617,19 +651,31 @@ def run_fire_station_plan(
     )
     travel_meta["kolesar_fit"] = kmeta
     travel_meta["turnout"] = turnout_meta
+    travel_meta["pumps"] = {
+        "baseline_total": int(baseline_pumps[candidates["is_existing"].to_numpy()].sum()),
+        "n_two_plus": int((baseline_pumps[candidates["is_existing"].to_numpy()] >= 2).sum()),
+        "min_pumps": int(min_pumps),
+        "max_pumps": int(max_pumps),
+    }
     # Attendance = drive + station turnout; everything below optimises/scores A.
     A = attendance_seconds(T, turnout_vec[:, None])
 
+    busy_base = busy_prob_vector(candidates, incidents)
     busy_p = None
-    if use_busy:
-        busy_p = busy_prob_vector(candidates, incidents)
+    # Capacity-aware busy is required for resize; optional elsewhere via --use-busy
+    if mode == "resize" or use_busy:
+        if busy_base is None:
+            # Uniform prior when deploy columns are missing
+            busy_base = np.full(len(candidates), 0.25)
+            print("Busy rates unavailable — using uniform 0.25 prior for capacity model.")
+        busy_p = capacity_busy_prob(busy_base, baseline_pumps, baseline_pumps=baseline_pumps)
         travel_meta["busy"] = {
-            "used": busy_p is not None,
-            "mean_existing_busy_prob": None if busy_p is None
-            else round(float(busy_p[candidates["is_existing"].to_numpy()].mean()), 4),
+            "used": True,
+            "capacity_scaled": True,
+            "mean_existing_busy_prob": round(
+                float(busy_p[candidates["is_existing"].to_numpy()].mean()), 4
+            ),
         }
-        if busy_p is None:
-            print("use_busy requested but station_ground/deployed_from_station missing; ignoring.")
 
     # --- current posture ----------------------------------------------------
     cur_sel = existing_idx
@@ -638,11 +684,13 @@ def run_fire_station_plan(
         cur_resp, weights, threshold_s=threshold_s, label="current_fire_stations", n_posts=len(cur_sel)
     )
     cur_metrics["lfb_first_engine"] = score_first_engine(cur_resp, weights)
+    cur_metrics["total_pumps"] = int(baseline_pumps[np.asarray(cur_sel)].sum()) if cur_sel else 0
     baselines = {"current_fire_stations": cur_metrics}
 
     closed_df = pd.DataFrame()
     opened_df = pd.DataFrame()
     new_pool = [i for i in range(len(candidates)) if i not in set(existing_idx)]
+    plan_pumps = baseline_pumps.copy()
 
     if mode == "redesign":
         k = int(n_houses) if n_houses is not None else len(existing_idx)
@@ -678,7 +726,7 @@ def run_fire_station_plan(
             A, rnd["indices"], weights, threshold_s, busy_p, "random_replace"
         )
         extra = {"replace_r": r, "n_swaps": res["n_swaps"]}
-    else:  # expand
+    elif mode == "expand":
         m = int(add_stations)
         if m <= 0:
             raise ValueError("--add-stations must be > 0 for mode=expand")
@@ -698,11 +746,43 @@ def run_fire_station_plan(
             A, rnd["indices"], weights, threshold_s, busy_p, "random_expand"
         )
         extra = {"add_stations": m, "n_swaps": res["n_swaps"]}
+    else:  # resize
+        budget = int(total_pumps) if total_pumps is not None else int(
+            baseline_pumps[np.asarray(existing_idx)].sum() or DEFAULT_TOTAL_PUMPS
+        )
+        print(
+            f"Resize: reallocating {budget} pumps across {len(existing_idx)} fixed stations "
+            f"(min={min_pumps}, max={max_pumps})…"
+        )
+        res = plan_resize_capacity(
+            A, weights, existing_idx,
+            base_busy=busy_base if busy_base is not None else np.full(len(candidates), 0.25),
+            baseline_pumps=baseline_pumps,
+            total_pumps=budget,
+            min_pumps=min_pumps,
+            max_pumps=max_pumps,
+            threshold_s=threshold_s,
+        )
+        selected_idx = res["indices"]
+        plan_value = res["value"]
+        plan_pumps = res["n_pumps_full"]
+        busy_p = res["busy_p"]
+        extra = {
+            "total_pumps": res["total_pumps"],
+            "n_moves": res["n_moves"],
+            "min_pumps": int(min_pumps),
+            "max_pumps": int(max_pumps),
+            "n_upgraded": int((res["n_pumps"] > baseline_pumps[np.asarray(existing_idx)]).sum()),
+            "n_downgraded": int((res["n_pumps"] < baseline_pumps[np.asarray(existing_idx)]).sum()),
+        }
 
     plan_resp = posture_response(A, selected_idx, busy_p)
     selected = candidates.loc[selected_idx].copy().reset_index(drop=True)
     selected["plan_rank"] = np.arange(len(selected))
     selected["turnout_s"] = turnout_vec[selected_idx]
+    selected["n_pumps"] = plan_pumps[np.asarray(selected_idx)].astype(int)
+    selected["n_pumps_baseline"] = baseline_pumps[np.asarray(selected_idx)].astype(int)
+    selected["delta_pumps"] = selected["n_pumps"] - selected["n_pumps_baseline"]
     assign = A[selected_idx, :].argmin(axis=0)
     site_w = np.zeros(len(selected_idx))
     for j, a in enumerate(assign):
@@ -715,6 +795,7 @@ def run_fire_station_plan(
     )
     plan_metrics["objective_value"] = float(plan_value)  # nearest-engine objective
     plan_metrics["lfb_first_engine"] = score_first_engine(plan_resp, weights)
+    plan_metrics["total_pumps"] = int(plan_pumps[np.asarray(selected_idx)].sum())
 
     # --- held-out evaluation on eval_years incidents ------------------------
     eval_summary = None
@@ -765,6 +846,8 @@ def run_fire_station_plan(
         "n_closed": int(len(closed_df)),
         "n_opened": int(len(opened_df)),
         "threshold_min": threshold_min,
+        "total_pumps_baseline": int(baseline_pumps[np.asarray(existing_idx)].sum()),
+        "total_pumps_plan": int(plan_pumps[np.asarray(selected_idx)].sum()),
         "plan": plan_metrics,
         "baselines": baselines,
         "eval": eval_summary,
@@ -778,8 +861,11 @@ def run_fire_station_plan(
             f"({scorer}); new sites use the default turnout prior, existing houses a per-station "
             "estimate when available. Discrete candidates (existing houses + demand centroids); "
             "house sites are station-ground centroids, not surveyed. No land, zoning or staffing "
-            "constraints. Busy engines are only blended into reported response when use_busy=True "
-            "(optimisation itself uses nearest engine)."
+            "constraints. Station size (n_pumps) defaults from LFB two-pump inference "
+            "(~40 stations with a second appliance). resize mode reallocates a fixed pump budget "
+            "under a capacity-scaled busy model; other modes keep baseline pumps unless overridden. "
+            "Busy blend applies when use_busy=True or mode=resize "
+            "(location optimisation still uses nearest engine)."
         ),
     }
 
