@@ -156,7 +156,7 @@ open data/figures/fire_station_race_3d.html
 # Synthetic smoke test (no real data)
 PYTHONPATH=src python scripts/plan_fire_station_locations.py --demo
 ```
-Defaults: `--city london`, `--scorer kolesar`, `--threshold-min 10`, LFB
+Defaults: `--city london`, `--scorer lgbm` (decision-tree travel times; `kolesar` for other cities), `--threshold-min 10`, LFB
 `score_first_engine` in the summary, drive + turnout attendance scoring. Modelled cover
 rates are optimistic vs observed attendance (nearest engine always free unless `--use-busy`).
 

@@ -1,0 +1,218 @@
+{
+  "city_id": "london",
+  "mode": "expand",
+  "objective": "response_time",
+  "scorer": "lgbm",
+  "demand_years": [
+    2024
+  ],
+  "eval_years": [
+    2025
+  ],
+  "use_busy": false,
+  "n_existing_fire_stations": 102,
+  "n_candidates": 182,
+  "n_demand_cells": 1889,
+  "n_incidents": 50037,
+  "n_incidents_dropped_far": 300,
+  "n_selected": 103,
+  "n_closed": 0,
+  "n_opened": 1,
+  "threshold_min": 10.0,
+  "total_pumps_baseline": 142,
+  "total_pumps_plan": 143,
+  "plan": {
+    "label": "plan_expand",
+    "n_posts": 103,
+    "expected_response_s": 281.6,
+    "median_response_s": 276.8,
+    "p90_response_s": 375.6,
+    "worst_cell_response_s": 702.8,
+    "coverage_share_within_threshold": 0.9998,
+    "threshold_s": 600.0,
+    "demand_cells": 1889,
+    "objective_value": 281.64486336615755,
+    "lfb_first_engine": {
+      "mean_s": 281.64486336615755,
+      "p90_s": 375.64957554599295,
+      "share_within_6min": 0.8656793972460379,
+      "share_within_10min": 0.9998201331015049,
+      "meets_avg_6": true,
+      "meets_90pct_10": true,
+      "passes": true
+    },
+    "total_pumps": 143,
+    "lfb_first_engine_eval": {
+      "mean_s": 285.29663802867805,
+      "p90_s": 379.8914814652166,
+      "share_within_6min": 0.856198827978887,
+      "share_within_10min": 0.9995636091600515,
+      "meets_avg_6": true,
+      "meets_90pct_10": true,
+      "passes": true
+    }
+  },
+  "baselines": {
+    "current_fire_stations": {
+      "label": "current_fire_stations",
+      "n_posts": 102,
+      "expected_response_s": 284.3,
+      "median_response_s": 276.8,
+      "p90_response_s": 379.8,
+      "worst_cell_response_s": 702.8,
+      "coverage_share_within_threshold": 0.9998,
+      "threshold_s": 600.0,
+      "demand_cells": 1889,
+      "lfb_first_engine": {
+        "mean_s": 284.2598985885921,
+        "p90_s": 379.8914814652166,
+        "share_within_6min": 0.8503907108739532,
+        "share_within_10min": 0.9998201331015049,
+        "meets_avg_6": true,
+        "meets_90pct_10": true,
+        "passes": true
+      },
+      "total_pumps": 142,
+      "lfb_first_engine_eval": {
+        "mean_s": 287.14538990515905,
+        "p90_s": 380.71841325196607,
+        "share_within_6min": 0.844935788204979,
+        "share_within_10min": 0.9995636091600515,
+        "meets_avg_6": true,
+        "meets_90pct_10": true,
+        "passes": true
+      }
+    },
+    "random_expand": {
+      "label": "random_expand",
+      "n_posts": 103,
+      "expected_response_s": 283.3,
+      "median_response_s": 276.2,
+      "p90_response_s": 379.8,
+      "worst_cell_response_s": 702.8,
+      "coverage_share_within_threshold": 0.9998,
+      "threshold_s": 600.0,
+      "demand_cells": 1889,
+      "lfb_first_engine": {
+        "mean_s": 283.2890661070139,
+        "p90_s": 379.8914814652166,
+        "share_within_6min": 0.8503907108739532,
+        "share_within_10min": 0.9998201331015049,
+        "meets_avg_6": true,
+        "meets_90pct_10": true,
+        "passes": true
+      }
+    }
+  },
+  "eval": {
+    "years": [
+      2025
+    ],
+    "n_incidents": 48122,
+    "snap_median_km": 0.307,
+    "snap_p95_km": 0.541,
+    "current": {
+      "mean_s": 287.14538990515905,
+      "p90_s": 380.71841325196607,
+      "share_within_6min": 0.844935788204979,
+      "share_within_10min": 0.9995636091600515,
+      "meets_avg_6": true,
+      "meets_90pct_10": true,
+      "passes": true
+    },
+    "plan": {
+      "mean_s": 285.29663802867805,
+      "p90_s": 379.8914814652166,
+      "share_within_6min": 0.856198827978887,
+      "share_within_10min": 0.9995636091600515,
+      "meets_avg_6": true,
+      "meets_90pct_10": true,
+      "passes": true
+    },
+    "observed_attendance": {
+      "mean_s": 339.0663521881884,
+      "p90_s": 519.0,
+      "share_within_6min": 0.6471468351273846,
+      "share_within_10min": 0.9433523128714517,
+      "meets_avg_6": true,
+      "meets_90pct_10": true,
+      "passes": true
+    }
+  },
+  "delta_vs_current_s": -2.7,
+  "travel": {
+    "scorer": "lgbm",
+    "surrogate_speed_kph": 28.0,
+    "model": "data/processed/models/travel_time_lfb.joblib",
+    "scenario": {
+      "slots": [
+        [
+          3,
+          0.16611707336570938
+        ],
+        [
+          8,
+          0.11675360233427264
+        ],
+        [
+          13,
+          0.31404760477246835
+        ],
+        [
+          18,
+          0.222195575274297
+        ],
+        [
+          21,
+          0.18088614425325258
+        ]
+      ],
+      "date": "2024-10-16",
+      "incident_group": "False Alarm",
+      "property_category": "Dwelling",
+      "busy_flag": 0,
+      "pump_order": 1,
+      "from_home": 1
+    },
+    "cache": "data/processed/planner_cache/lgbm_182x1889_ba7951d57479.npy",
+    "kolesar_fit": {
+      "source": "fit_house_to_dest_crow_km",
+      "n_pairs": 35736,
+      "turnout_removed_s": 60.0
+    },
+    "turnout": {
+      "source": "recorded_mobilisation_median",
+      "default_s": 73.0,
+      "n_existing_with_prior": 102,
+      "existing_min_s": 57.0,
+      "existing_median_s": 73.0,
+      "existing_max_s": 91.0,
+      "years": [
+        2024
+      ]
+    },
+    "pumps": {
+      "baseline_total": 142,
+      "n_two_plus": 40,
+      "min_pumps": 1,
+      "max_pumps": 3
+    }
+  },
+  "add_stations": 1,
+  "solver": {
+    "solver": "HiGHS integer program (scipy.optimize.milp)",
+    "status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "optimal": true,
+    "objective_value": 281.6449,
+    "lower_bound": 281.6449,
+    "gap": 0.0,
+    "solve_s": 0.03,
+    "n_vars": 2502,
+    "cap": {
+      "cap_s": 600.0,
+      "n_cells_exempt": 6,
+      "demand_share_exempt": 0.00018
+    }
+  },
+  "honesty": "Response = predicted drive + station turnout (LFB attendance is mobilise->arrive; travel-only scoring was wrong). Judged on LFB first-engine KPIs: mean <= 6 min, > 90% within 10 min. Drive comes from the chosen scorer (lgbm). Turnout: recorded_mobilisation_median (existing stations), 73 s for new sites. Discrete candidates (existing houses + demand centroids); house sites are OpenStreetMap station buildings. No land, zoning or staffing constraints. Station size (n_pumps) defaults from LFB two-pump inference (~40 stations with a second appliance). resize mode reallocates a fixed pump budget under a capacity-scaled busy model; other modes keep baseline pumps unless overridden. Busy blend applies when use_busy=True or mode=resize (location optimisation still uses nearest engine)."
+}

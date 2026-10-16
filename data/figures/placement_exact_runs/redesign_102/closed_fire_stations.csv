@@ -1,0 +1,36 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+10,Bromley,existing_fire_station,0.0171208318825317,51.407038,True,,2
+11,Chelsea,existing_fire_station,-0.1703650504527192,51.4872478,True,,1
+13,Chiswick,existing_fire_station,-0.2690538141204884,51.49060455,True,,1
+14,Clapham,existing_fire_station,-0.1408792937483196,51.46492985,True,,1
+15,Croydon,existing_fire_station,-0.1055356617454408,51.369216050000006,True,,2
+17,Deptford,existing_fire_station,-0.0338287628551537,51.4848576,True,,1
+18,Dockhead,existing_fire_station,-0.0707950071742421,51.5008984,True,,1
+19,Dowgate,existing_fire_station,-0.0901008,51.510035,True,,1
+32,Greenwich,existing_fire_station,-0.013655847633136,51.47385895,True,,1
+34,Hammersmith,existing_fire_station,-0.224293537625646,51.4960867,True,,2
+38,Heathrow,existing_fire_station,-0.4590324166476678,51.48022665,True,,1
+42,Holloway,existing_fire_station,-0.1159426867900488,51.5615714,True,,1
+46,Ilford,existing_fire_station,0.0900462500705925,51.562220100000005,True,,2
+47,Islington,existing_fire_station,-0.1023069299975422,51.5402671,True,,1
+48,Kensington,existing_fire_station,-0.1901176722364718,51.50295535,True,,1
+49,Kentish Town,existing_fire_station,-0.1417072245645472,51.55283145,True,,2
+50,Kingston,existing_fire_station,-0.3065912404057513,51.429441,True,,2
+51,Lambeth,existing_fire_station,-0.1212760753291227,51.49281255,True,,2
+52,Lee Green,existing_fire_station,0.012513473521701,51.45664085,True,,1
+56,Mill Hill,existing_fire_station,-0.2432100393349606,51.61499645,True,,1
+57,Millwall,existing_fire_station,-0.0255593731203916,51.50081445,True,,1
+59,New Cross,existing_fire_station,-0.0493004024826299,51.4735264,True,,1
+62,North Kensington,existing_fire_station,-0.212041205723519,51.52183735,True,,2
+66,Paddington,existing_fire_station,-0.1833189410368907,51.520072299999995,True,,2
+67,Park Royal,existing_fire_station,-0.264824544196401,51.5357937,True,,1
+70,Plumstead,existing_fire_station,0.0915120200894747,51.487451,True,,2
+73,Richmond,existing_fire_station,-0.2848567753177973,51.4674072,True,,1
+76,Shadwell,existing_fire_station,-0.0557891963357072,51.5108626,True,,1
+79,Soho,existing_fire_station,-0.1300890958229078,51.51246085,True,,2
+84,Stratford,existing_fire_station,0.011128787625757,51.54375,True,,1
+88,Tottenham,existing_fire_station,-0.0718471337316405,51.59230965,True,,2
+95,West Hampstead,existing_fire_station,-0.192796697170743,51.55170105,True,,2
+97,Whitechapel,existing_fire_station,-0.0691888717611473,51.5153048,True,,1
+99,Wimbledon,existing_fire_station,-0.1975643455628843,51.41557195,True,,1
+100,Woodford,existing_fire_station,0.0239671628839159,51.60954165,True,,1

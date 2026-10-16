@@ -382,12 +382,27 @@ def main():
                    help="Optional CSV (station,n_pumps) overriding inferred pump counts")
     p.add_argument("--new-site-pumps", type=int, default=1, help="Default pumps for newly opened sites")
     p.add_argument("--cell-km", type=float, default=0.9)
-    p.add_argument("--demand-candidates", type=int, default=80)
+    p.add_argument("--demand-candidates", type=int, default=80, help="Busiest demand cells added as sites")
+    p.add_argument("--spread-km", type=float, default=3.0,
+                   help="Also add the busiest cell in every N km block as a site (0 = off)")
     p.add_argument("--objective", choices=["response_time", "coverage"], default="response_time")
     p.add_argument("--threshold-min", type=float, default=10.0, help="Cover threshold (LFB: 10)")
-    p.add_argument("--scorer", choices=["lgbm", "road", "kolesar", "crow"], default="kolesar",
-                   help="Drive-time scorer: lgbm (LightGBM travel-time model), road (Kolesar on road km), "
-                        "kolesar (Kolesar on straight-line km), crow (flat speed)")
+    p.add_argument("--severity", choices=["all", "serious", "dwelling_fire"], default="all",
+                   help="Which calls count as demand: all, serious (fires + special services), "
+                        "dwelling_fire (fires in homes)")
+    p.add_argument("--alpha", type=float, default=1.0,
+                   help="Trade-off: each area counts as (calls)**alpha; 1 = fastest average, "
+                        "0 = every area equal (see scripts/placement_tradeoff.py)")
+    p.add_argument("--solver", choices=["exact", "genetic"], default="exact",
+                   help="exact = integer program (proven optimum); genetic = genetic algorithm, "
+                        "which with --use-busy also optimises for busy engines")
+    p.add_argument("--cap-min", type=float, default=10.0,
+                   help="No area may be served from a site farther than this (minutes; 0 = no cap). "
+                        "Areas no candidate reaches in time are exempt")
+    p.add_argument("--scorer", choices=["lgbm", "road", "kolesar", "crow"], default=None,
+                   help="Drive-time scorer: lgbm (LightGBM decision-tree travel-time model; default for "
+                        "London), road (Kolesar on road km), kolesar (Kolesar on straight-line km; default "
+                        "elsewhere), crow (flat speed)")
     p.add_argument("--demand-years", type=str, default="2024", help="Comma list of cal_years for demand")
     p.add_argument("--eval-years", type=str, default="2025", help="Comma list of cal_years for held-out scoring")
     p.add_argument("--use-busy", action="store_true", help="Blend next-nearest engine by station busy rate")
@@ -408,6 +423,13 @@ def main():
 
     demand_years, eval_years = _years(args.demand_years), _years(args.eval_years)
     scorer = args.scorer
+    if scorer is None:
+        # The decision-tree model only knows London; other cities fall back to Kolesar.
+        from firestation.ml_scorer import MODEL_PATH
+
+        london = not args.demo and args.city.lower() == "london"
+        scorer = "lgbm" if london and MODEL_PATH.exists() else "kolesar"
+        print(f"Scorer: {scorer}")
 
     if args.demo:
         city_id = "demo"
@@ -462,8 +484,13 @@ def main():
         add_stations=args.add_stations,
         cell_km=args.cell_km,
         demand_candidates=args.demand_candidates,
+        spread_km=args.spread_km or None,
         objective=args.objective,
         threshold_min=args.threshold_min,
+        cap_min=args.cap_min or None,
+        severity=args.severity,
+        alpha=args.alpha,
+        solver=args.solver,
         max_incident_rows=args.max_incidents,
         seed=args.seed,
         scorer=scorer,

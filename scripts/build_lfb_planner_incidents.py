@@ -11,7 +11,9 @@ delay), **not** pure driving time from station to incident.
 
 Coordinates: ``dest_lat`` / ``dest_lon`` from ``Latitude`` / ``Longitude`` when
 present; otherwise British National Grid ``Easting_m`` / ``Northing_m`` converted
-to WGS84 (EPSG:27700 → EPSG:4326) via pyproj.
+to WGS84 (EPSG:27700 → EPSG:4326) via pyproj. Dwellings have neither (LFB withholds
+them), so they use ``Easting_rounded`` / ``Northing_rounded`` (50 m); ``dest_exact``
+marks rows with exact coordinates.
 
 Filters: require coordinates and attendance; keep attendance in [30, 1800] seconds.
 
@@ -38,6 +40,7 @@ ATTENDANCE_MAX_S = 1800
 OUTPUT_COLUMNS = [
     "dest_lat",
     "dest_lon",
+    "dest_exact",
     "travel_seconds",
     "cal_year",
     "date_of_call",
@@ -48,6 +51,9 @@ OUTPUT_COLUMNS = [
     "second_attendance_s",
     "second_deployed_from",
     "busy_flag",
+    "incident_group",
+    "stop_code",
+    "property_category",
 ]
 
 
@@ -76,8 +82,13 @@ def build_planner(df: pd.DataFrame) -> pd.DataFrame:
 
     lat = pd.to_numeric(df.get("Latitude"), errors="coerce")
     lon = pd.to_numeric(df.get("Longitude"), errors="coerce")
-    east = pd.to_numeric(df.get("Easting_m"), errors="coerce")
-    north = pd.to_numeric(df.get("Northing_m"), errors="coerce")
+    exact = pd.to_numeric(df.get("Easting_m"), errors="coerce").notna()
+    # LFB withholds exact coordinates for dwellings (about 60% of calls) and publishes a
+    # grid reference rounded to 50 m instead; use it so home calls count as demand.
+    east = pd.to_numeric(df.get("Easting_m"), errors="coerce").fillna(
+        pd.to_numeric(df.get("Easting_rounded"), errors="coerce"))
+    north = pd.to_numeric(df.get("Northing_m"), errors="coerce").fillna(
+        pd.to_numeric(df.get("Northing_rounded"), errors="coerce"))
 
     need_bng = lat.isna() | lon.isna()
     if need_bng.any():
@@ -91,6 +102,7 @@ def build_planner(df: pd.DataFrame) -> pd.DataFrame:
 
     out["dest_lat"] = lat
     out["dest_lon"] = lon
+    out["dest_exact"] = (lat.notna() & exact).astype(int)
 
     out["travel_seconds"] = pd.to_numeric(
         df.get("FirstPumpArriving_AttendanceTime"), errors="coerce"
@@ -105,6 +117,10 @@ def build_planner(df: pd.DataFrame) -> pd.DataFrame:
         df.get("SecondPumpArriving_AttendanceTime"), errors="coerce"
     )
     out["second_deployed_from"] = df.get("SecondPumpArriving_DeployedFromStation")
+    # Call type, for severity-weighted demand (fire / special service / false alarm).
+    out["incident_group"] = df.get("IncidentGroup")
+    out["stop_code"] = df.get("StopCodeDescription")
+    out["property_category"] = df.get("PropertyCategory")
 
     ground = out["station_ground"].astype(str).str.strip()
     deployed = out["deployed_from_station"].astype(str).str.strip()

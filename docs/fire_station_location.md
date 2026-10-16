@@ -1,7 +1,7 @@
 # Firehouse location planner
 
 Plan **where fire stations should sit** so the first engine meets LFB attendance
-standards, and compare drive scorers (**LightGBM / road / Kolesar / crow**, all **EXIST**).
+standards. Drive times come from the LightGBM decision-tree model by default; road / Kolesar / crow scorers are baselines (all **EXIST**).
 
 > **EXISTS** = in the repo today. **PLANNED** = in the plan, not built or run.
 
@@ -50,6 +50,50 @@ Candidates (**EXISTS**): existing stations plus top demand-cell
 centroids (`--demand-candidates`). **PLANNED**: additional candidates on street-graph
 nodes. Objectives: p-median `response_time` or max-cover `coverage`.
 
+## Optimiser: exact integer program
+
+`redesign`, `replace` and `expand` are solved as integer programs with HiGHS
+(`scipy.optimize.milp`, `firestation.facility.solve_exact`), to a **proven optimum**: the
+summary's `solver` block gives the status, the solver's lower bound and the gap (0 = proven).
+
+- p-median: open-site variables `y_s` (0/1) and assignment variables `x_sj`; minimise
+  Σ w_j t_sj x_sj / Σ w_j with every cell served once, only by open sites, and `k` sites.
+- `--cap-min` (default 10, LFB's standard): no area that today's stations reach within this
+  many minutes may be left beyond it. Areas already over it today are not constrained (the
+  objective still pulls them closer). Today's layout always satisfies the cap, so every
+  mode has a solution.
+- `replace --replace r` keeps at least `n − r` current stations (so it may move fewer than
+  `r` if that is better); `expand` fixes all current stations open.
+- Pairs a cell would never use (slower than a station that is always open) are dropped
+  before solving, which keeps the answer exact and makes `expand` solve in well under a second.
+
+This replaces the earlier greedy-plus-swaps search, which had no optimality guarantee.
+
+## Optimiser: genetic algorithm (`--solver genetic`)
+
+`firestation.facility.solve_genetic`. Each individual is a set of open sites; tournament
+selection, elitism, a crossover that keeps the sites both parents share, and a mutation
+that swaps one site (half the time for a nearby one). Stops after 400 generations or 80
+without improvement. Its point is the **busy-engine objective**: with `--use-busy` it
+minimises (1 − p)·t₁ + p·t₂ (nearest engine busy with probability p, next nearest answers),
+which the integer program cannot express linearly.
+
+Check against the exact solver (same problem, nearest engine): add 3 → same optimum;
+move 10 → within 0.04 %; full redesign → within 0.01 %. On the busy-engine objective
+(move 10), the genetic algorithm beats the exact solver's layout by 0.5 s (304.0 vs 304.5 s).
+
+## Demand weighting and the trade-off dial
+
+- `--severity all|serious|dwelling_fire`: which calls count (all; fires + special services;
+  fires in homes). Uses `incident_group` / `property_category` from the planner CSV.
+- `--alpha a`: each area counts as (weighted calls)^a. 1 = fastest call-weighted average,
+  0 = every area with calls counts the same. `scripts/placement_tradeoff.py` sweeps it.
+- Candidates: today's stations, the 80 busiest 0.9 km cells, and the busiest cell in every
+  3 km block (`--spread-km`), so the solver can also place stations in quieter areas.
+- Home calls: LFB withholds exact coordinates for dwellings, so the planner CSV uses LFB's
+  50 m rounded grid reference for them (`dest_exact = 0`). Earlier planner runs had left out
+  every dwelling call (about 60 % of calls).
+
 ## Scorers (multi-scorer comparison)
 
 | Scorer | Travel time from… | Status |
@@ -59,7 +103,7 @@ nodes. Objectives: p-median `response_time` or max-cover `coverage`.
 | **road** | Kolesar curve (road-km fit from the travel-time trainer) on the shortest legal route over the directed London drive graph | **EXISTS** (`--scorer road`) |
 | **lgbm** (street-aware) | LightGBM travel-time model (`docs/travel_time_training.md`) on the full route features from every site to every demand cell | **EXISTS** (`--scorer lgbm`, `firestation.ml_scorer`) |
 
-Default scorer: **kolesar**.
+Default scorer: **lgbm** for London (the decision-tree model is London-only), **kolesar** for `--demo` and custom cities.
 
 **lgbm scenario.** A site has no station ID, so new and existing sites are scored alike:
 first pump, from its home station, not busy, on the most common call type (false alarm in
@@ -184,7 +228,7 @@ PYTHONPATH=src python scripts/plan_fire_station_locations.py \
 |---|---|
 | City registry (London + custom) | `src/firestation/cities.py` |
 | Planner (redesign, replace, expand) | `src/firestation/fire_station_location.py` |
-| Demand grid, p-median / max-cover selection | `src/firestation/facility.py` |
+| Demand grid, exact p-median / max-cover integer program (HiGHS) | `src/firestation/facility.py` |
 | Kolesar model | `src/firestation/kolesar.py` |
 | LFB standards + attendance sum | `src/firestation/lfb_standards.py` |
 | Busy-engine rates | `src/firestation/busy_engines.py` |

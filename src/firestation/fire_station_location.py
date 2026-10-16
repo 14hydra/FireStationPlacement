@@ -20,15 +20,18 @@ Building blocks:
   ``TurnoutTimeSeconds``, home-station trips in the demand years); new sites get the
   median over all stations. Without mobilisation data, a prior from attendance
   residuals vs. Kolesar drive, and ``DEFAULT_TURNOUT_S`` for new sites
-- discrete facility location: p-median / max-cover (``facility.select_posts``)
+- discrete facility location: p-median / max-cover as an integer program, solved to a
+  proven optimum with HiGHS (``facility.solve_exact``); optional per-cell time cap
 - optional busy-engine blend (``use_busy``) and demand/eval year split
 
 Modes
 -----
-``redesign`` - choose ``k`` sites from the candidate set (full redesign).
-``replace``  - keep ``n - r`` current houses; jointly swap out ``r`` existing
-               for ``r`` new candidates (constant fleet size).
-``expand``   - keep ALL current houses; greedily open ``m`` new ones.
+``redesign`` - choose the best ``k`` sites from the candidate set (full redesign).
+``replace``  - keep at least ``n - r`` current houses; close up to ``r`` and open as
+               many new candidates (constant fleet size).
+``expand``   - keep ALL current houses; open the best ``m`` new ones.
+
+redesign / replace / expand are integer programs solved to a proven optimum.
 ``resize``   - keep ALL current house *locations*; reallocate ``total_pumps``
                across stations (1–3 engines each) under a capacity-aware busy
                model (``firestation.station_capacity``).
@@ -55,7 +58,9 @@ from .facility import (
     haversine_km,
     objective_value,
     posture_metrics,
-    select_posts,
+    GeneticResult,
+    solve_exact,
+    solve_genetic,
 )
 from .station_capacity import (
     DEFAULT_TOTAL_PUMPS,
@@ -66,6 +71,43 @@ from .station_capacity import (
 )
 
 SCORERS = ("lgbm", "road", "kolesar", "crow")
+
+# How much each call counts as demand (LFB IncidentGroup / PropertyCategory).
+SEVERITY_SCHEMES = {
+    "all": "every call counts 1",
+    "serious": "fires and special services count 1, false alarms 0",
+    "dwelling_fire": "only fires in homes count",
+}
+
+
+def severity_weight(incidents: pd.DataFrame, scheme: str = "all") -> np.ndarray:
+    """Demand weight per call under a severity scheme (see ``SEVERITY_SCHEMES``)."""
+    if scheme not in SEVERITY_SCHEMES:
+        raise ValueError(f"severity must be one of {list(SEVERITY_SCHEMES)}, got {scheme!r}")
+    if scheme == "all":
+        return np.ones(len(incidents))
+    if "incident_group" not in incidents.columns:
+        raise ValueError("severity weighting needs incident_group; rebuild with build_lfb_planner_incidents.py")
+    group = incidents["incident_group"].astype(str).str.upper()
+    if scheme == "serious":
+        return group.isin(["FIRE", "SPECIAL SERVICE"]).to_numpy(dtype=float)
+    prop = incidents["property_category"].astype(str).str.upper()
+    return (group.eq("FIRE") & prop.eq("DWELLING")).to_numpy(dtype=float)
+
+
+def cell_weights(cells: pd.DataFrame, incidents: pd.DataFrame, w: np.ndarray) -> np.ndarray:
+    """Sum of per-call weights in each demand-grid cell (same binning as ``build_demand_grid``)."""
+    dlat, dlon = float(cells["cell_dlat"].iloc[0]), float(cells["cell_dlon"].iloc[0])
+    key = pd.DataFrame({"_ix": np.floor(incidents["dest_lon"].to_numpy(float) / dlon).astype(int),
+                        "_iy": np.floor(incidents["dest_lat"].to_numpy(float) / dlat).astype(int), "w": w})
+    tot = key.groupby(["_ix", "_iy"])["w"].sum()
+    return tot.reindex(pd.MultiIndex.from_frame(cells[["_ix", "_iy"]])).fillna(0.0).to_numpy()
+
+
+def solver_weights(weights: np.ndarray, alpha: float) -> np.ndarray:
+    """Weight each area by demand**alpha: 1 = calls count (efficiency), 0 = areas count equally."""
+    w = np.asarray(weights, dtype=float)
+    return np.where(w > 0, np.power(np.maximum(w, 1e-12), float(alpha)), 0.0)
 TRAVEL_TRAINING = Path(__file__).resolve().parents[2] / "data" / "processed" / "lfb_travel_training.csv"
 MODES = ("redesign", "replace", "expand", "resize")
 
@@ -75,8 +117,9 @@ def build_house_candidates(
     cells: pd.DataFrame,
     *,
     demand_candidates: int = 80,
+    spread_km: float | None = None,
 ) -> pd.DataFrame:
-    """Existing fire stations + top demand centroids as relocatable sites."""
+    """Existing fire stations + top demand centroids (+ one per ``spread_km`` block) as sites."""
     existing = pd.DataFrame(
         {
             "site_name": houses["facilityname"].astype(str),
@@ -92,7 +135,7 @@ def build_house_candidates(
     # add_demand_cell_candidates expects post_name/layer/lon/lat
     post_shaped = cand.rename(columns={"site_name": "post_name"})
     post_shaped["is_anchor"] = True
-    enriched = add_demand_cell_candidates(post_shaped, cells, top_n=demand_candidates)
+    enriched = add_demand_cell_candidates(post_shaped, cells, top_n=demand_candidates, spread_km=spread_km)
     # Normalize columns for this module
     out = pd.DataFrame(
         {
@@ -154,23 +197,45 @@ def build_travel_matrix(
     return surrogate.matrix(candidates, cells), meta
 
 
+def _solver_meta(res) -> dict[str, Any]:
+    if isinstance(res, GeneticResult):
+        return {"solver": "genetic algorithm", "optimal": None, "objective_value": round(res.value, 4),
+                "generations": res.generations, "evaluations": res.evaluations, "solve_s": res.solve_s,
+                "params": res.params, "history_every_10": [round(v, 3) for v in res.history[::10]]}
+    return {"solver": "HiGHS integer program (scipy.optimize.milp)", "status": res.status,
+            "optimal": res.optimal, "objective_value": round(res.value, 4),
+            "lower_bound": round(res.bound, 4) if np.isfinite(res.bound) else None,
+            "gap": res.gap, "solve_s": res.solve_s, "n_vars": res.n_vars, "cap": res.cap}
+
+
+def _solve(T, weights, k, *, solver, objective, threshold_s, cap_s, busy_p=None, seed=42, **kw):
+    """Exact integer program, or the genetic algorithm (which can also use busy engines)."""
+    if solver == "genetic":
+        if objective != "response_time":
+            raise ValueError("the genetic solver optimises response_time only")
+        return solve_genetic(T, weights, k, cap_s=cap_s, busy_p=busy_p, seed=seed, **kw)
+    if solver != "exact":
+        raise ValueError(f"solver must be exact|genetic, got {solver!r}")
+    return solve_exact(T, weights, k, objective=objective, threshold_s=threshold_s, cap_s=cap_s, **kw)
+
+
 def plan_redesign(
     T: np.ndarray,
     weights: np.ndarray,
     k: int,
     *,
     objective: str = "response_time",
-    threshold_s: float = 480.0,
-    max_swap_rounds: int = 10,
-):
-    return select_posts(
-        T,
-        weights,
-        k,
-        objective=objective,
-        threshold_s=threshold_s,
-        max_swap_rounds=max_swap_rounds,
-    )
+    threshold_s: float = 600.0,
+    cap_s: float | None = None,
+    solver: str = "exact",
+    busy_p: np.ndarray | None = None,
+    cap_cells: np.ndarray | None = None,
+) -> dict[str, Any]:
+    """Best ``k`` sites from the whole candidate set."""
+    res = _solve(T, weights, k, solver=solver, objective=objective, threshold_s=threshold_s, cap_s=cap_s,
+                 busy_p=busy_p, cap_cells=cap_cells)
+    return {"indices": res.indices, "value": res.value, "response_s": res.response_s,
+            "objective": objective, "solver": _solver_meta(res)}
 
 
 def plan_replace(
@@ -181,80 +246,33 @@ def plan_replace(
     replace_r: int,
     new_pool: Sequence[int] | None = None,
     objective: str = "response_time",
-    threshold_s: float = 480.0,
-    max_rounds: int | None = None,
+    threshold_s: float = 600.0,
+    cap_s: float | None = None,
+    solver: str = "exact",
+    busy_p: np.ndarray | None = None,
+    cap_cells: np.ndarray | None = None,
 ) -> dict[str, Any]:
-    """Joint swaps: drop ``r`` existing houses, open ``r`` new candidates.
+    """Keep the fleet size; close up to ``r`` current stations and open as many new sites.
 
-    Starts from the full existing set; each round swaps one existing site for
-    the best unused new candidate. Total fleet size stays ``len(existing_idx)``.
+    Solved jointly and exactly: the best layout with at least ``n - r`` current stations.
     """
-
     existing = [int(i) for i in existing_idx]
+    ex = set(existing)
     n = len(existing)
     r = int(min(max(0, replace_r), n))
-    if new_pool is None:
-        new_pool = [i for i in range(T.shape[0]) if i not in set(existing)]
-    else:
-        new_pool = [int(i) for i in new_pool if int(i) not in set(existing)]
-
-    selected = list(existing)
-    if r == 0 or not new_pool:
-        best = T[selected, :].min(axis=0)
-        return {
-            "indices": selected,
-            "closed": [],
-            "opened": [],
-            "value": objective_value(T, selected, weights, objective=objective, threshold_s=threshold_s),
-            "response_s": best,
-            "n_swaps": 0,
-        }
-
-    rounds = max_rounds if max_rounds is not None else r
-    n_swaps = 0
-    closed: list[int] = []
-    opened: list[int] = []
-    current = objective_value(T, selected, weights, objective=objective, threshold_s=threshold_s)
-
-    for _ in range(rounds):
-        if len(closed) >= r:
-            break
-        best_gain = 0.0
-        best_out = None
-        best_in = None
-        # Only swap out still-original existing houses not yet closed
-        drop_candidates = [i for i in selected if i in set(existing) and i not in closed]
-        add_candidates = [j for j in new_pool if j not in selected]
-        if not drop_candidates or not add_candidates:
-            break
-        for out_idx in drop_candidates:
-            base = [s for s in selected if s != out_idx]
-            for in_idx in add_candidates:
-                val = objective_value(
-                    T, base + [in_idx], weights, objective=objective, threshold_s=threshold_s
-                )
-                gain = current - val
-                if gain > best_gain + 1e-9:
-                    best_gain = gain
-                    best_out = out_idx
-                    best_in = in_idx
-        if best_out is None or best_in is None:
-            break
-        selected = [best_in if s == best_out else s for s in selected]
-        closed.append(best_out)
-        opened.append(best_in)
-        current -= best_gain
-        n_swaps += 1
-
-    best = T[selected, :].min(axis=0)
+    pool = [i for i in range(T.shape[0]) if i not in ex] if new_pool is None else [
+        int(i) for i in new_pool if int(i) not in ex]
+    res = _solve(T, weights, n, solver=solver, objective=objective, threshold_s=threshold_s, cap_s=cap_s,
+                 busy_p=busy_p, cap_cells=cap_cells, allowed=existing + pool, min_from=(existing, n - r))
+    chosen = set(res.indices)
     return {
-        "indices": [int(i) for i in selected],
-        "closed": [int(i) for i in closed],
-        "opened": [int(i) for i in opened],
-        "value": float(current),
-        "response_s": best,
-        "n_swaps": n_swaps,
+        "indices": res.indices,
+        "closed": [i for i in existing if i not in chosen],
+        "opened": [i for i in res.indices if i not in ex],
+        "value": res.value,
+        "response_s": res.response_s,
         "objective": objective,
+        "solver": _solver_meta(res),
     }
 
 
@@ -300,39 +318,28 @@ def plan_expand(
     *,
     new_pool: Sequence[int] | None = None,
     objective: str = "response_time",
-    threshold_s: float = 480.0,
-    max_swap_rounds: int = 4,
+    threshold_s: float = 600.0,
+    cap_s: float | None = None,
+    solver: str = "exact",
+    busy_p: np.ndarray | None = None,
+    cap_cells: np.ndarray | None = None,
 ) -> dict[str, Any]:
-    """Keep ALL existing houses; open ``add_m`` new candidates from ``new_pool``.
-
-    Uses ``select_posts`` with ``must_include=existing`` (greedy seed + swaps among
-    the new sites only; existing rows are locked).
-    """
+    """Keep ALL current stations; open the best ``add_m`` new sites."""
     existing = [int(i) for i in existing_idx]
     ex = set(existing)
     pool = [i for i in range(T.shape[0]) if i not in ex] if new_pool is None else [
-        int(i) for i in new_pool if int(i) not in ex
-    ]
+        int(i) for i in new_pool if int(i) not in ex]
     m = int(min(max(0, add_m), len(pool)))
-    if m == 0:
-        return {
-            "indices": existing, "closed": [], "opened": [], "n_swaps": 0,
-            "value": _expand_value(T, existing, weights, objective, threshold_s),
-            "response_s": T[existing, :].min(axis=0), "objective": objective,
-        }
-    res = select_posts(
-        T, weights, len(existing) + m,
-        objective=objective, threshold_s=threshold_s,
-        must_include=existing, allowed=existing + pool, max_swap_rounds=max_swap_rounds,
-    )
+    res = _solve(T, weights, len(existing) + m, solver=solver, objective=objective, threshold_s=threshold_s,
+                 cap_s=cap_s, busy_p=busy_p, cap_cells=cap_cells, fixed_open=existing, allowed=existing + pool)
     return {
         "indices": res.indices,
         "closed": [],
         "opened": [i for i in res.indices if i not in ex],
-        "value": float(res.value),
+        "value": res.value,
         "response_s": res.response_s,
-        "n_swaps": res.n_swaps,
         "objective": objective,
+        "solver": _solver_meta(res),
     }
 
 
@@ -606,8 +613,10 @@ def run_fire_station_plan(
     add_stations: int = 0,
     cell_km: float = 0.9,
     demand_candidates: int = 80,
+    spread_km: float | None = 3.0,
     objective: str = "response_time",
     threshold_min: float = 10.0,
+    cap_min: float | None = 10.0,
     max_incident_rows: int | None = 200_000,
     seed: int = 42,
     scorer: str = "kolesar",
@@ -620,6 +629,9 @@ def run_fire_station_plan(
     min_pumps: int = 1,
     max_pumps: int = 3,
     new_site_pumps: int = 1,
+    severity: str = "all",
+    alpha: float = 1.0,
+    solver: str = "exact",
 ) -> FireStationPlanResult:
     """End-to-end facility location for one city.
 
@@ -631,6 +643,12 @@ def run_fire_station_plan(
     ``pumps`` / ``total_pumps`` control per-station engine counts (``resize`` mode
     reallocates a fixed pump budget; other modes attach ``n_pumps`` for reporting
     and optional busy scaling when ``use_busy`` is set).
+    ``severity`` weights calls by type (``SEVERITY_SCHEMES``); ``alpha`` sets the trade-off
+    the solver optimises: each area counts as (its weighted calls)**alpha, so 1 minimises
+    the call-weighted average time and 0 the average over areas (equal coverage).
+    Metrics are always reported with the severity weights.
+    ``solver``: ``exact`` (integer program, proven optimum, nearest engine always free) or
+    ``genetic`` (genetic algorithm; with ``use_busy`` it optimises the busy-engine blend).
     """
     if mode not in MODES:
         raise ValueError(f"mode must be {'|'.join(MODES)}, got {mode!r}")
@@ -648,12 +666,20 @@ def run_fire_station_plan(
         if eval_inc is not None and len(eval_inc) > max_incident_rows:
             eval_inc = eval_inc.sample(max_incident_rows, random_state=seed).reset_index(drop=True)
 
+    # Grid geometry from all calls (so sites and travel times are shared across schemes);
+    # each cell's demand is then its severity-weighted call count.
     cells = build_demand_grid(incidents, lat_col="dest_lat", lon_col="dest_lon", cell_km=cell_km)
     # resize only needs existing sites — skip demand-cell candidates for speed
     demand_cand = 0 if mode == "resize" else demand_candidates
-    candidates = build_house_candidates(houses, cells, demand_candidates=demand_cand)
+    candidates = build_house_candidates(houses, cells, demand_candidates=demand_cand,
+                                        spread_km=None if mode == "resize" else spread_km)
+    sev_w = severity_weight(incidents, severity)
+    cells["weight"] = cell_weights(cells, incidents, sev_w)
+    cells["share"] = cells["weight"] / max(float(cells["weight"].sum()), 1e-9)
     weights = cells["weight"].to_numpy(dtype=float)
+    w_opt = solver_weights(weights, alpha)
     threshold_s = float(threshold_min) * 60.0
+    cap_s = float(cap_min) * 60.0 if cap_min else None
 
     existing_idx = candidates.index[candidates["is_existing"]].tolist()
     if not existing_idx:
@@ -738,6 +764,9 @@ def run_fire_station_plan(
     cur_metrics["total_pumps"] = int(baseline_pumps[np.asarray(cur_sel)].sum()) if cur_sel else 0
     baselines = {"current_fire_stations": cur_metrics}
 
+    # 10-minute cap: no area that today's stations reach in time may lose the standard.
+    cap_cells = A[np.asarray(existing_idx)].min(axis=0) <= cap_s if cap_s is not None else None
+
     closed_df = pd.DataFrame()
     opened_df = pd.DataFrame()
     new_pool = [i for i in range(len(candidates)) if i not in set(existing_idx)]
@@ -747,23 +776,25 @@ def run_fire_station_plan(
         k = int(n_houses) if n_houses is not None else len(existing_idx)
         k = max(1, min(k, len(candidates)))
         print(f"Redesign: placing k={k} fire stations…")
-        res = plan_redesign(A, weights, k, objective=objective, threshold_s=threshold_s)
-        selected_idx = res.indices
-        plan_value = res.value
+        res = plan_redesign(A, w_opt, k, objective=objective, threshold_s=threshold_s, cap_s=cap_s,
+                            solver=solver, busy_p=busy_p if solver == "genetic" else None, cap_cells=cap_cells)
+        selected_idx = res["indices"]
+        plan_value = res["value"]
         kept = [i for i in selected_idx if i in set(existing_idx)]
         opened_idx = [i for i in selected_idx if i not in set(existing_idx)]
         closed_idx = [i for i in existing_idx if i not in set(selected_idx)]
         closed_df = candidates.loc[closed_idx].copy() if closed_idx else pd.DataFrame()
         opened_df = candidates.loc[opened_idx].copy() if opened_idx else pd.DataFrame()
-        extra = {"k": k, "n_swaps": res.n_swaps, "kept_existing": len(kept)}
+        extra = {"k": k, "kept_existing": len(kept), "solver": res["solver"]}
     elif mode == "replace":
         r = int(replace_r)
         if r <= 0:
             raise ValueError("--replace must be > 0 for mode=replace")
         print(f"Replace: relocating r={r} of {len(existing_idx)} fire stations…")
         res = plan_replace(
-            A, weights, existing_idx,
-            replace_r=r, new_pool=new_pool, objective=objective, threshold_s=threshold_s,
+            A, w_opt, existing_idx,
+            replace_r=r, new_pool=new_pool, objective=objective, threshold_s=threshold_s, cap_s=cap_s,
+            solver=solver, busy_p=busy_p if solver == "genetic" else None, cap_cells=cap_cells,
         )
         selected_idx = res["indices"]
         plan_value = res["value"]
@@ -776,15 +807,16 @@ def run_fire_station_plan(
         baselines["random_replace"] = _baseline_metrics(
             A, rnd["indices"], weights, threshold_s, busy_p, "random_replace"
         )
-        extra = {"replace_r": r, "n_swaps": res["n_swaps"]}
+        extra = {"replace_r": r, "n_replaced": len(res["opened"]), "solver": res["solver"]}
     elif mode == "expand":
         m = int(add_stations)
         if m <= 0:
             raise ValueError("--add-stations must be > 0 for mode=expand")
         print(f"Expand: keeping {len(existing_idx)} houses, opening m={m} new…")
         res = plan_expand(
-            A, weights, existing_idx, m,
-            new_pool=new_pool, objective=objective, threshold_s=threshold_s,
+            A, w_opt, existing_idx, m,
+            new_pool=new_pool, objective=objective, threshold_s=threshold_s, cap_s=cap_s,
+            solver=solver, busy_p=busy_p if solver == "genetic" else None, cap_cells=cap_cells,
         )
         selected_idx = res["indices"]
         plan_value = res["value"]
@@ -796,7 +828,7 @@ def run_fire_station_plan(
         baselines["random_expand"] = _baseline_metrics(
             A, rnd["indices"], weights, threshold_s, busy_p, "random_expand"
         )
-        extra = {"add_stations": m, "n_swaps": res["n_swaps"]}
+        extra = {"add_stations": m, "solver": res["solver"]}
     else:  # resize
         budget = int(total_pumps) if total_pumps is not None else int(
             baseline_pumps[np.asarray(existing_idx)].sum() or DEFAULT_TOTAL_PUMPS
@@ -854,13 +886,15 @@ def run_fire_station_plan(
         ok = eval_inc[["dest_lat", "dest_lon"]].notna().all(axis=1)
         ev = eval_inc[ok].reset_index(drop=True)
         cidx, ckm = snap_to_cells(ev, cells)
-        cur_score = score_first_engine(cur_resp[cidx])
-        plan_score = score_first_engine(plan_resp[cidx])
+        ev_w = severity_weight(ev, severity)
+        cur_score = score_first_engine(cur_resp[cidx], ev_w)
+        plan_score = score_first_engine(plan_resp[cidx], ev_w)
         cur_metrics["lfb_first_engine_eval"] = cur_score
         plan_metrics["lfb_first_engine_eval"] = plan_score
         eval_summary = {
             "years": [int(y) for y in (eval_years or [])],
             "n_incidents": int(len(ev)),
+            "n_incidents_weighted": float(ev_w.sum()),
             "snap_median_km": round(float(np.median(ckm)), 3),
             "snap_p95_km": round(float(np.percentile(ckm, 95)), 3),
             "current": cur_score,
@@ -884,6 +918,10 @@ def run_fire_station_plan(
         "city_id": city_id,
         "mode": mode,
         "objective": objective,
+        "severity": severity,
+        "severity_rule": SEVERITY_SCHEMES[severity],
+        "alpha": float(alpha),
+        "solver_kind": solver,
         "scorer": scorer,
         "demand_years": [int(y) for y in (demand_years or [])] if has_years else [],
         "eval_years": [int(y) for y in (eval_years or [])] if has_years else [],

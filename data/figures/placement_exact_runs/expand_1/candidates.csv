@@ -1,0 +1,183 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+0,Acton,existing_fire_station,-0.2769203061884447,51.507054,True,,1
+1,Addington,existing_fire_station,-0.0236213420691161,51.3519192,True,,2
+2,Barking,existing_fire_station,0.0888736549390424,51.53000055,True,,2
+3,Barnet,existing_fire_station,-0.1859670751536085,51.647254649999994,True,,1
+4,Battersea,existing_fire_station,-0.1694003932299012,51.4672269,True,,1
+5,Beckenham,existing_fire_station,-0.0342898308077814,51.408058049999994,True,,1
+6,Bethnal Green,existing_fire_station,-0.0532636626069591,51.52787645,True,,1
+7,Bexley,existing_fire_station,0.1536625307820576,51.46116425,True,,1
+8,Biggin Hill,existing_fire_station,0.0341143511908675,51.313615,True,,1
+9,Brixton,existing_fire_station,-0.1094055,51.463738,True,,2
+10,Bromley,existing_fire_station,0.0171208318825317,51.407038,True,,2
+11,Chelsea,existing_fire_station,-0.1703650504527192,51.4872478,True,,1
+12,Chingford,existing_fire_station,-0.0047711,51.6296127,True,,1
+13,Chiswick,existing_fire_station,-0.2690538141204884,51.49060455,True,,1
+14,Clapham,existing_fire_station,-0.1408792937483196,51.46492985,True,,1
+15,Croydon,existing_fire_station,-0.1055356617454408,51.369216050000006,True,,2
+16,Dagenham,existing_fire_station,0.1570281714646305,51.55946845,True,,2
+17,Deptford,existing_fire_station,-0.0338287628551537,51.4848576,True,,1
+18,Dockhead,existing_fire_station,-0.0707950071742421,51.5008984,True,,1
+19,Dowgate,existing_fire_station,-0.0901008,51.510035,True,,1
+20,Ealing,existing_fire_station,-0.3139067419956537,51.51208625,True,,1
+21,East Greenwich,existing_fire_station,0.0222960967435707,51.48697755,True,,2
+22,East Ham,existing_fire_station,0.0568595461331539,51.5233978,True,,1
+23,Edmonton,existing_fire_station,-0.0690767018132989,51.62723145,True,,2
+24,Eltham,existing_fire_station,0.0594040645005442,51.4506963,True,,1
+25,Enfield,existing_fire_station,-0.05189325,51.6602193,True,,2
+26,Erith,existing_fire_station,0.156541794689897,51.485523400000005,True,,1
+27,Euston,existing_fire_station,-0.1306108099453524,51.52775695,True,,1
+28,Feltham,existing_fire_station,-0.4138852634195626,51.4606344,True,,2
+29,Finchley,existing_fire_station,-0.1792936720326938,51.5979575,True,,2
+30,Forest Hill,existing_fire_station,-0.0450111,51.4428876,True,,1
+31,Fulham,existing_fire_station,-0.2009176151088025,51.47791755,True,,1
+32,Greenwich,existing_fire_station,-0.013655847633136,51.47385895,True,,1
+33,Hainault,existing_fire_station,0.1043983327517823,51.60617575,True,,1
+34,Hammersmith,existing_fire_station,-0.224293537625646,51.4960867,True,,2
+35,Harold Hill,existing_fire_station,0.2235413607554786,51.5983747,True,,1
+36,Harrow,existing_fire_station,-0.3663798847978869,51.59096095,True,,1
+37,Hayes,existing_fire_station,-0.4316736479820627,51.49438,True,,1
+38,Heathrow,existing_fire_station,-0.4590324166476678,51.48022665,True,,1
+39,Hendon,existing_fire_station,-0.2286435,51.5888473,True,,2
+40,Heston,existing_fire_station,-0.3431990961907811,51.47502,True,,2
+41,Hillingdon,existing_fire_station,-0.4520808892082451,51.5319982,True,,2
+42,Holloway,existing_fire_station,-0.1159426867900488,51.5615714,True,,1
+43,Homerton,existing_fire_station,-0.0439337508623871,51.54865169999999,True,,2
+44,Hornchurch,existing_fire_station,0.2205802941206759,51.56451135,True,,1
+45,Hornsey,existing_fire_station,-0.1272021246958989,51.58652805,True,,2
+46,Ilford,existing_fire_station,0.0900462500705925,51.562220100000005,True,,2
+47,Islington,existing_fire_station,-0.1023069299975422,51.5402671,True,,1
+48,Kensington,existing_fire_station,-0.1901176722364718,51.50295535,True,,1
+49,Kentish Town,existing_fire_station,-0.1417072245645472,51.55283145,True,,2
+50,Kingston,existing_fire_station,-0.3065912404057513,51.429441,True,,2
+51,Lambeth,existing_fire_station,-0.1212760753291227,51.49281255,True,,2
+52,Lee Green,existing_fire_station,0.012513473521701,51.45664085,True,,1
+53,Lewisham,existing_fire_station,-0.0131157201655826,51.4570297,True,,1
+54,Leyton,existing_fire_station,-0.0167733359643747,51.56309865,True,,1
+55,Leytonstone,existing_fire_station,0.008677359734444,51.56061125,True,,1
+56,Mill Hill,existing_fire_station,-0.2432100393349606,51.61499645,True,,1
+57,Millwall,existing_fire_station,-0.0255593731203916,51.50081445,True,,1
+58,Mitcham,existing_fire_station,-0.1728234450853488,51.3972598,True,,1
+59,New Cross,existing_fire_station,-0.0493004024826299,51.4735264,True,,1
+60,New Malden,existing_fire_station,-0.245331458018544,51.39901785,True,,1
+61,Norbury,existing_fire_station,-0.1215921420954122,51.4067832,True,,2
+62,North Kensington,existing_fire_station,-0.212041205723519,51.52183735,True,,2
+63,Northolt,existing_fire_station,-0.3595665275568182,51.5546449,True,,2
+64,Old Kent Road,existing_fire_station,-0.0734971739043401,51.48713365,True,,1
+65,Orpington,existing_fire_station,0.1107023454309018,51.37233395,True,,2
+66,Paddington,existing_fire_station,-0.1833189410368907,51.520072299999995,True,,2
+67,Park Royal,existing_fire_station,-0.264824544196401,51.5357937,True,,1
+68,Peckham,existing_fire_station,-0.07797625,51.4738848,True,,1
+69,Plaistow,existing_fire_station,0.0324907696420734,51.5209984,True,,1
+70,Plumstead,existing_fire_station,0.0915120200894747,51.487451,True,,2
+71,Poplar,existing_fire_station,-0.0146520704560918,51.510921,True,,1
+72,Purley,existing_fire_station,-0.125150449999989,51.33182495,True,,1
+73,Richmond,existing_fire_station,-0.2848567753177973,51.4674072,True,,1
+74,Romford,existing_fire_station,0.1811242124324326,51.59367685,True,,1
+75,Ruislip,existing_fire_station,-0.4367001982307689,51.5883815,True,,1
+76,Shadwell,existing_fire_station,-0.0557891963357072,51.5108626,True,,1
+77,Shoreditch,existing_fire_station,-0.0854857815774265,51.5266217,True,,1
+78,Sidcup,existing_fire_station,0.0945067633431096,51.4268951,True,,2
+79,Soho,existing_fire_station,-0.1300890958229078,51.51246085,True,,2
+80,Southall,existing_fire_station,-0.3744259889421966,51.511274099999994,True,,2
+81,Southgate,existing_fire_station,-0.1273731499984277,51.6305411,True,,1
+82,Stanmore,existing_fire_station,-0.2976070250672114,51.60366915,True,,2
+83,Stoke Newington,existing_fire_station,-0.0768660185166992,51.56257215,True,,2
+84,Stratford,existing_fire_station,0.011128787625757,51.54375,True,,1
+85,Surbiton,existing_fire_station,-0.2980315164452493,51.3922391,True,,1
+86,Sutton,existing_fire_station,-0.2109095530614245,51.3688755,True,,2
+87,Tooting,existing_fire_station,-0.1627606180986193,51.4378035,True,,2
+88,Tottenham,existing_fire_station,-0.0718471337316405,51.59230965,True,,2
+89,Twickenham,existing_fire_station,-0.3475775313157903,51.43516065,True,,2
+90,Wallington,existing_fire_station,-0.1482993,51.3622744,True,,1
+91,Walthamstow,existing_fire_station,-0.0288444693923726,51.58972495,True,,2
+92,Wandsworth,existing_fire_station,-0.2014031947589517,51.45640225,True,,1
+93,Wembley,existing_fire_station,-0.3040197283283985,51.55169655,True,,2
+94,Wennington,existing_fire_station,0.2203615409801693,51.50593515,True,,1
+95,West Hampstead,existing_fire_station,-0.192796697170743,51.55170105,True,,2
+96,West Norwood,existing_fire_station,-0.1054584646052626,51.42590975,True,,2
+97,Whitechapel,existing_fire_station,-0.0691888717611473,51.5153048,True,,1
+98,Willesden,existing_fire_station,-0.2367436977388931,51.5443512,True,,1
+99,Wimbledon,existing_fire_station,-0.1975643455628843,51.41557195,True,,1
+100,Woodford,existing_fire_station,0.0239671628839159,51.60954165,True,,1
+101,Woodside,existing_fire_station,-0.0621930777407106,51.3857831,True,,1
+102,Demand cell 0,demand_cell,-0.1369167747901028,51.51028481939216,False,,1
+103,Demand cell 1,demand_cell,-0.13680382264543797,51.517083434122625,False,,1
+104,Demand cell 2,demand_cell,-0.12397167609244533,51.510793110888265,False,,1
+105,Demand cell 3,demand_cell,-0.14846009367901233,51.517176017770616,False,,1
+106,Demand cell 4,demand_cell,-0.10972756950724638,51.51861027454841,False,,1
+107,Demand cell 5,demand_cell,-0.135580640001634,51.52517580718987,False,,1
+108,Demand cell 6,demand_cell,-0.14759061842937293,51.510703901763364,False,,1
+109,Demand cell 7,demand_cell,-0.08509964048211921,51.51728669237219,False,,1
+110,Demand cell 8,demand_cell,-0.08516981966060606,51.51091829144141,False,,1
+111,Demand cell 9,demand_cell,-0.12334269073629893,51.51708599271459,False,,1
+112,Demand cell 10,demand_cell,-0.12361898436496062,51.52581352684095,False,,1
+113,Demand cell 11,demand_cell,-0.084707256849187,51.52577338946544,False,,1
+114,Demand cell 12,demand_cell,-0.09773172659375,51.5183273807,False,,1
+115,Demand cell 13,demand_cell,-0.11294700280945273,51.46192512761691,False,,1
+116,Demand cell 14,demand_cell,-0.11117192215151515,51.50130407653081,False,,1
+117,Demand cell 15,demand_cell,-0.48883153418260866,51.46929728989456,False,,1
+118,Demand cell 16,demand_cell,-0.3041863983371585,51.411077700667214,False,,1
+119,Demand cell 17,demand_cell,-0.07195693228579235,51.51702185732131,False,,1
+120,Demand cell 18,demand_cell,-0.09556346161966293,51.51071305179382,False,,1
+121,Demand cell 19,demand_cell,-0.13644404410170455,51.494295948876136,False,,1
+122,Demand cell 20,demand_cell,-0.09653376690416667,51.50237777603273,False,,1
+123,Demand cell 21,demand_cell,-0.018127660311875,51.503025864974994,False,,1
+124,Demand cell 22,demand_cell,-0.1738771243396104,51.51837984816363,False,,1
+125,Demand cell 23,demand_cell,-0.1102563569611842,51.525632586275,False,,1
+126,Demand cell 24,demand_cell,-0.1619379377900662,51.518388625625825,False,,1
+127,Demand cell 25,demand_cell,-0.09741244428344371,51.52573538997947,False,,1
+128,Demand cell 26,demand_cell,-0.05900013521466666,51.51753781628,False,,1
+129,Demand cell 27,demand_cell,-0.13800426458367349,51.53525678104694,False,,1
+130,Demand cell 28,demand_cell,-0.4571734684787671,51.472018880915066,False,,1
+131,Demand cell 29,demand_cell,-0.2270682526465278,51.493461252237495,False,,1
+132,Demand cell 30,demand_cell,0.0050251024097222215,51.542024401075,False,,1
+133,Demand cell 31,demand_cell,-0.09881471477083333,51.37239054890694,False,,1
+134,Demand cell 32,demand_cell,-0.08455125428723403,51.50226557667589,False,,1
+135,Demand cell 33,demand_cell,-0.1471146268798561,51.494499195659714,False,,1
+136,Demand cell 34,demand_cell,-0.164509968807971,51.55208092725652,False,,1
+137,Demand cell 35,demand_cell,-0.07320969016764706,51.51119802121838,False,,1
+138,Demand cell 36,demand_cell,0.01654383634015748,51.40415991441811,False,,1
+139,Demand cell 37,demand_cell,0.0709720366392,51.5586709221368,False,,1
+140,Demand cell 38,demand_cell,-0.10955956551451612,51.51098851612016,False,,1
+141,Demand cell 39,demand_cell,-0.1470044917370968,51.541795108439516,False,,1
+142,Demand cell 40,demand_cell,-0.1378389317413223,51.54208370168843,False,,1
+143,Demand cell 41,demand_cell,-0.18971603422735042,51.49372813141111,False,,1
+144,Demand cell 42,demand_cell,-0.22670414876410255,51.50176901917778,False,,1
+145,Demand cell 43,demand_cell,-0.17428343131034482,51.492593402685344,False,,1
+146,Demand cell 44,demand_cell,-0.05770309282017544,51.52664053875351,False,,1
+147,Demand cell 45,demand_cell,0.11096015889912281,51.57671765774123,False,,1
+148,Demand cell 46,demand_cell,-0.1375961751245614,51.56618141771666,False,,1
+149,Demand cell 47,demand_cell,-0.19946727932767858,51.509151769683925,False,,1
+150,Demand cell 48,demand_cell,-0.20221308645855857,51.51835602579639,False,,1
+151,Demand cell 49,demand_cell,-0.08303100114311926,51.47574701698349,False,,1
+152,Demand cell 50,demand_cell,-0.09844615258899082,51.49357665907156,False,,1
+153,Demand cell 51,demand_cell,-0.13539175243113208,51.501142774475476,False,,1
+154,Demand cell 52,demand_cell,-0.3038779976556604,51.46127508851416,False,,1
+155,Demand cell 53,demand_cell,-0.056396545320952375,51.54975896862857,False,,1
+156,Demand cell 54,demand_cell,-0.12206613931619048,51.53283640441048,False,,1
+157,Demand cell 55,demand_cell,-0.1247177577553398,51.49409760188252,False,,1
+158,Demand cell 56,demand_cell,-0.07263582462038835,51.525835573071845,False,,1
+159,Demand cell 57,demand_cell,-0.033330732051960785,51.477011887337255,False,,1
+160,Demand cell 58,demand_cell,-0.10894745926237624,51.533107982868316,False,,1
+161,Demand cell 59,demand_cell,-0.177611826839,51.484722419715,False,,1
+162,Demand cell 60,demand_cell,-0.215528232194,51.493392729929,False,,1
+163,Demand cell 61,demand_cell,-0.12426359334081633,51.501694611296934,False,,1
+164,Demand cell 62,demand_cell,0.03359707716185567,51.52440267122062,False,,1
+165,Demand cell 63,demand_cell,-0.09857834116082474,51.542399306444324,False,,1
+166,Demand cell 64,demand_cell,-0.20105006662916666,51.525581452975,False,,1
+167,Demand cell 65,demand_cell,-0.1621227933180851,51.49955556146276,False,,1
+168,Demand cell 66,demand_cell,-0.19969078752659575,51.542172667647876,False,,1
+169,Demand cell 67,demand_cell,-0.30553985690212765,51.511748706321285,False,,1
+170,Demand cell 68,demand_cell,-0.09670179179574469,51.47678660409894,False,,1
+171,Demand cell 69,demand_cell,-0.09925315428723405,51.37807842428192,False,,1
+172,Demand cell 70,demand_cell,0.08622986493225805,51.4931230100129,False,,1
+173,Demand cell 71,demand_cell,-0.2107298694901099,51.420053145431865,False,,1
+174,Demand cell 72,demand_cell,-0.019036341425274727,51.50968401542747,False,,1
+175,Demand cell 73,demand_cell,-0.1616969883131868,51.49269479241318,False,,1
+176,Demand cell 74,demand_cell,-0.14834669344725274,51.52404186876373,False,,1
+177,Demand cell 75,demand_cell,-0.020676162744444445,51.47707069716556,False,,1
+178,Demand cell 76,demand_cell,-0.07193971109444444,51.59882440852667,False,,1
+179,Demand cell 77,demand_cell,-0.12112439005222221,51.55877210290888,False,,1
+180,Demand cell 78,demand_cell,-0.45103319086704546,51.470439910663636,False,,1
+181,Demand cell 79,demand_cell,-0.1887018245238636,51.47730364334432,False,,1

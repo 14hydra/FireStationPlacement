@@ -179,6 +179,10 @@ _LFB_KEEP = (
     "second_attendance_s",
     "second_deployed_from",
     "busy_flag",
+    "dest_exact",
+    "incident_group",
+    "stop_code",
+    "property_category",
 )
 
 
@@ -247,7 +251,8 @@ def load_incidents(
     for c in _LFB_KEEP:
         if c not in df.columns:
             continue
-        if c in {"borough", "station_ground", "deployed_from_station", "second_deployed_from", "date_of_call"}:
+        if c in {"borough", "station_ground", "deployed_from_station", "second_deployed_from", "date_of_call",
+                 "incident_group", "stop_code", "property_category"}:
             out[c] = df[c]
         else:
             out[c] = pd.to_numeric(df[c], errors="coerce")

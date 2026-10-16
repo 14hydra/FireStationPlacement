@@ -199,6 +199,20 @@
     }
   },
   "add_stations": 2,
-  "n_swaps": 0,
+  "solver": {
+    "solver": "HiGHS integer program (scipy.optimize.milp)",
+    "status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "optimal": true,
+    "objective_value": 279.9397,
+    "lower_bound": 279.9397,
+    "gap": 0.0,
+    "solve_s": 0.03,
+    "n_vars": 2502,
+    "cap": {
+      "cap_s": 600.0,
+      "n_cells_exempt": 6,
+      "demand_share_exempt": 0.00018
+    }
+  },
   "honesty": "Response = predicted drive + station turnout (LFB attendance is mobilise->arrive; travel-only scoring was wrong). Judged on LFB first-engine KPIs: mean <= 6 min, > 90% within 10 min. Drive comes from the chosen scorer (lgbm). Turnout: recorded_mobilisation_median (existing stations), 73 s for new sites. Discrete candidates (existing houses + demand centroids); house sites are OpenStreetMap station buildings. No land, zoning or staffing constraints. Station size (n_pumps) defaults from LFB two-pump inference (~40 stations with a second appliance). resize mode reallocates a fixed pump budget under a capacity-scaled busy model; other modes keep baseline pumps unless overridden. Busy blend applies when use_busy=True or mode=resize (location optimisation still uses nearest engine)."
 }
