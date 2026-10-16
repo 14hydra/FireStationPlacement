@@ -1,0 +1,32 @@
+{
+  "years": [
+    2021,
+    2025
+  ],
+  "n_trips": 901624,
+  "A_share_of_first_engine_calls_in_squares_over_6_min": 0.225,
+  "A_slowest_squares_min": {
+    "Bromley": 10.4,
+    "Barnet": 9.5,
+    "Kingston Upon Thames": 9.5,
+    "Hillingdon": 9.3,
+    "Enfield": 9.2
+  },
+  "B_median_rush_slowdown_pct": 10.3,
+  "B_most_congested_pct": {
+    "Kingston Upon Thames": 39.1,
+    "Barnet": 27.5,
+    "Richmond Upon Thames": 27.1,
+    "Enfield": 26.0,
+    "Wandsworth": 25.8
+  },
+  "C_overall_traffic_delay_pct": 7.65,
+  "C_highest_pct": {
+    "Enfield": 36.6,
+    "Havering": 34.0,
+    "Harrow": 27.3,
+    "Barnet": 24.2,
+    "Croydon": 23.3
+  },
+  "corr_B_vs_C": 0.35
+}
