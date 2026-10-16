@@ -3,7 +3,7 @@
 Plan optimal fire-station locations (London LFB primary): redesign, replace
 or expand.
 
-Response = predicted drive (kolesar / crow scorer) + station turnout,
+Response = predicted drive (lgbm / road / kolesar / crow scorer) + station turnout,
 judged against LFB first-engine KPIs (mean <= 6 min, > 90 % within 10 min).
 Demand comes from --demand-years, held-out scoring from --eval-years.
 
@@ -385,7 +385,9 @@ def main():
     p.add_argument("--demand-candidates", type=int, default=80)
     p.add_argument("--objective", choices=["response_time", "coverage"], default="response_time")
     p.add_argument("--threshold-min", type=float, default=10.0, help="Cover threshold (LFB: 10)")
-    p.add_argument("--scorer", choices=["kolesar", "crow"], default="kolesar", help="Drive-time scorer")
+    p.add_argument("--scorer", choices=["lgbm", "road", "kolesar", "crow"], default="kolesar",
+                   help="Drive-time scorer: lgbm (LightGBM travel-time model), road (Kolesar on road km), "
+                        "kolesar (Kolesar on straight-line km), crow (flat speed)")
     p.add_argument("--demand-years", type=str, default="2024", help="Comma list of cal_years for demand")
     p.add_argument("--eval-years", type=str, default="2025", help="Comma list of cal_years for held-out scoring")
     p.add_argument("--use-busy", action="store_true", help="Blend next-nearest engine by station busy rate")

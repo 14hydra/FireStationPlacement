@@ -1,7 +1,7 @@
 # Firehouse location planner
 
 Plan **where fire stations should sit** so the first engine meets LFB attendance
-standards, and compare drive scorers (**Kolesar / crow**; the LightGBM model is **PLANNED**).
+standards, and compare drive scorers (**LightGBM / road / Kolesar / crow**, all **EXIST**).
 
 > **EXISTS** = in the repo today. **PLANNED** = in the plan, not built or run.
 
@@ -30,12 +30,12 @@ demand grid and, when `--eval-years` is set, held-out eval plus optional
 attendance(station s → incident i) = predicted_drive(s, i) + turnout(s)
 ```
 
-- Public LFB incident CSV has only `FirstPumpArriving_AttendanceTime` (mobilise → arrive).
-  Turnout and drive are **not separable** in that file; per-station turnout from
-  mobilisation data is **PLANNED** when ingested.
-- The planner fits/scores **drive** via the chosen scorer, then adds turnout:
-  default `DEFAULT_TURNOUT_S = 60 s` for new sites; existing houses get a
-  Kolesar-residual estimate when data allow (**EXISTS** in `run_fire_station_plan`).
+- LFB mobilisation records give turnout (`TurnoutTimeSeconds`) separately from drive.
+  For London the planner uses each station's **median recorded turnout** on home-station
+  trips in the demand years (`recorded_station_turnout`; 2024: 57–91 s, median 73 s).
+  New sites get the median over all stations (73 s) (**EXISTS**).
+- Without mobilisation data (custom cities), existing houses get a Kolesar-residual
+  estimate and new sites `DEFAULT_TURNOUT_S = 60 s`.
 - `lfb_standards.attendance_seconds(drive_s, turnout_s)` implements the sum (**EXISTS**).
 
 ## Modes
@@ -56,10 +56,28 @@ nodes. Objectives: p-median `response_time` or max-cover `coverage`.
 |---|---|---|
 | **crow** | Haversine surrogate at a flat speed with a 1.3 detour factor | **EXISTS** (`--scorer crow`) |
 | **Kolesar** | Piecewise `T = a + b√d` / `c + e·d` on distance; refit on London trips (`firestation.kolesar`) | **EXISTS** (`--scorer kolesar`) |
-| **Road** | Shortest legal route on the directed London drive graph (`firestation.road_distance`) | Routing **EXISTS**; planner scorer **PLANNED** |
-| **ML (street-aware)** | LightGBM travel-time model (`docs/travel_time_training.md`) | Model **EXISTS**; planner scorer **PLANNED** |
+| **road** | Kolesar curve (road-km fit from the travel-time trainer) on the shortest legal route over the directed London drive graph | **EXISTS** (`--scorer road`) |
+| **lgbm** (street-aware) | LightGBM travel-time model (`docs/travel_time_training.md`) on the full route features from every site to every demand cell | **EXISTS** (`--scorer lgbm`, `firestation.ml_scorer`) |
 
 Default scorer: **kolesar**.
+
+**lgbm scenario.** A site has no station ID, so new and existing sites are scored alike:
+first pump, from its home station, not busy, on the most common call type (false alarm in
+a dwelling). Each cell gets the most common borough of its calls. Time of day is a weighted
+average over hours 03 / 08 / 13 / 18 / 21, weighted by when demand calls happen. The first
+run routes 182 sites × ~1,900 cells and takes about 10 min; the matrix is then cached in
+`data/processed/planner_cache/` (also for `road`).
+
+**Expand by 2, demand 2024, eval 2025** (modelled first-engine mean, current → plan):
+
+| Scorer | Demand grid | 2025 calls |
+|---|---|---|
+| lgbm | 284.3 → 279.9 s | 287.1 → 284.5 s |
+| road | 293.7 → 289.5 s | 297.7 → 295.1 s |
+| kolesar | 301.7 → 297.3 s | 305.2 → 302.5 s |
+
+All three open the same two sites (near Soho and Farringdon). Observed 2025 attendance is
+339 s mean, so every scorer is still optimistic: they assume the nearest engine is free.
 
 ## Demand and evaluation split
 

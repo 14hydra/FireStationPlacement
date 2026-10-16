@@ -46,7 +46,8 @@ attendance  =  predicted driving time (station → incident)  +  that station's 
 
 LFB mobilisation records give driving time (`TravelTimeSeconds`) and turnout
 (`TurnoutTimeSeconds`) separately, so the travel-time model is trained on driving time
-alone. The planner still uses `DEFAULT_TURNOUT_S` (60 s) for hypothetical sites.
+alone. The planner adds each station's median recorded turnout, and the median over all stations
+(73 s in 2024) for new sites.
 
 ## Three models
 
@@ -54,7 +55,7 @@ alone. The planner still uses `DEFAULT_TURNOUT_S` (60 s) for hypothetical sites.
 |---|---|---|---|
 | 1 | **Travel-time LightGBM, no station IDs** — gradient-boosted trees, 4-seed average | Predict driving time to any point from any site | **EXISTS** (`train_travel_time_lfb.py`, `firestation.travel_time_model`): mobilisation `TravelTimeSeconds`, real station origins, road distance, route street features, fastest route, incident type, destination history; held-out 2025 MAE **57.6 s** (62.4 s on stations held out of training) vs Kolesar 68.7 s; OS NGD street attrs **PLANNED** |
 | 2 | **Route model** with learned segment speeds | Dijkstra under learned EMV edge speeds; FOI GPS when available | Shortest-distance routing on directed London graph **EXISTS** (`firestation.road_distance`); firetruck weights + race viz **EXIST**; learned speeds scaffold **EXISTS** (`segment_speeds.py`); FOI **PLANNED** |
-| 3 | **Placement on a directed street graph** | redesign / replace / expand station sets | All three modes **EXISTS**; Kolesar/crow scorers **EXIST**; model-1 scoring in planner **PLANNED** |
+| 3 | **Placement on a directed street graph** | redesign / replace / expand / resize | All modes **EXIST**; LightGBM, road, Kolesar and crow scorers **EXIST** (`--scorer lgbm\|road\|kolesar\|crow`), with each station's recorded turnout |
 Details: [`docs/travel_time_training.md`](docs/travel_time_training.md),
 [`docs/fire_station_location.md`](docs/fire_station_location.md).
 
@@ -97,6 +98,7 @@ fetches them; see [`docs/datasets.md`](docs/datasets.md).
 | LightGBM travel-time trainer | `scripts/train_travel_time_lfb.py` |
 | Kolesar piecewise `T(d)` (fit + predict) | `src/firestation/kolesar.py` |
 | LFB planner CSV builder (with `busy_flag`) | `scripts/build_lfb_planner_incidents.py` |
+| Planner drive matrices from the LightGBM model / road graph | `src/firestation/ml_scorer.py` |
 | Firehouse planner (redesign, replace, expand) | `src/firestation/fire_station_location.py`, `src/firestation/facility.py`, `scripts/plan_fire_station_locations.py` |
 | LFB 6 / 10-min standards scoring, turnout + drive | `src/firestation/lfb_standards.py` |
 | Busy-engine rates (`deployed ≠ ground`) | `src/firestation/busy_engines.py` |
@@ -107,8 +109,7 @@ fetches them; see [`docs/datasets.md`](docs/datasets.md).
 | Initial data analysis + street feature impact | `scripts/analyze_london.py` → `data/figures/london_eda/` |
 
 Still **PLANNED**: OS NGD download,
-SHAP/ablations, leave-one-firehouse-out CV, pre-2014 LFB ingest, planner scoring with
-the LightGBM model.
+SHAP/ablations, leave-one-firehouse-out CV, pre-2014 LFB ingest, a multi-scorer comparison table.
 
 ## Quick start
 

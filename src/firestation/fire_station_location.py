@@ -12,10 +12,14 @@ alone understates response and misses the 6/10-minute standards.
 
 Building blocks:
 
-- travel scorers (``scorer=``): ``kolesar`` (crow distance -> Kolesar
-  piecewise model, refit on LFB trips) and ``crow`` (flat-speed surrogate)
-- turnout: per-station prior (median attendance residual vs. Kolesar drive,
-  clipped to [30, 180] s) for existing houses, ``DEFAULT_TURNOUT_S`` for new sites
+- travel scorers (``scorer=``): ``lgbm`` (LightGBM travel-time model on the full
+  route features, ``firestation.ml_scorer``), ``road`` (Kolesar on shortest legal road
+  km), ``kolesar`` (crow distance -> Kolesar piecewise model, refit on LFB trips) and
+  ``crow`` (flat-speed surrogate)
+- turnout: each station's median recorded turnout (LFB mobilisation
+  ``TurnoutTimeSeconds``, home-station trips in the demand years); new sites get the
+  median over all stations. Without mobilisation data, a prior from attendance
+  residuals vs. Kolesar drive, and ``DEFAULT_TURNOUT_S`` for new sites
 - discrete facility location: p-median / max-cover (``facility.select_posts``)
 - optional busy-engine blend (``use_busy``) and demand/eval year split
 
@@ -61,7 +65,8 @@ from .station_capacity import (
     resolve_pump_vector,
 )
 
-SCORERS = ("kolesar", "crow")
+SCORERS = ("lgbm", "road", "kolesar", "crow")
+TRAVEL_TRAINING = Path(__file__).resolve().parents[2] / "data" / "processed" / "lfb_travel_training.csv"
 MODES = ("redesign", "replace", "expand", "resize")
 
 
@@ -111,10 +116,14 @@ def build_travel_matrix(
     surrogate: TravelTimeSurrogate | None = None,
     scorer: str = "kolesar",
     kolesar: KolesarModel | None = None,
+    incidents: pd.DataFrame | None = None,
 ) -> tuple[np.ndarray, dict[str, Any]]:
     """Candidate × demand **drive** seconds (turnout is added by the caller).
 
     ``scorer``:
+      * ``lgbm``    — LightGBM travel-time model on routes over the London drive graph
+                      (``incidents`` sets the hour weights and cell boroughs)
+      * ``road``    — shortest legal road km → Kolesar (road-km fit)
       * ``kolesar`` — crow-flies km → :class:`KolesarModel` (London default if none given)
       * ``crow``    — flat-speed surrogate
     """
@@ -122,6 +131,16 @@ def build_travel_matrix(
         raise ValueError(f"scorer must be one of {SCORERS}, got {scorer!r}")
     surrogate = surrogate or TravelTimeSurrogate()
     meta: dict[str, Any] = {"scorer": scorer, "surrogate_speed_kph": surrogate.speed_kph}
+    if scorer == "lgbm":
+        from .ml_scorer import lgbm_matrix
+
+        T, m = lgbm_matrix(candidates, cells, incidents)
+        return T, {**meta, **m}
+    if scorer == "road":
+        from .ml_scorer import road_matrix
+
+        T, m = road_matrix(candidates, cells)
+        return T, {**meta, **m}
     if scorer == "kolesar":
         model = kolesar or KolesarModel.london_default()
         km = haversine_km(
@@ -427,6 +446,30 @@ def estimate_station_turnout(
     return {k: float(np.clip(default_s + v, *clip)) for k, v in g["median"].items()}
 
 
+def recorded_station_turnout(
+    years: Sequence[int] | None = None,
+    *,
+    path: Path = TRAVEL_TRAINING,
+    min_n: int = 50,
+) -> tuple[dict[str, float], float] | None:
+    """Median recorded turnout per station from LFB mobilisation records.
+
+    Uses home-station engine trips (``scripts/build_lfb_travel_training.py``) in ``years``;
+    returns ``({station: seconds}, median over stations)`` or None if the file is missing.
+    """
+    if not path.exists():
+        return None
+    t = pd.read_csv(path, usecols=["cal_year", "deployed_from_station", "deployed_from_location", "turnout_s"])
+    t = t[t["deployed_from_location"].eq("Home Station") & t["turnout_s"].between(1, 600)]
+    if years:
+        t = t[t["cal_year"].isin({int(y) for y in years})]
+    g = t.groupby("deployed_from_station")["turnout_s"].agg(["median", "size"])
+    g = g[g["size"] >= min_n]
+    if g.empty:
+        return None
+    return {str(k): float(v) for k, v in g["median"].items()}, float(g["median"].median())
+
+
 def resolve_turnout_vector(
     candidates: pd.DataFrame,
     turnout_s: float | Mapping[str, float] | None,
@@ -636,9 +679,16 @@ def run_fire_station_plan(
 
     # --- turnout per candidate ---------------------------------------------
     estimated = None
-    if turnout_s is None and kmeta["source"] != "london_default":
+    turnout_default = DEFAULT_TURNOUT_S
+    recorded = recorded_station_turnout(demand_years) if turnout_s is None and city_id == "london" else None
+    if recorded is not None:
+        estimated, turnout_default = recorded
+    elif turnout_s is None and kmeta["source"] != "london_default":
         estimated = estimate_station_turnout(pairs, kmodel)
-    turnout_vec, turnout_meta = resolve_turnout_vector(candidates, turnout_s, estimated)
+    turnout_vec, turnout_meta = resolve_turnout_vector(candidates, turnout_s, estimated, default_s=turnout_default)
+    if recorded is not None:
+        turnout_meta["source"] = "recorded_mobilisation_median"
+        turnout_meta["years"] = list(demand_years) if demand_years else "all"
     print("Turnout:", turnout_meta)
 
     print(f"Building {scorer} travel matrix ({len(candidates)} sites × {len(cells)} cells)…")
@@ -648,6 +698,7 @@ def run_fire_station_plan(
         surrogate=TravelTimeSurrogate(),
         scorer=scorer,
         kolesar=kmodel,
+        incidents=incidents,
     )
     travel_meta["kolesar_fit"] = kmeta
     travel_meta["turnout"] = turnout_meta
@@ -858,9 +909,9 @@ def run_fire_station_plan(
             "Response = predicted drive + station turnout (LFB attendance is mobilise->arrive; "
             "travel-only scoring was wrong). Judged on LFB first-engine KPIs: mean <= 6 min, "
             "> 90% within 10 min. Drive comes from the chosen scorer "
-            f"({scorer}); new sites use the default turnout prior, existing houses a per-station "
-            "estimate when available. Discrete candidates (existing houses + demand centroids); "
-            "house sites are station-ground centroids, not surveyed. No land, zoning or staffing "
+            f"({scorer}). Turnout: {turnout_meta['source']} (existing stations), "
+            f"{turnout_meta['default_s']:.0f} s for new sites. Discrete candidates (existing houses + "
+            "demand centroids); house sites are OpenStreetMap station buildings. No land, zoning or staffing "
             "constraints. Station size (n_pumps) defaults from LFB two-pump inference "
             "(~40 stations with a second appliance). resize mode reallocates a fixed pump budget "
             "under a capacity-scaled busy model; other modes keep baseline pumps unless overridden. "

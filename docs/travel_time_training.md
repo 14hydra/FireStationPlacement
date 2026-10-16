@@ -110,7 +110,6 @@ held-out stations' trips).
 - Quantile LightGBM (prediction intervals) for 90th-percentile placement.
 - Learned per-street speeds for routing (instead of shortest / posted-limit routes).
 - OS NGD carriageway width and speed data.
-- Score placements with this model in `plan_fire_station_locations.py`.
 
 ## Code
 
