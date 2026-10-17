@@ -82,6 +82,26 @@ Check against the exact solver (same problem, nearest engine): add 3 → same op
 move 10 → within 0.04 %; full redesign → within 0.01 %. On the busy-engine objective
 (move 10), the genetic algorithm beats the exact solver's layout by 0.5 s (304.0 vs 304.5 s).
 
+## Street-level sites (`--refine-km`, default 1)
+
+After solving, each newly opened site (not today's stations) moves to the best road
+junction within `--refine-km` (`firestation.site_refine`):
+
+1. Candidates: junctions on A / B / local distributor roads (primary, secondary,
+   tertiary in OpenStreetMap; not motorways, trunk roads or residential side streets).
+2. Quick score for every candidate: one Dijkstra run at posted speed limits to every
+   demand cell, converted to attendance seconds by a straight-line fit on the site's own
+   LightGBM times.
+3. The best 6 get full LightGBM travel times and are scored with the planner's real
+   objective (busy engines when on, the 10-minute cap enforced); the best move is kept
+   only if it improves the layout.
+
+Sites are named by the roads at the junction (e.g. "New site on Kilburn High Road").
+About 15–30 s per new site. Results: add 3 → 2 sites move 190–310 m, 278.3 → 278.0 s;
+move up to 10 with busy engines → all 10 move 30–920 m, 303.9 → 302.9 s
+(2025 calls 311.7 → 305.6 s). Gains are small because a 0.9 km cell centre is already
+close to its best junction; the point is a real, buildable street location.
+
 ## Demand weighting and the trade-off dial
 
 - `--severity all|serious|dwelling_fire`: which calls count (all; fires + special services;
@@ -141,9 +161,35 @@ LFB's first pump is often not from the home station. `firestation.busy_engines` 
 **busy** when `FirstPumpArriving_DeployedFromStation != IncidentStationGround`
 (**EXISTS**). `build_lfb_planner_incidents.py` writes `busy_flag` and deploy columns.
 
-- **`--use-busy`** (**EXISTS**): blends nearest and next-nearest attendance in
-  **reported** response via `expected_first_arrival`; **optimisation still uses
-  nearest engine only** (`posture_response` vs `plan_*` on matrix `A`).
+- **`--use-busy`** (**EXISTS**, `firestation.busy_placement`): busy engines in both the
+  **optimisation** and the scores. Expected first-engine time = (1 − p)·t₁ + p·t₂, where p
+  is the chance the nearest station has no free pump.
+  - **Erlang loss model**: p = B(a, c) for a station with c pumps and offered load a.
+    Each station's a is calibrated so B reproduces its measured 2024 busy rate today
+    (mean 28 %); load scales with the calls the station is nearest to, so opening a
+    station next door takes calls and busyness off its neighbours. New sites get the
+    median erlangs per call.
+  - **Exact solver**: every area gets a primary and a backup station; with p fixed this
+    is linear (Daskin's expected-coverage idea). It solves, recomputes p from the new
+    loads, and re-solves until the layout repeats, keeping the best. Each round is a
+    proven optimum for its fixed p; the loop itself is a heuristic.
+  - **Genetic algorithm**: optimises the full load-dependent model directly.
+  - The summary's `busy_vs_ignoring_busy` compares with the plan that assumes the
+    nearest engine is free, scored under the busy model.
+- First result (move up to 10, all calls): today 309.5 s with busy engines (vs 281.9 s
+  assuming free engines; observed 2024–25 mean about 332 s). Plan ignoring busy engines
+  305.8 s; busy-aware exact 304.6 s; busy-aware genetic 304.1 s. 7 of the 10 moved sites
+  change when busy engines are modelled.
+- **Pumps move with their station** (`busy_placement.PumpPlan`, all modes but resize):
+  kept stations keep their pumps; each closed station's pumps go to an opened site
+  (closed and opened sites paired to minimise total distance moved); in expand mode a new
+  station takes the second pump of the nearest two-pump station (`--expand-pumps move`,
+  default; London stays at 142 pumps) or gets new pumps (`--expand-pumps new`). The busy
+  model uses each layout's pumps inside the optimisation; the summary lists `pump_moves`.
+  Measured 2024 busy rate: 32 % at one-pump stations, 22 % at two-pump stations.
+  Move up to 10 (busy-aware): 309.5 → 303.9 s with pumps moving (304.6 s when new sites
+  always had one pump). Add 3 with pumps moved from two-pump stations: 306.3 s (305.7 s
+  with three new pumps, 145 in total).
 - Without `--use-busy`, modelled cover is **optimistic** vs observed attendance
   (always-free nearest engine).
 

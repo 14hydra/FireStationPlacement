@@ -380,7 +380,14 @@ def main():
     p.add_argument("--max-pumps", type=int, default=3, help="Max engines per station in resize")
     p.add_argument("--pumps-csv", type=Path, default=None,
                    help="Optional CSV (station,n_pumps) overriding inferred pump counts")
-    p.add_argument("--new-site-pumps", type=int, default=1, help="Default pumps for newly opened sites")
+    p.add_argument("--new-site-pumps", type=int, default=1,
+                   help="Pumps for a new site that gets no moved pumps (with --expand-pumps new)")
+    p.add_argument("--refine-km", type=float, default=1.0,
+                   help="Move each new site to the best road junction within this many km after "
+                        "solving (0 = off; about 30-60 s per new site)")
+    p.add_argument("--expand-pumps", choices=["move", "new"], default="move",
+                   help="Expand mode: a new station takes the second pump of the nearest two-pump "
+                        "station (move; London's total stays fixed) or gets new pumps (new)")
     p.add_argument("--cell-km", type=float, default=0.9)
     p.add_argument("--demand-candidates", type=int, default=80, help="Busiest demand cells added as sites")
     p.add_argument("--spread-km", type=float, default=3.0,
@@ -502,6 +509,8 @@ def main():
         min_pumps=args.min_pumps,
         max_pumps=args.max_pumps,
         new_site_pumps=args.new_site_pumps,
+        expand_pumps=args.expand_pumps,
+        refine_km=args.refine_km,
     )
 
     # Write artifacts

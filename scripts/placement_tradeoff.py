@@ -22,9 +22,10 @@ those optima:
 0 = no better than today, 100 = the best possible for that measure in that mode, negative
 = worse than today. A layout scoring above 0 on both beats today's stations on both.
 
-Writes data/figures/placement_tradeoff/: tradeoff.csv, tradeoff.png, summary.json.
+Writes data/figures/placement_tradeoff/: tradeoff.csv, tradeoff.png, summary.json
+(``--busy``: placement_tradeoff_busy/, busy engines in solver and scores).
 
-Run:  PYTHONPATH=src .venv/bin/python scripts/placement_tradeoff.py
+Run:  PYTHONPATH=src .venv/bin/python scripts/placement_tradeoff.py [--busy] [--solver genetic]
 """
 
 from __future__ import annotations
@@ -57,7 +58,8 @@ MODE_LABEL = {"expand_3": "Add 3 stations", "replace_10": "Move up to 10", "rede
 MODE_COLOR = {"expand_3": "#2a9d8f", "replace_10": "#e76f51", "redesign": "#264653"}
 
 
-def run_one(houses, incidents, scenario: str, severity: str, alpha: float, scorer: str) -> dict:
+def run_one(houses, incidents, scenario: str, severity: str, alpha: float, scorer: str,
+            busy: bool = False, solver: str = "exact") -> dict:
     kw = dict(MODES[scenario])
     if kw["mode"] == "redesign":
         kw["n_houses"] = len(houses)
@@ -65,7 +67,7 @@ def run_one(houses, incidents, scenario: str, severity: str, alpha: float, score
         res = run_fire_station_plan(
             city_id="london", houses=houses, incidents=incidents, scorer=scorer,
             demand_years=[2024], eval_years=[2025], max_incident_rows=None,
-            severity=severity, alpha=alpha, **kw,
+            severity=severity, alpha=alpha, use_busy=busy, solver=solver, **kw,
         )
     s = res.summary
     cur, plan = s["baselines"]["current_fire_stations"], s["plan"]
@@ -84,7 +86,10 @@ def run_one(houses, incidents, scenario: str, severity: str, alpha: float, score
         "n_opened": s["n_opened"], "n_closed": s["n_closed"],
         "opened": "; ".join(f"{r.lat:.4f},{r.lon:.4f}" for r in res.opened.itertuples()) if len(res.opened) else "",
         "closed": "; ".join(res.closed["site_name"].astype(str)) if len(res.closed) else "",
-        "optimal": s["solver"]["optimal"], "gap": s["solver"]["gap"],
+        "optimal": s["solver"]["optimal"], "gap": s["solver"].get("gap"),
+        "busy": busy, "solver": solver,
+        "busy_plan_ignoring_busy_s": (s.get("busy_vs_ignoring_busy") or {}).get("ignoring_busy_s"),
+        "busy_sites_differ": (s.get("busy_vs_ignoring_busy") or {}).get("sites_differ"),
     }
 
 
@@ -102,7 +107,7 @@ def add_scores(df: pd.DataFrame) -> pd.DataFrame:
     return pd.concat(out, ignore_index=True)
 
 
-def plot(df: pd.DataFrame, path: Path) -> None:
+def plot(df: pd.DataFrame, path: Path, title_extra: str = "") -> None:
     import matplotlib.pyplot as plt
 
     sev = list(dict.fromkeys(df["severity"]))
@@ -124,8 +129,8 @@ def plot(df: pd.DataFrame, path: Path) -> None:
         ax.set_ylabel("Area average time (s)  ← fairer across areas")
         ax.grid(alpha=0.25)
     axes[0].legend(fontsize=8, loc="upper right")
-    fig.suptitle("Placement trade-off: efficiency vs equal coverage (exact solver, LightGBM travel times)",
-                 fontsize=12)
+    fig.suptitle("Placement trade-off: efficiency vs equal coverage (LightGBM travel times"
+                 + title_extra + ")", fontsize=12)
     fig.tight_layout()
     fig.savefig(path, dpi=170, bbox_inches="tight")
     plt.close(fig)
@@ -136,8 +141,12 @@ def main() -> int:
     ap.add_argument("--scenarios", default=",".join(MODES))
     ap.add_argument("--severities", default=",".join(SEVERITY_SCHEMES))
     ap.add_argument("--scorer", default="lgbm")
+    ap.add_argument("--busy", action="store_true",
+                    help="Busy engines (Erlang loss, load-dependent) in both the solver and the scores")
+    ap.add_argument("--solver", choices=["exact", "genetic"], default="exact")
     args = ap.parse_args()
-    OUT.mkdir(parents=True, exist_ok=True)
+    out = OUT.with_name(OUT.name + ("_busy" if args.busy else "") + ("_genetic" if args.solver == "genetic" else ""))
+    out.mkdir(parents=True, exist_ok=True)
 
     spec = get_city("london")
     houses = load_fire_stations(spec)
@@ -146,21 +155,23 @@ def main() -> int:
     for sv in args.severities.split(","):
         for sc in args.scenarios.split(","):
             for a in ALPHAS:
-                r = run_one(houses, incidents, sc, sv, a, args.scorer)
+                r = run_one(houses, incidents, sc, sv, a, args.scorer, busy=args.busy, solver=args.solver)
                 rows.append(r)
                 print(f"{sv:13s} {sc:10s} α={a:<4g} E={r['E']:.1f} (today {r['E_today']:.1f})  "
                       f"Q={r['Q']:.1f} (today {r['Q_today']:.1f})  optimal={r['optimal']}", flush=True)
     df = add_scores(pd.DataFrame(rows))
-    df.to_csv(OUT / "tradeoff.csv", index=False)
-    plot(df, OUT / "tradeoff.png")
-    (OUT / "summary.json").write_text(json.dumps({
+    df.to_csv(out / "tradeoff.csv", index=False)
+    plot(df, out / "tradeoff.png", (", busy engines" if args.busy else ", nearest engine free")
+         + f", {args.solver} solver")
+    (out / "summary.json").write_text(json.dumps({
+        "busy": args.busy, "solver": args.solver,
         "alphas": list(ALPHAS), "severity_schemes": SEVERITY_SCHEMES,
         "measures": {"E": "call-weighted average first-engine time (s), demand grid 2024",
                      "Q": "average over areas with calls, each area once (s)"},
         "scale": "score = 100*(today - layout)/(today - best); 0 = today, 100 = best possible in that mode",
         "rows": df.round(3).to_dict(orient="records"),
     }, indent=2) + "\n")
-    print("Wrote", OUT)
+    print("Wrote", out)
     return 0
 
 

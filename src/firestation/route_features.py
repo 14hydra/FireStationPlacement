@@ -186,6 +186,10 @@ class RouteFeatureRouter(RoadRouter):
         self.csr_time = csr_matrix((self.edge_time, (e["ui"], e["vi"])), shape=(n, n))
         main = e["road_class"].isin(["major", "primary"])
         self.main_nodes = np.unique(np.r_[e.loc[main, "ui"], e.loc[main, "vi"]])
+        # Junctions on A / B / local distributor roads: where a fire station can sit
+        # (not motorways or trunk roads, not residential side streets).
+        site = e["road_class"].isin(["primary", "secondary", "tertiary"])
+        self.site_nodes = np.unique(np.r_[e.loc[site, "ui"], e.loc[site, "vi"]])
 
     @staticmethod
     def _ancestor_sums(pred: np.ndarray, vals: np.ndarray) -> np.ndarray:

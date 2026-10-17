@@ -207,6 +207,8 @@ def solve_exact(
     fixed_open: Sequence[int] = (),
     allowed: Sequence[int] | None = None,
     min_from: tuple[Sequence[int], int] | None = None,
+    backup_p: np.ndarray | None = None,
+    backup_k: int = 30,
     time_limit_s: float = 900.0,
     rel_gap: float = 1e-4,
 ) -> SelectionResult:
@@ -231,6 +233,13 @@ def solve_exact(
     default, cells with no allowed site inside the cap are exempt. Recorded in ``cap``.
     ``min_from=(subset, n)`` requires at least ``n`` open sites from ``subset``
     (replace mode: keep at least ``n - r`` current stations).
+
+    ``backup_p`` (response_time only; per cell, <= 0.5): busy-engine version. Each cell
+    gets a primary ``x1`` and a backup ``x2`` station (different, both open) and costs
+    ``(1 - p_j) t_primary + p_j t_backup``; ``x1_sj + x2_sj <= y_s``. Candidate pairs are
+    each cell's ``backup_k`` nearest sites (and, with fixed open sites, none slower than
+    the second-fastest fixed one); ``cap['backup_outside_k']`` counts cells whose real
+    second-nearest open site fell outside that list.
 
     Pairs (s, j) that can never be used are dropped before solving, which keeps the
     answer exact: with fixed open sites, a cell is never served by a site slower than
@@ -281,6 +290,58 @@ def solve_exact(
             keep &= inside | exempt[None, :]
             cap_info = {"cap_s": float(cap_s), "n_cells_exempt": int(exempt.sum()),
                         "demand_share_exempt": round(float(w[exempt].sum() / W), 5)}
+    if objective == "response_time" and backup_p is not None:
+        pj = np.clip(np.asarray(backup_p, dtype=float), 0.0, 0.5)
+        rank = np.argsort(np.argsort(Tp, axis=0), axis=0)
+        pair = rank < int(backup_k)
+        if len(fixed) >= 2:
+            second_fixed = np.sort(Tp[fixed], axis=0)[1]
+            pair &= Tp <= second_fixed[None, :]
+            two = fixed[np.argsort(Tp[fixed], axis=0)[:2]]
+            pair[two[0], np.arange(n_cells)] = True
+            pair[two[1], np.arange(n_cells)] = True
+        pair |= keep
+        si, cj = np.nonzero(pair)
+        prim_ok = keep[si, cj]
+        n_x = len(si)
+        idx = np.arange(n_x)
+        tw = w[cj] * Tp[si, cj] / W
+        c = np.r_[np.zeros(n_y), tw * (1 - pj[cj]), tw * pj[cj]]
+        nv = n_y + 2 * n_x
+        assign1 = coo_matrix((np.ones(n_x), (cj, n_y + idx)), shape=(n_cells, nv))
+        assign2 = coo_matrix((np.ones(n_x), (cj, n_y + n_x + idx)), shape=(n_cells, nv))
+        link = coo_matrix((np.r_[np.ones(n_x), np.ones(n_x), -np.ones(n_x)],
+                           (np.r_[idx, idx, idx], np.r_[n_y + idx, n_y + n_x + idx, si])), shape=(n_x, nv))
+        Acon = vstack([csr_matrix((r.toarray()[0], (np.zeros(n_y, int), np.arange(n_y))), shape=(1, nv))
+                       for r in rows] + [assign1, assign2, link]).tocsr()
+        res = milp(
+            c,
+            constraints=LinearConstraint(Acon, np.array(lo + [1.0] * (2 * n_cells) + [-np.inf] * n_x),
+                                         np.array(hi + [1.0] * (2 * n_cells) + [0.0] * n_x)),
+            integrality=np.r_[np.ones(n_y), np.zeros(2 * n_x)],
+            bounds=Bounds(np.r_[y_lb, np.zeros(2 * n_x)], np.r_[np.ones(n_y), prim_ok.astype(float), np.ones(n_x)]),
+            options={"time_limit": float(time_limit_s), "mip_rel_gap": float(rel_gap), "disp": False},
+        )
+        solve_s = time.perf_counter() - t0
+        if res.x is None:
+            raise RuntimeError(f"Placement problem has no solution: {res.message}")
+        chosen = [int(pool[i]) for i in np.flatnonzero(res.x[:n_y] > 0.5)]
+        sub = T[chosen, :]
+        srt = np.sort(sub, axis=0)
+        open_pos = np.array([pos[i] for i in chosen])
+        in_list = pair[open_pos]
+        true_second = np.argsort(sub, axis=0)[1] if len(chosen) > 1 else np.zeros(n_cells, int)
+        outside = ~in_list[true_second, np.arange(n_cells)]
+        value = float((w * ((1 - pj) * srt[0] + pj * srt[min(1, len(chosen) - 1)])).sum() / W)
+        cap_info = {**cap_info, "backup_k": int(backup_k), "backup_outside_k": int(outside.sum())}
+        return SelectionResult(
+            objective="response_time_busy", indices=chosen, value=value,
+            assignment=sub.argmin(axis=0), response_s=(1 - pj) * srt[0] + pj * srt[min(1, len(chosen) - 1)],
+            status=str(res.message), optimal=bool(res.status == 0),
+            bound=float(getattr(res, "mip_dual_bound", np.nan)), gap=float(getattr(res, "mip_gap", np.nan)),
+            solve_s=round(solve_s, 2), n_vars=int(nv), cap=cap_info,
+        )
+    if objective == "response_time":
         si, cj = np.nonzero(keep)
         n_x = len(si)
         c = np.r_[np.zeros(n_y), w[cj] * Tp[si, cj] / W]
@@ -375,6 +436,7 @@ def solve_genetic(
     allowed: Sequence[int] | None = None,
     min_from: tuple[Sequence[int], int] | None = None,
     busy_p: np.ndarray | None = None,
+    busy_fn: Any = None,
     cap_s: float | None = None,
     cap_cells: np.ndarray | None = None,
     cap_penalty: float = 5.0,
@@ -392,7 +454,8 @@ def solve_genetic(
 
     - fitness: demand-weighted average first-engine seconds, nearest open site, or with
       ``busy_p`` the busy-engine blend (1 - p) t1 + p t2 that the integer program cannot
-      express linearly. ``cap_s`` adds ``cap_penalty`` x the seconds by which any area
+      express linearly. ``busy_fn(open_sites) -> p per candidate`` makes ``p`` depend on
+      the layout (e.g. ``busy_placement.ErlangBusyModel.probs``). ``cap_s`` adds ``cap_penalty`` x the seconds by which any area
       exceeds the cap (areas no site reaches in time are exempt).
     - selection: tournaments of ``tournament``; the best ``elite`` survive unchanged.
     - crossover: the child keeps sites both parents share, then fills up from the sites
@@ -415,7 +478,7 @@ def solve_genetic(
     pool_arr = np.array(pool)
     m = int(k) - len(fixed)
     if m <= 0 or not pool:
-        resp = posture_seconds(T, fixed, busy_p)
+        resp = posture_seconds(T, fixed, busy_fn(fixed) if busy_fn is not None else busy_p)
         return GeneticResult(fixed, float((w * resp).sum() / W), resp, [], 0, 1, 0.0)
     m = min(m, len(pool))
     keep_set, n_keep = (set(map(int, min_from[0])) & set(pool), int(min_from[1])) if min_from else (set(), 0)
@@ -425,7 +488,10 @@ def solve_genetic(
     d2 = ((prof[:, None, :] - prof[None, :, :]) ** 2).sum(axis=2)
     near = np.argsort(d2, axis=1)[:, 1:11]
     pos_in_pool = {s: i for i, s in enumerate(pool)}
-    base = T[fixed].min(axis=0) if fixed and busy_p is None else None
+    base = T[fixed].min(axis=0) if fixed and busy_p is None and busy_fn is None else None
+
+    def busy_of(idx):
+        return busy_fn(idx) if busy_fn is not None else busy_p
     exempt = None
     if cap_s is not None:
         exempt = ~(T[fixed + pool] <= cap_s).any(axis=0)
@@ -439,7 +505,8 @@ def solve_genetic(
         if base is not None:
             resp = np.minimum(base, T[genes].min(axis=0))
         else:
-            resp = posture_seconds(T, fixed + genes.tolist(), busy_p)
+            idx = fixed + genes.tolist()
+            resp = posture_seconds(T, idx, busy_of(idx))
         val = float((w * resp).sum() / W)
         if cap_s is not None:
             over = np.where(exempt, 0.0, np.maximum(resp - cap_s, 0.0))
@@ -514,7 +581,7 @@ def solve_genetic(
             break
 
     chosen = fixed + best.tolist()
-    resp = posture_seconds(T, chosen, busy_p)
+    resp = posture_seconds(T, chosen, busy_of(chosen))
     return GeneticResult(
         indices=sorted(int(i) for i in chosen),
         value=float((w * resp).sum() / W),
@@ -525,7 +592,8 @@ def solve_genetic(
         solve_s=round(time.perf_counter() - t0, 2),
         params={"population": population, "max_generations": generations, "elite": elite,
                 "tournament": tournament, "mutation_rate": mutation_rate, "patience": patience,
-                "seed": seed, "busy_aware": busy_p is not None, "cap_s": cap_s},
+                "seed": seed, "busy_aware": busy_p is not None or busy_fn is not None,
+                "busy_load_dependent": busy_fn is not None, "cap_s": cap_s},
     )
 
 
