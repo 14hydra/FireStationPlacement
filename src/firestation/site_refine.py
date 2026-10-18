@@ -59,7 +59,7 @@ def refine_sites(
     *,
     make_rows: Callable[[pd.DataFrame], np.ndarray],
     objective: Callable[[np.ndarray, list[int], pd.DataFrame], float],
-    cap_ok: Callable[[np.ndarray, list[int]], bool] | None = None,
+    cap_ok: Callable[[np.ndarray, list[int], pd.DataFrame], bool] | None = None,
     radius_km: float = 1.0,
     shortlist: int = 6,
     passes: int = 1,
@@ -119,7 +119,7 @@ def refine_sites(
             best_val, best_row = current_val, None
             for j in range(len(top)):
                 trial = [start + j if i == site else i for i in idx]
-                if cap_ok is not None and not cap_ok(A, trial):
+                if cap_ok is not None and not cap_ok(A, trial, cand):
                     continue
                 v = objective(A, trial, cand)
                 if v < best_val - 1e-6:

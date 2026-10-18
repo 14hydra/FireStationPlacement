@@ -1,0 +1,11 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+375,New site on Beak Street / Regent Street,street_junction,-0.1392861,51.5116591,False,,
+377,New site on Rochester Row / Vauxhall Bridge Road,street_junction,-0.13807,51.4927786,False,,
+384,New site on Wigmore Street / Marylebone Lane,street_junction,-0.1499523,51.5161796,False,,
+388,New site on Marloes Road / Cromwell Road,street_junction,-0.1921101,51.4947247,False,,
+399,New site on Kilburn High Road,street_junction,-0.1919941,51.5367646,False,,
+400,New site on Cranbrook Road / Ilford Hill,street_junction,0.0701292,51.558586,False,,
+408,New site on Sterling Way,street_junction,-0.0717478,51.6146091,False,,
+414,New site on Brentfield Road / Hillside,street_junction,-0.2589804,51.5414752,False,,
+418,New site on Gervase Road / Orange Hill Road,street_junction,-0.2626615,51.6032173,False,,
+426,New site on Manor Way / New Road,street_junction,0.1812489,51.5228728,False,,

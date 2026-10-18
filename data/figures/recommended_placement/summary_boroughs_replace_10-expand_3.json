@@ -1,0 +1,243 @@
+{
+  "replace_10_boroughs0s": {
+    "average_s": {
+      "today": 309.5,
+      "plan": 309.5,
+      "best_possible": 303.9
+    },
+    "slowest10_s": {
+      "today": 423.2,
+      "plan": 423.2
+    },
+    "area_average_s": {
+      "today": 354.0,
+      "plan": 354.0,
+      "best_possible": 340.8
+    },
+    "efficiency_score": 0.0,
+    "equity_score": 0.0,
+    "within_6min": {
+      "today": 0.8156846565212562,
+      "plan": 0.8156846565212562
+    },
+    "eval_2025_mean_s": {
+      "today": 311.7,
+      "plan": 311.7,
+      "recorded": 332.0
+    },
+    "boroughs_worse_by_1s_or_more": [],
+    "opened": [],
+    "closed": []
+  },
+  "replace_10_boroughs1s": {
+    "average_s": {
+      "today": 309.5,
+      "plan": 304.0,
+      "best_possible": 303.9
+    },
+    "slowest10_s": {
+      "today": 423.2,
+      "plan": 420.2
+    },
+    "area_average_s": {
+      "today": 354.0,
+      "plan": 349.7,
+      "best_possible": 340.8
+    },
+    "efficiency_score": 98.2,
+    "equity_score": 32.6,
+    "within_6min": {
+      "today": 0.8156846565212562,
+      "plan": 0.8380992430613962
+    },
+    "eval_2025_mean_s": {
+      "today": 311.7,
+      "plan": 306.4,
+      "recorded": 332.0
+    },
+    "boroughs_worse_by_1s_or_more": [],
+    "opened": [
+      "New site on Great Marlborough Street / Maddox Street",
+      "New site on St John's Wood Road / Maida Vale",
+      "Demand cell 67",
+      "New site on Greenwich High Road / Deals Gateway",
+      "New site on Bow Road / Fairfield Road",
+      "New site on Coldharbour Lane / Uxbridge Road",
+      "New site on Brentfield Road / Hillside",
+      "New site on Deansbrook Road",
+      "New site on London Road",
+      "New site on Manor Way / New Road"
+    ],
+    "closed": [
+      "Dockhead",
+      "Greenwich",
+      "Hayes",
+      "Kingston",
+      "Mill Hill",
+      "Paddington",
+      "Park Royal",
+      "Shadwell",
+      "Soho",
+      "Wennington"
+    ]
+  },
+  "replace_10_boroughs5s": {
+    "average_s": {
+      "today": 309.5,
+      "plan": 303.4,
+      "best_possible": 303.9
+    },
+    "slowest10_s": {
+      "today": 423.2,
+      "plan": 420.0
+    },
+    "area_average_s": {
+      "today": 354.0,
+      "plan": 349.8,
+      "best_possible": 340.8
+    },
+    "efficiency_score": 108.8,
+    "equity_score": 31.9,
+    "within_6min": {
+      "today": 0.8156846565212562,
+      "plan": 0.8427487820746783
+    },
+    "eval_2025_mean_s": {
+      "today": 311.7,
+      "plan": 306.2,
+      "recorded": 332.0
+    },
+    "boroughs_worse_by_1s_or_more": [
+      "CAMDEN",
+      "GREENWICH"
+    ],
+    "opened": [
+      "New site on Beak Street / Regent Street",
+      "New site on Wigmore Street / Marylebone Lane",
+      "New site on Marloes Road / Cromwell Road",
+      "New site on Marsh Wall",
+      "New site on Coldharbour Lane / Uxbridge Road",
+      "New site on Southend Lane / Bromley Road",
+      "New site on Brentfield Road / Hillside",
+      "New site on Gervase Road / Orange Hill Road",
+      "New site on London Road",
+      "New site on Manor Way / New Road"
+    ],
+    "closed": [
+      "Greenwich",
+      "Hayes",
+      "Kensington",
+      "Kingston",
+      "Mill Hill",
+      "Millwall",
+      "Park Royal",
+      "Shadwell",
+      "Soho",
+      "Wennington"
+    ]
+  },
+  "expand_3_boroughs0s": {
+    "average_s": {
+      "today": 309.5,
+      "plan": 306.6,
+      "best_possible": 306.3
+    },
+    "slowest10_s": {
+      "today": 423.2,
+      "plan": 422.9
+    },
+    "area_average_s": {
+      "today": 354.0,
+      "plan": 353.4,
+      "best_possible": 349.2
+    },
+    "efficiency_score": 89.8,
+    "equity_score": 12.9,
+    "within_6min": {
+      "today": 0.8156846565212562,
+      "plan": 0.824547344367393
+    },
+    "eval_2025_mean_s": {
+      "today": 311.7,
+      "plan": 309.1,
+      "recorded": 332.0
+    },
+    "boroughs_worse_by_1s_or_more": [],
+    "opened": [
+      "New site on Hanover Street / Regent Street",
+      "Demand cell 36",
+      "Demand cell 47"
+    ],
+    "closed": []
+  },
+  "expand_3_boroughs1s": {
+    "average_s": {
+      "today": 309.5,
+      "plan": 306.4,
+      "best_possible": 306.3
+    },
+    "slowest10_s": {
+      "today": 423.2,
+      "plan": 423.1
+    },
+    "area_average_s": {
+      "today": 354.0,
+      "plan": 353.4,
+      "best_possible": 349.2
+    },
+    "efficiency_score": 97.6,
+    "equity_score": 12.8,
+    "within_6min": {
+      "today": 0.8156846565212562,
+      "plan": 0.8250392751162384
+    },
+    "eval_2025_mean_s": {
+      "today": 311.7,
+      "plan": 308.9,
+      "recorded": 332.0
+    },
+    "boroughs_worse_by_1s_or_more": [],
+    "opened": [
+      "New site on Hanover Street / Regent Street",
+      "Demand cell 36",
+      "New site on Kilburn High Road"
+    ],
+    "closed": []
+  },
+  "expand_3_boroughs5s": {
+    "average_s": {
+      "today": 309.5,
+      "plan": 306.0,
+      "best_possible": 306.3
+    },
+    "slowest10_s": {
+      "today": 423.2,
+      "plan": 422.9
+    },
+    "area_average_s": {
+      "today": 354.0,
+      "plan": 353.3,
+      "best_possible": 349.2
+    },
+    "efficiency_score": 108.4,
+    "equity_score": 15.0,
+    "within_6min": {
+      "today": 0.8156846565212562,
+      "plan": 0.8250392751162384
+    },
+    "eval_2025_mean_s": {
+      "today": 311.7,
+      "plan": 308.5,
+      "recorded": 332.0
+    },
+    "boroughs_worse_by_1s_or_more": [
+      "LAMBETH"
+    ],
+    "opened": [
+      "New site on Great Marlborough Street / Regent Street",
+      "New site on Rochester Row / Vauxhall Bridge Road",
+      "New site on St John's Wood Road / Grove End Road"
+    ],
+    "closed": []
+  }
+}

@@ -1,0 +1,11 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+370,New site on Shepherds Bush Road / Shepherds Bush Green,street_junction,-0.223079,51.5030931,False,,
+169,Demand cell 67,demand_cell,-0.08459595126026956,51.49347275072606,False,,1.0
+385,New site on Bow Road / Fairfield Road,street_junction,-0.0192682,51.5281522,False,,
+390,New site on Inner Ring West / Cirrus Road,street_junction,-0.4540551,51.4717278,False,,
+395,New site on Beckenham Road / Birkbeck Road,street_junction,-0.0459512,51.4101828,False,,
+404,New site on Manor Road / Portland Road,street_junction,-0.0734647,51.3989058,False,,
+408,New site on Florence Road / Tweedy Road,street_junction,0.0149239,51.4086902,False,,
+417,New site on High Road Leytonstone / Vernon Road,street_junction,0.0101757,51.5655215,False,,
+418,New site on North Street,street_junction,0.178018,51.5806047,False,,
+426,New site on Manor Way / New Road,street_junction,0.1812489,51.5228728,False,,

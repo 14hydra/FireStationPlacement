@@ -1,0 +1,4 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+373,New site on Great Marlborough Street / Regent Street,street_junction,-0.1411476,51.5137155,False,,
+377,New site on Rochester Row / Vauxhall Bridge Road,street_junction,-0.13807,51.4927786,False,,
+382,New site on St John's Wood Road / Grove End Road,street_junction,-0.1740829,51.527674,False,,

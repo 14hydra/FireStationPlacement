@@ -1,0 +1,133 @@
+{
+  "scenario": "expand_3_boroughs5s",
+  "rules": "alpha 1; busy engines; slowest 10% and average no worse than today; 10-minute cap; pumps move with stations; street refinement; every borough's average within 5 s of today",
+  "borough_tolerance_s": 5.0,
+  "average_s": {
+    "today": 309.5,
+    "plan": 306.0,
+    "best_possible": 306.3
+  },
+  "slowest10_s": {
+    "today": 423.2,
+    "plan": 422.9
+  },
+  "area_average_s": {
+    "today": 354.0,
+    "plan": 353.3,
+    "best_possible": 349.2
+  },
+  "efficiency_score": 108.4,
+  "equity_score": 15.0,
+  "within_6min": {
+    "today": 0.8156846565212562,
+    "plan": 0.8250392751162384
+  },
+  "eval_2025_mean_s": {
+    "today": 311.7,
+    "plan": 308.5,
+    "recorded": 332.0
+  },
+  "boroughs_worse_by_1s_or_more": [
+    "LAMBETH"
+  ],
+  "boroughs_better_by_5s_or_more": 2,
+  "opened": [
+    "New site on Great Marlborough Street / Regent Street",
+    "New site on Rochester Row / Vauxhall Bridge Road",
+    "New site on St John's Wood Road / Grove End Road"
+  ],
+  "closed": [],
+  "pump_moves": [
+    {
+      "from": 79,
+      "to": 373,
+      "pumps": 1,
+      "km": 0.78,
+      "second_pump": true,
+      "from_name": "Soho",
+      "to_name": "New site on Great Marlborough Street / Regent Street"
+    },
+    {
+      "from": 51,
+      "to": 377,
+      "pumps": 1,
+      "km": 1.16,
+      "second_pump": true,
+      "from_name": "Lambeth",
+      "to_name": "New site on Rochester Row / Vauxhall Bridge Road"
+    },
+    {
+      "from": 66,
+      "to": 382,
+      "pumps": 1,
+      "km": 1.06,
+      "second_pump": true,
+      "from_name": "Paddington",
+      "to_name": "New site on St John's Wood Road / Grove End Road"
+    }
+  ],
+  "floors": {
+    "keep_slowest": true,
+    "keep_average": true,
+    "keep_boroughs": {
+      "n_boroughs": 33,
+      "tolerance_s": 5.0
+    },
+    "today_mean_s": 309.49,
+    "today_slowest10_s": 423.22
+  },
+  "solver": {
+    "solver": "HiGHS integer program (scipy.optimize.milp)",
+    "status": "busy-aware: best of 3 rounds (round 2)",
+    "optimal": true,
+    "objective_value": 306.2992,
+    "lower_bound": null,
+    "gap": 0.0,
+    "solve_s": 4.09,
+    "n_vars": 0
+  },
+  "street_refinement": {
+    "radius_km": 1.0,
+    "solve_s": 14.2,
+    "n_moved": 3,
+    "moves": [
+      {
+        "pass": 1,
+        "from": 103,
+        "to": 373,
+        "from_lat": 51.517471655581545,
+        "from_lon": -0.13706457255736124,
+        "to_lat": 51.5137155,
+        "to_lon": -0.1411476,
+        "moved_m": 503,
+        "gain_s": 0.084,
+        "n_junctions_considered": 331
+      },
+      {
+        "pass": 1,
+        "from": 105,
+        "to": 377,
+        "from_lat": 51.493407595307715,
+        "from_lon": -0.13550883399416652,
+        "to_lat": 51.4927786,
+        "to_lon": -0.13807,
+        "moved_m": 191,
+        "gain_s": 0.05,
+        "n_junctions_considered": 208
+      },
+      {
+        "pass": 1,
+        "from": 107,
+        "to": 382,
+        "from_lat": 51.52565547420551,
+        "from_lon": -0.17495016801676191,
+        "to_lat": 51.527674,
+        "to_lon": -0.1740829,
+        "moved_m": 231,
+        "gain_s": 0.133,
+        "n_junctions_considered": 157
+      }
+    ]
+  },
+  "run_minutes": 0.5
+}

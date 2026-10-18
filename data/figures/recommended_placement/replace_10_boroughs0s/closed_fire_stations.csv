@@ -1,0 +1,11 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+5,Beckenham,existing_fire_station,-0.0342898308077814,51.408058049999994,True,,1
+10,Bromley,existing_fire_station,0.0171208318825317,51.407038,True,,2
+18,Dockhead,existing_fire_station,-0.0707950071742421,51.5008984,True,,1
+34,Hammersmith,existing_fire_station,-0.224293537625646,51.4960867,True,,2
+38,Heathrow,existing_fire_station,-0.4590324166476678,51.48022665,True,,1
+55,Leytonstone,existing_fire_station,0.008677359734444,51.56061125,True,,1
+74,Romford,existing_fire_station,0.1811242124324326,51.59367685,True,,1
+76,Shadwell,existing_fire_station,-0.0557891963357072,51.5108626,True,,1
+94,Wennington,existing_fire_station,0.2203615409801693,51.50593515,True,,1
+101,Woodside,existing_fire_station,-0.0621930777407106,51.3857831,True,,1

@@ -1,0 +1,266 @@
+{
+  "expand_3": {
+    "average_s": {
+      "today": 309.5,
+      "plan": 306.0,
+      "best_possible": 306.3
+    },
+    "slowest10_s": {
+      "today": 423.2,
+      "plan": 422.9
+    },
+    "area_average_s": {
+      "today": 354.0,
+      "plan": 353.3,
+      "best_possible": 349.2
+    },
+    "efficiency_score": 108.4,
+    "equity_score": 15.0,
+    "within_6min": {
+      "today": 0.8156846565212562,
+      "plan": 0.8250392751162384
+    },
+    "eval_2025_mean_s": {
+      "today": 311.7,
+      "plan": 308.5,
+      "recorded": 332.0
+    },
+    "boroughs_worse_by_1s_or_more": [
+      "LAMBETH"
+    ],
+    "opened": [
+      "New site on Great Marlborough Street / Regent Street",
+      "New site on Rochester Row / Vauxhall Bridge Road",
+      "New site on St John's Wood Road / Grove End Road"
+    ],
+    "closed": []
+  },
+  "replace_10": {
+    "average_s": {
+      "today": 309.5,
+      "plan": 302.9,
+      "best_possible": 303.9
+    },
+    "slowest10_s": {
+      "today": 423.2,
+      "plan": 420.9
+    },
+    "area_average_s": {
+      "today": 354.0,
+      "plan": 351.3,
+      "best_possible": 340.8
+    },
+    "efficiency_score": 117.4,
+    "equity_score": 20.5,
+    "within_6min": {
+      "today": 0.8156846565212562,
+      "plan": 0.8356078518495009
+    },
+    "eval_2025_mean_s": {
+      "today": 311.7,
+      "plan": 305.7,
+      "recorded": 332.0
+    },
+    "boroughs_worse_by_1s_or_more": [
+      "GREENWICH",
+      "SOUTHWARK",
+      "RICHMOND UPON THAMES",
+      "LEWISHAM",
+      "TOWER HAMLETS",
+      "KINGSTON UPON THAMES"
+    ],
+    "opened": [
+      "New site on Beak Street / Regent Street",
+      "New site on Rochester Row / Vauxhall Bridge Road",
+      "New site on Wigmore Street / Marylebone Lane",
+      "New site on Marloes Road / Cromwell Road",
+      "New site on Kilburn High Road",
+      "New site on Cranbrook Road / Ilford Hill",
+      "New site on Sterling Way",
+      "New site on Brentfield Road / Hillside",
+      "New site on Gervase Road / Orange Hill Road",
+      "New site on Manor Way / New Road"
+    ],
+    "closed": [
+      "Greenwich",
+      "Kensington",
+      "Kingston",
+      "Mill Hill",
+      "Millwall",
+      "New Cross",
+      "Park Royal",
+      "Shadwell",
+      "Soho",
+      "Wennington"
+    ]
+  },
+  "redesign": {
+    "average_s": {
+      "today": 309.5,
+      "plan": 290.5,
+      "best_possible": 298.3
+    },
+    "slowest10_s": {
+      "today": 423.2,
+      "plan": 406.8
+    },
+    "area_average_s": {
+      "today": 354.0,
+      "plan": 337.0,
+      "best_possible": 331.7
+    },
+    "efficiency_score": 170.0,
+    "equity_score": 76.2,
+    "within_6min": {
+      "today": 0.8156846565212562,
+      "plan": 0.8839519494739515
+    },
+    "eval_2025_mean_s": {
+      "today": 311.7,
+      "plan": 293.7,
+      "recorded": 332.0
+    },
+    "boroughs_worse_by_1s_or_more": [
+      "CITY OF LONDON",
+      "WANDSWORTH",
+      "MERTON",
+      "TOWER HAMLETS"
+    ],
+    "opened": [
+      "New site on Great Marlborough Street / Regent Street",
+      "New site on Kingsway",
+      "Demand cell 3",
+      "Demand cell 4",
+      "New site on St John's Wood Road / Maida Vale",
+      "New site on Bishopsgate",
+      "New site on Bishop's Bridge Road / Inverness Terrace",
+      "Demand cell 16",
+      "New site on King's Road / Anderson Street",
+      "New site on Percy Road / Uxbridge Road",
+      "New site on North End Road / Lillie Road",
+      "New site on Lower Clapton Road",
+      "Demand cell 44",
+      "New site on Kilburn High Road / Gascony Avenue",
+      "New site on Belsize Avenue / Haverstock Hill",
+      "New site on Clapham Road / Bedford Road",
+      "New site on Camden Road / York Way",
+      "New site on Romford Road / The Grove",
+      "New site on Evelyn Street / Alloa Road",
+      "New site on Druid Street / Tanner Street",
+      "New site on King William Walk / College Approach",
+      "New site on Ilford Hill / Mill Road",
+      "New site on Tufnell Park Road / Holloway Road",
+      "New site on Coldharbour Lane / Uxbridge Road",
+      "New site on Tunnel Road West / West Ramp",
+      "New site on High Street / Bury Street",
+      "New site on Beckenham Road / War Memorial",
+      "New site on Leyton Green Road / High Road Leyton",
+      "New site on South Norwood Hill / Portland Road",
+      "New site on Sunderland Road / Waldram Park Road",
+      "New site on Hollydale Road / Evelina Road",
+      "New site on Sterling Way",
+      "New site on High Street",
+      "New site on Brighton Road / Banstead Road",
+      "New site on Manor Road / Parkgate Road",
+      "New site on Tottenham Lane / High Street",
+      "New site on High Street / Oakhill Road",
+      "New site on Christchurch Road / Tandem Way",
+      "New site on Garratt Lane",
+      "New site on Regent's Park Road / Nether Street",
+      "New site on Edgware Road / Wilkinson Close",
+      "New site on Ewell Road / Kingsdowne Road",
+      "New site on Kew Bridge Road / Kew Road",
+      "New site on Hillside",
+      "New site on High Road Wembley",
+      "New site on Montrose Avenue / Gervase Road",
+      "New site on London Road",
+      "New site on Kew Road",
+      "New site on Drayton Green Road / Broadway",
+      "New site on Railway Approach / The Bridge",
+      "New site on High Street / School Road",
+      "New site on Main Road / Lunar Close",
+      "New site on Tweedy Road / College Road",
+      "New site on Barking Road / Beckton Road",
+      "Demand cell 85",
+      "New site on Chingford Lane / The Charter Road",
+      "New site on Farnborough Common / High Street",
+      "New site on Herbert Road / Sandy Hill Road",
+      "New site on Ripple Road",
+      "New site on High Street",
+      "New site on Station Road / Leesons Hill",
+      "New site on Harrow Manorway",
+      "New site on Betterton Road / New Road",
+      "New site on North Street",
+      "New site on Gooshays Drive / Kingsbridge Road",
+      "New site on Upminster Road / Wingletye Lane"
+    ],
+    "closed": [
+      "Barking",
+      "Beckenham",
+      "Biggin Hill",
+      "Bromley",
+      "Chelsea",
+      "Chingford",
+      "Chiswick",
+      "Clapham",
+      "Deptford",
+      "Dockhead",
+      "Dowgate",
+      "Ealing",
+      "East Greenwich",
+      "Edmonton",
+      "Finchley",
+      "Forest Hill",
+      "Fulham",
+      "Greenwich",
+      "Hainault",
+      "Hammersmith",
+      "Harold Hill",
+      "Hayes",
+      "Heathrow",
+      "Hendon",
+      "Heston",
+      "Holloway",
+      "Homerton",
+      "Hornchurch",
+      "Hornsey",
+      "Islington",
+      "Kensington",
+      "Kentish Town",
+      "Kingston",
+      "Lambeth",
+      "Leyton",
+      "Leytonstone",
+      "Mill Hill",
+      "Millwall",
+      "Mitcham",
+      "New Cross",
+      "Old Kent Road",
+      "Orpington",
+      "Paddington",
+      "Park Royal",
+      "Plaistow",
+      "Plumstead",
+      "Purley",
+      "Richmond",
+      "Romford",
+      "Ruislip",
+      "Shadwell",
+      "Sidcup",
+      "Soho",
+      "Stratford",
+      "Surbiton",
+      "Sutton",
+      "Tooting",
+      "Wallington",
+      "Wembley",
+      "Wennington",
+      "West Hampstead",
+      "Whitechapel",
+      "Willesden",
+      "Wimbledon",
+      "Woodford",
+      "Woodside"
+    ]
+  }
+}

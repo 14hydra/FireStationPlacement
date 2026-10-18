@@ -382,6 +382,12 @@ def main():
                    help="Optional CSV (station,n_pumps) overriding inferred pump counts")
     p.add_argument("--new-site-pumps", type=int, default=1,
                    help="Pumps for a new site that gets no moved pumps (with --expand-pumps new)")
+    p.add_argument("--keep-slowest", action=argparse.BooleanOptionalAction, default=True,
+                   help="Floor: the slowest 10%% of calls may not get slower on average than today")
+    p.add_argument("--keep-average", action=argparse.BooleanOptionalAction, default=True,
+                   help="Floor: the overall average may not get worse than today")
+    p.add_argument("--keep-boroughs", type=float, default=None, metavar="SECONDS",
+                   help="Floor: no borough's average may get worse than today by more than SECONDS")
     p.add_argument("--refine-km", type=float, default=1.0,
                    help="Move each new site to the best road junction within this many km after "
                         "solving (0 = off; about 30-60 s per new site)")
@@ -392,7 +398,9 @@ def main():
     p.add_argument("--demand-candidates", type=int, default=80, help="Busiest demand cells added as sites")
     p.add_argument("--spread-km", type=float, default=3.0,
                    help="Also add the busiest cell in every N km block as a site (0 = off)")
-    p.add_argument("--objective", choices=["response_time", "coverage"], default="response_time")
+    p.add_argument("--objective", choices=["response_time", "cvar", "coverage"], default="response_time",
+                   help="response_time = average first-engine time; cvar = average of the slowest 10%% "
+                        "of calls (LFB's 90%% standard is about these); coverage = calls within --threshold-min")
     p.add_argument("--threshold-min", type=float, default=10.0, help="Cover threshold (LFB: 10)")
     p.add_argument("--severity", choices=["all", "serious", "dwelling_fire"], default="all",
                    help="Which calls count as demand: all, serious (fires + special services), "
@@ -406,9 +414,10 @@ def main():
     p.add_argument("--cap-min", type=float, default=10.0,
                    help="No area may be served from a site farther than this (minutes; 0 = no cap). "
                         "Areas no candidate reaches in time are exempt")
-    p.add_argument("--scorer", choices=["lgbm", "road", "kolesar", "crow"], default=None,
+    p.add_argument("--scorer", choices=["lgbm", "lgbm_q90", "road", "kolesar", "crow"], default=None,
                    help="Drive-time scorer: lgbm (LightGBM decision-tree travel-time model; default for "
-                        "London), road (Kolesar on road km), kolesar (Kolesar on straight-line km; default "
+                        "London), lgbm_q90 (90th-percentile LightGBM: slow-trip times), "
+                        "road (Kolesar on road km), kolesar (Kolesar on straight-line km; default "
                         "elsewhere), crow (flat speed)")
     p.add_argument("--demand-years", type=str, default="2024", help="Comma list of cal_years for demand")
     p.add_argument("--eval-years", type=str, default="2025", help="Comma list of cal_years for held-out scoring")
@@ -511,6 +520,9 @@ def main():
         new_site_pumps=args.new_site_pumps,
         expand_pumps=args.expand_pumps,
         refine_km=args.refine_km,
+        keep_slowest=args.keep_slowest,
+        keep_average=args.keep_average,
+        keep_boroughs=args.keep_boroughs,
     )
 
     # Write artifacts

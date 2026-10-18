@@ -1,0 +1,11 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+18,Dockhead,existing_fire_station,-0.0707950071742421,51.5008984,True,,1
+32,Greenwich,existing_fire_station,-0.013655847633136,51.47385895,True,,1
+37,Hayes,existing_fire_station,-0.4316736479820627,51.49438,True,,1
+50,Kingston,existing_fire_station,-0.3065912404057513,51.429441,True,,2
+56,Mill Hill,existing_fire_station,-0.2432100393349606,51.61499645,True,,1
+66,Paddington,existing_fire_station,-0.1833189410368907,51.520072299999995,True,,2
+67,Park Royal,existing_fire_station,-0.264824544196401,51.5357937,True,,1
+76,Shadwell,existing_fire_station,-0.0557891963357072,51.5108626,True,,1
+79,Soho,existing_fire_station,-0.1300890958229078,51.51246085,True,,2
+94,Wennington,existing_fire_station,0.2203615409801693,51.50593515,True,,1

@@ -1,0 +1,47 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+1,Addington,existing_fire_station,-0.0236213420691161,51.3519192,True,,2
+2,Barking,existing_fire_station,0.0888736549390424,51.53000055,True,,2
+5,Beckenham,existing_fire_station,-0.0342898308077814,51.408058049999994,True,,1
+8,Biggin Hill,existing_fire_station,0.0341143511908675,51.313615,True,,1
+10,Bromley,existing_fire_station,0.0171208318825317,51.407038,True,,2
+13,Chiswick,existing_fire_station,-0.2690538141204884,51.49060455,True,,1
+17,Deptford,existing_fire_station,-0.0338287628551537,51.4848576,True,,1
+18,Dockhead,existing_fire_station,-0.0707950071742421,51.5008984,True,,1
+19,Dowgate,existing_fire_station,-0.0901008,51.510035,True,,1
+21,East Greenwich,existing_fire_station,0.0222960967435707,51.48697755,True,,2
+29,Finchley,existing_fire_station,-0.1792936720326938,51.5979575,True,,2
+32,Greenwich,existing_fire_station,-0.013655847633136,51.47385895,True,,1
+33,Hainault,existing_fire_station,0.1043983327517823,51.60617575,True,,1
+34,Hammersmith,existing_fire_station,-0.224293537625646,51.4960867,True,,2
+37,Hayes,existing_fire_station,-0.4316736479820627,51.49438,True,,1
+38,Heathrow,existing_fire_station,-0.4590324166476678,51.48022665,True,,1
+40,Heston,existing_fire_station,-0.3431990961907811,51.47502,True,,2
+42,Holloway,existing_fire_station,-0.1159426867900488,51.5615714,True,,1
+43,Homerton,existing_fire_station,-0.0439337508623871,51.54865169999999,True,,2
+44,Hornchurch,existing_fire_station,0.2205802941206759,51.56451135,True,,1
+45,Hornsey,existing_fire_station,-0.1272021246958989,51.58652805,True,,2
+47,Islington,existing_fire_station,-0.1023069299975422,51.5402671,True,,1
+48,Kensington,existing_fire_station,-0.1901176722364718,51.50295535,True,,1
+50,Kingston,existing_fire_station,-0.3065912404057513,51.429441,True,,2
+54,Leyton,existing_fire_station,-0.0167733359643747,51.56309865,True,,1
+55,Leytonstone,existing_fire_station,0.008677359734444,51.56061125,True,,1
+56,Mill Hill,existing_fire_station,-0.2432100393349606,51.61499645,True,,1
+57,Millwall,existing_fire_station,-0.0255593731203916,51.50081445,True,,1
+59,New Cross,existing_fire_station,-0.0493004024826299,51.4735264,True,,1
+64,Old Kent Road,existing_fire_station,-0.0734971739043401,51.48713365,True,,1
+66,Paddington,existing_fire_station,-0.1833189410368907,51.520072299999995,True,,2
+67,Park Royal,existing_fire_station,-0.264824544196401,51.5357937,True,,1
+70,Plumstead,existing_fire_station,0.0915120200894747,51.487451,True,,2
+74,Romford,existing_fire_station,0.1811242124324326,51.59367685,True,,1
+75,Ruislip,existing_fire_station,-0.4367001982307689,51.5883815,True,,1
+76,Shadwell,existing_fire_station,-0.0557891963357072,51.5108626,True,,1
+78,Sidcup,existing_fire_station,0.0945067633431096,51.4268951,True,,2
+79,Soho,existing_fire_station,-0.1300890958229078,51.51246085,True,,2
+84,Stratford,existing_fire_station,0.011128787625757,51.54375,True,,1
+93,Wembley,existing_fire_station,-0.3040197283283985,51.55169655,True,,2
+94,Wennington,existing_fire_station,0.2203615409801693,51.50593515,True,,1
+95,West Hampstead,existing_fire_station,-0.192796697170743,51.55170105,True,,2
+96,West Norwood,existing_fire_station,-0.1054584646052626,51.42590975,True,,2
+97,Whitechapel,existing_fire_station,-0.0691888717611473,51.5153048,True,,1
+100,Woodford,existing_fire_station,0.0239671628839159,51.60954165,True,,1
+101,Woodside,existing_fire_station,-0.0621930777407106,51.3857831,True,,1

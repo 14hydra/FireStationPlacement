@@ -198,8 +198,22 @@ def solve_busy_exact(
     w = np.asarray(weights, dtype=float)
     W = max(float(w.sum()), 1e-9)
 
+    from .facility import weighted_cvar
+
+    tail = solve_kw.get("objective") == "cvar"
+
     def true_value(idx):
-        return float((w * model.response(A, idx)).sum() / W)
+        resp = model.response(A, idx)
+        return weighted_cvar(resp, w) if tail else float((w * resp).sum() / W)
+
+    fw = np.asarray(solve_kw.get("floor_weights") if solve_kw.get("floor_weights") is not None else w, float)
+    max_mean, max_cvar = solve_kw.get("max_mean"), solve_kw.get("max_cvar")
+
+    from .facility import floors_met
+
+    def floors_ok(idx):
+        """Floors checked under the full model (each round only enforces them for fixed p)."""
+        return floors_met(model.response(A, idx), fw, max_mean, max_cvar, solve_kw.get("group_floor"))
 
     idx = list(start_idx)
     best = {"indices": list(idx), "value": true_value(idx), "round": 0}
@@ -208,12 +222,18 @@ def solve_busy_exact(
         p_site = model.probs(A, idx)
         cur = np.asarray(idx)
         p_cell = np.clip(p_site[cur[A[cur].argmin(axis=0)]], *P_CLIP)
-        res = solve_exact(A, w, k, backup_p=p_cell, backup_k=backup_k, **solve_kw)
+        try:
+            res = solve_exact(A, w, k, backup_p=p_cell, backup_k=backup_k, **solve_kw)
+        except RuntimeError as e:  # floors can be infeasible once p is updated
+            rounds.append({"round": r, "infeasible": str(e)})
+            break
         val = true_value(res.indices)
         rounds.append({"round": r, "value_full_model": round(val, 3), "value_fixed_p": round(res.value, 3),
                        "optimal_fixed_p": res.optimal, "gap": res.gap, "solve_s": res.solve_s,
-                       "backup_outside_k": res.cap.get("backup_outside_k")})
-        if val < best["value"] - 1e-9:
+                       "backup_outside_k": res.cap.get("backup_outside_k"), "floors": res.cap.get("floors")})
+        ok = floors_ok(res.indices)
+        rounds[-1]["floors_met_full_model"] = ok
+        if ok and val < best["value"] - 1e-9:
             best = {"indices": list(res.indices), "value": val, "round": r}
         key = tuple(sorted(res.indices))
         if key in seen:

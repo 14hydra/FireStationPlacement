@@ -62,6 +62,10 @@ from .facility import (
     SelectionResult,
     solve_exact,
     solve_genetic,
+    swap_search,
+    weighted_cvar,
+    floors_met,
+    group_means,
 )
 from .station_capacity import (
     DEFAULT_TOTAL_PUMPS,
@@ -71,7 +75,7 @@ from .station_capacity import (
     resolve_pump_vector,
 )
 
-SCORERS = ("lgbm", "road", "kolesar", "crow")
+SCORERS = ("lgbm", "lgbm_q90", "road", "kolesar", "crow")
 
 # How much each call counts as demand (LFB IncidentGroup / PropertyCategory).
 SEVERITY_SCHEMES = {
@@ -175,10 +179,11 @@ def build_travel_matrix(
         raise ValueError(f"scorer must be one of {SCORERS}, got {scorer!r}")
     surrogate = surrogate or TravelTimeSurrogate()
     meta: dict[str, Any] = {"scorer": scorer, "surrogate_speed_kph": surrogate.speed_kph}
-    if scorer == "lgbm":
-        from .ml_scorer import lgbm_matrix
+    if scorer in {"lgbm", "lgbm_q90"}:
+        from .ml_scorer import MODEL_PATH, Q90_MODEL_PATH, lgbm_matrix
 
-        T, m = lgbm_matrix(candidates, cells, incidents)
+        T, m = lgbm_matrix(candidates, cells, incidents,
+                           model_path=Q90_MODEL_PATH if scorer == "lgbm_q90" else MODEL_PATH)
         return T, {**meta, **m}
     if scorer == "road":
         from .ml_scorer import road_matrix
@@ -212,13 +217,13 @@ def _solver_meta(res) -> dict[str, Any]:
 def _solve(T, weights, k, *, solver, objective, threshold_s, cap_s, busy_model=None, start_idx=None,
            seed=42, **kw):
     """Exact integer program or genetic algorithm; ``busy_model`` makes either busy-aware."""
-    if busy_model is not None and objective != "response_time":
-        raise ValueError("busy-aware placement optimises response_time only")
+    if busy_model is not None and objective == "coverage":
+        raise ValueError("busy-aware placement optimises response_time or cvar")
     if solver == "genetic":
-        if objective != "response_time":
-            raise ValueError("the genetic solver optimises response_time only")
+        if objective == "coverage":
+            raise ValueError("the genetic solver optimises response_time or cvar")
         fn = (lambda idx: busy_model.probs(T, idx)) if busy_model is not None else None
-        return solve_genetic(T, weights, k, cap_s=cap_s, busy_fn=fn, seed=seed, **kw)
+        return solve_genetic(T, weights, k, cap_s=cap_s, busy_fn=fn, seed=seed, objective=objective, **kw)
     if solver != "exact":
         raise ValueError(f"solver must be exact|genetic, got {solver!r}")
     if busy_model is not None:
@@ -226,12 +231,39 @@ def _solve(T, weights, k, *, solver, objective, threshold_s, cap_s, busy_model=N
 
         out = solve_busy_exact(T, weights, k, busy_model, start_idx=start_idx, objective=objective,
                                threshold_s=threshold_s, cap_s=cap_s, **kw)
+        if out["round"] == 0 and any("infeasible" in r for r in out["rounds"]):
+            # The exact solver found no layout in time (hard floors); fall back to the genetic
+            # algorithm, seeded with today's layout, which keeps only layouts meeting every floor.
+            ga_kw = {k2: v for k2, v in kw.items() if k2 not in {"max_rounds", "time_limit_s", "backup_k"}}
+            print("  exact solver found no layout in time; genetic algorithm + feasible-swap search…", flush=True)
+            ga = solve_genetic(T, weights, k, cap_s=cap_s, busy_fn=lambda idx: busy_model.probs(T, idx),
+                               seed=seed, objective=objective, seeds=[list(start_idx)], **ga_kw)
+            print(f"  genetic: feasible={ga.params.get('feasible')} value={ga.value:.2f} (today {out['value']:.2f})",
+                  flush=True)
+            sw_kw = {k2: v for k2, v in ga_kw.items() if k2 in {"fixed_open", "min_from", "cap_cells", "max_mean",
+                                                                 "max_cvar", "floor_weights", "group_floor"}}
+            allowed = kw.get("allowed") or range(T.shape[0])
+            lat, lon = busy_model.pump_plan.lat, busy_model.pump_plan.lon
+            start = list(ga.indices) if ga.params.get("feasible") else list(start_idx)
+            sw = swap_search(T, weights, start, lat=lat, lon=lon, allowed=allowed,
+                             busy_fn=lambda idx: busy_model.probs(T, idx), objective=objective, cap_s=cap_s, **sw_kw)
+            print(f"  swap search: {len(sw['swaps'])} swaps, value {sw['value']:.2f}", flush=True)
+            if sw["value"] < out["value"] - 1e-9:
+                res = SelectionResult(
+                    objective=f"{objective}_busy", indices=sw["indices"], value=sw["value"],
+                    assignment=T[sw["indices"]].argmin(axis=0), response_s=busy_model.response(T, sw["indices"]),
+                    status=f"fallback: feasible-swap search from {'genetic algorithm' if start != list(start_idx) else 'today'}"
+                           f" ({len(sw['swaps'])} swaps); exact solver found no layout in time",
+                    optimal=False, solve_s=sw["solve_s"],
+                    cap={"swaps": sw["swaps"], "genetic_feasible": ga.params.get("feasible"),
+                         "exact_rounds": out["rounds"]})
+                return res
         res = SelectionResult(
-            objective="response_time_busy", indices=out["indices"], value=out["value"],
+            objective=f"{objective}_busy", indices=out["indices"], value=out["value"],
             assignment=T[out["indices"]].argmin(axis=0), response_s=out["response_s"],
             status=f"busy-aware: best of {len(out['rounds'])} rounds (round {out['round']})",
-            optimal=all(r["optimal_fixed_p"] for r in out["rounds"]),
-            gap=max((r["gap"] for r in out["rounds"]), default=float("nan")),
+            optimal=all(r.get("optimal_fixed_p", True) for r in out["rounds"]),
+            gap=max((r["gap"] for r in out["rounds"] if "gap" in r), default=float("nan")),
             solve_s=out["solve_s"], cap={"busy_rounds": out["rounds"]})
         return res
     return solve_exact(T, weights, k, objective=objective, threshold_s=threshold_s, cap_s=cap_s, **kw)
@@ -249,10 +281,11 @@ def plan_redesign(
     busy_model: Any = None,
     start_idx: Sequence[int] | None = None,
     cap_cells: np.ndarray | None = None,
+    floors: dict | None = None,
 ) -> dict[str, Any]:
     """Best ``k`` sites from the whole candidate set."""
     res = _solve(T, weights, k, solver=solver, objective=objective, threshold_s=threshold_s, cap_s=cap_s,
-                 busy_model=busy_model, start_idx=start_idx, cap_cells=cap_cells)
+                 busy_model=busy_model, start_idx=start_idx, cap_cells=cap_cells, **(floors or {}))
     return {"indices": res.indices, "value": res.value, "response_s": res.response_s,
             "objective": objective, "solver": _solver_meta(res)}
 
@@ -271,6 +304,7 @@ def plan_replace(
     busy_model: Any = None,
     start_idx: Sequence[int] | None = None,
     cap_cells: np.ndarray | None = None,
+    floors: dict | None = None,
 ) -> dict[str, Any]:
     """Keep the fleet size; close up to ``r`` current stations and open as many new sites.
 
@@ -284,7 +318,7 @@ def plan_replace(
         int(i) for i in new_pool if int(i) not in ex]
     res = _solve(T, weights, n, solver=solver, objective=objective, threshold_s=threshold_s, cap_s=cap_s,
                  busy_model=busy_model, start_idx=start_idx or existing, cap_cells=cap_cells,
-                 allowed=existing + pool, min_from=(existing, n - r))
+                 allowed=existing + pool, min_from=(existing, n - r), **(floors or {}))
     chosen = set(res.indices)
     return {
         "indices": res.indices,
@@ -345,6 +379,7 @@ def plan_expand(
     busy_model: Any = None,
     start_idx: Sequence[int] | None = None,
     cap_cells: np.ndarray | None = None,
+    floors: dict | None = None,
 ) -> dict[str, Any]:
     """Keep ALL current stations; open the best ``add_m`` new sites."""
     existing = [int(i) for i in existing_idx]
@@ -354,7 +389,7 @@ def plan_expand(
     m = int(min(max(0, add_m), len(pool)))
     res = _solve(T, weights, len(existing) + m, solver=solver, objective=objective, threshold_s=threshold_s,
                  cap_s=cap_s, busy_model=busy_model, start_idx=start_idx or existing, cap_cells=cap_cells,
-                 fixed_open=existing, allowed=existing + pool)
+                 fixed_open=existing, allowed=existing + pool, **(floors or {}))
     return {
         "indices": res.indices,
         "closed": [],
@@ -623,6 +658,7 @@ class FireStationPlanResult:
     baselines: dict[str, Any]
     travel_meta: dict[str, Any]
     summary: dict[str, Any]
+    attendance: np.ndarray | None = None  # candidate x cell attendance seconds (drive + turnout)
 
 
 def run_fire_station_plan(
@@ -654,6 +690,11 @@ def run_fire_station_plan(
     new_site_pumps: int = 1,
     expand_pumps: str = "move",
     refine_km: float = 0.0,
+    keep_slowest: bool = False,
+    keep_average: bool = False,
+    keep_boroughs: float | None = None,
+    busy_rounds: int | None = None,
+    solver_time_s: float | None = None,
     severity: str = "all",
     alpha: float = 1.0,
     solver: str = "exact",
@@ -675,6 +716,10 @@ def run_fire_station_plan(
     ``expand_pumps``: where a new station's pump comes from when more sites open than
     close: ``move`` (second pump of the nearest two-pump station; total fixed) or ``new``.
     Pumps always move with their station (``busy_placement.PumpPlan``).
+    ``keep_slowest`` / ``keep_average``: floors, the plan's slowest-10 % average / overall
+    average (severity-weighted calls, busy engines when on) may not be worse than today's.
+    ``keep_boroughs`` (seconds, e.g. 1.0): no borough's call-weighted average may get worse
+    than today's by more than this.
     ``refine_km`` > 0 moves each newly opened site to the best road junction within that
     distance after solving (``site_refine``; today's stations stay put).
     ``solver``: ``exact`` (integer program, proven optimum, nearest engine always free) or
@@ -821,6 +866,30 @@ def run_fire_station_plan(
     cur_metrics["total_pumps"] = int(baseline_pumps[np.asarray(cur_sel)].sum()) if cur_sel else 0
     baselines = {"current_fire_stations": cur_metrics}
 
+    # Floors: the plan may not be worse than today on the slowest 10 % / the average.
+    floors = {}
+    today_mean = float((weights * cur_resp).sum() / max(weights.sum(), 1e-9))
+    today_cvar = weighted_cvar(cur_resp, weights)
+    if keep_slowest:
+        floors["max_cvar"] = today_cvar
+    if keep_average:
+        floors["max_mean"] = today_mean
+    borough_info = None
+    if keep_boroughs is not None:
+        from .ml_scorer import cell_boroughs
+
+        names = cell_boroughs(cells, incidents)
+        uniq = sorted({n for n in names if n})
+        code = np.array([uniq.index(n) if n else -1 for n in names])
+        today_b = group_means(cur_resp, weights, code, len(uniq))
+        floors["group_floor"] = (code, today_b + float(keep_boroughs))
+        borough_info = {"n_boroughs": len(uniq), "tolerance_s": float(keep_boroughs)}
+    if floors:
+        floors["floor_weights"] = weights
+    if solver == "exact" and solver_time_s:
+        floors["time_limit_s"] = float(solver_time_s)
+    if solver == "exact" and busy_rounds and use_busy:
+        floors["max_rounds"] = int(busy_rounds)
     # 10-minute cap: no area that today's stations reach in time may lose the standard.
     cap_cells = A[np.asarray(existing_idx)].min(axis=0) <= cap_s if cap_s is not None else None
 
@@ -834,7 +903,8 @@ def run_fire_station_plan(
         k = max(1, min(k, len(candidates)))
         print(f"Redesign: placing k={k} fire stations…")
         res = plan_redesign(A, w_opt, k, objective=objective, threshold_s=threshold_s, cap_s=cap_s,
-                            solver=solver, busy_model=busy_model, start_idx=existing_idx, cap_cells=cap_cells)
+                            solver=solver, busy_model=busy_model, start_idx=existing_idx, cap_cells=cap_cells,
+                            floors=floors)
         selected_idx = res["indices"]
         plan_value = res["value"]
         kept = [i for i in selected_idx if i in set(existing_idx)]
@@ -851,7 +921,7 @@ def run_fire_station_plan(
         res = plan_replace(
             A, w_opt, existing_idx,
             replace_r=r, new_pool=new_pool, objective=objective, threshold_s=threshold_s, cap_s=cap_s,
-            solver=solver, busy_model=busy_model, start_idx=existing_idx, cap_cells=cap_cells,
+            solver=solver, busy_model=busy_model, start_idx=existing_idx, cap_cells=cap_cells, floors=floors,
         )
         selected_idx = res["indices"]
         plan_value = res["value"]
@@ -874,7 +944,7 @@ def run_fire_station_plan(
         res = plan_expand(
             A, w_opt, existing_idx, m,
             new_pool=new_pool, objective=objective, threshold_s=threshold_s, cap_s=cap_s,
-            solver=solver, busy_model=busy_model, start_idx=existing_idx, cap_cells=cap_cells,
+            solver=solver, busy_model=busy_model, start_idx=existing_idx, cap_cells=cap_cells, floors=floors,
         )
         selected_idx = res["indices"]
         plan_value = res["value"]
@@ -936,12 +1006,23 @@ def run_fire_station_plan(
 
         def objective_fn(Ax, idx, cand):
             if busy_model is None:
-                return float((w_opt * Ax[idx].min(axis=0)).sum() / W_opt)
-            m = extend_busy_model(busy_model, cand["lat"].to_numpy(float)[n0:], cand["lon"].to_numpy(float)[n0:])
-            return float((w_opt * m.response(Ax, idx)).sum() / W_opt)
+                resp = Ax[idx].min(axis=0)
+            else:
+                m = extend_busy_model(busy_model, cand["lat"].to_numpy(float)[n0:], cand["lon"].to_numpy(float)[n0:])
+                resp = m.response(Ax, idx)
+            return weighted_cvar(resp, w_opt) if objective == "cvar" else float((w_opt * resp).sum() / W_opt)
 
-        def cap_ok(Ax, idx):
-            return cap_cells is None or bool((Ax[idx].min(axis=0)[cap_cells] <= cap_s).all())
+        def cap_ok(Ax, idx, cand):
+            if cap_cells is not None and not bool((Ax[idx].min(axis=0)[cap_cells] <= cap_s).all()):
+                return False
+            if not floors:
+                return True
+            if busy_model is None:
+                resp = Ax[idx].min(axis=0)
+            else:
+                m = extend_busy_model(busy_model, cand["lat"].to_numpy(float)[n0:], cand["lon"].to_numpy(float)[n0:])
+                resp = m.response(Ax, idx)
+            return floors_met(resp, weights, floors.get("max_mean"), floors.get("max_cvar"), floors.get("group_floor"))
 
         print(f"Refining {len(new_open)} new site(s) to street junctions within {refine_km} km…")
         ref = refine_sites(A, candidates, cells, selected_idx, new_open, w_opt, make_rows=make_rows,
@@ -1081,6 +1162,8 @@ def run_fire_station_plan(
         "busy_vs_ignoring_busy": busy_compare,
         "pump_moves": pump_moves,
         "street_refinement": refine_meta,
+        "floors": {"keep_slowest": keep_slowest, "keep_average": keep_average, "keep_boroughs": borough_info,
+                   "today_mean_s": round(today_mean, 2), "today_slowest10_s": round(today_cvar, 2)},
         "expand_pumps": expand_pumps,
         **extra,
         "honesty": (
@@ -1110,6 +1193,7 @@ def run_fire_station_plan(
         baselines=baselines,
         travel_meta=travel_meta,
         summary=summary,
+        attendance=A,
     )
 
 

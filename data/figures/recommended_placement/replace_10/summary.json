@@ -1,0 +1,288 @@
+{
+  "scenario": "replace_10",
+  "rules": "alpha 1; busy engines; slowest 10% and average no worse than today; 10-minute cap; pumps move with stations; street refinement",
+  "average_s": {
+    "today": 309.5,
+    "plan": 302.9,
+    "best_possible": 303.9
+  },
+  "slowest10_s": {
+    "today": 423.2,
+    "plan": 420.9
+  },
+  "area_average_s": {
+    "today": 354.0,
+    "plan": 351.3,
+    "best_possible": 340.8
+  },
+  "efficiency_score": 117.4,
+  "equity_score": 20.5,
+  "within_6min": {
+    "today": 0.8156846565212562,
+    "plan": 0.8356078518495009
+  },
+  "eval_2025_mean_s": {
+    "today": 311.7,
+    "plan": 305.7,
+    "recorded": 332.0
+  },
+  "boroughs_worse_by_1s_or_more": [
+    "GREENWICH",
+    "SOUTHWARK",
+    "RICHMOND UPON THAMES",
+    "LEWISHAM",
+    "TOWER HAMLETS",
+    "KINGSTON UPON THAMES"
+  ],
+  "boroughs_better_by_5s_or_more": 13,
+  "opened": [
+    "New site on Beak Street / Regent Street",
+    "New site on Rochester Row / Vauxhall Bridge Road",
+    "New site on Wigmore Street / Marylebone Lane",
+    "New site on Marloes Road / Cromwell Road",
+    "New site on Kilburn High Road",
+    "New site on Cranbrook Road / Ilford Hill",
+    "New site on Sterling Way",
+    "New site on Brentfield Road / Hillside",
+    "New site on Gervase Road / Orange Hill Road",
+    "New site on Manor Way / New Road"
+  ],
+  "closed": [
+    "Greenwich",
+    "Kensington",
+    "Kingston",
+    "Mill Hill",
+    "Millwall",
+    "New Cross",
+    "Park Royal",
+    "Shadwell",
+    "Soho",
+    "Wennington"
+  ],
+  "pump_moves": [
+    {
+      "from": 32,
+      "to": 400,
+      "pumps": 1,
+      "km": 11.02,
+      "from_name": "Greenwich",
+      "to_name": "New site on Cranbrook Road / Ilford Hill"
+    },
+    {
+      "from": 48,
+      "to": 399,
+      "pumps": 1,
+      "km": 3.74,
+      "from_name": "Kensington",
+      "to_name": "New site on Kilburn High Road"
+    },
+    {
+      "from": 50,
+      "to": 388,
+      "pumps": 2,
+      "km": 10.73,
+      "from_name": "Kingston",
+      "to_name": "New site on Marloes Road / Cromwell Road"
+    },
+    {
+      "from": 56,
+      "to": 418,
+      "pumps": 1,
+      "km": 1.87,
+      "from_name": "Mill Hill",
+      "to_name": "New site on Gervase Road / Orange Hill Road"
+    },
+    {
+      "from": 57,
+      "to": 408,
+      "pumps": 1,
+      "km": 12.98,
+      "from_name": "Millwall",
+      "to_name": "New site on Sterling Way"
+    },
+    {
+      "from": 59,
+      "to": 377,
+      "pumps": 1,
+      "km": 6.51,
+      "from_name": "New Cross",
+      "to_name": "New site on Rochester Row / Vauxhall Bridge Road"
+    },
+    {
+      "from": 67,
+      "to": 414,
+      "pumps": 1,
+      "km": 0.75,
+      "from_name": "Park Royal",
+      "to_name": "New site on Brentfield Road / Hillside"
+    },
+    {
+      "from": 76,
+      "to": 384,
+      "pumps": 1,
+      "km": 6.55,
+      "from_name": "Shadwell",
+      "to_name": "New site on Wigmore Street / Marylebone Lane"
+    },
+    {
+      "from": 79,
+      "to": 375,
+      "pumps": 2,
+      "km": 0.64,
+      "from_name": "Soho",
+      "to_name": "New site on Beak Street / Regent Street"
+    },
+    {
+      "from": 94,
+      "to": 426,
+      "pumps": 1,
+      "km": 3.29,
+      "from_name": "Wennington",
+      "to_name": "New site on Manor Way / New Road"
+    }
+  ],
+  "floors": {
+    "keep_slowest": true,
+    "keep_average": true,
+    "today_mean_s": 309.49,
+    "today_slowest10_s": 423.22
+  },
+  "solver": {
+    "solver": "HiGHS integer program (scipy.optimize.milp)",
+    "status": "busy-aware: best of 8 rounds (round 1)",
+    "optimal": true,
+    "objective_value": 304.0429,
+    "lower_bound": null,
+    "gap": 8.537519061251598e-05,
+    "solve_s": 677.05,
+    "n_vars": 0
+  },
+  "street_refinement": {
+    "radius_km": 1.0,
+    "solve_s": 50.0,
+    "n_moved": 10,
+    "moves": [
+      {
+        "pass": 1,
+        "from": 102,
+        "to": 375,
+        "from_lat": 51.51038722541255,
+        "from_lon": -0.1367713001752659,
+        "to_lat": 51.5116591,
+        "to_lon": -0.1392861,
+        "moved_m": 224,
+        "gain_s": 0.151,
+        "n_junctions_considered": 333
+      },
+      {
+        "pass": 1,
+        "from": 105,
+        "to": 377,
+        "from_lat": 51.493407595307715,
+        "from_lon": -0.13550883399416652,
+        "to_lat": 51.4927786,
+        "to_lon": -0.13807,
+        "moved_m": 191,
+        "gain_s": 0.04,
+        "n_junctions_considered": 208
+      },
+      {
+        "pass": 1,
+        "from": 106,
+        "to": 384,
+        "from_lat": 51.51752281400114,
+        "from_lon": -0.14879986704018586,
+        "to_lat": 51.5161796,
+        "to_lon": -0.1499523,
+        "moved_m": 169,
+        "gain_s": 0.025,
+        "n_junctions_considered": 329
+      },
+      {
+        "pass": 1,
+        "from": 118,
+        "to": 388,
+        "from_lat": 51.49333089788615,
+        "from_lon": -0.18999435199867326,
+        "to_lat": 51.4947247,
+        "to_lon": -0.1921101,
+        "moved_m": 213,
+        "gain_s": 0.074,
+        "n_junctions_considered": 143
+      },
+      {
+        "pass": 1,
+        "from": 149,
+        "to": 399,
+        "from_lat": 51.534688689781056,
+        "from_lon": -0.18968726098076977,
+        "to_lat": 51.5367646,
+        "to_lon": -0.1919941,
+        "moved_m": 280,
+        "gain_s": 0.118,
+        "n_junctions_considered": 169
+      },
+      {
+        "pass": 1,
+        "from": 176,
+        "to": 400,
+        "from_lat": 51.55869336797664,
+        "from_lon": 0.07056864000586578,
+        "to_lat": 51.558586,
+        "to_lon": 0.0701292,
+        "moved_m": 33,
+        "gain_s": 0.078,
+        "n_junctions_considered": 125
+      },
+      {
+        "pass": 1,
+        "from": 225,
+        "to": 408,
+        "from_lat": 51.60766000149922,
+        "from_lon": -0.06967968370582238,
+        "to_lat": 51.6146091,
+        "to_lon": -0.0717478,
+        "moved_m": 782,
+        "gain_s": 0.135,
+        "n_junctions_considered": 112
+      },
+      {
+        "pass": 1,
+        "from": 278,
+        "to": 414,
+        "from_lat": 51.541896458279915,
+        "from_lon": -0.25302032615594644,
+        "to_lat": 51.5414752,
+        "to_lon": -0.2589804,
+        "moved_m": 416,
+        "gain_s": 0.22,
+        "n_junctions_considered": 128
+      },
+      {
+        "pass": 1,
+        "from": 280,
+        "to": 418,
+        "from_lat": 51.5981218632206,
+        "from_lon": -0.252191370757561,
+        "to_lat": 51.6032173,
+        "to_lon": -0.2626615,
+        "moved_m": 919,
+        "gain_s": 0.153,
+        "n_junctions_considered": 104
+      },
+      {
+        "pass": 1,
+        "from": 356,
+        "to": 426,
+        "from_lat": 51.52462324996682,
+        "from_lon": 0.18812638083004196,
+        "to_lat": 51.5228728,
+        "to_lon": 0.1812489,
+        "moved_m": 514,
+        "gain_s": 0.124,
+        "n_junctions_considered": 81
+      }
+    ]
+  },
+  "run_minutes": 13.6
+}

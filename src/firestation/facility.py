@@ -179,6 +179,22 @@ class SelectionResult:
     cap: dict = field(default_factory=dict)
 
 
+TAIL_BETA = 0.9  # CVaR level: average over the slowest 10 % of (weighted) calls
+
+
+def weighted_cvar(values: np.ndarray, weights: np.ndarray, beta: float = TAIL_BETA) -> float:
+    """Average of the slowest (1 - beta) share of demand (Rockafellar–Uryasev CVaR)."""
+    v = np.asarray(values, dtype=float)
+    w = np.asarray(weights, dtype=float)
+    order = np.argsort(-v)
+    v, w = v[order], w[order]
+    tail = (1.0 - beta) * w.sum()
+    if tail <= 0:
+        return float(v.max())
+    take = np.minimum(w, np.maximum(tail - (np.cumsum(w) - w), 0.0))
+    return float((v * take).sum() / tail)
+
+
 def objective_value(
     T: np.ndarray,
     indices: Sequence[int],
@@ -192,7 +208,94 @@ def objective_value(
     total = max(weights.sum(), 1e-9)
     if objective == "coverage":
         return -float((weights * (best <= threshold_s)).sum() / total)
+    if objective == "cvar":
+        return weighted_cvar(best, weights)
     return float((weights * best).sum() / total)
+
+
+def _cvar_augment(A, lo, hi, cols, vals, cells, w, W, n_cells, beta=TAIL_BETA):
+    """Add CVaR variables: eta (the 90th-percentile level) and u_j >= cost_j - eta.
+
+    Objective becomes eta + sum_j w_j u_j / ((1 - beta) W); returns the new matrix,
+    bounds, objective tail and the number of added variables.
+    """
+    from scipy.sparse import coo_matrix, hstack, vstack
+
+    nv = A.shape[1]
+    rows = coo_matrix((np.r_[vals, -np.ones(n_cells), -np.ones(n_cells)],
+                       (np.r_[cells, np.arange(n_cells), np.arange(n_cells)],
+                        np.r_[cols, np.full(n_cells, nv), nv + 1 + np.arange(n_cells)])),
+                      shape=(n_cells, nv + 1 + n_cells))
+    A2 = vstack([hstack([A, coo_matrix((A.shape[0], 1 + n_cells))]), rows]).tocsr()
+    c_tail = np.r_[1.0, w / ((1.0 - beta) * W)]
+    return A2, lo + [-np.inf] * n_cells, hi + [0.0] * n_cells, c_tail, 1 + n_cells
+
+
+def _add_floors(A, lo, hi, cols, vals, cells, fw, n_cells, max_mean=None, max_cvar=None, group_floor=None):
+    """Floor limits on the layout's call-weighted average and slowest-10 % average.
+
+    ``vals`` are the assignment costs at columns ``cols`` for cells ``cells``; both limits
+    are linear (CVaR via its own eta / u variables). Returns the new matrix, bounds and the
+    number of variables added.
+    """
+    from scipy.sparse import coo_matrix, hstack, vstack
+
+    FW = max(float(np.sum(fw)), 1e-9)
+    added = 0
+    if max_cvar is not None:
+        nv = A.shape[1]
+        A, lo, hi, c_tail, n_new = _cvar_augment(A, lo, hi, cols, vals, cells, fw, FW, n_cells)
+        row = coo_matrix((c_tail, (np.zeros(n_new, int), nv + np.arange(n_new))), shape=(1, A.shape[1]))
+        A = vstack([A, row]).tocsr()
+        lo, hi = lo + [-np.inf], hi + [float(max_cvar)]
+        added += n_new
+    if max_mean is not None:
+        row = coo_matrix((fw[cells] * vals / FW, (np.zeros(len(cols), int), cols)), shape=(1, A.shape[1]))
+        A = vstack([A, row]).tocsr()
+        lo, hi = lo + [-np.inf], hi + [float(max_mean)]
+    if group_floor is not None:
+        # One row per group (e.g. borough): its call-weighted average <= its limit.
+        group, limits = np.asarray(group_floor[0]), np.asarray(group_floor[1], dtype=float)
+        g = group[cells]
+        use = g >= 0
+        gw = np.bincount(group[group >= 0], weights=fw[group >= 0], minlength=len(limits))
+        coef = fw[cells][use] * vals[use] / np.maximum(gw[g[use]], 1e-9)
+        rows = coo_matrix((coef, (g[use], cols[use])), shape=(len(limits), A.shape[1]))
+        A = vstack([A, rows]).tocsr()
+        lo, hi = lo + [-np.inf] * len(limits), hi + list(limits)
+    return A, lo, hi, added
+
+
+def group_means(resp: np.ndarray, fw: np.ndarray, group: np.ndarray, n_groups: int) -> np.ndarray:
+    """Call-weighted average per group (cells with group -1 ignored)."""
+    ok = group >= 0
+    num = np.bincount(group[ok], weights=(fw * resp)[ok], minlength=n_groups)
+    den = np.bincount(group[ok], weights=fw[ok], minlength=n_groups)
+    return num / np.maximum(den, 1e-9)
+
+
+def floors_met(resp, fw, max_mean=None, max_cvar=None, group_floor=None, tol=1e-3) -> bool:
+    if max_mean is not None and float((fw * resp).sum() / max(float(fw.sum()), 1e-9)) > max_mean + tol:
+        return False
+    if max_cvar is not None and weighted_cvar(resp, fw) > max_cvar + tol:
+        return False
+    if group_floor is not None:
+        limits = np.asarray(group_floor[1], dtype=float)
+        if (group_means(resp, fw, np.asarray(group_floor[0]), len(limits)) > limits + tol).any():
+            return False
+    return True
+
+
+def _floor_report(resp, fw, max_mean, max_cvar, group_floor=None) -> dict:
+    mean = float((fw * resp).sum() / max(float(fw.sum()), 1e-9))
+    cvar = weighted_cvar(resp, fw)
+    out = {"max_mean": max_mean, "mean": round(mean, 3), "max_cvar": max_cvar, "cvar": round(cvar, 3),
+           "met": floors_met(resp, fw, max_mean, max_cvar, group_floor)}
+    if group_floor is not None:
+        limits = np.asarray(group_floor[1], dtype=float)
+        gm = group_means(resp, fw, np.asarray(group_floor[0]), len(limits))
+        out["groups_over_limit"] = int((gm > limits + 1e-3).sum())
+    return out
 
 
 def solve_exact(
@@ -209,6 +312,10 @@ def solve_exact(
     min_from: tuple[Sequence[int], int] | None = None,
     backup_p: np.ndarray | None = None,
     backup_k: int = 30,
+    max_mean: float | None = None,
+    max_cvar: float | None = None,
+    floor_weights: np.ndarray | None = None,
+    group_floor: tuple[np.ndarray, np.ndarray] | None = None,
     time_limit_s: float = 900.0,
     rel_gap: float = 1e-4,
 ) -> SelectionResult:
@@ -241,6 +348,12 @@ def solve_exact(
     the second-fastest fixed one); ``cap['backup_outside_k']`` counts cells whose real
     second-nearest open site fell outside that list.
 
+    Floors (response_time / cvar): ``max_mean`` caps the layout's call-weighted average
+    and ``max_cvar`` its average over the slowest 10 % of calls, both with
+    ``floor_weights`` (default ``weights``) and the same costs as the objective (the busy
+    blend with ``backup_p``). The planner passes today's values: "no worse than today".
+    ``group_floor=(group_per_cell, limits)`` caps each group's (e.g. borough's) average.
+
     Pairs (s, j) that can never be used are dropped before solving, which keeps the
     answer exact: with fixed open sites, a cell is never served by a site slower than
     its fastest fixed site. With ``x`` continuous, the optimum still assigns each cell
@@ -251,12 +364,18 @@ def solve_exact(
     from scipy.optimize import Bounds, LinearConstraint, milp
     from scipy.sparse import coo_matrix, csr_matrix, vstack
 
-    if objective not in {"response_time", "coverage"}:
+    if objective not in {"response_time", "coverage", "cvar"}:
         raise ValueError(f"Unknown objective={objective!r}")
+    tail = objective == "cvar"
+    if tail:
+        objective = "response_time"  # same assignment structure; only the cost changes
     T = np.asarray(T, dtype=float)
     w = np.asarray(weights, dtype=float)
     W = max(float(w.sum()), 1e-9)
     n_cells = T.shape[1]
+    n_extra = 0
+    fw = w if floor_weights is None else np.asarray(floor_weights, dtype=float)
+    floors = max_mean is not None or max_cvar is not None or group_floor is not None
     pool = np.array(sorted(set(range(T.shape[0]) if allowed is None else map(int, allowed)) | set(map(int, fixed_open))))
     pos = {int(s): i for i, s in enumerate(pool)}
     n_y = len(pool)
@@ -314,12 +433,27 @@ def solve_exact(
                            (np.r_[idx, idx, idx], np.r_[n_y + idx, n_y + n_x + idx, si])), shape=(n_x, nv))
         Acon = vstack([csr_matrix((r.toarray()[0], (np.zeros(n_y, int), np.arange(n_y))), shape=(1, nv))
                        for r in rows] + [assign1, assign2, link]).tocsr()
+        lo_b = lo + [1.0] * (2 * n_cells) + [-np.inf] * n_x
+        hi_b = hi + [1.0] * (2 * n_cells) + [0.0] * n_x
+        if tail:
+            cost = Tp[si, cj]
+            Acon, lo_b, hi_b, c_tail, n_extra = _cvar_augment(
+                Acon, lo_b, hi_b, np.r_[n_y + idx, n_y + n_x + idx], np.r_[cost * (1 - pj[cj]), cost * pj[cj]],
+                np.r_[cj, cj], w, W, n_cells)
+            c = np.r_[np.zeros(nv), c_tail]
+        if floors:
+            cost = Tp[si, cj]
+            Acon, lo_b, hi_b, n_f = _add_floors(
+                Acon, lo_b, hi_b, np.r_[n_y + idx, n_y + n_x + idx], np.r_[cost * (1 - pj[cj]), cost * pj[cj]],
+                np.r_[cj, cj], fw, n_cells, max_mean, max_cvar, group_floor)
+            c = np.r_[c, np.zeros(n_f)]
+            n_extra += n_f
         res = milp(
             c,
-            constraints=LinearConstraint(Acon, np.array(lo + [1.0] * (2 * n_cells) + [-np.inf] * n_x),
-                                         np.array(hi + [1.0] * (2 * n_cells) + [0.0] * n_x)),
-            integrality=np.r_[np.ones(n_y), np.zeros(2 * n_x)],
-            bounds=Bounds(np.r_[y_lb, np.zeros(2 * n_x)], np.r_[np.ones(n_y), prim_ok.astype(float), np.ones(n_x)]),
+            constraints=LinearConstraint(Acon, np.array(lo_b), np.array(hi_b)),
+            integrality=np.r_[np.ones(n_y), np.zeros(2 * n_x + n_extra)],
+            bounds=Bounds(np.r_[y_lb, np.zeros(2 * n_x), np.zeros(n_extra)],
+                          np.r_[np.ones(n_y), prim_ok.astype(float), np.ones(n_x), np.full(n_extra, np.inf)]),
             options={"time_limit": float(time_limit_s), "mip_rel_gap": float(rel_gap), "disp": False},
         )
         solve_s = time.perf_counter() - t0
@@ -332,10 +466,13 @@ def solve_exact(
         in_list = pair[open_pos]
         true_second = np.argsort(sub, axis=0)[1] if len(chosen) > 1 else np.zeros(n_cells, int)
         outside = ~in_list[true_second, np.arange(n_cells)]
-        value = float((w * ((1 - pj) * srt[0] + pj * srt[min(1, len(chosen) - 1)])).sum() / W)
+        blend = (1 - pj) * srt[0] + pj * srt[min(1, len(chosen) - 1)]
+        value = weighted_cvar(blend, w) if tail else float((w * blend).sum() / W)
         cap_info = {**cap_info, "backup_k": int(backup_k), "backup_outside_k": int(outside.sum())}
+        if floors:
+            cap_info["floors"] = _floor_report(blend, fw, max_mean, max_cvar, group_floor)
         return SelectionResult(
-            objective="response_time_busy", indices=chosen, value=value,
+            objective="cvar_busy" if tail else "response_time_busy", indices=chosen, value=value,
             assignment=sub.argmin(axis=0), response_s=(1 - pj) * srt[0] + pj * srt[min(1, len(chosen) - 1)],
             status=str(res.message), optimal=bool(res.status == 0),
             bound=float(getattr(res, "mip_dual_bound", np.nan)), gap=float(getattr(res, "mip_gap", np.nan)),
@@ -354,6 +491,14 @@ def solve_exact(
         lo = lo + [1.0] * n_cells + [-np.inf] * n_x
         hi = hi + [1.0] * n_cells + [0.0] * n_x
         n_z = n_x
+        if tail:
+            A, lo, hi, c_tail, n_extra = _cvar_augment(A, lo, hi, n_y + idx, Tp[si, cj], cj, w, W, n_cells)
+            c = np.r_[np.zeros(n_y + n_x), c_tail]
+        if floors:
+            A, lo, hi, n_f = _add_floors(A, lo, hi, n_y + idx, Tp[si, cj], cj, fw, n_cells, max_mean, max_cvar,
+                                         group_floor)
+            c = np.r_[c, np.zeros(n_f)]
+            n_extra += n_f
     else:
         reach = Tp <= threshold_s
         si, cj = np.nonzero(reach)
@@ -370,8 +515,9 @@ def solve_exact(
     res = milp(
         c,
         constraints=LinearConstraint(A, np.array(lo), np.array(hi)),
-        integrality=np.r_[np.ones(n_y), np.zeros(n_z)],
-        bounds=Bounds(np.r_[y_lb, np.zeros(n_z)], np.r_[np.ones(n_y), np.ones(n_z)]),
+        integrality=np.r_[np.ones(n_y), np.zeros(n_z + n_extra)],
+        bounds=Bounds(np.r_[y_lb, np.zeros(n_z), np.zeros(n_extra)],
+                      np.r_[np.ones(n_y), np.ones(n_z), np.full(n_extra, np.inf)]),
         options={"time_limit": float(time_limit_s), "mip_rel_gap": float(rel_gap), "disp": False},
     )
     solve_s = time.perf_counter() - t0
@@ -379,10 +525,12 @@ def solve_exact(
         raise RuntimeError(f"Placement problem has no solution: {res.message}")
     chosen = [int(pool[i]) for i in np.flatnonzero(res.x[:n_y] > 0.5)]
     sub = T[chosen, :]
-    value = objective_value(T, chosen, w, objective=objective, threshold_s=threshold_s)
+    value = objective_value(T, chosen, w, objective="cvar" if tail else objective, threshold_s=threshold_s)
     bound = float(getattr(res, "mip_dual_bound", np.nan))
+    if floors:
+        cap_info["floors"] = _floor_report(sub.min(axis=0), fw, max_mean, max_cvar, group_floor)
     return SelectionResult(
-        objective=objective,
+        objective="cvar" if tail else objective,
         indices=chosen,
         value=float(value),
         assignment=sub.argmin(axis=0),
@@ -447,6 +595,13 @@ def solve_genetic(
     mutation_rate: float = 0.3,
     patience: int = 80,
     seed: int = 42,
+    objective: str = "response_time",
+    max_mean: float | None = None,
+    max_cvar: float | None = None,
+    floor_weights: np.ndarray | None = None,
+    group_floor: tuple[np.ndarray, np.ndarray] | None = None,
+    floor_penalty: float = 20.0,
+    seeds: Sequence[Sequence[int]] = (),
 ) -> GeneticResult:
     """Choose ``k`` sites with a genetic algorithm (minimises demand-weighted first-engine time).
 
@@ -456,13 +611,18 @@ def solve_genetic(
       ``busy_p`` the busy-engine blend (1 - p) t1 + p t2 that the integer program cannot
       express linearly. ``busy_fn(open_sites) -> p per candidate`` makes ``p`` depend on
       the layout (e.g. ``busy_placement.ErlangBusyModel.probs``). ``cap_s`` adds ``cap_penalty`` x the seconds by which any area
-      exceeds the cap (areas no site reaches in time are exempt).
+      exceeds the cap (areas no site reaches in time are exempt). Floors ``max_mean`` /
+      ``max_cvar`` (as in ``solve_exact``) add ``floor_penalty`` x the seconds over.
     - selection: tournaments of ``tournament``; the best ``elite`` survive unchanged.
     - crossover: the child keeps sites both parents share, then fills up from the sites
       only one parent has (random order).
     - mutation: with probability ``mutation_rate`` per child, swap one free site for an
       unused one, half the time a near neighbour of the dropped site.
     - repair: ``min_from=(subset, n)`` keeps at least ``n`` sites from ``subset``.
+
+    ``seeds``: full layouts (e.g. today's stations) placed in the first population.
+    With floors or a cap, the best layout that breaks none of them is returned (falling
+    back to the best overall only if none was found); ``params['feasible']`` says which.
 
     Stops after ``generations`` or ``patience`` generations without improvement.
     """
@@ -473,13 +633,16 @@ def solve_genetic(
     T = np.asarray(T, dtype=float)
     w = np.asarray(weights, dtype=float)
     W = max(float(w.sum()), 1e-9)
+    fw = w if floor_weights is None else np.asarray(floor_weights, dtype=float)
+    FW = max(float(fw.sum()), 1e-9)
     fixed = sorted({int(i) for i in fixed_open})
     pool = sorted(set(range(T.shape[0]) if allowed is None else map(int, allowed)) - set(fixed))
     pool_arr = np.array(pool)
     m = int(k) - len(fixed)
     if m <= 0 or not pool:
         resp = posture_seconds(T, fixed, busy_fn(fixed) if busy_fn is not None else busy_p)
-        return GeneticResult(fixed, float((w * resp).sum() / W), resp, [], 0, 1, 0.0)
+        v0 = weighted_cvar(resp, w) if objective == "cvar" else float((w * resp).sum() / W)
+        return GeneticResult(fixed, v0, resp, [], 0, 1, 0.0)
     m = min(m, len(pool))
     keep_set, n_keep = (set(map(int, min_from[0])) & set(pool), int(min_from[1])) if min_from else (set(), 0)
     keep_arr = np.array(sorted(keep_set))
@@ -507,11 +670,37 @@ def solve_genetic(
         else:
             idx = fixed + genes.tolist()
             resp = posture_seconds(T, idx, busy_of(idx))
-        val = float((w * resp).sum() / W)
+        val = weighted_cvar(resp, w) if objective == "cvar" else float((w * resp).sum() / W)
+        if max_mean is not None:
+            val += floor_penalty * max(0.0, float((fw * resp).sum() / FW) - max_mean)
+        if max_cvar is not None:
+            val += floor_penalty * max(0.0, weighted_cvar(resp, fw) - max_cvar)
+        if group_floor is not None:
+            lim = np.asarray(group_floor[1], dtype=float)
+            over = group_means(resp, fw, np.asarray(group_floor[0]), len(lim)) - lim
+            val += floor_penalty * float(np.maximum(over, 0.0).sum())
         if cap_s is not None:
-            over = np.where(exempt, 0.0, np.maximum(resp - cap_s, 0.0))
+            near = T[fixed + genes.tolist()].min(axis=0)  # cap on the nearest station, not the busy blend
+            over = np.where(exempt, 0.0, np.maximum(near - cap_s, 0.0))
             val += cap_penalty * float((w * over).sum() / W)
         return val
+
+    constrained = cap_s is not None or max_mean is not None or max_cvar is not None or group_floor is not None
+
+    def violation(genes: np.ndarray) -> float:
+        idx = fixed + genes.tolist()
+        resp = posture_seconds(T, idx, busy_of(idx))
+        v = 0.0
+        if max_mean is not None:
+            v += max(0.0, float((fw * resp).sum() / FW) - max_mean)
+        if max_cvar is not None:
+            v += max(0.0, weighted_cvar(resp, fw) - max_cvar)
+        if group_floor is not None:
+            lim = np.asarray(group_floor[1], dtype=float)
+            v += float(np.maximum(group_means(resp, fw, np.asarray(group_floor[0]), len(lim)) - lim, 0).sum())
+        if cap_s is not None:
+            v += float(np.maximum(np.where(exempt, 0.0, T[idx].min(axis=0) - cap_s), 0.0).sum())
+        return v
 
     def repair(genes: np.ndarray) -> np.ndarray:
         genes = np.unique(genes)
@@ -534,6 +723,11 @@ def solve_genetic(
         return np.sort(rng.choice(pool_arr, m, replace=False))
 
     pop = [random_individual() for _ in range(population)]
+    fixed_set = set(fixed)
+    for i, sd in enumerate(seeds):
+        if i < population:
+            g = np.array(sorted(int(x) for x in sd if int(x) not in fixed_set and int(x) in set(pool)))
+            pop[i] = repair(g) if len(g) != m or n_keep else np.sort(g)
     # Replace mode: seed part of the population near today's layout (all kept + random others).
     if n_keep and len(keep_arr) >= m:
         for i in range(population // 4):
@@ -545,6 +739,18 @@ def solve_genetic(
     best_i = int(fit.argmin())
     best, best_val = pop[best_i].copy(), float(fit[best_i])
     history, stale, gen = [best_val], 0, 0
+    feas, feas_val = None, np.inf
+
+    def update_feasible():
+        nonlocal feas, feas_val
+        if not constrained:
+            return
+        for i in np.argsort(fit)[:5]:
+            if fit[i] < feas_val - 1e-9 and violation(pop[i]) <= 1e-3:
+                feas, feas_val = pop[i].copy(), float(fit[i])
+                break
+
+    update_feasible()
 
     def pick() -> np.ndarray:
         c = rng.choice(population, tournament, replace=False)
@@ -576,15 +782,21 @@ def solve_genetic(
             best, best_val, stale = pop[i].copy(), float(fit[i]), 0
         else:
             stale += 1
+        update_feasible()
         history.append(best_val)
         if stale >= patience:
             break
 
+    feasible = None
+    if constrained:
+        feasible = feas is not None
+        if feas is not None:
+            best = feas
     chosen = fixed + best.tolist()
     resp = posture_seconds(T, chosen, busy_of(chosen))
     return GeneticResult(
         indices=sorted(int(i) for i in chosen),
-        value=float((w * resp).sum() / W),
+        value=weighted_cvar(resp, w) if objective == "cvar" else float((w * resp).sum() / W),
         response_s=resp,
         history=history,
         generations=gen,
@@ -593,8 +805,82 @@ def solve_genetic(
         params={"population": population, "max_generations": generations, "elite": elite,
                 "tournament": tournament, "mutation_rate": mutation_rate, "patience": patience,
                 "seed": seed, "busy_aware": busy_p is not None or busy_fn is not None,
-                "busy_load_dependent": busy_fn is not None, "cap_s": cap_s},
+                "busy_load_dependent": busy_fn is not None, "cap_s": cap_s, "feasible": feasible},
     )
+
+
+def swap_search(
+    T: np.ndarray,
+    weights: np.ndarray,
+    start: Sequence[int],
+    *,
+    lat: np.ndarray,
+    lon: np.ndarray,
+    allowed: Sequence[int],
+    fixed_open: Sequence[int] = (),
+    min_from: tuple[Sequence[int], int] | None = None,
+    busy_fn: Any = None,
+    objective: str = "response_time",
+    cap_s: float | None = None,
+    cap_cells: np.ndarray | None = None,
+    max_mean: float | None = None,
+    max_cvar: float | None = None,
+    floor_weights: np.ndarray | None = None,
+    group_floor: tuple[np.ndarray, np.ndarray] | None = None,
+    neighbours: int = 12,
+    max_swaps: int = 200,
+) -> dict[str, Any]:
+    """Feasible-swap local search (Teitz–Bart style) from a layout that meets every floor.
+
+    Each step tries closing one open site and opening one of its ``neighbours`` nearest
+    unused sites, and applies the swap that lowers the objective most while keeping every
+    floor and the cap. Every layout it passes through is valid, so it can only improve on
+    ``start``. Used when the exact solver finds no layout in time.
+    """
+    import time
+
+    t0 = time.perf_counter()
+    w = np.asarray(weights, dtype=float)
+    W = max(float(w.sum()), 1e-9)
+    fw = w if floor_weights is None else np.asarray(floor_weights, dtype=float)
+    fixed = {int(i) for i in fixed_open}
+    pool = np.array(sorted(set(map(int, allowed)) - fixed))
+    kx = 111.32 * np.cos(np.radians(51.5))
+    keep_set, n_keep = (set(map(int, min_from[0])), int(min_from[1])) if min_from else (set(), 0)
+
+    def evaluate(idx):
+        resp = posture_seconds(T, idx, busy_fn(idx) if busy_fn is not None else None)
+        # The cap is on the nearest station's time (as in solve_exact), not the busy blend.
+        if cap_s is not None and cap_cells is not None and (T[idx].min(axis=0)[cap_cells] > cap_s + 1e-6).any():
+            return np.inf
+        if not floors_met(resp, fw, max_mean, max_cvar, group_floor):
+            return np.inf
+        return weighted_cvar(resp, w) if objective == "cvar" else float((w * resp).sum() / W)
+
+    cur = sorted(int(i) for i in start)
+    cur_val = evaluate(cur)
+    log = []
+    for _ in range(max_swaps):
+        cur_set = set(cur)
+        unused = pool[~np.isin(pool, cur)]
+        best = (cur_val, None, None)
+        for s in cur:
+            if s in fixed:
+                continue
+            d = np.hypot((lon[unused] - lon[s]) * kx, (lat[unused] - lat[s]) * 110.574)
+            for t in unused[np.argsort(d)[:neighbours]]:
+                if n_keep and s in keep_set and t not in keep_set and len(cur_set & keep_set) - 1 < n_keep:
+                    continue
+                trial = sorted(cur_set - {s} | {int(t)})
+                v = evaluate(trial)
+                if v < best[0] - 1e-6:
+                    best = (v, s, int(t))
+        if best[1] is None:
+            break
+        cur = sorted(set(cur) - {best[1]} | {best[2]})
+        log.append({"close": best[1], "open": best[2], "value": round(best[0], 3)})
+        cur_val = best[0]
+    return {"indices": cur, "value": float(cur_val), "swaps": log, "solve_s": round(time.perf_counter() - t0, 1)}
 
 
 def _weighted_quantile(values: np.ndarray, weights: np.ndarray, q: float) -> float:
@@ -627,6 +913,7 @@ def posture_metrics(
         "expected_response_s": round(float((weights[finite] * response_s[finite]).sum() / total), 1),
         "median_response_s": round(_weighted_quantile(response_s[finite], weights[finite], 0.5), 1),
         "p90_response_s": round(_weighted_quantile(response_s[finite], weights[finite], 0.9), 1),
+        "cvar90_response_s": round(weighted_cvar(response_s[finite], weights[finite]), 1),
         "worst_cell_response_s": round(float(np.max(response_s[areas])), 1) if areas.any() else None,
         "coverage_share_within_threshold": round(
             float((weights[finite] * (response_s[finite] <= threshold_s)).sum() / total), 4

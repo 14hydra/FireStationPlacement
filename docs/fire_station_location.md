@@ -50,6 +50,60 @@ Candidates (**EXISTS**): existing stations plus top demand-cell
 centroids (`--demand-candidates`). **PLANNED**: additional candidates on street-graph
 nodes. Objectives: p-median `response_time` or max-cover `coverage`.
 
+## Recommended placement (`scripts/recommended_placement.py`)
+
+The project's position: **favour busy areas, but leave no one worse off than today.**
+
+- alpha = 1 (each area counts by its calls), busy engines on, pumps move with stations,
+  each new site refined to a street junction, LightGBM travel times;
+- floors (`--keep-slowest`, `--keep-average`, on by default in the CLI): the slowest 10 %
+  of calls and the overall average may not be worse than today; both are linear limits,
+  so the exact solver still applies (checked against brute force), and the busy-aware
+  loop only keeps layouts that meet them under the full busy model;
+- 10-minute cap: no area that meets the standard today loses it.
+
+Then the alpha check: efficiency score (share of the best possible average improvement)
+and equity score (share of the best possible area-average improvement), plus a
+per-borough table, so the cost of favouring busy areas is visible.
+Outputs: `data/figures/recommended_placement/<scenario>/` (map, figures, stations,
+`boroughs.csv`, `summary.json`).
+
+Results (busy engines; today 309.5 s average, 423.2 s slowest 10 %, 81.6 % within 6 min;
+2025 calls 311.7 s modelled, 332.0 s recorded):
+
+| Scenario | Average | Slowest 10 % | Area avg | Within 6 min | 2025 calls | Boroughs worse ≥ 1 s |
+|---|---|---|---|---|---|---|
+| Add 3 | 306.0 | 422.9 | 353.3 | 82.5 % | 308.5 | Lambeth |
+| Move up to 10 | 302.9 | 420.9 | 351.3 | 83.6 % | 305.7 | 6 (Kingston +33 s) |
+| Full redesign (66 moves) | 290.5 | 406.8 | 337.0 | 88.4 % | 293.7 | 4 |
+
+Scores above 100 (efficiency 108 / 117 / 170) mean the recommended layout beat the
+reference "best possible", which is unrefined (street refinement adds 1–8 s) and, with busy
+engines, a heuristic loop rather than a proven optimum; read them as "at or past the
+reference". Equity scores: 15 / 21 / 76.
+
+**Price of fairness** (`--keep-boroughs SECONDS`: no borough's average may get worse
+than today by more than SECONDS). Citywide floors alone still let boroughs lose (move 10:
+Kingston +33 s, Tower Hamlets +21 s). Busy engines on; today 309.5 s / 423.2 s:
+
+| Scenario | Borough rule | Average | Slowest 10 % | Boroughs worse ≥ 1 s | Moves |
+|---|---|---|---|---|---|
+| Add 3 | none | 306.0 | 422.9 | 1 | 3 |
+| Add 3 | 0 s / 1 s / 5 s | 306.6 / 306.4 / 306.0 | ≈ 423 | 0 / 0 / 1 | 3 |
+| Move up to 10 | none | 302.9 | 420.9 | 6 | 10 |
+| Move up to 10 | 5 s | 303.4 | 420.0 | 2 | 10 |
+| Move up to 10 | 1 s | 304.0 | 420.2 | 0 | 10 |
+| Move up to 10 | 0 s | 305.6 | 420.9 | 0 | 10 |
+| Full redesign | none | 290.5 | 406.8 | 4 | 66 |
+| Full redesign | 1 s | 293.3 | 409.5 | 0 | 46 |
+
+Protecting every borough costs about 1 s (move 10, 1 s rule) to 3 s (full redesign).
+Borough floors make the exact problem hard: when it finds no layout in time, a fallback
+(genetic algorithm seeded with today's layout, then a feasible-swap search that only
+accepts swaps meeting every floor) is used and reported (not proven optimal); this was
+needed for move 10 at 0 s and the full redesign.
+
+
 ## Optimiser: exact integer program
 
 `redesign`, `replace` and `expand` are solved as integer programs with HiGHS
@@ -101,6 +155,34 @@ About 15–30 s per new site. Results: add 3 → 2 sites move 190–310 m, 278.3
 move up to 10 with busy engines → all 10 move 30–920 m, 303.9 → 302.9 s
 (2025 calls 311.7 → 305.6 s). Gains are small because a 0.9 km cell centre is already
 close to its best junction; the point is a real, buildable street location.
+
+## Slow calls: 90th-percentile model and CVaR objective
+
+- **90th-percentile travel times** (`scripts/train_travel_time_quantile.py` →
+  `travel_time_lfb_q90.joblib`, scorer `--scorer lgbm_q90`): LightGBM with quantile loss
+  (0.9) on the same features. 2025 coverage 86.9 % (target 90 %; 83 % on trips over 8 km,
+  as 2025 trips run slower than training years); pinball loss 18.6 vs 19.4 for the median
+  model plus a constant offset. On average the 90th percentile is 93 s above the median.
+- **`--objective cvar`**: minimises the average of the slowest 10 % of calls (CVaR,
+  Rockafellar–Uryasev), linear, so the exact solver still applies (checked against brute
+  force on a small problem); also in the genetic algorithm and the busy-aware solver.
+  CVaR problems are harder: move-10 and redesign hit the 15-minute limit and report a gap.
+- `scripts/placement_slow_calls.py` solves each mode four ways (average or CVaR, median
+  or 90th-percentile times) and scores every layout on all measures
+  (`data/figures/placement_slow_calls/`). Move up to 10, all calls:
+
+  | Objective | Average | Slowest 10 % | Avg 90th pct |
+  |---|---|---|---|
+  | today | 281.9 | 406.7 | 353.7 |
+  | average, median times | 276.3 | 405.8 | 349.3 |
+  | CVaR, median times | 284.2 | 394.9 | 356.7 |
+  | average, 90th-pct times | 277.2 | 404.6 | 349.0 |
+  | CVaR, 90th-pct times | 282.1 | 396.8 | 354.7 |
+
+  Optimising the average barely helps the slowest calls (−1 s); optimising them cuts the
+  slowest 10 % by about 12 s at a cost of 2 s on the average. Every layout keeps 99.5 %+ of
+  calls in areas whose modelled 90th percentile is under 10 minutes, so that measure does
+  not separate layouts (recorded: about 94 % of calls within 10 minutes).
 
 ## Demand weighting and the trade-off dial
 
@@ -195,6 +277,48 @@ LFB's first pump is often not from the home station. `firestation.busy_engines` 
 
 Caveat: busy ≠ "home engine physically unavailable" — also cross-border and
 closest-appliance mobilisation.
+
+## Three-model scoring (`scripts/score_layouts.py`)
+
+Every layout scored on held-out 2025 calls (48,115) under LightGBM, Kolesar on road km and
+Kolesar on straight-line km, with busy engines (each layout's own pumps) and recorded
+turnout. Change in average first-engine time vs today, 95 % paired bootstrap interval:
+
+| Layout (chosen by → rules: busy, floors) | LightGBM | Road Kolesar | Straight-line Kolesar |
+|---|---|---|---|
+| Add 3, LightGBM | −3.2 [−3.2, −3.1] | −2.6 | −2.0 |
+| Add 3, road Kolesar | −2.8 | −2.5 | −2.3 |
+| Add 3, straight-line Kolesar | −2.9 | −2.4 | −2.4 |
+| Move 10, LightGBM | **−6.0** [−6.2, −5.9] | **−4.7** | −2.4 |
+| Move 10, road Kolesar | −3.8 | −5.2 | −3.1 |
+| Move 10, straight-line Kolesar | −3.6 | −3.9 | **−4.2** |
+| Full redesign, LightGBM | −18.0 | −13.1 | −6.0 |
+
+- Every layout beats today under all three models (all intervals below 0).
+- Each model favours the layouts chosen with it. The LightGBM layouts beat the
+  distance-chosen ones under LightGBM and road Kolesar, but not under straight-line
+  Kolesar, so "street-aware placement is better" holds under 2 of 3 models. The 2014
+  closure test is what decides which travel-time model to trust.
+- The size of the gain depends on the model: the full redesign saves 18 s under LightGBM
+  but 6 s under straight-line Kolesar.
+- With borough floors (rescored the same way; average / slowest 10 % change vs today):
+
+  | Layout | LightGBM | Road Kolesar | Straight-line Kolesar |
+  |---|---|---|---|
+  | Move 10, no borough rule | −6.0 / −2.2 | −4.7 / −1.7 | −2.4 / −1.9 |
+  | Move 10, every borough ≤ 1 s | −5.3 / −3.2 | −4.6 / −3.0 | −2.3 / −3.2 |
+  | Full redesign, no borough rule | −18.0 / −15.1 | −13.1 / −7.1 | −6.0 / −0.8 |
+  | Full redesign, every borough ≤ 1 s | −15.6 / −13.0 | −12.2 / −9.3 | −6.1 / −5.0 |
+
+  Borough floors cost a little on the average under LightGBM but make the slowest-call
+  gains larger and consistent across all three models: the fairer layouts are also the
+  more robust ones.
+- The intervals are narrow because they only resample calls; they do not include
+  travel-time model error, which the spread across the three models shows is larger.
+- Slowest 10 %: the LightGBM layouts improve it under all three models (move 10: −1.7 to
+  −2.2 s); the road-chosen move-10 layout makes it worse under all three (+0.7 to +2.9 s)
+  although it met the floor in planning: floors are enforced on 2024 demand with the
+  planner's busy model, and 2025 calls can differ.
 
 ## Validation
 

@@ -1,0 +1,54 @@
+{
+  "replace_10_boroughs0s": {
+    "average_s": {
+      "today": 309.5,
+      "plan": 305.6,
+      "best_possible": 303.9
+    },
+    "slowest10_s": {
+      "today": 423.2,
+      "plan": 420.9
+    },
+    "area_average_s": {
+      "today": 354.0,
+      "plan": 351.2,
+      "best_possible": 340.8
+    },
+    "efficiency_score": 68.9,
+    "equity_score": 21.6,
+    "within_6min": {
+      "today": 0.8156846565212562,
+      "plan": 0.8270308012123713
+    },
+    "eval_2025_mean_s": {
+      "today": 311.7,
+      "plan": 308.0,
+      "recorded": 332.0
+    },
+    "boroughs_worse_by_1s_or_more": [],
+    "opened": [
+      "New site on Shepherds Bush Road / Shepherds Bush Green",
+      "Demand cell 67",
+      "New site on Bow Road / Fairfield Road",
+      "New site on Inner Ring West / Cirrus Road",
+      "New site on Beckenham Road / Birkbeck Road",
+      "New site on Manor Road / Portland Road",
+      "New site on Florence Road / Tweedy Road",
+      "New site on High Road Leytonstone / Vernon Road",
+      "New site on North Street",
+      "New site on Manor Way / New Road"
+    ],
+    "closed": [
+      "Beckenham",
+      "Bromley",
+      "Dockhead",
+      "Hammersmith",
+      "Heathrow",
+      "Leytonstone",
+      "Romford",
+      "Shadwell",
+      "Wennington",
+      "Woodside"
+    ]
+  }
+}

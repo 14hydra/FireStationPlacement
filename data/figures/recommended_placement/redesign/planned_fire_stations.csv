@@ -1,0 +1,103 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline,plan_rank,turnout_s,n_pumps,delta_pumps,assigned_demand,assigned_share
+0,Acton,existing_fire_station,-0.2769203061884447,51.507054,True,,1,0,61.0,1,0,1036.0,0.008220004125870796
+1,Addington,existing_fire_station,-0.0236213420691161,51.3519192,True,,2,1,69.0,2,0,655.0,0.0051970103305457255
+3,Barnet,existing_fire_station,-0.1859670751536085,51.647254649999994,True,,1,2,57.0,1,0,836.0,0.006633130742498056
+4,Battersea,existing_fire_station,-0.1694003932299012,51.4672269,True,,1,3,61.0,1,0,1282.0,0.010171858387419267
+6,Bethnal Green,existing_fire_station,-0.0532636626069591,51.52787645,True,,1,4,70.0,1,0,1858.0,0.014742053731532761
+7,Bexley,existing_fire_station,0.1536625307820576,51.46116425,True,,1,5,72.0,1,0,842.0,0.006680736943999239
+9,Brixton,existing_fire_station,-0.1094055,51.463738,True,,2,6,62.0,2,0,1698.0,0.013472555024834569
+15,Croydon,existing_fire_station,-0.1055356617454408,51.369216050000006,True,,2,7,74.0,2,0,1935.0,0.015352999984131267
+16,Dagenham,existing_fire_station,0.1570281714646305,51.55946845,True,,2,8,87.0,2,0,836.0,0.006633130742498056
+22,East Ham,existing_fire_station,0.0568595461331539,51.5233978,True,,1,9,68.0,1,0,1067.0,0.00846596950029357
+24,Eltham,existing_fire_station,0.0594040645005442,51.4506963,True,,1,10,79.0,1,0,1083.0,0.008592919370963391
+25,Enfield,existing_fire_station,-0.05189325,51.6602193,True,,2,11,76.0,2,0,866.0,0.0068711617500039675
+26,Erith,existing_fire_station,0.156541794689897,51.485523400000005,True,,1,12,72.0,1,0,757.0,0.006006315756065824
+27,Euston,existing_fire_station,-0.1306108099453524,51.52775695,True,,1,13,70.0,1,0,1682.0,0.013345605154164749
+28,Feltham,existing_fire_station,-0.4138852634195626,51.4606344,True,,2,14,75.0,2,0,1052.0,0.008346953996540616
+36,Harrow,existing_fire_station,-0.3663798847978869,51.59096095,True,,1,15,62.0,1,0,502.0,0.003983052192265579
+41,Hillingdon,existing_fire_station,-0.4520808892082451,51.5319982,True,,2,16,63.0,2,0,1157.0,0.009180062522811306
+46,Ilford,existing_fire_station,0.0900462500705925,51.562220100000005,True,,2,17,72.0,2,0,994.0,0.00788676071536252
+52,Lee Green,existing_fire_station,0.012513473521701,51.45664085,True,,1,18,76.0,1,0,786.0,0.006236412396654871
+53,Lewisham,existing_fire_station,-0.0131157201655826,51.4570297,True,,1,19,82.0,1,0,1335.0,0.010592379834013043
+60,New Malden,existing_fire_station,-0.245331458018544,51.39901785,True,,1,20,70.0,1,0,912.0,0.007236142628179698
+61,Norbury,existing_fire_station,-0.1215921420954122,51.4067832,True,,2,21,70.0,2,0,1611.0,0.012782265103067427
+62,North Kensington,existing_fire_station,-0.212041205723519,51.52183735,True,,2,22,67.0,2,0,1947.0,0.01544821238713363
+63,Northolt,existing_fire_station,-0.3595665275568182,51.5546449,True,,2,23,81.0,2,0,863.0,0.006847358649253376
+68,Peckham,existing_fire_station,-0.07797625,51.4738848,True,,1,24,58.0,1,0,1392.0,0.011044638748274275
+71,Poplar,existing_fire_station,-0.0146520704560918,51.510921,True,,1,25,72.0,1,0,2089.0,0.016574892489328277
+77,Shoreditch,existing_fire_station,-0.0854857815774265,51.5266217,True,,1,26,70.0,1,0,2154.0,0.017090626338924417
+80,Southall,existing_fire_station,-0.3744259889421966,51.511274099999994,True,,2,27,78.0,2,0,969.0,0.007688401542440929
+81,Southgate,existing_fire_station,-0.1273731499984277,51.6305411,True,,1,28,64.0,1,0,1047.0,0.008307282161956298
+82,Stanmore,existing_fire_station,-0.2976070250672114,51.60366915,True,,2,29,70.0,2,0,625.0,0.004958979323039815
+83,Stoke Newington,existing_fire_station,-0.0768660185166992,51.56257215,True,,2,30,73.0,2,0,2074.0,0.01645587698557532
+88,Tottenham,existing_fire_station,-0.0718471337316405,51.59230965,True,,2,31,72.0,2,0,1359.0,0.010782804640017773
+89,Twickenham,existing_fire_station,-0.3475775313157903,51.43516065,True,,2,32,73.0,2,0,793.0,0.0062919529650729165
+91,Walthamstow,existing_fire_station,-0.0288444693923726,51.58972495,True,,2,33,80.0,2,0,992.0,0.007870891981528794
+92,Wandsworth,existing_fire_station,-0.2014031947589517,51.45640225,True,,1,34,70.0,1,0,1862.0,0.014773791199200215
+96,West Norwood,existing_fire_station,-0.1054584646052626,51.42590975,True,,2,35,74.0,2,0,1295.0,0.010275005157338497
+371,New site on Great Marlborough Street / Regent Street,street_junction,-0.1411476,51.5137155,False,,1,36,73.0,2,1,2027.0,0.016082961740482727
+380,New site on Kingsway,street_junction,-0.1201019,51.5171028,False,,1,37,73.0,1,0,1960.0,0.01555135915705286
+105,Demand cell 3,demand_cell,-0.13550883399416652,51.493407595307715,False,,1,38,73.0,2,1,1909.0,0.01514670644429281
+106,Demand cell 4,demand_cell,-0.14879986704018586,51.51752281400114,False,,1,39,73.0,1,0,1148.0,0.009108653220559532
+399,New site on St John's Wood Road / Maida Vale,street_junction,-0.1782656,51.5257526,False,,1,40,73.0,2,1,1383.0,0.010973229446022501
+404,New site on Bishopsgate,street_junction,-0.0793662,51.5189952,False,,1,41,73.0,1,0,2082.0,0.01651935192091023
+406,New site on Bishop's Bridge Road / Inverness Terrace,street_junction,-0.1874599,51.516089,False,,1,42,73.0,1,0,1681.0,0.013337670787247886
+118,Demand cell 16,demand_cell,-0.18999435199867326,51.49333089788615,False,,1,43,73.0,2,1,1246.0,0.009886221178412175
+420,New site on King's Road / Anderson Street,street_junction,-0.1620692,51.4903825,False,,1,44,73.0,1,0,1398.0,0.011092244949775457
+426,New site on Percy Road / Uxbridge Road,street_junction,-0.2383697,51.506444,False,,1,45,73.0,2,1,1662.0,0.013186917815827474
+431,New site on North End Road / Lillie Road,street_junction,-0.2025308,51.4855394,False,,1,46,73.0,1,0,1902.0,0.015091165875874763
+437,New site on Lower Clapton Road,street_junction,-0.0520059,51.5508403,False,,1,47,73.0,2,1,2288.0,0.018153831505784153
+146,Demand cell 44,demand_cell,-0.09848982543836655,51.493173338875025,False,,1,48,73.0,1,0,1884.0,0.014948347271371218
+449,New site on Kilburn High Road / Gascony Avenue,street_junction,-0.1978804,51.5418279,False,,1,49,73.0,2,1,1921.0,0.015241918847295175
+455,New site on Belsize Avenue / Haverstock Hill,street_junction,-0.1662876,51.55144,False,,1,50,73.0,2,1,1327.0,0.010528904898678134
+460,New site on Clapham Road / Bedford Road,street_junction,-0.1296199,51.4653986,False,,1,51,73.0,1,0,1678.0,0.013313867686497295
+468,New site on Camden Road / York Way,street_junction,-0.1290923,51.5488435,False,,1,52,73.0,1,0,1194.0,0.009473634098735261
+472,New site on Romford Road / The Grove,street_junction,0.0040493,51.541978,False,,1,53,73.0,1,0,1512.0,0.01199676277829792
+481,New site on Evelyn Street / Alloa Road,street_junction,-0.040442,51.488986,False,,1,54,73.0,1,0,1105.0,0.008767475443134392
+488,New site on Druid Street / Tanner Street,street_junction,-0.0758976,51.5001121,False,,1,55,73.0,1,0,1428.0,0.011330275957281368
+491,New site on King William Walk / College Approach,street_junction,-0.0081399,51.4812643,False,,1,56,73.0,1,0,1334.0,0.01058444546709618
+501,New site on Ilford Hill / Mill Road,street_junction,0.0664639,51.5569944,False,,1,57,73.0,1,0,1105.0,0.008767475443134392
+502,New site on Tufnell Park Road / Holloway Road,street_junction,-0.1203256,51.5584424,False,,1,58,73.0,1,0,1711.0,0.013575701794753797
+508,New site on Coldharbour Lane / Uxbridge Road,street_junction,-0.406734,51.5179059,False,,1,59,73.0,1,0,1200.0,0.009521240300236444
+518,New site on Tunnel Road West / West Ramp,street_junction,-0.4532935,51.4804806,False,,1,60,73.0,1,0,1027.0,0.008148594823619024
+521,New site on High Street / Bury Street,street_junction,-0.4270706,51.5769198,False,,1,61,73.0,1,0,861.0,0.0068314899154196486
+526,New site on Beckenham Road / War Memorial,street_junction,-0.032186,51.4072153,False,,1,62,73.0,1,0,814.0,0.006458574670327054
+534,New site on Leyton Green Road / High Road Leyton,street_junction,-0.0098087,51.5738739,False,,1,63,73.0,1,0,962.0,0.007632860974022882
+538,New site on South Norwood Hill / Portland Road,street_junction,-0.0746232,51.3994935,False,,1,64,73.0,1,0,1459.0,0.011576241331704143
+544,New site on Sunderland Road / Waldram Park Road,street_junction,-0.0474212,51.4413041,False,,1,65,73.0,1,0,1319.0,0.010465429963343225
+552,New site on Hollydale Road / Evelina Road,street_junction,-0.0539861,51.4677506,False,,1,66,73.0,1,0,1132.0,0.008981703349889712
+557,New site on Sterling Way,street_junction,-0.0687108,51.6146668,False,,1,67,73.0,2,1,1363.0,0.010814542107685227
+566,New site on High Street,street_junction,-0.0464123,51.64813,False,,1,68,73.0,1,0,1045.0,0.00829141342812257
+568,New site on Brighton Road / Banstead Road,street_junction,-0.1173371,51.3381474,False,,1,69,73.0,1,0,656.0,0.00520494469746259
+576,New site on Manor Road / Parkgate Road,street_junction,-0.151077,51.3631848,False,,1,70,73.0,1,0,890.0,0.0070615865560086965
+582,New site on Tottenham Lane / High Street,street_junction,-0.1132309,51.5880678,False,,1,71,73.0,2,1,1692.0,0.013424948823333387
+586,New site on High Street / Oakhill Road,street_junction,-0.1946562,51.3712649,False,,1,72,73.0,2,1,1456.0,0.011552438230953551
+597,New site on Christchurch Road / Tandem Way,street_junction,-0.1786936,51.4144144,False,,1,73,73.0,1,0,1020.0,0.008093054255200977
+601,New site on Garratt Lane,street_junction,-0.1682387,51.4281533,False,,1,74,73.0,1,0,1236.0,0.009806877509243538
+609,New site on Regent's Park Road / Nether Street,street_junction,-0.1933273,51.6015855,False,,1,75,73.0,2,1,1596.0,0.012663249599314471
+613,New site on Edgware Road / Wilkinson Close,street_junction,-0.223884,51.5645776,False,,1,76,73.0,1,0,1240.0,0.009838614976910992
+618,New site on Ewell Road / Kingsdowne Road,street_junction,-0.2955522,51.3853596,False,,1,77,73.0,1,0,653.0,0.005181141596711999
+622,New site on Kew Bridge Road / Kew Road,street_junction,-0.2876055,51.488943,False,,1,78,73.0,1,0,917.0,0.007275814462764016
+632,New site on Hillside,street_junction,-0.2593338,51.5413851,False,,1,79,73.0,1,0,1296.0,0.01028293952425536
+639,New site on High Road Wembley,street_junction,-0.2909092,51.5536381,False,,1,80,73.0,2,1,1153.0,0.00914832505514385
+640,New site on Montrose Avenue / Gervase Road,street_junction,-0.2576554,51.6008303,False,,1,81,73.0,1,0,1229.0,0.009751336940825492
+647,New site on London Road,street_junction,-0.2963309,51.4106835,False,,1,82,73.0,2,1,831.0,0.006593458907913737
+652,New site on Kew Road,street_junction,-0.3006245,51.4644764,False,,1,83,73.0,1,0,901.0,0.007148864592094197
+658,New site on Drayton Green Road / Broadway,street_junction,-0.3194585,51.5108987,False,,1,84,73.0,1,0,1297.0,0.010290873891172224
+664,New site on Railway Approach / The Bridge,street_junction,-0.3332813,51.5911758,False,,1,85,73.0,2,1,1080.0,0.0085691162702128
+670,New site on High Street / School Road,street_junction,-0.3569488,51.4700189,False,,1,86,73.0,2,1,1203.0,0.009545043400987035
+680,New site on Main Road / Lunar Close,street_junction,0.0330515,51.3161105,False,,1,87,73.0,1,0,141.0,0.0011187457352777822
+686,New site on Tweedy Road / College Road,street_junction,0.0143358,51.4089397,False,,1,88,73.0,2,1,1259.0,0.009989367948331402
+692,New site on Barking Road / Beckton Road,street_junction,0.0134415,51.5181605,False,,1,89,73.0,1,0,1145.0,0.00908485011980894
+314,Demand cell 85,demand_cell,0.007295922931113259,51.55938367250367,False,,1,90,73.0,1,0,956.0,0.007585254772521701
+702,New site on Chingford Lane / The Charter Road,street_junction,0.0195753,51.6077899,False,,1,91,73.0,1,0,947.0,0.007513845470269927
+707,New site on Farnborough Common / High Street,street_junction,0.0638687,51.3608266,False,,1,92,73.0,2,1,452.0,0.003586333846422394
+713,New site on Herbert Road / Sandy Hill Road,street_junction,0.0699673,51.4821463,False,,1,93,73.0,2,1,1644.0,0.013044099211323929
+719,New site on Ripple Road,street_junction,0.0869598,51.5344973,False,,1,94,73.0,2,1,1026.0,0.00814066045670216
+726,New site on High Street,street_junction,0.0845557,51.5931031,False,,1,95,73.0,1,0,605.0,0.004800291984702541
+730,New site on Station Road / Leesons Hill,street_junction,0.1123652,51.3963396,False,,1,96,73.0,2,1,1065.0,0.008450100766459844
+740,New site on Harrow Manorway,street_junction,0.1209185,51.4965129,False,,1,97,73.0,2,1,958.0,0.007601123506355428
+746,New site on Betterton Road / New Road,street_junction,0.176865,51.5239619,False,,1,98,73.0,1,0,861.0,0.0068314899154196486
+748,New site on North Street,street_junction,0.178018,51.5806047,False,,1,99,73.0,1,0,1156.0,0.009172128155894441
+758,New site on Gooshays Drive / Kingsbridge Road,street_junction,0.2283982,51.6031862,False,,1,100,73.0,1,0,574.0,0.004554326610279766
+760,New site on Upminster Road / Wingletye Lane,street_junction,0.2297334,51.5601259,False,,1,101,73.0,1,0,589.0,0.004673342114032721

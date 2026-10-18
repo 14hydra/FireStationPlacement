@@ -30,6 +30,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
 MODEL_PATH = ROOT / "data" / "processed" / "models" / "travel_time_lfb.joblib"
+Q90_MODEL_PATH = ROOT / "data" / "processed" / "models" / "travel_time_lfb_q90.joblib"  # 90th-percentile
 CACHE_DIR = ROOT / "data" / "processed" / "planner_cache"
 
 # (representative hour, hours it stands for); weights come from demand call hours.
@@ -38,7 +39,7 @@ SCENARIO_DATE = "2024-10-16"  # a Wednesday in the last training year
 SCENARIO_CALL = {"incident_group": "False Alarm", "property_category": "Dwelling"}
 
 _ROUTER = None
-_BUNDLE = None
+_BUNDLES: dict[Path, dict] = {}
 
 
 def _router():
@@ -53,14 +54,14 @@ def _router():
 
 
 def _bundle(path: Path = MODEL_PATH) -> dict:
-    global _BUNDLE
-    if _BUNDLE is None:
+    if path not in _BUNDLES:
         import joblib
 
         if not path.exists():
-            raise FileNotFoundError(f"{path} not found; run scripts/train_travel_time_lfb.py first")
-        _BUNDLE = joblib.load(path)
-    return _BUNDLE
+            raise FileNotFoundError(f"{path} not found; run scripts/train_travel_time_lfb.py "
+                                    "(or train_travel_time_quantile.py for the 90th-percentile model)")
+        _BUNDLES[path] = joblib.load(path)
+    return _BUNDLES[path]
 
 
 def slot_weights(incidents: pd.DataFrame | None) -> list[tuple[int, float]]:
@@ -87,14 +88,15 @@ def cell_boroughs(cells: pd.DataFrame, incidents: pd.DataFrame | None) -> np.nda
     return mode.reindex(np.arange(len(cells))).fillna("").to_numpy()
 
 
-def _cache_key(scorer: str, candidates: pd.DataFrame, cells: pd.DataFrame, extra: Any) -> Path:
+def _cache_key(scorer: str, candidates: pd.DataFrame, cells: pd.DataFrame, extra: Any,
+               model_path: Path = MODEL_PATH) -> Path:
     h = hashlib.sha1()
     h.update(scorer.encode())
     for df in (candidates, cells):
         h.update(np.round(df[["lat", "lon"]].to_numpy(dtype=float), 6).tobytes())
     h.update(json.dumps(extra, sort_keys=True, default=str).encode())
-    if MODEL_PATH.exists():
-        h.update(str(MODEL_PATH.stat().st_mtime_ns).encode())
+    if model_path.exists():
+        h.update(str(model_path.stat().st_mtime_ns).encode())
     return CACHE_DIR / f"{scorer}_{len(candidates)}x{len(cells)}_{h.hexdigest()[:12]}.npy"
 
 
@@ -136,8 +138,12 @@ def lgbm_matrix(
     incidents: pd.DataFrame | None = None,
     *,
     use_cache: bool = True,
+    model_path: Path = MODEL_PATH,
 ) -> tuple[np.ndarray, dict]:
-    """LightGBM predicted drive seconds, candidate × cell, averaged over time slots."""
+    """LightGBM predicted drive seconds, candidate × cell, averaged over time slots.
+
+    ``model_path=Q90_MODEL_PATH`` gives 90th-percentile times (the quantile model).
+    """
     from .facility import haversine_km
     from .travel_time_model import predict
 
@@ -145,12 +151,13 @@ def lgbm_matrix(
     boroughs = cell_boroughs(cells, incidents)
     scenario = {"slots": slots, "date": SCENARIO_DATE, **SCENARIO_CALL,
                 "busy_flag": 0, "pump_order": 1, "from_home": 1}
-    meta = {"scorer": "lgbm", "model": str(MODEL_PATH.relative_to(ROOT)), "scenario": scenario}
-    path = _cache_key("lgbm", candidates, cells, [scenario, list(boroughs)])
+    name = "lgbm" if model_path == MODEL_PATH else "lgbm_" + model_path.stem.split("_")[-1]
+    meta = {"scorer": name, "model": str(model_path.relative_to(ROOT)), "scenario": scenario}
+    path = _cache_key(name, candidates, cells, [scenario, list(boroughs)], model_path)
     if use_cache and path.exists():
         return np.load(path), {**meta, "cache": str(path.relative_to(ROOT))}
 
-    bundle, r = _bundle(), _router()
+    bundle, r = _bundle(model_path), _router()
     ends = _pairs(candidates, cells)
     print(f"  routing {len(candidates)} sites × {len(cells)} cells on the London drive graph…", flush=True)
     trips = pd.concat([r.route_features(*ends), r.route_context(*ends)], axis=1)
