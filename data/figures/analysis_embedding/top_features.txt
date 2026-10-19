@@ -1,0 +1,40 @@
+PC1 (32.2% of variance)
+  +0.236  utilisation_pct  (utilisation %; busyness)
+  +0.227  util_night_pct  (utilisation 00-06; busyness)
+  +0.225  util_peak_pct  (utilisation at peak hour; busyness)
+  +0.223  signals_per_km_mean  (signals per km; trips)
+  +0.211  junctions_per_km_mean  (junctions per km; trips)
+  -0.208  median_job_min  (median job length; busyness)
+  +0.207  trips_2025  (trips 2025; trips)
+  +0.206  n_home_trips  (home-station trips; capacity)
+
+PC2 (18.0% of variance)
+  +0.334  multi_dispatch_rate  (multi-pump dispatch rate; capacity)
+  +0.329  n_pumps  (pumps; capacity)
+  +0.319  n_multi_dispatch  (multi-pump dispatches; capacity)
+  -0.264  all_out_pct  (% of year all engines out; busyness)
+  -0.261  covered_by_other_pct  (% own-area calls covered by others; busyness)
+  -0.258  busy_rate  (busy rate; capacity)
+  +0.245  named_two_pump  (named two-pump station; capacity)
+  +0.234  engine_hours_per_day  (engine hours per day; busyness)
+
+PC3 (11.0% of variance)
+  +0.336  kolesar_mae_s  (Kolesar MAE (2025); model)
+  +0.328  lgbm_mae_s  (LightGBM MAE (2025); model)
+  +0.276  n_incidents  (incidents (2024-25); capacity)
+  +0.249  incidents_per_pump  (incidents per pump; capacity)
+  +0.240  plan_assigned_share  (planned demand share; plans)
+  +0.239  drive_p90_s  (90th pct drive time; trips)
+  +0.235  drive_median_s  (median drive time; trips)
+  +0.228  incidents_per_nn_km  (incidents per km to neighbour; capacity)
+
+group 1 (n=33): high first_pump_pct, drive_median_s, drive_p90_s, road_km_median; low engine_hours_per_day, calls_per_day, trips_2025
+  e.g. Heathrow, Hayes, Ealing, Beckenham, Bexley, Wimbledon, Harrow, Southgate
+group 2 (n=24): high n_pumps, area_n_cells, multi_dispatch_rate, nearest_station_km; low all_out_pct, covered_by_other_pct, busy_rate
+  e.g. Ilford, Plumstead, Dagenham, Enfield, Southall, Hillingdon, Wembley, Walthamstow
+group 3 (n=14): high n_multi_dispatch, calls_per_day, trips_2025, n_home_trips; low drive_p90_s, drive_median_s, median_job_min
+  e.g. Lambeth, Paddington, Tottenham, Kentish Town, Hammersmith, Croydon, West Hampstead, North Kensington
+group 4 (n=29): high all_out_pct, busy_trip_pct, util_peak_pct, utilisation_pct; low nearest_station_km, area_first_engine_min, area_n_cells
+  e.g. Dowgate, Shoreditch, Chelsea, Bethnal Green, Stratford, Poplar, Holloway, Plaistow
+group 5 (n=2): high plan_assigned_share, incidents_per_nn_km, n_incidents, incidents_per_pump; low speed_kph_median, road_km_median, median_job_min
+  e.g. Soho, Euston

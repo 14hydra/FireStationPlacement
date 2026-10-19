@@ -1,0 +1,143 @@
+{
+  "method": "Per-station features joined by station name; median impute; drop constant or near-constant columns (one value in >= 95% of rows) and exact duplicates (|r| > 0.999); z-score; PCA (sklearn), UMAP (umap-learn, n_neighbors=15, min_dist=0.3), t-SNE (perplexity 20); k-means groups on the first 8 PCs (80% variance), k chosen by silhouette.",
+  "n_stations": 102,
+  "n_features_joined": 46,
+  "n_features_used": 45,
+  "dropped_columns": [
+    "outside_ground_pct (duplicate)"
+  ],
+  "features_by_source": {
+    "capacity": [
+      "n_pumps",
+      "n_incidents",
+      "busy_rate",
+      "nearest_station_km",
+      "incidents_per_nn_km",
+      "incidents_per_pump",
+      "named_two_pump",
+      "n_multi_dispatch",
+      "multi_dispatch_rate",
+      "n_home_trips"
+    ],
+    "busyness": [
+      "calls_per_day",
+      "engine_hours_per_day",
+      "median_job_min",
+      "utilisation_pct",
+      "all_out_pct",
+      "covered_by_other_pct",
+      "util_night_pct",
+      "util_peak_pct",
+      "util_peak_to_trough"
+    ],
+    "trips": [
+      "trips_2025",
+      "drive_median_s",
+      "drive_p90_s",
+      "road_km_median",
+      "speed_kph_median",
+      "turnout_median_s",
+      "busy_trip_pct",
+      "first_pump_pct",
+      "share_major_mean",
+      "share_residential_mean",
+      "share_20mph_mean",
+      "signals_per_km_mean",
+      "junctions_per_km_mean"
+    ],
+    "model": [
+      "lgbm_mae_s",
+      "lgbm_bias_s",
+      "kolesar_mae_s",
+      "lgbm_gain_vs_kolesar_s"
+    ],
+    "area maps": [
+      "area_first_engine_min",
+      "area_rush_slowdown_pct",
+      "area_traffic_delay_pct",
+      "area_n_cells"
+    ],
+    "plans": [
+      "plan_assigned_share",
+      "resize_delta_pumps",
+      "plan_turnout_s",
+      "keep_rate_closing_layouts",
+      "share_lost_expand5_pct"
+    ]
+  },
+  "missing_values_imputed": {},
+  "pca_variance_explained": [
+    0.3216,
+    0.1797,
+    0.1098,
+    0.0635,
+    0.0503,
+    0.0419,
+    0.0281,
+    0.0258,
+    0.0229,
+    0.0199
+  ],
+  "pca_cumulative": [
+    0.3216,
+    0.5013,
+    0.6111,
+    0.6746,
+    0.7249,
+    0.7668,
+    0.7948,
+    0.8206,
+    0.8436,
+    0.8635
+  ],
+  "pc1_top": "+utilisation %, +utilisation 00-06, +utilisation at peak hour, +signals per km, +junctions per km",
+  "pc2_top": "+multi-pump dispatch rate, +pumps, +multi-pump dispatches, \u2212% of year all engines out, \u2212% own-area calls covered by others",
+  "umap_vs_pca_spearman": {
+    "umap1~pca1": 0.54,
+    "umap2~pca2": -0.722
+  },
+  "clusters": {
+    "k": 5,
+    "silhouette_by_k": {
+      "3": 0.248,
+      "4": 0.242,
+      "5": 0.25,
+      "6": 0.225
+    },
+    "sizes": [
+      33,
+      24,
+      14,
+      29,
+      2
+    ]
+  },
+  "trip_and_model_metrics": "2025 trips from data/processed/lfb_travel_training.csv grouped by deployed_from_station; LightGBM error is held out (model trained 2021-24); cached in station_trip_metrics_2025.csv",
+  "n_closing_layouts_for_keep_rate": 7,
+  "layout_matrix": {
+    "n_layouts": 15,
+    "n_features_used": 39,
+    "dropped_columns": [
+      "d_mean_s_all_day (duplicate)",
+      "d_mean_s_evening_rush_16_20 (duplicate)",
+      "d_mean_s_night_00_07 (duplicate)",
+      "d_mean_s_rush_hours_07_10_16_20 (duplicate)",
+      "d_slowest10_s_all_day (duplicate)",
+      "d_slowest10_s_rush_hours_07_10_16_20 (duplicate)"
+    ],
+    "pca_variance_explained": [
+      0.8385,
+      0.0856,
+      0.0462,
+      0.0109,
+      0.0083
+    ],
+    "pc1_top": "+d_mean_s_serious, +d_mean_s_day_10_16, +mean_s_lgbm/dispatch, \u2212within_6min_road/busy_blend, \u2212within_6min_lgbm/dispatch"
+  },
+  "not_joined": {
+    "validation/closure_2014*": "the 10 stations closed in 2014 are not current stations",
+    "validation/dispatch": "city-wide / closure-area rows, not stations",
+    "placement/tradeoff, tradeoff_busy, slow_calls": "layout level with scenario x alpha keys that do not match the named layouts; left out of the layout PCA"
+  },
+  "honesty": "Descriptive only. Many inputs measure the same thing (incidents, calls/day, engine hours, multi-dispatches all track demand), so PCA axes are dominated by whichever theme has the most columns; read loadings, not just positions. Area-map metrics give each map cell to its crow-fly nearest station, which is not the LFB station ground. Plan metrics come from specific planner runs with their own demand years. UMAP/t-SNE distances are only meaningful locally; their axes have no units. Groups are k-means on ~100 points with modest silhouette, so treat them as a reading aid, not station types."
+}
