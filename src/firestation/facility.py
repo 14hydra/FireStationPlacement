@@ -675,6 +675,7 @@ def solve_genetic(
     group_floor: tuple[np.ndarray, np.ndarray] | None = None,
     floor_penalty: float = 20.0,
     seeds: Sequence[Sequence[int]] = (),
+    response_fn: Any = None,
 ) -> GeneticResult:
     """Choose ``k`` sites with a genetic algorithm (minimises demand-weighted first-engine time).
 
@@ -694,6 +695,8 @@ def solve_genetic(
     - repair: ``min_from=(subset, n)`` keeps at least ``n`` sites from ``subset``.
 
     ``seeds``: full layouts (e.g. today's stations) placed in the first population.
+    ``response_fn(open_sites) -> seconds per cell`` replaces the nearest / busy-blend
+    response (e.g. ``dispatch.dispatch_response``: which station responds, learned).
     With floors or a cap, the best layout that breaks none of them is returned (falling
     back to the best overall only if none was found); ``params['feasible']`` says which.
 
@@ -713,7 +716,8 @@ def solve_genetic(
     pool_arr = np.array(pool)
     m = int(k) - len(fixed)
     if m <= 0 or not pool:
-        resp = posture_seconds(T, fixed, busy_fn(fixed) if busy_fn is not None else busy_p)
+        resp = response_fn(fixed) if response_fn is not None else posture_seconds(
+            T, fixed, busy_fn(fixed) if busy_fn is not None else busy_p)
         v0 = weighted_cvar(resp, w) if objective == "cvar" else float((w * resp).sum() / W)
         return GeneticResult(fixed, v0, resp, [], 0, 1, 0.0)
     m = min(m, len(pool))
@@ -724,10 +728,13 @@ def solve_genetic(
     d2 = ((prof[:, None, :] - prof[None, :, :]) ** 2).sum(axis=2)
     near = np.argsort(d2, axis=1)[:, 1:11]
     pos_in_pool = {s: i for i, s in enumerate(pool)}
-    base = T[fixed].min(axis=0) if fixed and busy_p is None and busy_fn is None else None
+    base = T[fixed].min(axis=0) if fixed and busy_p is None and busy_fn is None and response_fn is None else None
 
     def busy_of(idx):
         return busy_fn(idx) if busy_fn is not None else busy_p
+
+    def respond(idx):
+        return response_fn(idx) if response_fn is not None else posture_seconds(T, idx, busy_of(idx))
     exempt = None
     if cap_s is not None:
         exempt = ~(T[fixed + pool] <= cap_s).any(axis=0)
@@ -742,7 +749,7 @@ def solve_genetic(
             resp = np.minimum(base, T[genes].min(axis=0))
         else:
             idx = fixed + genes.tolist()
-            resp = posture_seconds(T, idx, busy_of(idx))
+            resp = respond(idx)
         val = weighted_cvar(resp, w) if objective == "cvar" else float((w * resp).sum() / W)
         if max_mean is not None:
             val += floor_penalty * max(0.0, float((fw * resp).sum() / FW) - max_mean)
@@ -762,7 +769,7 @@ def solve_genetic(
 
     def violation(genes: np.ndarray) -> float:
         idx = fixed + genes.tolist()
-        resp = posture_seconds(T, idx, busy_of(idx))
+        resp = respond(idx)
         v = 0.0
         if max_mean is not None:
             v += max(0.0, float((fw * resp).sum() / FW) - max_mean)
@@ -866,7 +873,7 @@ def solve_genetic(
         if feas is not None:
             best = feas
     chosen = fixed + best.tolist()
-    resp = posture_seconds(T, chosen, busy_of(chosen))
+    resp = respond(chosen)
     return GeneticResult(
         indices=sorted(int(i) for i in chosen),
         value=weighted_cvar(resp, w) if objective == "cvar" else float((w * resp).sum() / W),
@@ -902,6 +909,7 @@ def swap_search(
     group_floor: tuple[np.ndarray, np.ndarray] | None = None,
     neighbours: int = 12,
     max_swaps: int = 200,
+    response_fn: Any = None,
 ) -> dict[str, Any]:
     """Feasible-swap local search (Teitz–Bart style) from a layout that meets every floor.
 
@@ -922,7 +930,8 @@ def swap_search(
     keep_set, n_keep = (set(map(int, min_from[0])), int(min_from[1])) if min_from else (set(), 0)
 
     def evaluate(idx):
-        resp = posture_seconds(T, idx, busy_fn(idx) if busy_fn is not None else None)
+        resp = response_fn(idx) if response_fn is not None else posture_seconds(
+            T, idx, busy_fn(idx) if busy_fn is not None else None)
         # The cap is on the nearest station's time (as in solve_exact), not the busy blend.
         if cap_s is not None and cap_cells is not None and (T[idx].min(axis=0)[cap_cells] > cap_s + 1e-6).any():
             return np.inf

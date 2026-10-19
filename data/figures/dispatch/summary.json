@@ -1,0 +1,213 @@
+{
+  "doc": "Fit and test the dispatch model (firestation.dispatch): which station sends the first engine.\n\nPart A - today's network: trained on 2021-2024 first-engine trips, tested on 2025.\n  Candidates per demand cell: the 8 open stations with the fastest predicted attendance\n  (LightGBM travel times + recorded turnout); busy chances from the Erlang model.\n  Compared with \"nearest station\" and \"nearest, or second nearest when busy\" on:\n    share of first engines by rank (predicted vs recorded), accuracy of the most likely\n    responder, and expected first-engine drive per cell vs the recorded drive.\n  Saves data/processed/models/dispatch_lfb.joblib.\n\nPart B - the 2014 closures: trained on 2009-2013 only (pre-2014 LightGBM travel times,\n  2013 pumps and busy rates), then predicts the 2014 layout (closed stations removed,\n  2014 pump counts). Expected first-engine drive change per closed station's former area\n  (difference in differences, as in closure_2014_diagnostic.py) vs the recorded change;\n  the \"nearest station\" assumption reached a correlation of 0.42 across the 10 areas and\n  the actual responding station 0.88.\n\nWrites data/figures/dispatch/summary.json, rank_shares.csv, closure_areas.csv.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/fit_dispatch_model.py\n",
+  "today": {
+    "rank_shares_2025": [
+      {
+        "rank": 1,
+        "recorded": 0.6963,
+        "dispatch_all_day": 0.7146,
+        "dispatch_by_hour_call_rate": 0.7166,
+        "dispatch_by_hour_calibrated": 0.7166,
+        "nearest_or_next_if_busy": 0.7228
+      },
+      {
+        "rank": 2,
+        "recorded": 0.1806,
+        "dispatch_all_day": 0.177,
+        "dispatch_by_hour_call_rate": 0.1764,
+        "dispatch_by_hour_calibrated": 0.1763,
+        "nearest_or_next_if_busy": 0.2772
+      },
+      {
+        "rank": 3,
+        "recorded": 0.0633,
+        "dispatch_all_day": 0.0603,
+        "dispatch_by_hour_call_rate": 0.0592,
+        "dispatch_by_hour_calibrated": 0.0594,
+        "nearest_or_next_if_busy": 0.0
+      },
+      {
+        "rank": 4,
+        "recorded": 0.0287,
+        "dispatch_all_day": 0.0256,
+        "dispatch_by_hour_call_rate": 0.0256,
+        "dispatch_by_hour_calibrated": 0.0255,
+        "nearest_or_next_if_busy": 0.0
+      },
+      {
+        "rank": 5,
+        "recorded": 0.012,
+        "dispatch_all_day": 0.0113,
+        "dispatch_by_hour_call_rate": 0.0112,
+        "dispatch_by_hour_calibrated": 0.0112,
+        "nearest_or_next_if_busy": 0.0
+      },
+      {
+        "rank": 6,
+        "recorded": 0.0072,
+        "dispatch_all_day": 0.0059,
+        "dispatch_by_hour_call_rate": 0.0059,
+        "dispatch_by_hour_calibrated": 0.0059,
+        "nearest_or_next_if_busy": 0.0
+      },
+      {
+        "rank": 7,
+        "recorded": 0.004,
+        "dispatch_all_day": 0.0031,
+        "dispatch_by_hour_call_rate": 0.0032,
+        "dispatch_by_hour_calibrated": 0.0032,
+        "nearest_or_next_if_busy": 0.0
+      },
+      {
+        "rank": 8,
+        "recorded": 0.0025,
+        "dispatch_all_day": 0.002,
+        "dispatch_by_hour_call_rate": 0.0019,
+        "dispatch_by_hour_calibrated": 0.0019,
+        "nearest_or_next_if_busy": 0.0
+      },
+      {
+        "rank": ">8",
+        "recorded": 0.0052,
+        "dispatch_all_day": 0.0,
+        "dispatch_by_hour_call_rate": 0.0,
+        "dispatch_by_hour_calibrated": 0.0,
+        "nearest_or_next_if_busy": 0.0
+      }
+    ],
+    "top1_accuracy_2025": {
+      "dispatch_all_day": 0.7029709258935802,
+      "dispatch_by_hour_call_rate": 0.7010813471584865,
+      "dispatch_by_hour_calibrated": 0.700620861584388,
+      "nearest": 0.6963335821014021
+    },
+    "drive_per_cell_2025": {
+      "dispatch_all_day": {
+        "cell_mae_s": 23.4,
+        "bias_s": -16.5,
+        "corr": 0.892
+      },
+      "dispatch_by_hour_call_rate": {
+        "cell_mae_s": 23.5,
+        "bias_s": -16.6,
+        "corr": 0.893
+      },
+      "dispatch_by_hour_calibrated": {
+        "cell_mae_s": 23.5,
+        "bias_s": -16.6,
+        "corr": 0.893
+      },
+      "nearest_or_next_if_busy": {
+        "cell_mae_s": 25.4,
+        "bias_s": -19.3,
+        "corr": 0.878
+      },
+      "nearest": {
+        "cell_mae_s": 47.8,
+        "bias_s": -46.6,
+        "corr": 0.883
+      }
+    },
+    "share_outside_top8": 0.005192371818282865,
+    "by_time_of_day_2025": [
+      {
+        "slot": "00-04h",
+        "calls": 14063,
+        "recorded_nearest": 0.7781,
+        "dispatch_all_day": 0.7102,
+        "dispatch_by_hour_call_rate": 0.7856,
+        "dispatch_by_hour_calibrated": 0.789,
+        "busy_blend_call_rate": 0.8086
+      },
+      {
+        "slot": "04-08h",
+        "calls": 10398,
+        "recorded_nearest": 0.7963,
+        "dispatch_all_day": 0.715,
+        "dispatch_by_hour_call_rate": 0.8096,
+        "dispatch_by_hour_calibrated": 0.8053,
+        "busy_blend_call_rate": 0.8541
+      },
+      {
+        "slot": "08-12h",
+        "calls": 20734,
+        "recorded_nearest": 0.682,
+        "dispatch_all_day": 0.7149,
+        "dispatch_by_hour_call_rate": 0.7046,
+        "dispatch_by_hour_calibrated": 0.7038,
+        "busy_blend_call_rate": 0.7089
+      },
+      {
+        "slot": "12-16h",
+        "calls": 25760,
+        "recorded_nearest": 0.6054,
+        "dispatch_all_day": 0.7165,
+        "dispatch_by_hour_call_rate": 0.6345,
+        "dispatch_by_hour_calibrated": 0.6354,
+        "busy_blend_call_rate": 0.6686
+      },
+      {
+        "slot": "16-20h",
+        "calls": 29338,
+        "recorded_nearest": 0.6848,
+        "dispatch_all_day": 0.716,
+        "dispatch_by_hour_call_rate": 0.7102,
+        "dispatch_by_hour_calibrated": 0.7102,
+        "busy_blend_call_rate": 0.6444
+      },
+      {
+        "slot": "20-24h",
+        "calls": 25661,
+        "recorded_nearest": 0.7271,
+        "dispatch_all_day": 0.7131,
+        "dispatch_by_hour_call_rate": 0.7407,
+        "dispatch_by_hour_calibrated": 0.7401,
+        "busy_blend_call_rate": 0.6874
+      }
+    ],
+    "nearest_share_error_across_slots": {
+      "dispatch_all_day": 0.0564,
+      "dispatch_by_hour_call_rate": 0.0186,
+      "dispatch_by_hour_calibrated": 0.0184,
+      "busy_blend_call_rate": 0.0431
+    },
+    "slot_load_factors": [
+      0.744,
+      0.67,
+      1.096,
+      1.493,
+      1.078,
+      0.928
+    ]
+  },
+  "closure_2014": {
+    "closure_score": {
+      "nearest": {
+        "corr_across_areas": 0.416,
+        "mae_across_areas_s": 17.2,
+        "all_10_areas_s": 72.8
+      },
+      "nearest_or_next_if_busy": {
+        "corr_across_areas": 0.307,
+        "mae_across_areas_s": 16.3,
+        "all_10_areas_s": 63.2
+      },
+      "dispatch_all_day": {
+        "corr_across_areas": 0.557,
+        "mae_across_areas_s": 13.1,
+        "all_10_areas_s": 64.3
+      },
+      "dispatch_by_hour_call_rate": {
+        "corr_across_areas": 0.498,
+        "mae_across_areas_s": 13.6,
+        "all_10_areas_s": 65.0
+      },
+      "dispatch_by_hour_calibrated": {
+        "corr_across_areas": 0.515,
+        "mae_across_areas_s": 14.4,
+        "all_10_areas_s": 66.8
+      }
+    },
+    "recorded_all_areas_drive_s": 61.76081521277149
+  }
+}

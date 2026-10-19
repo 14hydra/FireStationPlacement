@@ -18,7 +18,12 @@ Layouts:
     Kolesar model instead of LightGBM (``--make-distance-layouts``; no street refinement).
 
 Scoring (held-out 2025 calls, each at its 0.9 km demand cell; busy engines with each
-layout's own pump counts; turnout as recorded, 73 s for new sites):
+layout's own pump counts; turnout as recorded, 73 s for new sites), with two models of
+which station responds (``response``):
+  busy_blend  nearest station, or the next nearest when it is busy (Erlang loss)
+  dispatch    the learned dispatch model (firestation.dispatch): any of the 8 fastest
+              open stations, with probabilities learned from LFB's first-engine records
+Measures:
   mean_s, slowest10_s (average of the slowest 10 % of calls), within_6min;
   each layout minus today, with a 95 % paired bootstrap interval (resampling 2025 calls).
   wins_all_three: the interval for the average is below 0 under every model.
@@ -44,6 +49,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from firestation.busy_placement import ErlangBusyModel  # noqa: E402
+from firestation.dispatch import dispatch_response, load_dispatch  # noqa: E402
 from firestation.cities import get_city, load_fire_stations, load_incidents  # noqa: E402
 from firestation.facility import TravelTimeSurrogate, build_demand_grid, posture_seconds, weighted_cvar  # noqa: E402
 from firestation.fire_station_location import (  # noqa: E402
@@ -148,6 +154,7 @@ def main() -> int:
     measured = busy_prob_vector(sites.assign(site_name=sites["site_name"]), demand)
     kmodel, _, _ = fit_scorer_kolesar(demand, houses)
 
+    dmodel = load_dispatch()
     rng = np.random.default_rng(0)
     boot = rng.multinomial(int(n), counts / n, size=args.boot).astype(float)  # resampled 2025 calls per cell
 
@@ -161,42 +168,44 @@ def main() -> int:
         base_pumps = np.ones(len(sites), int)
         base_pumps[today_rows] = pumps["today"]
         model = ErlangBusyModel.calibrate(A, today_rows, measured, base_pumps, load_w)
-        resp = {}
+        responses = {"busy_blend": {}, "dispatch": {}}
         for name, r in rows.items():
             model.pumps = np.ones(len(sites), int)
             model.pumps[r] = np.maximum(pumps[name], 1)
-            resp[name] = posture_seconds(A, r, model.probs(A, r))
-        r0 = resp["today"]
-        b_mean0 = boot @ r0 / n
-        b_cvar0 = np.array([weighted_cvar(r0, b) for b in boot])
-        for name, r in resp.items():
-            mean = float(counts @ r / n)
-            cvar = weighted_cvar(r, counts)
-            d_mean = boot @ r / n - b_mean0
-            d_cvar = np.array([weighted_cvar(r, b) for b in boot]) - b_cvar0
-            records.append({
-                "layout": name, "scorer": scorer, "mean_s": round(mean, 2), "slowest10_s": round(cvar, 2),
-                "within_6min": round(float(counts @ (r <= 360) / n), 4),
-                "d_mean_s": round(mean - float(counts @ r0 / n), 2),
-                "d_mean_lo": round(float(np.percentile(d_mean, 2.5)), 2),
-                "d_mean_hi": round(float(np.percentile(d_mean, 97.5)), 2),
-                "d_slowest10_s": round(cvar - weighted_cvar(r0, counts), 2),
-                "d_slowest10_lo": round(float(np.percentile(d_cvar, 2.5)), 2),
-                "d_slowest10_hi": round(float(np.percentile(d_cvar, 97.5)), 2),
-            })
+            responses["busy_blend"][name] = posture_seconds(A, r, model.probs(A, r))
+            responses["dispatch"][name] = dispatch_response(A, r, model, dmodel)
+        for kind, resp in responses.items():
+            r0 = resp["today"]
+            b_mean0 = boot @ r0 / n
+            b_cvar0 = np.array([weighted_cvar(r0, b) for b in boot])
+            for name, r in resp.items():
+                mean = float(counts @ r / n)
+                cvar = weighted_cvar(r, counts)
+                d_mean = boot @ r / n - b_mean0
+                d_cvar = np.array([weighted_cvar(r, b) for b in boot]) - b_cvar0
+                records.append({
+                    "layout": name, "scorer": scorer, "response": kind, "mean_s": round(mean, 2),
+                    "slowest10_s": round(cvar, 2),
+                    "within_6min": round(float(counts @ (r <= 360) / n), 4),
+                    "d_mean_s": round(mean - float(counts @ r0 / n), 2),
+                    "d_mean_lo": round(float(np.percentile(d_mean, 2.5)), 2),
+                    "d_mean_hi": round(float(np.percentile(d_mean, 97.5)), 2),
+                    "d_slowest10_s": round(cvar - weighted_cvar(r0, counts), 2),
+                    "d_slowest10_lo": round(float(np.percentile(d_cvar, 2.5)), 2),
+                    "d_slowest10_hi": round(float(np.percentile(d_cvar, 97.5)), 2),
+                })
     df = pd.DataFrame(records)
-    wins = (df[df["layout"] != "today"].groupby("layout")
-            .agg(wins_all_three=("d_mean_hi", lambda s: bool((s < 0).all())),
-                 slowest10_no_worse_all_three=("d_slowest10_lo", lambda s: True)))
-    tail_ok = df[df["layout"] != "today"].groupby("layout")["d_slowest10_s"].apply(lambda s: bool((s <= 0).all()))
-    wins["slowest10_no_worse_all_three"] = tail_ok
-    df = df.merge(wins, left_on="layout", right_index=True, how="left")
+    keys = ["layout", "response"]
+    nt = df[df["layout"] != "today"]
+    wins = nt.groupby(keys).agg(wins_all_three=("d_mean_hi", lambda s: bool((s < 0).all())))
+    wins["slowest10_no_worse_all_three"] = nt.groupby(keys)["d_slowest10_s"].apply(lambda s: bool((s <= 0).all()))
+    df = df.merge(wins, left_on=keys, right_index=True, how="left")
     df.to_csv(OUT / "scores.csv", index=False)
     (OUT / "summary.json").write_text(json.dumps(
         {"doc": __doc__, "n_calls_2025": int(n), "bootstrap": args.boot,
          "rows": df.to_dict(orient="records")}, indent=2, default=str) + "\n")
     pd.set_option("display.width", 220)
-    print(df.pivot_table(index="layout", columns="scorer", values="d_mean_s").round(1).to_string())
+    print(df.pivot_table(index="layout", columns=["response", "scorer"], values="d_mean_s").round(1).to_string())
     print(wins.to_string())
     print("Wrote", OUT)
     return 0

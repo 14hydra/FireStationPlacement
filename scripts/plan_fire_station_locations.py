@@ -386,6 +386,11 @@ def main():
                    help="Floor: the slowest 10%% of calls may not get slower on average than today")
     p.add_argument("--keep-average", action=argparse.BooleanOptionalAction, default=True,
                    help="Floor: the overall average may not get worse than today")
+    p.add_argument("--busy-rounds", type=int, default=None, help="Max busy-rate update rounds (exact solver)")
+    p.add_argument("--solver-time", type=float, default=None, help="Time limit per exact solve (s)")
+    p.add_argument("--dispatch", action="store_true",
+                   help="Which station responds from the learned dispatch model (implies --use-busy); "
+                        "optimised directly with --solver genetic")
     p.add_argument("--keep-boroughs", type=float, default=None, metavar="SECONDS",
                    help="Floor: no borough's average may get worse than today by more than SECONDS")
     p.add_argument("--refine-km", type=float, default=1.0,
@@ -523,6 +528,9 @@ def main():
         keep_slowest=args.keep_slowest,
         keep_average=args.keep_average,
         keep_boroughs=args.keep_boroughs,
+        dispatch=args.dispatch,
+        busy_rounds=args.busy_rounds,
+        solver_time_s=args.solver_time,
     )
 
     # Write artifacts

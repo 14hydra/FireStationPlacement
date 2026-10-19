@@ -704,6 +704,7 @@ def run_fire_station_plan(
     keep_slowest: bool = False,
     keep_average: bool = False,
     keep_boroughs: float | None = None,
+    dispatch: bool = False,
     busy_rounds: int | None = None,
     solver_time_s: float | None = None,
     severity: str = "all",
@@ -729,6 +730,9 @@ def run_fire_station_plan(
     Pumps always move with their station (``busy_placement.PumpPlan``).
     ``keep_slowest`` / ``keep_average``: floors, the plan's slowest-10 % average / overall
     average (severity-weighted calls, busy engines when on) may not be worse than today's.
+    ``dispatch``: which station responds comes from the learned dispatch model
+    (``firestation.dispatch``; implies busy engines). Reported times always use it; the
+    genetic solver also optimises it, while the exact solver keeps its busy approximation.
     ``keep_boroughs`` (seconds, e.g. 1.0): no borough's call-weighted average may get worse
     than today's by more than this.
     ``refine_km`` > 0 moves each newly opened site to the best road junction within that
@@ -740,6 +744,15 @@ def run_fire_station_plan(
         raise ValueError(f"mode must be {'|'.join(MODES)}, got {mode!r}")
     if scorer not in SCORERS:
         raise ValueError(f"scorer must be {'|'.join(SCORERS)}, got {scorer!r}")
+    if dispatch and mode == "resize":
+        raise ValueError("dispatch scoring is not available for resize mode")
+    if dispatch:
+        use_busy = True  # the dispatch model needs each station's busy chance
+    dmodel = None
+    if dispatch:
+        from .dispatch import load_dispatch
+
+        dmodel = load_dispatch()
 
     has_years = "cal_year" in incidents.columns
     n_raw = len(incidents)
@@ -868,8 +881,20 @@ def run_fire_station_plan(
         }
 
     # --- current posture ----------------------------------------------------
+    from .dispatch import dispatch_response
+
+    solver_dispatch = dmodel is not None and solver == "genetic"
+
+    def report_response(Ax, idx, bmodel):
+        """Times reported in the summary: learned dispatch when on, else nearest / busy blend."""
+        if dmodel is not None:
+            return dispatch_response(Ax, idx, bmodel, dmodel)
+        return posture_response(Ax, idx, bmodel.probs(Ax, idx) if bmodel is not None else busy_p)
+
     cur_sel = existing_idx
-    cur_resp = posture_response(A, cur_sel, busy_p) if cur_sel else np.full(len(cells), np.nan)
+    cur_resp = report_response(A, cur_sel, busy_model) if cur_sel else np.full(len(cells), np.nan)
+    # What the solver sees (floors are set on the same model): dispatch only for the genetic solver.
+    cur_resp_solver = cur_resp if (dmodel is None or solver_dispatch) else posture_response(A, cur_sel, busy_p)
     cur_metrics = posture_metrics(
         cur_resp, weights, threshold_s=threshold_s, label="current_fire_stations", n_posts=len(cur_sel)
     )
@@ -879,8 +904,8 @@ def run_fire_station_plan(
 
     # Floors: the plan may not be worse than today on the slowest 10 % / the average.
     floors = {}
-    today_mean = float((weights * cur_resp).sum() / max(weights.sum(), 1e-9))
-    today_cvar = weighted_cvar(cur_resp, weights)
+    today_mean = float((weights * cur_resp_solver).sum() / max(weights.sum(), 1e-9))
+    today_cvar = weighted_cvar(cur_resp_solver, weights)
     if keep_slowest:
         floors["max_cvar"] = today_cvar
     if keep_average:
@@ -892,11 +917,13 @@ def run_fire_station_plan(
         names = cell_boroughs(cells, incidents)
         uniq = sorted({n for n in names if n})
         code = np.array([uniq.index(n) if n else -1 for n in names])
-        today_b = group_means(cur_resp, weights, code, len(uniq))
+        today_b = group_means(cur_resp_solver, weights, code, len(uniq))
         floors["group_floor"] = (code, today_b + float(keep_boroughs))
         borough_info = {"n_boroughs": len(uniq), "tolerance_s": float(keep_boroughs)}
     if floors:
         floors["floor_weights"] = weights
+    if solver_dispatch:
+        floors["response_fn"] = lambda idx: dispatch_response(A, idx, busy_model, dmodel)
     if solver == "exact" and solver_time_s:
         floors["time_limit_s"] = float(solver_time_s)
     if solver == "exact" and busy_rounds and use_busy:
@@ -943,9 +970,8 @@ def run_fire_station_plan(
             replace_r=r, new_pool=new_pool, objective=objective, threshold_s=threshold_s, seed=seed,
         )
         baselines["random_replace"] = _baseline_metrics(
-            A, rnd["indices"], weights, threshold_s,
-            busy_model.probs(A, rnd["indices"]) if busy_model else busy_p, "random_replace"
-        )
+            A, rnd["indices"], weights, threshold_s, None, "random_replace",
+            resp=report_response(A, rnd["indices"], busy_model))
         extra = {"replace_r": r, "n_replaced": len(res["opened"]), "solver": res["solver"]}
     elif mode == "expand":
         m = int(add_stations)
@@ -965,9 +991,8 @@ def run_fire_station_plan(
             new_pool=new_pool, objective=objective, threshold_s=threshold_s, seed=seed,
         )
         baselines["random_expand"] = _baseline_metrics(
-            A, rnd["indices"], weights, threshold_s,
-            busy_model.probs(A, rnd["indices"]) if busy_model else busy_p, "random_expand"
-        )
+            A, rnd["indices"], weights, threshold_s, None, "random_expand",
+            resp=report_response(A, rnd["indices"], busy_model))
         extra = {"add_stations": m, "solver": res["solver"]}
     else:  # resize
         budget = int(total_pumps) if total_pumps is not None else int(
@@ -1020,7 +1045,7 @@ def run_fire_station_plan(
                 resp = Ax[idx].min(axis=0)
             else:
                 m = extend_busy_model(busy_model, cand["lat"].to_numpy(float)[n0:], cand["lon"].to_numpy(float)[n0:])
-                resp = m.response(Ax, idx)
+                resp = dispatch_response(Ax, idx, m, dmodel) if solver_dispatch else m.response(Ax, idx)
             return weighted_cvar(resp, w_opt) if objective == "cvar" else float((w_opt * resp).sum() / W_opt)
 
         def cap_ok(Ax, idx, cand):
@@ -1032,7 +1057,7 @@ def run_fire_station_plan(
                 resp = Ax[idx].min(axis=0)
             else:
                 m = extend_busy_model(busy_model, cand["lat"].to_numpy(float)[n0:], cand["lon"].to_numpy(float)[n0:])
-                resp = m.response(Ax, idx)
+                resp = dispatch_response(Ax, idx, m, dmodel) if solver_dispatch else m.response(Ax, idx)
             return floors_met(resp, weights, floors.get("max_mean"), floors.get("max_cvar"), floors.get("group_floor"))
 
         print(f"Refining {len(new_open)} new site(s) to street junctions within {refine_km} km…")
@@ -1080,14 +1105,16 @@ def run_fire_station_plan(
             free = plan_expand(A, w_opt, existing_idx, int(add_stations), new_pool=new_pool, **kw_free)
         free_idx = free["indices"]
         baselines["plan_ignoring_busy"] = _baseline_metrics(
-            A, free_idx, weights, threshold_s, busy_model.probs(A, free_idx), "plan_ignoring_busy")
+            A, free_idx, weights, threshold_s, None, "plan_ignoring_busy",
+            resp=report_response(A, free_idx, busy_model))
         busy_compare = {
             "sites_differ": int(len(set(free_idx) ^ set(pre_refine_idx)) // 2),  # before street refinement
-            "busy_aware_s": round(float((weights * posture_response(A, selected_idx, plan_busy_p)).sum()
+            "busy_aware_s": round(float((weights * report_response(A, selected_idx, busy_model)).sum()
                                         / max(weights.sum(), 1e-9)), 2),
             "ignoring_busy_s": baselines["plan_ignoring_busy"]["expected_response_s"],
         }
-    plan_resp = posture_response(A, selected_idx, plan_busy_p)
+    plan_resp = (report_response(A, selected_idx, busy_model) if busy_model is not None
+                 else posture_response(A, selected_idx, plan_busy_p))
     selected = candidates.loc[selected_idx].copy().reset_index(drop=True)
     selected["plan_rank"] = np.arange(len(selected))
     selected["turnout_s"] = turnout_vec[selected_idx]
@@ -1150,6 +1177,10 @@ def run_fire_station_plan(
         "severity_rule": SEVERITY_SCHEMES[severity],
         "alpha": float(alpha),
         "solver_kind": solver,
+        "response_model": ("learned dispatch (firestation.dispatch); "
+                           + ("optimised by the genetic solver" if solver_dispatch else
+                              "solver uses the busy-engine blend, layouts rescored with dispatch"))
+        if dmodel is not None else ("busy-engine blend" if busy_model is not None else "nearest engine free"),
         "scorer": scorer,
         "demand_years": [int(y) for y in (demand_years or [])] if has_years else [],
         "eval_years": [int(y) for y in (eval_years or [])] if has_years else [],
@@ -1208,8 +1239,8 @@ def run_fire_station_plan(
     )
 
 
-def _baseline_metrics(A, idx, weights, threshold_s, busy_p, label) -> dict[str, Any]:
-    resp = posture_response(A, idx, busy_p)
+def _baseline_metrics(A, idx, weights, threshold_s, busy_p, label, resp=None) -> dict[str, Any]:
+    resp = posture_response(A, idx, busy_p) if resp is None else resp
     out = posture_metrics(resp, weights, threshold_s=threshold_s, label=label, n_posts=len(idx))
     out["lfb_first_engine"] = score_first_engine(resp, weights)
     return out

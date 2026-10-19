@@ -328,6 +328,26 @@ turnout. Change in average first-engine time vs today, 95 % paired bootstrap int
   Borough floors cost a little on the average under LightGBM but make the slowest-call
   gains larger and consistent across all three models: the fairer layouts are also the
   more robust ones.
+- **With the learned dispatch model** (`response = dispatch` in `scores.csv`; which of
+  the 8 fastest open stations responds, learned from LFB's records) instead of "nearest, or
+  next nearest when busy". Today's stations on 2025 calls: 314.4 s under LightGBM (busy
+  blend 311.7 s; recorded 332.0 s). Change vs today, average / slowest 10 %:
+
+  | Layout | LightGBM | Road Kolesar | Straight-line Kolesar |
+  |---|---|---|---|
+  | Add 3 | −2.6 / −0.1 | −2.2 / 0.0 | −1.4 / 0.0 |
+  | Move 10, no borough rule | −5.4 / −2.0 | −4.6 / −3.2 | −2.2 / −2.4 |
+  | **Move 10, every borough ≤ 1 s** | **−5.5 / −3.8** | **−4.7 / −4.9** | **−2.5 / −3.6** |
+  | Full redesign, every borough ≤ 1 s | −13.8 / −13.4 | −10.6 / −9.8 | −5.1 / −3.7 |
+
+  Gains are usually a little smaller than with the busy blend (realistic dispatch spreads
+  calls over more stations), except the recommended move-10 layout with borough floors,
+  whose gains hold or grow, especially for the slowest calls. Every layout still beats
+  today under all three travel-time models.
+- Planner: `--dispatch` reports every time with the dispatch model. With `--solver
+  genetic` it also optimises it, but that was no better than the exact solver's busy-blend
+  layout rescored with dispatch (move 10: 307.8 vs 307.4 s; 20 min vs 4 min), so the
+  recommended workflow is exact solver + dispatch scoring.
 - The intervals are narrow because they only resample calls; they do not include
   travel-time model error, which the spread across the three models shows is larger.
 - Slowest 10 %: the LightGBM layouts improve it under all three models (move 10: −1.7 to
@@ -396,6 +416,41 @@ So the travel-time model is not the bottleneck: what placement gets wrong is *wh
 station responds. **Next:** a dispatch model learned from LFB's records (probability that
 the 1st, 2nd, 3rd… nearest station responds, by distance and how busy each is), used in
 placement in place of "nearest, or second nearest when busy".
+
+**Dispatch model** (`firestation.dispatch`, `scripts/fit_dispatch_model.py`): for a call in
+a demand cell, the probability that each of the 8 open stations with the fastest predicted
+attendance sends the first engine, from features any layout has (rank, predicted
+attendance, seconds behind the fastest, each candidate's busy chance from the Erlang model,
+its pumps, the chance every faster candidate is busy, stations within 60 s of the fastest,
+the fastest station's pumps). LightGBM classifier on first-engine records, normalised per
+call; expected attendance = probability-weighted average.
+
+| | Drive error per cell, 2025 | 2014: correlation across 10 areas | 2014: error per area |
+|---|---|---|---|
+| Nearest station | 47.8 s | 0.42 | 17.2 s |
+| Nearest, or next nearest when busy | 25.4 s | 0.31 | 16.3 s |
+| **Dispatch model, all day** | **23.4 s** | **0.56** | **13.1 s** |
+| Dispatch model, by time of day | 23.5 s | 0.52 | 14.4 s |
+
+- Today (trained 2021–24, tested 2025): shares by rank 72 / 18 / 6 / 2.5 % predicted vs
+  70 / 18 / 6 / 3 % recorded (the busy blend can only give ranks 1–2).
+- 2014 closures (trained 2009–2013 only): up from 0.42 to 0.56, still short of the 0.88
+  with the real responder. Largest misses: Knightsbridge (+104 s predicted, +59 recorded)
+  and Silvertown (+86 vs +117); likely LFB's own repositioning after the closures and
+  only a few hundred calls per area.
+
+**Time of day.** The nearest station sent the first engine on 78–80 % of calls at night
+but only 61 % in the early afternoon (12–16 h), not at the evening call peak (16–20 h:
+69 %); crews' daytime training and fire-safety visits seem to matter more than call
+volume. The time-of-day model (six 4-hour slots, each with its own busy level, calibrated
+to the records: load factors 0.74, 0.67, 1.10, 1.49, 1.08, 0.93) reproduces this: error in
+the nearest-station share across slots 1.8 points against 5.6 for the all-day model, which
+predicts 71–72 % at every hour. It does not improve the all-day tests above (they average
+the hours away), so use the **time-of-day model for rush-hour / night analyses** and the
+all-day model for all-day placement scores.
+
+Model (both versions): `data/processed/models/dispatch_lfb.joblib`; results
+`data/figures/dispatch/` (`rank_shares.csv`, `by_time_of_day.csv`, `closure_areas.csv`).
 
 Outputs: `data/figures/closure_2014/` (`closure_test.csv`, `closed_station_ranking.csv`,
 `diagnostic.csv`, `diagnostic.json`, `summary.json`); model
