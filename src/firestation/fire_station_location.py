@@ -211,7 +211,10 @@ def _solver_meta(res) -> dict[str, Any]:
     return {"solver": "HiGHS integer program (scipy.optimize.milp)", "status": res.status,
             "optimal": res.optimal, "objective_value": round(res.value, 4),
             "lower_bound": round(res.bound, 4) if np.isfinite(res.bound) else None,
-            "gap": res.gap, "solve_s": res.solve_s, "n_vars": res.n_vars, "cap": res.cap}
+            "gap": res.gap, "solve_s": res.solve_s, "n_vars": res.n_vars, "cap": res.cap,
+            "warm_start": (res.cap or {}).get("warm_start"),
+            "bound_note": ("lower bound of the round that produced the layout, busy rates held fixed"
+                           if "busy" in str(res.objective) else "lower bound: no layout can score better")}
 
 
 def _solve(T, weights, k, *, solver, objective, threshold_s, cap_s, busy_model=None, start_idx=None,
@@ -231,11 +234,14 @@ def _solve(T, weights, k, *, solver, objective, threshold_s, cap_s, busy_model=N
 
         out = solve_busy_exact(T, weights, k, busy_model, start_idx=start_idx, objective=objective,
                                threshold_s=threshold_s, cap_s=cap_s, **kw)
-        if out["round"] == 0 and any("infeasible" in r for r in out["rounds"]):
-            # The exact solver found no layout in time (hard floors); fall back to the genetic
-            # algorithm, seeded with today's layout, which keeps only layouts meeting every floor.
+        if out["round"] == 0 and any(kw.get(f) is not None for f in ("max_mean", "max_cvar", "group_floor")):
+            # No round produced a valid improvement: the exact solver found no layout in time,
+            # or its layouts broke a floor once busy rates were recomputed. Fall back to the
+            # genetic algorithm (seeded with today's layout) and a feasible-swap search, which
+            # keep only layouts meeting every floor under the full busy model.
             ga_kw = {k2: v for k2, v in kw.items() if k2 not in {"max_rounds", "time_limit_s", "backup_k"}}
-            print("  exact solver found no layout in time; genetic algorithm + feasible-swap search…", flush=True)
+            print("  no valid improving layout from the exact rounds; genetic algorithm + feasible-swap search…",
+                  flush=True)
             ga = solve_genetic(T, weights, k, cap_s=cap_s, busy_fn=lambda idx: busy_model.probs(T, idx),
                                seed=seed, objective=objective, seeds=[list(start_idx)], **ga_kw)
             print(f"  genetic: feasible={ga.params.get('feasible')} value={ga.value:.2f} (today {out['value']:.2f})",
@@ -253,8 +259,10 @@ def _solve(T, weights, k, *, solver, objective, threshold_s, cap_s, busy_model=N
                     objective=f"{objective}_busy", indices=sw["indices"], value=sw["value"],
                     assignment=T[sw["indices"]].argmin(axis=0), response_s=busy_model.response(T, sw["indices"]),
                     status=f"fallback: feasible-swap search from {'genetic algorithm' if start != list(start_idx) else 'today'}"
-                           f" ({len(sw['swaps'])} swaps); exact solver found no layout in time",
+                           f" ({len(sw['swaps'])} swaps); exact rounds gave no valid improvement",
                     optimal=False, solve_s=sw["solve_s"],
+                    bound=(fb := float(np.nanmin([r.get("bound_fixed_p", np.nan) for r in out["rounds"]] + [np.inf]))),
+                    gap=(sw["value"] - fb) / sw["value"] if np.isfinite(fb) else float("nan"),
                     cap={"swaps": sw["swaps"], "genetic_feasible": ga.params.get("feasible"),
                          "exact_rounds": out["rounds"]})
                 return res
@@ -263,10 +271,13 @@ def _solve(T, weights, k, *, solver, objective, threshold_s, cap_s, busy_model=N
             assignment=T[out["indices"]].argmin(axis=0), response_s=out["response_s"],
             status=f"busy-aware: best of {len(out['rounds'])} rounds (round {out['round']})",
             optimal=all(r.get("optimal_fixed_p", True) for r in out["rounds"]),
+            # Lower bound for the round that produced the layout, with that round's busy rates fixed.
+            bound=float(out.get("bound_fixed_p", np.nan)),
             gap=max((r["gap"] for r in out["rounds"] if "gap" in r), default=float("nan")),
             solve_s=out["solve_s"], cap={"busy_rounds": out["rounds"]})
         return res
-    return solve_exact(T, weights, k, objective=objective, threshold_s=threshold_s, cap_s=cap_s, **kw)
+    return solve_exact(T, weights, k, objective=objective, threshold_s=threshold_s, cap_s=cap_s,
+                       warm_start=start_idx, **kw)
 
 
 def plan_redesign(

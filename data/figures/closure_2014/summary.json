@@ -1,0 +1,427 @@
+{
+  "doc": "The 2014 closure test: which travel-time model predicts what really happened?\n\nOn 9 January 2014 London closed 10 fire stations. Placement asks a model what happens\nwhen the set of stations changes, and this is the one real change we can check against.\n\nStep 3 - pre-closure models (trained only on 2009-2013 engine trips):\n  LightGBM (same features and settings as the current model, FINAL_GROUPS, trees by early\n  stopping on 2013 with 2009-12 training), Kolesar on road km, Kolesar on straight-line km.\n  Accuracy on 2014 trips after the closures.\n\nStep 4 - the test:\n  - Each closed station's former area: 0.9 km cells whose first engine in 2013 most often\n    came from that station (LFB mobilisation records, independent of any model).\n  - Recorded effect: mean recorded first-engine attendance (incident records) in those\n    cells, 9 Jan - 31 Dec 2014 minus 2013, minus the same change in all other cells\n    (difference in differences: removes London-wide trends). 95 % bootstrap interval.\n  - Predicted effect: each model's attendance (drive + each station's 2013 median turnout)\n    with the 2013 stations minus the 2014 stations, same cells, same difference in\n    differences; nearest engine free, and with busy engines (Erlang loss calibrated on 2013\n    busy rates, pump counts per station for 2013 and 2014 from the mobilisation records).\n  - Score per model: error and correlation across the 10 areas.\n\nStep 5 - ranking the closed stations: each closed station put back, one at a time, into\ntoday's 102 stations; predicted saving on 2025 calls (current LightGBM model, busy\nengines), compared with the recorded damage in its area (Spearman rank correlation).\n\nInputs: data/processed/lfb_travel_training_2009_2014.parquet (build_lfb_travel_training.py\n--era 2009-2014), data/raw/london/lfb_incidents_2009_2017.csv, lfb_mobilisations_2009_2014.csv.\nWrites data/figures/closure_2014/ and data/processed/models/travel_time_lfb_pre2014.joblib.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/closure_2014_test.py\n",
+  "pre2014_model_accuracy_on_2014_trips": {
+    "lightgbm": {
+      "mae_s": 64.81,
+      "medae_s": 38.29,
+      "bias_s": -30.36
+    },
+    "kolesar(road_km)": {
+      "mae_s": 73.36,
+      "medae_s": 45.78,
+      "bias_s": -30.42
+    },
+    "kolesar(crow_km)": {
+      "mae_s": 74.83,
+      "medae_s": 48.27,
+      "bias_s": -30.14
+    }
+  },
+  "recorded": {
+    "Belsize": {
+      "recorded_s": 65.78570200892432,
+      "lo": 53.04914489277353,
+      "hi": 77.28341077093934,
+      "n_cells": 6,
+      "calls_2014": 823
+    },
+    "Bow": {
+      "recorded_s": 62.968829651693284,
+      "lo": 46.78493395119334,
+      "hi": 78.85079830777838,
+      "n_cells": 4,
+      "calls_2014": 421
+    },
+    "Clerkenwell": {
+      "recorded_s": 59.09304989840524,
+      "lo": 48.33697966927359,
+      "hi": 68.80204771988863,
+      "n_cells": 4,
+      "calls_2014": 941
+    },
+    "Downham": {
+      "recorded_s": 83.2965018446015,
+      "lo": 69.47632450754712,
+      "hi": 98.0187496657811,
+      "n_cells": 14,
+      "calls_2014": 572
+    },
+    "Kingsland": {
+      "recorded_s": 84.15058477677346,
+      "lo": 69.04643752094282,
+      "hi": 100.3334796356864,
+      "n_cells": 3,
+      "calls_2014": 418
+    },
+    "Knightsbridge": {
+      "recorded_s": 80.11997057575309,
+      "lo": 61.9421821737408,
+      "hi": 98.57689926528703,
+      "n_cells": 2,
+      "calls_2014": 384
+    },
+    "Silvertown": {
+      "recorded_s": 126.3063259584369,
+      "lo": 95.48946794327418,
+      "hi": 159.2597336328454,
+      "n_cells": 6,
+      "calls_2014": 191
+    },
+    "Southwark": {
+      "recorded_s": 63.03478578760368,
+      "lo": 51.79043463587825,
+      "hi": 74.56938016908674,
+      "n_cells": 4,
+      "calls_2014": 750
+    },
+    "Westminster": {
+      "recorded_s": 60.64747670266917,
+      "lo": 52.82978313088072,
+      "hi": 71.01619105518469,
+      "n_cells": 6,
+      "calls_2014": 1091
+    },
+    "Woolwich": {
+      "recorded_s": 71.37549600012971,
+      "lo": 59.33683924397991,
+      "hi": 85.44537379150171,
+      "n_cells": 9,
+      "calls_2014": 560
+    },
+    "all 10 areas": {
+      "recorded_s": 70.47726449286148,
+      "lo": 66.30008317938704,
+      "hi": 75.27800595167398,
+      "n_cells": 58,
+      "calls_2014": 6151
+    }
+  },
+  "predicted": {
+    "lightgbm / free": {
+      "Belsize": 70.3626481324153,
+      "Bow": 57.64596260063288,
+      "Clerkenwell": 83.14929670797494,
+      "Downham": 87.21301111607139,
+      "Kingsland": 91.28001202641524,
+      "Knightsbridge": 136.43635010416523,
+      "Silvertown": 80.48859080367106,
+      "Southwark": 65.20686107337308,
+      "Westminster": 67.19264913048454,
+      "Woolwich": 60.88179941829566,
+      "all 10 areas": 76.82210993653351
+    },
+    "lightgbm / busy": {
+      "Belsize": 55.96870215380888,
+      "Bow": 57.19696219292852,
+      "Clerkenwell": 69.65701023863986,
+      "Downham": 66.28201140913332,
+      "Kingsland": 76.4199387760791,
+      "Knightsbridge": 92.51320158427143,
+      "Silvertown": 63.31920362091177,
+      "Southwark": 62.27628854888376,
+      "Westminster": 81.68291535695393,
+      "Woolwich": 46.85206016717164,
+      "all 10 areas": 67.50540116801545
+    },
+    "kolesar(road_km) / free": {
+      "Belsize": 67.38572285342075,
+      "Bow": 57.60954782922083,
+      "Clerkenwell": 62.67104893709407,
+      "Downham": 86.3869893640663,
+      "Kingsland": 82.50959959439056,
+      "Knightsbridge": 120.54009691378741,
+      "Silvertown": 58.398453473370054,
+      "Southwark": 65.44404550345759,
+      "Westminster": 69.33506308807367,
+      "Woolwich": 57.03385665279467,
+      "all 10 areas": 70.99592694708642
+    },
+    "kolesar(road_km) / busy": {
+      "Belsize": 46.10139449785723,
+      "Bow": 52.78569105861473,
+      "Clerkenwell": 47.08056274104301,
+      "Downham": 65.8170968302334,
+      "Kingsland": 68.09792719306765,
+      "Knightsbridge": 94.05763961681468,
+      "Silvertown": 48.60071570773401,
+      "Southwark": 57.515105895082385,
+      "Westminster": 74.36011454482694,
+      "Woolwich": 45.45973984613509,
+      "all 10 areas": 59.45389125620521
+    },
+    "kolesar(crow_km) / free": {
+      "Belsize": 71.72903096974167,
+      "Bow": 95.83214209101115,
+      "Clerkenwell": 69.25683041265685,
+      "Downham": 91.04283538948698,
+      "Kingsland": 70.81409786831507,
+      "Knightsbridge": 150.23047648529618,
+      "Silvertown": 78.33577166247137,
+      "Southwark": 71.3556916984401,
+      "Westminster": 55.00896838268515,
+      "Woolwich": 88.00202798111044,
+      "all 10 areas": 78.31070082671316
+    },
+    "kolesar(crow_km) / busy": {
+      "Belsize": 55.903758531101836,
+      "Bow": 70.16267013313775,
+      "Clerkenwell": 47.62041557203656,
+      "Downham": 68.62693828514418,
+      "Kingsland": 54.994930789075795,
+      "Knightsbridge": 99.12405501672366,
+      "Silvertown": 45.384831744384144,
+      "Southwark": 65.01218277383411,
+      "Westminster": 64.51066812493771,
+      "Woolwich": 65.87996032172721,
+      "all 10 areas": 62.650913996719154
+    }
+  },
+  "score": {
+    "lightgbm / free": {
+      "mae_s_across_areas": 16.63,
+      "bias_s": 4.31,
+      "corr": 0.293,
+      "all_areas_pred_s": 76.8
+    },
+    "lightgbm / busy": {
+      "mae_s_across_areas": 17.26,
+      "bias_s": -8.46,
+      "corr": 0.048,
+      "all_areas_pred_s": 67.5
+    },
+    "kolesar(road_km) / free": {
+      "mae_s_across_areas": 14.9,
+      "bias_s": -2.95,
+      "corr": 0.084,
+      "all_areas_pred_s": 71.0
+    },
+    "kolesar(road_km) / busy": {
+      "mae_s_across_areas": 21.22,
+      "bias_s": -15.69,
+      "corr": 0.003,
+      "all_areas_pred_s": 59.5
+    },
+    "kolesar(crow_km) / free": {
+      "mae_s_across_areas": 21.87,
+      "bias_s": 8.48,
+      "corr": 0.157,
+      "all_areas_pred_s": 78.3
+    },
+    "kolesar(crow_km) / busy": {
+      "mae_s_across_areas": 18.36,
+      "bias_s": -11.96,
+      "corr": -0.213,
+      "all_areas_pred_s": 62.7
+    }
+  },
+  "ranking_spearman": -0.41896220372014725,
+  "ranking": [
+    {
+      "station": "Westminster",
+      "pumps_2013": 1,
+      "saving_mean_s": 1.16,
+      "extra_calls_within_6min": 138,
+      "extra_calls_within_10min": 0,
+      "recorded_damage_2014_s": 60.6,
+      "rank_saving": 1,
+      "rank_recorded_damage": 9
+    },
+    {
+      "station": "Knightsbridge",
+      "pumps_2013": 1,
+      "saving_mean_s": 1.07,
+      "extra_calls_within_6min": 324,
+      "extra_calls_within_10min": 0,
+      "recorded_damage_2014_s": 80.1,
+      "rank_saving": 2,
+      "rank_recorded_damage": 4
+    },
+    {
+      "station": "Belsize",
+      "pumps_2013": 1,
+      "saving_mean_s": 0.88,
+      "extra_calls_within_6min": 279,
+      "extra_calls_within_10min": 0,
+      "recorded_damage_2014_s": 65.8,
+      "rank_saving": 3,
+      "rank_recorded_damage": 6
+    },
+    {
+      "station": "Bow",
+      "pumps_2013": 2,
+      "saving_mean_s": 0.87,
+      "extra_calls_within_6min": 41,
+      "extra_calls_within_10min": 0,
+      "recorded_damage_2014_s": 63.0,
+      "rank_saving": 4,
+      "rank_recorded_damage": 7
+    },
+    {
+      "station": "Clerkenwell",
+      "pumps_2013": 1,
+      "saving_mean_s": 0.84,
+      "extra_calls_within_6min": 0,
+      "extra_calls_within_10min": 0,
+      "recorded_damage_2014_s": 59.1,
+      "rank_saving": 5,
+      "rank_recorded_damage": 10
+    },
+    {
+      "station": "Kingsland",
+      "pumps_2013": 2,
+      "saving_mean_s": 0.84,
+      "extra_calls_within_6min": 0,
+      "extra_calls_within_10min": 0,
+      "recorded_damage_2014_s": 84.2,
+      "rank_saving": 6,
+      "rank_recorded_damage": 2
+    },
+    {
+      "station": "Downham",
+      "pumps_2013": 1,
+      "saving_mean_s": 0.69,
+      "extra_calls_within_6min": 461,
+      "extra_calls_within_10min": 0,
+      "recorded_damage_2014_s": 83.3,
+      "rank_saving": 7,
+      "rank_recorded_damage": 3
+    },
+    {
+      "station": "Southwark",
+      "pumps_2013": 1,
+      "saving_mean_s": 0.64,
+      "extra_calls_within_6min": 0,
+      "extra_calls_within_10min": 0,
+      "recorded_damage_2014_s": 63.0,
+      "rank_saving": 8,
+      "rank_recorded_damage": 7
+    },
+    {
+      "station": "Woolwich",
+      "pumps_2013": 1,
+      "saving_mean_s": 0.64,
+      "extra_calls_within_6min": 557,
+      "extra_calls_within_10min": 0,
+      "recorded_damage_2014_s": 71.4,
+      "rank_saving": 9,
+      "rank_recorded_damage": 5
+    },
+    {
+      "station": "Silvertown",
+      "pumps_2013": 1,
+      "saving_mean_s": 0.33,
+      "extra_calls_within_6min": 186,
+      "extra_calls_within_10min": 0,
+      "recorded_damage_2014_s": 126.3,
+      "rank_saving": 10,
+      "rank_recorded_damage": 1
+    }
+  ],
+  "pumps_2013_2014_changed": {
+    "Chelsea": [
+      2,
+      1
+    ],
+    "Chingford": [
+      2,
+      1
+    ],
+    "Clapham": [
+      2,
+      1
+    ],
+    "Ealing": [
+      2,
+      1
+    ],
+    "East Greenwich": [
+      1,
+      2
+    ],
+    "Erith": [
+      2,
+      1
+    ],
+    "Forest Hill": [
+      2,
+      1
+    ],
+    "Hayes": [
+      2,
+      1
+    ],
+    "Hendon": [
+      1,
+      2
+    ],
+    "Holloway": [
+      2,
+      1
+    ],
+    "Leyton": [
+      2,
+      1
+    ],
+    "Leytonstone": [
+      2,
+      1
+    ],
+    "Old Kent Road": [
+      2,
+      1
+    ],
+    "Peckham": [
+      2,
+      1
+    ],
+    "Plaistow": [
+      2,
+      1
+    ],
+    "Poplar": [
+      2,
+      1
+    ],
+    "Romford": [
+      2,
+      1
+    ],
+    "Shoreditch": [
+      2,
+      1
+    ],
+    "Stanmore": [
+      1,
+      2
+    ],
+    "Stratford": [
+      2,
+      1
+    ],
+    "Twickenham": [
+      1,
+      2
+    ],
+    "Wandsworth": [
+      2,
+      1
+    ],
+    "Whitechapel": [
+      2,
+      1
+    ],
+    "Willesden": [
+      2,
+      1
+    ],
+    "Bow": [
+      2,
+      1
+    ],
+    "Kingsland": [
+      2,
+      1
+    ]
+  },
+  "minutes": 11.8
+}

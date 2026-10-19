@@ -231,6 +231,74 @@ def _cvar_augment(A, lo, hi, cols, vals, cells, w, W, n_cells, beta=TAIL_BETA):
     return A2, lo + [-np.inf] * n_cells, hi + [0.0] * n_cells, c_tail, 1 + n_cells
 
 
+@dataclass
+class MilpResult:
+    x: np.ndarray | None
+    status: int  # 0 = optimal (proven), 1 = stopped (time limit) with a layout, 2 = no layout found
+    message: str
+    mip_gap: float
+    mip_dual_bound: float  # lower bound: no layout can do better than this
+    warm_start_used: bool = False
+
+
+def _run_milp(c, A, lo, hi, integrality, lb, ub, *, time_limit_s, rel_gap, warm=None) -> MilpResult:
+    """Solve with HiGHS directly (highspy), optionally from a starting solution.
+
+    ``warm`` = (column indices, values): a partial starting point, typically only the
+    open-site variables of a known valid layout (e.g. today's stations); HiGHS completes
+    the rest. With a valid start the solver always has a layout to improve and to prune
+    against. Falls back to ``scipy.optimize.milp`` (no warm start) without highspy.
+    """
+    try:
+        import highspy
+    except ImportError:
+        from scipy.optimize import Bounds, LinearConstraint, milp
+
+        r = milp(c, constraints=LinearConstraint(A, lo, hi), integrality=integrality, bounds=Bounds(lb, ub),
+                 options={"time_limit": float(time_limit_s), "mip_rel_gap": float(rel_gap), "disp": False})
+        st = 0 if r.status == 0 else (1 if r.x is not None else 2)
+        return MilpResult(r.x, st, str(r.message), float(getattr(r, "mip_gap", np.nan)),
+                          float(getattr(r, "mip_dual_bound", np.nan)))
+    from scipy.sparse import csc_matrix
+
+    A = csc_matrix(A)
+    inf = highspy.kHighsInf
+    h = highspy.Highs()
+    h.setOptionValue("output_flag", False)
+    h.setOptionValue("time_limit", float(time_limit_s))
+    h.setOptionValue("mip_rel_gap", float(rel_gap))
+    lp = highspy.HighsLp()
+    lp.num_col_, lp.num_row_ = int(A.shape[1]), int(A.shape[0])
+    def clip(v):  # HiGHS uses its own infinity
+        v = np.asarray(v, dtype=float).copy()
+        v[np.isposinf(v)], v[np.isneginf(v)] = inf, -inf
+        return v
+
+    lp.col_cost_ = np.asarray(c, float)
+    lp.col_lower_, lp.col_upper_ = clip(np.asarray(lb, float)), clip(np.asarray(ub, float))
+    lp.row_lower_, lp.row_upper_ = clip(np.asarray(lo, float)), clip(np.asarray(hi, float))
+    lp.a_matrix_.format_ = highspy.MatrixFormat.kColwise
+    lp.a_matrix_.num_col_, lp.a_matrix_.num_row_ = lp.num_col_, lp.num_row_
+    lp.a_matrix_.start_ = A.indptr.astype(np.int32)
+    lp.a_matrix_.index_ = A.indices.astype(np.int32)
+    lp.a_matrix_.value_ = A.data.astype(float)
+    lp.integrality_ = [highspy.HighsVarType.kInteger if v else highspy.HighsVarType.kContinuous
+                       for v in np.asarray(integrality)]
+    h.passModel(lp)
+    used = False
+    if warm is not None:
+        idx, val = warm
+        used = h.setSolution(len(idx), np.asarray(idx, np.int32), np.asarray(val, float)) == highspy.HighsStatus.kOk
+    h.run()
+    ms = h.getModelStatus()
+    info = h.getInfo()
+    sol = h.getSolution()
+    has_x = info.primal_solution_status == 2  # feasible
+    x = np.asarray(sol.col_value) if has_x else None
+    st = 0 if ms == highspy.HighsModelStatus.kOptimal else (1 if has_x else 2)
+    return MilpResult(x, st, h.modelStatusToString(ms), float(info.mip_gap), float(info.mip_dual_bound), used)
+
+
 def _add_floors(A, lo, hi, cols, vals, cells, fw, n_cells, max_mean=None, max_cvar=None, group_floor=None):
     """Floor limits on the layout's call-weighted average and slowest-10 % average.
 
@@ -316,6 +384,7 @@ def solve_exact(
     max_cvar: float | None = None,
     floor_weights: np.ndarray | None = None,
     group_floor: tuple[np.ndarray, np.ndarray] | None = None,
+    warm_start: Sequence[int] | None = None,
     time_limit_s: float = 900.0,
     rel_gap: float = 1e-4,
 ) -> SelectionResult:
@@ -354,6 +423,10 @@ def solve_exact(
     blend with ``backup_p``). The planner passes today's values: "no worse than today".
     ``group_floor=(group_per_cell, limits)`` caps each group's (e.g. borough's) average.
 
+    ``warm_start``: a valid layout (k candidate rows, e.g. today's stations) handed to
+    HiGHS as a starting point. ``bound`` / ``gap`` always report HiGHS's lower bound, so
+    even a solve stopped by the time limit says how far from optimal it can be.
+
     Pairs (s, j) that can never be used are dropped before solving, which keeps the
     answer exact: with fixed open sites, a cell is never served by a site slower than
     its fastest fixed site. With ``x`` continuous, the optimum still assigns each cell
@@ -386,6 +459,11 @@ def solve_exact(
 
     y_lb = np.zeros(n_y)
     y_lb[fixed] = 1.0
+    warm = None
+    if warm_start is not None and len(set(map(int, warm_start))) == k and all(int(i) in pos for i in warm_start):
+        y0 = np.zeros(n_y)
+        y0[[pos[int(i)] for i in warm_start]] = 1.0
+        warm = (np.arange(n_y), y0)
     rows = [csr_matrix(np.ones((1, n_y)))]
     lo, hi = [float(k)], [float(k)]
     if min_from is not None:
@@ -448,14 +526,12 @@ def solve_exact(
                 np.r_[cj, cj], fw, n_cells, max_mean, max_cvar, group_floor)
             c = np.r_[c, np.zeros(n_f)]
             n_extra += n_f
-        res = milp(
-            c,
-            constraints=LinearConstraint(Acon, np.array(lo_b), np.array(hi_b)),
-            integrality=np.r_[np.ones(n_y), np.zeros(2 * n_x + n_extra)],
-            bounds=Bounds(np.r_[y_lb, np.zeros(2 * n_x), np.zeros(n_extra)],
-                          np.r_[np.ones(n_y), prim_ok.astype(float), np.ones(n_x), np.full(n_extra, np.inf)]),
-            options={"time_limit": float(time_limit_s), "mip_rel_gap": float(rel_gap), "disp": False},
-        )
+        res = _run_milp(
+            c, Acon, np.array(lo_b), np.array(hi_b), np.r_[np.ones(n_y), np.zeros(2 * n_x + n_extra)],
+            np.r_[y_lb, np.zeros(2 * n_x), np.zeros(n_extra)],
+            np.r_[np.ones(n_y), prim_ok.astype(float), np.ones(n_x), np.full(n_extra, np.inf)],
+            time_limit_s=time_limit_s, rel_gap=rel_gap, warm=warm)
+        cap_info["warm_start"] = bool(res.warm_start_used)
         solve_s = time.perf_counter() - t0
         if res.x is None:
             raise RuntimeError(f"Placement problem has no solution: {res.message}")
@@ -512,14 +588,11 @@ def solve_exact(
         lo = lo + [-np.inf] * n_cells
         hi = hi + [0.0] * n_cells
 
-    res = milp(
-        c,
-        constraints=LinearConstraint(A, np.array(lo), np.array(hi)),
-        integrality=np.r_[np.ones(n_y), np.zeros(n_z + n_extra)],
-        bounds=Bounds(np.r_[y_lb, np.zeros(n_z), np.zeros(n_extra)],
-                      np.r_[np.ones(n_y), np.ones(n_z), np.full(n_extra, np.inf)]),
-        options={"time_limit": float(time_limit_s), "mip_rel_gap": float(rel_gap), "disp": False},
-    )
+    res = _run_milp(
+        c, A, np.array(lo), np.array(hi), np.r_[np.ones(n_y), np.zeros(n_z + n_extra)],
+        np.r_[y_lb, np.zeros(n_z), np.zeros(n_extra)], np.r_[np.ones(n_y), np.ones(n_z), np.full(n_extra, np.inf)],
+        time_limit_s=time_limit_s, rel_gap=rel_gap, warm=warm)
+    cap_info["warm_start"] = bool(res.warm_start_used)
     solve_s = time.perf_counter() - t0
     if res.x is None:
         raise RuntimeError(f"Placement problem has no solution: {res.message}")

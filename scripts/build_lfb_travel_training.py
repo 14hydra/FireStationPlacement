@@ -27,6 +27,12 @@ the travel time is 30-1200 s.
 
 Output: data/processed/lfb_travel_training.csv
 
+Pre-2014 set for the 2014 closure test (stations closed on 9 January 2014 added at their
+estimated sites; LFB's 2009-2017 incident file is re-coded to today's station grounds, so
+``busy_flag`` there means "not from the nearest station open at the time"):
+
+  .venv/bin/python scripts/build_lfb_travel_training.py --era 2009-2014
+
 Run:  .venv/bin/python scripts/build_lfb_travel_training.py
 """
 
@@ -66,14 +72,21 @@ def haversine_km(lat1, lon1, lat2, lon2):
     return 6371.0088 * 2 * np.arcsin(np.sqrt(a))
 
 
-def load_incidents() -> pd.DataFrame:
+def _incident_number(s: pd.Series) -> pd.Series:
+    """Normalise incident numbers (the 2009-2017 file writes 235138081 as '235138081.00')."""
+    return s.astype(str).str.strip().str.replace(r"\.0+$", "", regex=True)
+
+
+def load_incidents(files=INCIDENT_FILES) -> pd.DataFrame:
     from pyproj import Transformer
 
     parts = []
-    for f in INCIDENT_FILES:
+    for f in files:
         d = pd.read_csv(RAW / f, usecols=INC_COLS, dtype={"IncidentNumber": str}, low_memory=False)
         parts.append(d)
-    inc = pd.concat(parts, ignore_index=True).drop_duplicates("IncidentNumber")
+    inc = pd.concat(parts, ignore_index=True)
+    inc["IncidentNumber"] = _incident_number(inc["IncidentNumber"])
+    inc = inc.drop_duplicates("IncidentNumber")
     # Exact grid reference when LFB publishes it, else the 50 m rounded one (always present).
     e = pd.to_numeric(inc["Easting_m"], errors="coerce").fillna(inc["Easting_rounded"])
     n = pd.to_numeric(inc["Northing_m"], errors="coerce").fillna(inc["Northing_rounded"])
@@ -93,38 +106,69 @@ def load_incidents() -> pd.DataFrame:
     )
 
 
-def load_mobilisations() -> pd.DataFrame:
+def load_mobilisations(files=MOBILISATION_FILES) -> pd.DataFrame:
     parts = [
         pd.read_csv(RAW / f, usecols=MOB_COLS, dtype={"IncidentNumber": str}, encoding="utf-8-sig", low_memory=False)
-        for f in MOBILISATION_FILES
+        for f in files
     ]
     m = pd.concat(parts, ignore_index=True)
-    m["IncidentNumber"] = m["IncidentNumber"].str.strip()
+    m["IncidentNumber"] = _incident_number(m["IncidentNumber"])
     return m
 
 
-def _load_stations() -> pd.DataFrame:
+def _load_stations(with_closed_2014: bool = False) -> pd.DataFrame:
     path = RAW / "london_fire_stations.csv"
     s = pd.read_csv(path)
     if "name" not in s.columns and "facilityname" in s.columns:
         s = s.rename(columns={"facilityname": "name", "latitude": "lat", "longitude": "lon"})
     if "lat" not in s.columns and "latitude" in s.columns:
         s = s.rename(columns={"latitude": "lat", "longitude": "lon"})
-    return s.set_index("name")[["lat", "lon"]]
+    s = s.set_index("name")[["lat", "lon"]]
+    if with_closed_2014:
+        from firestation.london_closures_2014 import CLOSED_2014_COORDS
+
+        s = pd.concat([s, pd.DataFrame(CLOSED_2014_COORDS, index=["lat", "lon"]).T])
+    return s
+
+
+ERAS = {
+    "2021+": dict(mobilisations=MOBILISATION_FILES, incidents=INCIDENT_FILES, closed=False,
+                  out="lfb_travel_training.csv"),
+    "2009-2014": dict(mobilisations=["lfb_mobilisations_2009_2014.csv"], incidents=["lfb_incidents_2009_2017.csv"],
+                      closed=True, out="lfb_travel_training_2009_2014.parquet"),
+}
+
+
+def nearest_open_station(stations: pd.DataFrame, lat, lon, when) -> np.ndarray:
+    """Name of the nearest station (straight line) open on each date (closed 2014 stations
+    count until 9 January 2014)."""
+    from firestation.london_closures_2014 import CLOSED_2014, closure_date
+
+    names = stations.index.to_numpy()
+    d = haversine_km(np.asarray(lat)[:, None], np.asarray(lon)[:, None],
+                     stations["lat"].to_numpy()[None, :], stations["lon"].to_numpy()[None, :])
+    after = pd.to_datetime(when).dt.date.to_numpy() >= closure_date
+    is_closed = np.isin(names, CLOSED_2014)
+    d[np.ix_(after, is_closed)] = np.inf
+    return names[d.argmin(axis=1)]
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--out", type=Path, default=ROOT / "data" / "processed" / "lfb_travel_training.csv")
+    ap.add_argument("--era", choices=list(ERAS), default="2021+",
+                    help="2021+ (model training) or 2009-2014 (2014 closure test)")
+    ap.add_argument("--out", type=Path, default=None)
     ap.add_argument(
         "--crow-only",
         action="store_true",
         help="Skip road-graph distances (set road_km ≈ 1.25×crow). Use when london_drive.graphml is not built yet.",
     )
     args = ap.parse_args()
+    era = ERAS[args.era]
+    args.out = args.out or ROOT / "data" / "processed" / era["out"]
 
-    stations = _load_stations()
-    mob = load_mobilisations()
+    stations = _load_stations(with_closed_2014=era["closed"])
+    mob = load_mobilisations(era["mobilisations"])
     counts = {"mobilisations": len(mob)}
 
     mob = mob[mob["DeployedFromLocation"].isin(["Home Station", "Other Station"])]
@@ -137,7 +181,7 @@ def main() -> int:
     mob = mob[travel.between(*TRAVEL_CLIP_S)].assign(travel_s=travel)
     counts["travel_30_1200s"] = len(mob)
 
-    df = mob.merge(load_incidents(), on="IncidentNumber", how="inner")
+    df = mob.merge(load_incidents(era["incidents"]), on="IncidentNumber", how="inner")
     counts["joined_to_incident_location"] = len(df)
 
     df["start_lat"] = df["DeployedFromStation_Name"].map(stations["lat"])
@@ -174,6 +218,11 @@ def main() -> int:
         street = pd.concat([router.route_features(*ends), router.route_context(*ends)], axis=1)
 
     mobilised = pd.to_datetime(df["DateAndTimeMobilised"], format="%d/%m/%Y %H:%M", errors="coerce")
+    if era["closed"]:  # 2009-2014 files use ISO timestamps
+        mobilised = pd.to_datetime(df["DateAndTimeMobilised"], errors="coerce")
+        ground = nearest_open_station(stations, df["dest_lat"], df["dest_lon"], mobilised)
+    else:
+        ground = df["station_ground"]
     out = pd.DataFrame(
         {
             "incident_number": df["IncidentNumber"],
@@ -188,7 +237,7 @@ def main() -> int:
             "incident_group": df["incident_group"],
             "property_category": df["property_category"],
             # Engine came from outside the incident's own station ground (own engine busy / further away).
-            "busy_flag": (df["DeployedFromStation_Name"] != df["station_ground"]).astype(int),
+            "busy_flag": (df["DeployedFromStation_Name"] != ground).astype(int),
             "start_lat": df["start_lat"],
             "start_lon": df["start_lon"],
             "dest_lat": df["dest_lat"],
@@ -202,7 +251,10 @@ def main() -> int:
     )
     out = pd.concat([out, street.set_index(out.index)], axis=1)
     args.out.parent.mkdir(parents=True, exist_ok=True)
-    out.to_csv(args.out, index=False)
+    if args.out.suffix == ".parquet":  # compact (the 2009-2014 set; about 5x smaller than CSV)
+        out.assign(date_of_call=pd.to_datetime(out["date_of_call"])).to_parquet(args.out, index=False)
+    else:
+        out.to_csv(args.out, index=False)
     for k, v in counts.items():
         if isinstance(v, (int, float)) and not isinstance(v, bool):
             print(f"{k:<34}{v:>10,}")

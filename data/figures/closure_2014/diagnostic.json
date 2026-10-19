@@ -1,0 +1,224 @@
+{
+  "doc": "Why can't the models tell which 2014 closure areas suffered most? A decomposition.\n\nFor first-engine trips (PumpOrder 1, engine left from a station) in each closed station's\nformer area (as in closure_2014_test.py) in 2013 and in 2014 after the closures:\n\n  1. Turnout vs drive: how much of the recorded slowdown is slower turnout and how much\n     longer driving.\n  2. Travel time: the pre-2014 models' predicted drive for the station that actually\n     responded, vs the recorded drive. If this tracks the recorded change, the travel-time\n     model is not the problem.\n  3. Dispatch: was the responding station the model's nearest open station (by predicted\n     attendance), the second nearest, or further? And how much slower the recorded drive\n     is than the model's nearest-station drive.\n\nEach change is a difference in differences (area change minus the change in the rest of\nLondon). Per-area correlations with the recorded drive change show which part the\nnearest-station prediction misses.\n\nWrites data/figures/closure_2014/diagnostic.csv and diagnostic.json.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/closure_2014_diagnostic.py\n",
+  "all_areas_did_s": {
+    "attendance_s": 67.84,
+    "turnout_s": 6.07,
+    "drive_s": 61.76,
+    "pred_lgbm_actual_station": 59.97,
+    "pred_kol_road_actual_station": 53.98,
+    "pred_kol_crow_actual_station": 58.02,
+    "model_nearest_drive": 72.79
+  },
+  "correlation_with_recorded_drive_change": {
+    "pred_lgbm_actual_station": 0.878,
+    "pred_kol_road_actual_station": 0.843,
+    "pred_kol_crow_actual_station": 0.745,
+    "model_nearest_drive": 0.416
+  },
+  "drive_accuracy_affected_post": {
+    "pred_lgbm": {
+      "mae_s": 59.8,
+      "bias_s": -28.5
+    },
+    "pred_kol_road": {
+      "mae_s": 65.5,
+      "bias_s": -32.9
+    },
+    "pred_kol_crow": {
+      "mae_s": 65.9,
+      "bias_s": -26.4
+    },
+    "model_nearest_drive": {
+      "mae_s": 76.0,
+      "bias_s": -33.9
+    }
+  },
+  "drive_accuracy_affected_2013": {
+    "pred_lgbm": {
+      "mae_s": 45.1,
+      "bias_s": -22.8
+    },
+    "pred_kol_road": {
+      "mae_s": 56.6,
+      "bias_s": -20.8
+    },
+    "pred_kol_crow": {
+      "mae_s": 57.9,
+      "bias_s": -19.0
+    }
+  },
+  "dispatch_share_all_affected": {
+    "pre": {
+      "nearest": 0.684,
+      "second": 0.216,
+      "further": 0.1
+    },
+    "post": {
+      "nearest": 0.635,
+      "second": 0.225,
+      "further": 0.14
+    }
+  },
+  "per_area": {
+    "Belsize": {
+      "attendance_s": 63.54,
+      "turnout_s": 2.387,
+      "drive_s": 61.137,
+      "pred_lgbm_actual_station": 53.112,
+      "pred_kol_road_actual_station": 47.611,
+      "pred_kol_crow_actual_station": 54.086,
+      "model_nearest_drive": 71.107,
+      "share_nearest_pre": 0.685,
+      "share_nearest_post": 0.803,
+      "share_second_pre": 0.251,
+      "share_second_post": 0.132,
+      "share_further_pre": 0.063,
+      "share_further_post": 0.065,
+      "n_post": 795.0
+    },
+    "Bow": {
+      "attendance_s": 69.04,
+      "turnout_s": 0.465,
+      "drive_s": 68.559,
+      "pred_lgbm_actual_station": 69.599,
+      "pred_kol_road_actual_station": 70.359,
+      "pred_kol_crow_actual_station": 86.768,
+      "model_nearest_drive": 64.428,
+      "share_nearest_pre": 0.751,
+      "share_nearest_post": 0.663,
+      "share_second_pre": 0.204,
+      "share_second_post": 0.197,
+      "share_further_pre": 0.046,
+      "share_further_post": 0.14,
+      "n_post": 407.0
+    },
+    "Clerkenwell": {
+      "attendance_s": 58.792,
+      "turnout_s": 7.081,
+      "drive_s": 51.595,
+      "pred_lgbm_actual_station": 51.778,
+      "pred_kol_road_actual_station": 35.721,
+      "pred_kol_crow_actual_station": 43.338,
+      "model_nearest_drive": 80.126,
+      "share_nearest_pre": 0.606,
+      "share_nearest_post": 0.379,
+      "share_second_pre": 0.21,
+      "share_second_post": 0.382,
+      "share_further_pre": 0.184,
+      "share_further_post": 0.239,
+      "n_post": 917.0
+    },
+    "Downham": {
+      "attendance_s": 83.867,
+      "turnout_s": 7.838,
+      "drive_s": 76.013,
+      "pred_lgbm_actual_station": 59.624,
+      "pred_kol_road_actual_station": 61.816,
+      "pred_kol_crow_actual_station": 63.455,
+      "model_nearest_drive": 66.241,
+      "share_nearest_pre": 0.745,
+      "share_nearest_post": 0.59,
+      "share_second_pre": 0.109,
+      "share_second_post": 0.288,
+      "share_further_pre": 0.146,
+      "share_further_post": 0.122,
+      "n_post": 539.0
+    },
+    "Kingsland": {
+      "attendance_s": 81.685,
+      "turnout_s": -2.561,
+      "drive_s": 84.231,
+      "pred_lgbm_actual_station": 70.948,
+      "pred_kol_road_actual_station": 65.324,
+      "pred_kol_crow_actual_station": 61.758,
+      "model_nearest_drive": 104.146,
+      "share_nearest_pre": 0.74,
+      "share_nearest_post": 0.579,
+      "share_second_pre": 0.174,
+      "share_second_post": 0.244,
+      "share_further_pre": 0.086,
+      "share_further_post": 0.176,
+      "n_post": 409.0
+    },
+    "Knightsbridge": {
+      "attendance_s": 69.443,
+      "turnout_s": 11.125,
+      "drive_s": 58.758,
+      "pred_lgbm_actual_station": 82.027,
+      "pred_kol_road_actual_station": 83.317,
+      "pred_kol_crow_actual_station": 93.861,
+      "model_nearest_drive": 111.254,
+      "share_nearest_pre": 0.745,
+      "share_nearest_post": 0.557,
+      "share_second_pre": 0.176,
+      "share_second_post": 0.227,
+      "share_further_pre": 0.079,
+      "share_further_post": 0.216,
+      "n_post": 370.0
+    },
+    "Silvertown": {
+      "attendance_s": 122.058,
+      "turnout_s": 4.999,
+      "drive_s": 117.043,
+      "pred_lgbm_actual_station": 124.251,
+      "pred_kol_road_actual_station": 112.309,
+      "pred_kol_crow_actual_station": 118.066,
+      "model_nearest_drive": 88.573,
+      "share_nearest_pre": 0.693,
+      "share_nearest_post": 0.439,
+      "share_second_pre": 0.19,
+      "share_second_post": 0.164,
+      "share_further_pre": 0.116,
+      "share_further_post": 0.398,
+      "n_post": 171.0
+    },
+    "Southwark": {
+      "attendance_s": 56.721,
+      "turnout_s": 10.848,
+      "drive_s": 45.857,
+      "pred_lgbm_actual_station": 45.429,
+      "pred_kol_road_actual_station": 33.833,
+      "pred_kol_crow_actual_station": 31.386,
+      "model_nearest_drive": 53.341,
+      "share_nearest_pre": 0.619,
+      "share_nearest_post": 0.676,
+      "share_second_pre": 0.286,
+      "share_second_post": 0.156,
+      "share_further_pre": 0.095,
+      "share_further_post": 0.167,
+      "n_post": 717.0
+    },
+    "Westminster": {
+      "attendance_s": 60.287,
+      "turnout_s": 6.883,
+      "drive_s": 53.388,
+      "pred_lgbm_actual_station": 52.506,
+      "pred_kol_road_actual_station": 50.623,
+      "pred_kol_crow_actual_station": 44.386,
+      "model_nearest_drive": 61.964,
+      "share_nearest_pre": 0.704,
+      "share_nearest_post": 0.732,
+      "share_second_pre": 0.204,
+      "share_second_post": 0.2,
+      "share_further_pre": 0.092,
+      "share_further_post": 0.068,
+      "n_post": 1075.0
+    },
+    "Woolwich": {
+      "attendance_s": 65.07,
+      "turnout_s": 8.517,
+      "drive_s": 56.537,
+      "pred_lgbm_actual_station": 57.533,
+      "pred_kol_road_actual_station": 54.63,
+      "pred_kol_crow_actual_station": 69.939,
+      "model_nearest_drive": 54.034,
+      "share_nearest_pre": 0.702,
+      "share_nearest_post": 0.758,
+      "share_second_pre": 0.26,
+      "share_second_post": 0.199,
+      "share_further_pre": 0.038,
+      "share_further_post": 0.043,
+      "n_post": 533.0
+    }
+  }
+}

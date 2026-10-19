@@ -1,0 +1,11 @@
+station,pumps_2013,saving_mean_s,extra_calls_within_6min,extra_calls_within_10min,recorded_damage_2014_s,rank_saving,rank_recorded_damage
+Westminster,1,1.16,138,0,60.6,1,9
+Knightsbridge,1,1.07,324,0,80.1,2,4
+Belsize,1,0.88,279,0,65.8,3,6
+Bow,2,0.87,41,0,63.0,4,7
+Clerkenwell,1,0.84,0,0,59.1,5,10
+Kingsland,2,0.84,0,0,84.2,6,2
+Downham,1,0.69,461,0,83.3,7,3
+Southwark,1,0.64,0,0,63.0,8,7
+Woolwich,1,0.64,557,0,71.4,9,5
+Silvertown,1,0.33,186,0,126.3,10,1

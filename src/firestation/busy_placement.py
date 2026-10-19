@@ -223,18 +223,20 @@ def solve_busy_exact(
         cur = np.asarray(idx)
         p_cell = np.clip(p_site[cur[A[cur].argmin(axis=0)]], *P_CLIP)
         try:
-            res = solve_exact(A, w, k, backup_p=p_cell, backup_k=backup_k, **solve_kw)
+            res = solve_exact(A, w, k, backup_p=p_cell, backup_k=backup_k, warm_start=idx, **solve_kw)
         except RuntimeError as e:  # floors can be infeasible once p is updated
             rounds.append({"round": r, "infeasible": str(e)})
             break
         val = true_value(res.indices)
         rounds.append({"round": r, "value_full_model": round(val, 3), "value_fixed_p": round(res.value, 3),
-                       "optimal_fixed_p": res.optimal, "gap": res.gap, "solve_s": res.solve_s,
+                       "optimal_fixed_p": res.optimal, "gap": res.gap, "bound_fixed_p": res.bound,
+                       "solve_s": res.solve_s, "warm_start": res.cap.get("warm_start"),
                        "backup_outside_k": res.cap.get("backup_outside_k"), "floors": res.cap.get("floors")})
         ok = floors_ok(res.indices)
         rounds[-1]["floors_met_full_model"] = ok
         if ok and val < best["value"] - 1e-9:
-            best = {"indices": list(res.indices), "value": val, "round": r}
+            best = {"indices": list(res.indices), "value": val, "round": r, "bound_fixed_p": res.bound,
+                    "value_fixed_p": res.value}
         key = tuple(sorted(res.indices))
         if key in seen:
             break

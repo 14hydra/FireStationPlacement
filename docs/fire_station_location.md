@@ -123,6 +123,21 @@ summary's `solver` block gives the status, the solver's lower bound and the gap 
 
 This replaces the earlier greedy-plus-swaps search, which had no optimality guarantee.
 
+**Warm starts and lower bounds.** Every exact solve runs through HiGHS directly
+(`highspy`; `facility._run_milp`) and is given a valid starting layout, normally today's
+stations (busy rounds: the previous round's layout). The solver then always has a layout
+to improve and to prune against, and every result reports HiGHS's **lower bound**: no
+layout can score better, so `gap` says how far from optimal a result can be even when the
+time limit stops the search. Example (move up to 10, every borough within 0 s, no busy
+engines): with no start the solver found no layout in 120 s; with today's layout as the
+start it finished with a proven optimum (276.9 s, gap 0.01 %) in about 80 s.
+
+With busy engines the bound applies to the round's fixed busy rates (`bound_note` in the
+summary), because rates that depend on the layout are not linear. When no round gives a
+valid improvement under the full busy model, the genetic algorithm + feasible-swap
+fallback runs and reports its distance to that bound (e.g. move 10, every borough within
+0 s: 307.1 s against a bound of 304.5 s, within 0.9 %).
+
 ## Optimiser: genetic algorithm (`--solver genetic`)
 
 `firestation.facility.solve_genetic`. Each individual is a set of open sites; tournament
@@ -320,13 +335,77 @@ turnout. Change in average first-engine time vs today, 95 % paired bootstrap int
   although it met the floor in planning: floors are enforced on 2024 demand with the
   planner's busy model, and 2025 calls can differ.
 
+## 2014 closure test (`scripts/closure_2014_test.py`)
+
+The one real change in London's station layout we can test against: 10 stations closed on
+9 January 2014 (and LFB cut the second pump at 22 stations that stayed open).
+
+- **Data:** LFB incidents 2009–2017 and mobilisations 2009–2014 (London Datastore).
+  Pre-closure training set: 735,335 engine trips, 1 Jan 2009 – 8 Jan 2014
+  (`build_lfb_travel_training.py --era 2009-2014`); the incident file is re-coded to
+  today's station grounds, so "busy" there means "not from the nearest open station".
+- **Closed-station sites:** estimated from each station's own trips (median location of
+  incidents reached in 5–60 s); on today's stations this lands 154 m from the real
+  building on median (`london_closures_2014.CLOSED_2014_COORDS`).
+- **Pre-2014 models** (trained only on trips before the closures), accuracy on 119,177
+  post-closure 2014 trips: LightGBM **64.8 s** MAE, Kolesar road km 73.4 s, Kolesar
+  straight line 74.8 s.
+- **Recorded effect:** first-engine attendance in each closed station's former area
+  (cells its engines most often reached first in 2013), 2014 after the closures minus 2013,
+  minus the same change in the rest of London: **+70.5 s** [66.3, 75.3] over all 10 areas;
+  per area +59 s (Clerkenwell) to +126 s (Silvertown).
+- **Predicted effect** (same areas and difference in differences):
+
+  | Model | All 10 areas | Error across areas (MAE) | Correlation across areas |
+  |---|---|---|---|
+  | LightGBM, nearest engine free | **+76.8 s** | 16.6 s | **0.29** |
+  | Kolesar road km, free | **+71.0 s** | **14.9 s** | 0.08 |
+  | Kolesar straight line, free | +78.3 s | 21.9 s | 0.16 |
+  | LightGBM, busy engines | +67.5 s | 17.3 s | 0.05 |
+  | Kolesar road km, busy | +59.5 s | 21.2 s | 0.00 |
+  | Kolesar straight line, busy | +62.7 s | 18.4 s | −0.21 |
+
+  All models predict the London-wide effect of the closures to within about 1–8 s
+  (recorded 70.5 s). None reliably predicts which of the 10 areas suffered most
+  (correlations ≤ 0.29); each area has only 2–14 cells and 190–1,090 calls, so per-area
+  recorded effects are noisy (Silvertown's +126 s rests on 191 calls). The busy-engine
+  versions predict a smaller effect than recorded.
+- **Ranking the closed stations** (reopen each in today's network; 2025 calls, current
+  LightGBM, busy engines): each would save 0.3–1.2 s citywide (Westminster most,
+  Silvertown least); the ranking does not match the 2014 damage (Spearman −0.42), which
+  is expected to be weak: London's demand and network have changed since 2014, and the
+  recorded per-area damage is noisy.
+
+**Diagnostic: why area-level predictions miss** (`scripts/closure_2014_diagnostic.py`).
+First-engine trips (170,294 in 2013 and 2014 after the closures), each change as a
+difference in differences against the rest of London:
+
+- The slowdown is almost all driving: +67.8 s attendance = +61.8 s drive + 6.1 s turnout.
+- **Given the station that actually responded, the travel-time models track the areas:**
+  correlation across the 10 areas with the recorded drive change 0.88 (LightGBM), 0.84
+  (Kolesar road), 0.75 (Kolesar straight line); LightGBM predicts +60.0 s against +61.8 s
+  recorded.
+- **Assuming the nearest open station responds drops this to 0.42.** Share of first engines
+  from the model's nearest open station: about 70 % in 2013, and in 2014 as low as 38 %
+  (Clerkenwell) and 44 % (Silvertown, where 40 % came from the third-nearest station or
+  further: hence its +117 s).
+- LightGBM's trip error in the affected areas rises from 45 s (2013) to 60 s (2014), with
+  predictions about 28 s too fast on average.
+
+So the travel-time model is not the bottleneck: what placement gets wrong is *which*
+station responds. **Next:** a dispatch model learned from LFB's records (probability that
+the 1st, 2nd, 3rd… nearest station responds, by distance and how busy each is), used in
+placement in place of "nearest, or second nearest when busy".
+
+Outputs: `data/figures/closure_2014/` (`closure_test.csv`, `closed_station_ranking.csv`,
+`diagnostic.csv`, `diagnostic.json`, `summary.json`); model
+`data/processed/models/travel_time_lfb_pre2014.joblib`.
+
 ## Validation
 
-1. **2014 ten-station closures** — list in `firestation.london_closures_2014` (**EXISTS**).
-   `scripts/validate_london_2014_closures.py` and `scripts/rank_closed_stations_2014.py`
-   run counterfactuals on **today's network** with approximate closed-station coords
-   (**EXISTS**). True pre-2014 train → post-2014 test needs older LFB extracts
-   (**PLANNED** ingest).
+1. **2014 ten-station closures** — **EXISTS** (`scripts/closure_2014_test.py`, above).
+   The older scaffolds `validate_london_2014_closures.py` / `rank_closed_stations_2014.py`
+   (today's network, hand-entered coordinates) are superseded.
 2. **Leave-one-firehouse-out** — **PLANNED**.
 3. **Multi-scorer table** — planner runs one scorer per invocation (**EXISTS**);
    batch comparison script **PLANNED**.

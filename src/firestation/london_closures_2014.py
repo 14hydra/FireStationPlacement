@@ -75,3 +75,23 @@ CLOSED_2014_APPROX_COORDS: dict[str, tuple[float, float]] = {
     "Westminster": (51.4975, -0.1325),
     "Woolwich": (51.4905, 0.0640),
 }
+
+
+# Station locations estimated from LFB's own records: the median location of incidents
+# each station's engines reached in 5-60 s (home-station trips, 2009-2013, exact incident
+# coordinates). Checked on today's 102 stations against their OpenStreetMap buildings:
+# median error 154 m, 90 % within 466 m. Consistent with the stations' known addresses
+# (e.g. Belsize, Lancaster Grove; Clerkenwell, Rosebery Avenue; Westminster, Greycoat Place).
+# scripts/build_lfb_2014_closure_data.py uses these.
+CLOSED_2014_COORDS: dict[str, tuple[float, float]] = {
+    "Belsize": (51.54542, -0.16788),  # 59 trips
+    "Bow": (51.53234, -0.02913),  # 63 trips
+    "Clerkenwell": (51.52375, -0.11036),  # 180 trips
+    "Downham": (51.43413, 0.01148),  # 60 trips
+    "Kingsland": (51.53931, -0.07624),  # 87 trips
+    "Knightsbridge": (51.50044, -0.16013),  # 124 trips
+    "Silvertown": (51.50370, 0.02527),  # 32 trips
+    "Southwark": (51.50187, -0.09644),  # 274 trips
+    "Westminster": (51.49627, -0.13453),  # 361 trips
+    "Woolwich": (51.48994, 0.06114),  # 24 trips
+}

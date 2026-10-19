@@ -2,8 +2,8 @@
 """Download the London data this project uses into data/raw/london/.
 
 London Datastore (Open Government Licence):
-  - LFB incident records 2018-2023 (xlsx, converted to csv) and 2024 onwards
-  - LFB mobilisation records 2021-2024 and 2025 onwards
+  - LFB incident records 2009-2017, 2018-2023 (xlsx, converted to csv) and 2024 onwards
+  - LFB mobilisation records 2009-2014 and 2015-2020 (xlsx, converted), 2021-2024, 2025 onwards
 Geofabrik (OpenStreetMap, ODbL):
   - Greater London extract (.osm.pbf), used to build the drive graph
 
@@ -35,6 +35,13 @@ FILES = {
     "LFB%20Mobilisation%20data%20from%202021%20-%202024.csv",
     "lfb_mobilisations_2025.csv": f"{DATASTORE}/24r65/7d5b4e2f-3ddb-48b9-8a4d-bf86bdf6a4ef/"
     "LFB%20Mobilisation%20data%20from%202025.csv",
+    # Pre-2014 history for the 2014 closure test (scripts/build_lfb_2014_closure_data.py).
+    "lfb_incidents_2009_2017.csv": f"{DATASTORE}/em8xy/73728cf4-b70e-48e2-9b97-4e4341a2110d/"
+    "LFB%20Incident%20data%20from%202009%20-%202017.csv",
+    "lfb_mobilisations_2009_2014.xlsx": f"{DATASTORE}/24r65/fcbd2e97-b5bf-4117-a50f-d596181bc8d3/"
+    "LFB%20Mobilisation%20data%20from%20January%202009%20-%202014.xlsx",
+    "lfb_mobilisations_2015_2020.xlsx": f"{DATASTORE}/24r65/329ef4d3-7ebb-4198-8bcf-92ad6711e50d/"
+    "LFB%20Mobilisation%20data%20from%202015%20-%202020.xlsx",
     "greater-london-latest.osm.pbf": "https://download.geofabrik.de/europe/united-kingdom/england/"
     "greater-london-latest.osm.pbf",
 }
@@ -47,7 +54,11 @@ def download(name: str, url: str, force: bool) -> Path:
         return path
     print(f"get   {name} …", flush=True)
     tmp = path.with_suffix(path.suffix + ".part")
-    urllib.request.urlretrieve(url, tmp)
+    # The Datastore refuses Python's default user agent on some files (HTTP 403).
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (FireStationPlacement research)"})
+    with urllib.request.urlopen(req) as r, open(tmp, "wb") as f:
+        while chunk := r.read(1 << 20):
+            f.write(chunk)
     tmp.rename(path)
     print(f"      {path.stat().st_size / 1e6:,.0f} MB")
     return path
