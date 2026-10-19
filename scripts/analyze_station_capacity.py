@@ -51,7 +51,7 @@ MUTED = "#6b7280"
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--out-dir", type=Path, default=ROOT / "data" / "figures" / "station_capacity")
+    ap.add_argument("--out-dir", type=Path, default=ROOT / "data" / "figures" / "data_exploration" / "station_capacity")
     ap.add_argument("--demand-years", type=str, default="2024,2025")
     args = ap.parse_args()
     args.out_dir.mkdir(parents=True, exist_ok=True)

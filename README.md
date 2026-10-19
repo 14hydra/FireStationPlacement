@@ -106,7 +106,7 @@ fetches them; see [`docs/datasets.md`](docs/datasets.md).
 | Segment-speed route scaffold | `src/firestation/segment_speeds.py`, `scripts/fit_segment_speeds.py` |
 | Incident density map | `scripts/plot_incident_density.py` |
 | Street features along each route | `src/firestation/route_features.py` |
-| Initial data analysis + street feature impact | `scripts/analyze_london.py` → `data/figures/london_eda/` |
+| Initial data analysis + street feature impact | `scripts/analyze_london.py` → `data/figures/data_exploration/london_eda/` |
 
 Still **PLANNED**: OS NGD download,
 SHAP/ablations, leave-one-firehouse-out CV, pre-2014 LFB ingest, a multi-scorer comparison table.
@@ -132,10 +132,10 @@ python scripts/fetch_london_weather.py
 # 3. Travel-time model (LightGBM; ~5 h with all checks, --quick for the model only)
 python scripts/train_travel_time_lfb.py
 
-# 4. Incident density map -> data/figures/london_incident_density.html
+# 4. Incident density map -> data/figures/data_exploration/london_incident_density.html
 PYTHONPATH=src python scripts/plot_incident_density.py
 
-# 4b. Initial analysis + street feature impact -> data/figures/london_eda/ (~15 min)
+# 4b. Initial analysis + street feature impact -> data/figures/data_exploration/london_eda/ (~15 min)
 python scripts/analyze_london.py
 
 # 5. Placement planner
@@ -151,7 +151,7 @@ PYTHONPATH=src python scripts/rank_closed_stations_2014.py
 # 7. 3D race: newly placed station vs existing (firetruck routing)
 PYTHONPATH=src python scripts/build_london_drive_graph.py                 # central London OSM graph
 PYTHONPATH=src python scripts/build_fire_station_race_3d.py
-open data/figures/fire_station_race_3d.html
+open data/figures/placement/planner_runs/fire_station_race_3d.html
 
 # Synthetic smoke test (no real data)
 PYTHONPATH=src python scripts/plan_fire_station_locations.py --demo

@@ -132,6 +132,23 @@ def road_matrix(candidates: pd.DataFrame, cells: pd.DataFrame, *, use_cache: boo
     return T, {**meta, "cache": str(path.relative_to(ROOT))}
 
 
+def _lgbm_trips(candidates: pd.DataFrame, cells: pd.DataFrame, boroughs: np.ndarray) -> pd.DataFrame:
+    """Route every site × cell pair and build the model's input rows (one scenario call each)."""
+    from .facility import haversine_km
+
+    r = _router()
+    ends = _pairs(candidates, cells)
+    print(f"  routing {len(candidates)} sites × {len(cells)} cells on the London drive graph…", flush=True)
+    trips = pd.concat([r.route_features(*ends), r.route_context(*ends)], axis=1)
+    trips["road_km"] = r.road_km(*ends)
+    trips["crow_km"] = haversine_km(ends[1], ends[0], ends[3], ends[2])
+    return trips.assign(
+        dest_lat=ends[2], dest_lon=ends[3], borough=np.tile(boroughs, len(candidates)),
+        date_of_call=SCENARIO_DATE, busy_flag=0, pump_order=1, dest_exact=1,
+        deployed_from_location="Home Station", **SCENARIO_CALL,
+    )
+
+
 def lgbm_matrix(
     candidates: pd.DataFrame,
     cells: pd.DataFrame,
@@ -139,15 +156,18 @@ def lgbm_matrix(
     *,
     use_cache: bool = True,
     model_path: Path = MODEL_PATH,
+    slots: list[tuple[int, float]] | None = None,
+    trips: pd.DataFrame | None = None,
 ) -> tuple[np.ndarray, dict]:
     """LightGBM predicted drive seconds, candidate × cell, averaged over time slots.
 
     ``model_path=Q90_MODEL_PATH`` gives 90th-percentile times (the quantile model).
+    ``slots``: (hour, weight) pairs to average over instead of the demand-weighted
+    ``TIME_SLOTS`` (e.g. ``[(8, 1.0)]`` for the morning rush alone).
     """
-    from .facility import haversine_km
     from .travel_time_model import predict
 
-    slots = slot_weights(incidents)
+    slots = slot_weights(incidents) if slots is None else slots
     boroughs = cell_boroughs(cells, incidents)
     scenario = {"slots": slots, "date": SCENARIO_DATE, **SCENARIO_CALL,
                 "busy_flag": 0, "pump_order": 1, "from_home": 1}
@@ -157,17 +177,8 @@ def lgbm_matrix(
     if use_cache and path.exists():
         return np.load(path), {**meta, "cache": str(path.relative_to(ROOT))}
 
-    bundle, r = _bundle(model_path), _router()
-    ends = _pairs(candidates, cells)
-    print(f"  routing {len(candidates)} sites × {len(cells)} cells on the London drive graph…", flush=True)
-    trips = pd.concat([r.route_features(*ends), r.route_context(*ends)], axis=1)
-    trips["road_km"] = r.road_km(*ends)
-    trips["crow_km"] = haversine_km(ends[1], ends[0], ends[3], ends[2])
-    trips = trips.assign(
-        dest_lat=ends[2], dest_lon=ends[3], borough=np.tile(boroughs, len(candidates)),
-        date_of_call=SCENARIO_DATE, busy_flag=0, pump_order=1, dest_exact=1,
-        deployed_from_location="Home Station", **SCENARIO_CALL,
-    )
+    bundle = _bundle(model_path)
+    trips = _lgbm_trips(candidates, cells, boroughs) if trips is None else trips
     T = np.zeros(len(trips))
     for hour, w in slots:
         print(f"  predicting hour {hour:02d} (weight {w:.2f})…", flush=True)
@@ -178,3 +189,17 @@ def lgbm_matrix(
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     np.save(path, T)
     return T, {**meta, "cache": str(path.relative_to(ROOT))}
+
+
+def lgbm_matrices_by_hour(candidates: pd.DataFrame, cells: pd.DataFrame, incidents: pd.DataFrame | None = None,
+                          hours=tuple(h for h, _ in TIME_SLOTS), **kw) -> dict[int, np.ndarray]:
+    """One LightGBM matrix per representative hour (default: the ``TIME_SLOTS`` hours), routing once."""
+    out, trips = {}, None
+    for h in hours:
+        key = _cache_key("lgbm", candidates, cells,
+                         [{"slots": [(h, 1.0)], "date": SCENARIO_DATE, **SCENARIO_CALL, "busy_flag": 0,
+                           "pump_order": 1, "from_home": 1}, list(cell_boroughs(cells, incidents))])
+        if trips is None and not key.exists():
+            trips = _lgbm_trips(candidates, cells, cell_boroughs(cells, incidents))
+        out[h], _ = lgbm_matrix(candidates, cells, incidents, slots=[(h, 1.0)], trips=trips, **kw)
+    return out

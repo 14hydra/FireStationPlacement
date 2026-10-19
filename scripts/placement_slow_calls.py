@@ -20,7 +20,7 @@ Measures (2024 demand grid, all calls):
                 i.e. 90th-percentile attendance <= 600 s (quantile model)
   worst_q90_s   slowest area's 90th-percentile attendance
 
-Writes data/figures/placement_slow_calls/: slow_calls.csv, summary.json.
+Writes data/figures/placement/slow_calls/: slow_calls.csv, summary.json.
 
 Run:  PYTHONPATH=src .venv/bin/python scripts/placement_slow_calls.py
 """
@@ -43,7 +43,7 @@ from firestation.cities import get_city, load_fire_stations, load_incidents  # n
 from firestation.facility import weighted_cvar  # noqa: E402
 from firestation.fire_station_location import run_fire_station_plan  # noqa: E402
 
-OUT = ROOT / "data" / "figures" / "placement_slow_calls"
+OUT = ROOT / "data" / "figures" / "placement" / "slow_calls"
 MODES = {"expand_3": {"mode": "expand", "add_stations": 3},
          "replace_10": {"mode": "replace", "replace_r": 10},
          "redesign": {"mode": "redesign"}}

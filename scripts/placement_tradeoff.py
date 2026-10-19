@@ -22,8 +22,8 @@ those optima:
 0 = no better than today, 100 = the best possible for that measure in that mode, negative
 = worse than today. A layout scoring above 0 on both beats today's stations on both.
 
-Writes data/figures/placement_tradeoff/: tradeoff.csv, tradeoff.png, summary.json
-(``--busy``: placement_tradeoff_busy/, busy engines in solver and scores).
+Writes data/figures/placement/tradeoff/: tradeoff.csv, tradeoff.png, summary.json
+(``--busy``: placement/tradeoff_busy/, busy engines in solver and scores).
 
 Run:  PYTHONPATH=src .venv/bin/python scripts/placement_tradeoff.py [--busy] [--solver genetic]
 """
@@ -46,7 +46,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from firestation.cities import get_city, load_fire_stations, load_incidents  # noqa: E402
 from firestation.fire_station_location import SEVERITY_SCHEMES, run_fire_station_plan  # noqa: E402
 
-OUT = ROOT / "data" / "figures" / "placement_tradeoff"
+OUT = ROOT / "data" / "figures" / "placement" / "tradeoff"
 ALPHAS = (0.0, 0.25, 0.5, 0.75, 1.0)
 MODES = {
     "expand_3": {"mode": "expand", "add_stations": 3},

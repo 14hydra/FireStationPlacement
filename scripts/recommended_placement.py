@@ -20,10 +20,11 @@ E_best is the unconstrained alpha = 1 optimum and Q_best the alpha = 0 optimum (
 aware, before street refinement, so refinement can push a score slightly past 100). Also
 per-borough averages today vs plan.
 
-Writes data/figures/recommended_placement/<scenario>/: the planner's map and figures,
+Writes data/figures/placement/recommended/<scenario>/: the planner's map and figures,
 planned / opened / closed stations, boroughs.csv, summary.json; and summary.json at the top.
 
 Run:  PYTHONPATH=src .venv/bin/python scripts/recommended_placement.py [--scenarios expand_3,replace_10]
+      (station-count sweep: --scenarios expand_1,expand_2,expand_5,replace_5 --keep-boroughs 1)
 """
 
 from __future__ import annotations
@@ -47,16 +48,23 @@ from firestation.cities import get_city, load_fire_stations, load_incidents  # n
 from firestation.fire_station_location import run_fire_station_plan  # noqa: E402
 from firestation.ml_scorer import cell_boroughs  # noqa: E402
 
-OUT = ROOT / "data" / "figures" / "recommended_placement"
-SCENARIOS = {"expand_3": {"mode": "expand", "add_stations": 3},
-             "replace_10": {"mode": "replace", "replace_r": 10},
-             "redesign": {"mode": "redesign"}}
+OUT = ROOT / "data" / "figures" / "placement" / "recommended"
+SCENARIOS = ("expand_3", "replace_10", "redesign")  # default; any expand_<n> or replace_<n> also works
+
+
+def scenario_kw(name: str) -> dict:
+    """``expand_<n>``: add n stations; ``replace_<n>``: move up to n; ``redesign``: all stations."""
+    if name == "redesign":
+        return {"mode": "redesign"}
+    mode, n = name.rsplit("_", 1)
+    return {"expand": {"mode": "expand", "add_stations": int(n)},
+            "replace": {"mode": "replace", "replace_r": int(n)}}[mode]
 COMMON = dict(city_id="london", scorer="lgbm", demand_years=[2024], eval_years=[2025], max_incident_rows=None,
               use_busy=True, objective="response_time")
 
 
 def run(houses, incidents, scenario, quiet=True, **kw):
-    mkw = dict(SCENARIOS[scenario])
+    mkw = scenario_kw(scenario)
     if mkw["mode"] == "redesign":
         mkw["n_houses"] = len(houses)
     ctx = contextlib.redirect_stdout(io.StringIO()) if quiet else contextlib.nullcontext()

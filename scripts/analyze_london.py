@@ -6,7 +6,7 @@ characteristics have the biggest impact on fire engine driving time.
 Inputs: data/processed/lfb_travel_training.csv (scripts/build_lfb_travel_training.py),
 data/raw/london/lfb_incidents_planner.csv, data/raw/london/lfb_mobilisations_*.csv.
 
-Writes data/figures/london_eda/*.png and summary.json:
+Writes data/figures/data_exploration/london_eda/*.png and summary.json:
 
   01  driving and turnout time distributions
   02  driving time vs road distance (with the Kolesar curve)
@@ -50,7 +50,7 @@ from firestation.route_features import ROUTE_FEATURES  # noqa: E402
 from firestation import travel_time_model as T  # noqa: E402
 
 RAW = ROOT / "data" / "raw" / "london"
-OUT = ROOT / "data" / "figures" / "london_eda"
+OUT = ROOT / "data" / "figures" / "data_exploration" / "london_eda"
 
 # Reference palette (dataviz skill, light mode).
 SURFACE, INK, INK2, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#e4e3df"

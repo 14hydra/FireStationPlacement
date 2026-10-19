@@ -12,7 +12,7 @@ not the exact streets driven. Engines LFB recorded as held up by traffic, roadwo
 traffic calming are flagged. The "road speed" gauge is the median engine speed in that
 hour of the day across all 2025 trips (data/processed/lfb_travel_training.csv).
 
-Writes data/figures/station_busyness/live_day.html (deck.gl; open in a browser).
+Writes data/figures/data_exploration/station_busyness/live_day.html (deck.gl; open in a browser).
 
 Run:  .venv/bin/python scripts/build_live_day.py [--date 2025-01-05]
 """
@@ -30,7 +30,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 RAW = ROOT / "data" / "raw" / "london"
-OUT = ROOT / "data" / "figures" / "station_busyness" / "live_day.html"
+OUT = ROOT / "data" / "figures" / "data_exploration" / "station_busyness" / "live_day.html"
 TEMPLATE = Path(__file__).with_name("live_day_template.html")
 TRAFFIC_DELAYS = {"Traffic, roadworks, etc": "traffic", "Traffic calming measures": "calming"}
 
@@ -168,7 +168,7 @@ def main() -> int:
 
     # Engines per station: from the yearly busyness table (pump codes sent from home in the year),
     # never fewer than the engines seen on this day.
-    yearly = ROOT / "data" / "figures" / "station_busyness" / "station_busyness.csv"
+    yearly = ROOT / "data" / "figures" / "data_exploration" / "station_busyness" / "station_busyness.csv"
     fleet = pd.read_csv(yearly).set_index("station")["engines"].to_dict() if yearly.exists() else {}
     station_list = [{"name": s, "ll": [round(stations.loc[s, "lon"], 5), round(stations.loc[s, "lat"], 5)],
                      "engines": int(max(fleet.get(s, 1), len(engines.get(s, ()))))} for s in stations.index]

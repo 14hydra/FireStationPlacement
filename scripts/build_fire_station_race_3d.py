@@ -8,7 +8,7 @@ plays them in sequence, then shows average time saved.
 
 Usage:
   PYTHONPATH=src .venv/bin/python scripts/build_fire_station_race_3d.py
-  open data/figures/fire_station_race_3d.html
+  open data/figures/placement/planner_runs/fire_station_race_3d.html
 """
 
 from __future__ import annotations
@@ -423,14 +423,14 @@ def main() -> int:
     _load_dotenv()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--graph", type=Path, default=ROOT / "data" / "raw" / "london" / "london_drive_central.graphml")
-    ap.add_argument("--opened", type=Path, default=ROOT / "data" / "figures" / "fire_station_plan_london_expand" / "opened_fire_stations.csv")
+    ap.add_argument("--opened", type=Path, default=ROOT / "data" / "figures" / "placement" / "planner_runs" / "london_expand" / "opened_fire_stations.csv")
     ap.add_argument("--houses", type=Path, default=ROOT / "data" / "raw" / "london" / "london_fire_stations.csv")
     ap.add_argument("--incidents", type=Path, default=ROOT / "data" / "raw" / "london" / "lfb_incidents_planner.csv")
     ap.add_argument("--model", type=Path, default=ROOT / "data" / "processed" / "models" / "travel_time_lfb.joblib")
     ap.add_argument("--hour", type=int, default=17)
     ap.add_argument("--n-examples", type=int, default=12)
-    ap.add_argument("--out-html", type=Path, default=ROOT / "data" / "figures" / "fire_station_race_3d.html")
-    ap.add_argument("--out-json", type=Path, default=ROOT / "data" / "figures" / "fire_station_race_3d.json")
+    ap.add_argument("--out-html", type=Path, default=ROOT / "data" / "figures" / "placement" / "planner_runs" / "fire_station_race_3d.html")
+    ap.add_argument("--out-json", type=Path, default=ROOT / "data" / "figures" / "placement" / "planner_runs" / "fire_station_race_3d.json")
     args = ap.parse_args()
 
     if not args.graph.exists():

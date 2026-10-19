@@ -17,7 +17,7 @@ Each change is a difference in differences (area change minus the change in the 
 London). Per-area correlations with the recorded drive change show which part the
 nearest-station prediction misses.
 
-Writes data/figures/closure_2014/diagnostic.csv and diagnostic.json.
+Writes data/figures/validation/closure_2014/diagnostic.csv and diagnostic.json.
 
 Run:  PYTHONPATH=src .venv/bin/python scripts/closure_2014_diagnostic.py
 """

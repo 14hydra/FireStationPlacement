@@ -27,7 +27,7 @@ engines), compared with the recorded damage in its area (Spearman rank correlati
 
 Inputs: data/processed/lfb_travel_training_2009_2014.parquet (build_lfb_travel_training.py
 --era 2009-2014), data/raw/london/lfb_incidents_2009_2017.csv, lfb_mobilisations_2009_2014.csv.
-Writes data/figures/closure_2014/ and data/processed/models/travel_time_lfb_pre2014.joblib.
+Writes data/figures/validation/closure_2014/ and data/processed/models/travel_time_lfb_pre2014.joblib.
 
 Run:  PYTHONPATH=src .venv/bin/python scripts/closure_2014_test.py
 """
@@ -56,7 +56,7 @@ from firestation.london_closures_2014 import CLOSED_2014, CLOSED_2014_COORDS, cl
 from firestation.travel_time_model import CATEGORICAL, DRIVE_CLIP_S, make_regressor, predict_bag  # noqa: E402
 
 RAW = ROOT / "data" / "raw" / "london"
-OUT = ROOT / "data" / "figures" / "closure_2014"
+OUT = ROOT / "data" / "figures" / "validation" / "closure_2014"
 MODEL_PATH = ROOT / "data" / "processed" / "models" / "travel_time_lfb_pre2014.joblib"
 TRIPS = ROOT / "data" / "processed" / "lfb_travel_training_2009_2014.parquet"
 CLIP = lambda p: np.clip(p, *DRIVE_CLIP_S)  # noqa: E731

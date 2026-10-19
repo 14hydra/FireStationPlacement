@@ -17,7 +17,7 @@ delay codes (LFB mobilisation records). Squares are by incident location (where 
 drove to), not by street: without GPS we do not know which streets they used.
 Squares with too few trips are left blank.
 
-Writes data/figures/travel_time_maps/: travel_time_maps.png, travel_time_maps.html,
+Writes data/figures/travel_time/maps/: travel_time_maps.png, travel_time_maps.html,
 travel_time_cells.csv, summary.json
 
 Run:  .venv/bin/python scripts/plot_travel_time_maps.py
@@ -40,7 +40,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 RAW = ROOT / "data" / "raw" / "london"
-OUT = ROOT / "data" / "figures" / "travel_time_maps"
+OUT = ROOT / "data" / "figures" / "travel_time" / "maps"
 YEARS = (2021, 2025)
 MIN_A, MIN_B, MIN_C = 25, 60, 150  # minimum trips per square (B, C: pooled 3 x 3 window) to shade it
 

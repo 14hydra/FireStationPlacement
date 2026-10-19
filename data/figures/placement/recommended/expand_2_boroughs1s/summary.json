@@ -1,0 +1,99 @@
+{
+  "scenario": "expand_2_boroughs1s",
+  "rules": "alpha 1; busy engines; slowest 10% and average no worse than today; 10-minute cap; pumps move with stations; street refinement; every borough's average within 1 s of today",
+  "borough_tolerance_s": 1.0,
+  "average_s": {
+    "today": 309.5,
+    "plan": 307.5,
+    "best_possible": 307.2
+  },
+  "slowest10_s": {
+    "today": 423.2,
+    "plan": 423.0
+  },
+  "area_average_s": {
+    "today": 354.0,
+    "plan": 353.7,
+    "best_possible": 350.6
+  },
+  "efficiency_score": 87.1,
+  "equity_score": 10.2,
+  "within_6min": {
+    "today": 0.8156846565212562,
+    "plan": 0.824547344367393
+  },
+  "eval_2025_mean_s": {
+    "today": 311.7,
+    "plan": 310.0,
+    "recorded": 332.0
+  },
+  "boroughs_worse_by_1s_or_more": [],
+  "boroughs_better_by_5s_or_more": 2,
+  "opened": [
+    "New site on Hanover Street / Regent Street",
+    "Demand cell 36"
+  ],
+  "closed": [],
+  "pump_moves": [
+    {
+      "from": 79,
+      "to": 375,
+      "pumps": 1,
+      "km": 0.8,
+      "second_pump": true,
+      "from_name": "Soho",
+      "to_name": "New site on Hanover Street / Regent Street"
+    },
+    {
+      "from": 51,
+      "to": 138,
+      "pumps": 1,
+      "km": 0.66,
+      "second_pump": true,
+      "from_name": "Lambeth",
+      "to_name": "Demand cell 36"
+    }
+  ],
+  "floors": {
+    "keep_slowest": true,
+    "keep_average": true,
+    "keep_boroughs": {
+      "n_boroughs": 33,
+      "tolerance_s": 1.0
+    },
+    "today_mean_s": 309.49,
+    "today_slowest10_s": 423.22
+  },
+  "solver": {
+    "solver": "HiGHS integer program (scipy.optimize.milp)",
+    "status": "busy-aware: best of 3 rounds (round 2)",
+    "optimal": true,
+    "objective_value": 307.5501,
+    "lower_bound": 307.3795,
+    "gap": 1.1096385042196368e-15,
+    "solve_s": 133.12,
+    "n_vars": 0,
+    "warm_start": null,
+    "bound_note": "lower bound of the round that produced the layout, busy rates held fixed"
+  },
+  "street_refinement": {
+    "radius_km": 1.0,
+    "solve_s": 14.3,
+    "n_moved": 1,
+    "moves": [
+      {
+        "pass": 1,
+        "from": 106,
+        "to": 375,
+        "from_lat": 51.51752281400114,
+        "from_lon": -0.14879986704018586,
+        "to_lat": 51.514031,
+        "to_lon": -0.1414097,
+        "moved_m": 641,
+        "gain_s": 0.054,
+        "n_junctions_considered": 329
+      }
+    ]
+  },
+  "run_minutes": 2.7
+}

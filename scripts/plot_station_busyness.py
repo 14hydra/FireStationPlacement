@@ -15,7 +15,7 @@ were sent from:
                        by an engine from another station (the effect of being busy)
   calls_per_day, engine_hours_per_day, median_job_min
 
-Writes data/figures/station_busyness/:
+Writes data/figures/data_exploration/station_busyness/:
   station_busyness.png   one-page poster: map of London (size = calls/day, colour =
                          utilisation), busiest / quietest stations, busy-by-hour heatmap
   station_busyness_ranked.png  all stations ranked (utilisation, every engine out,
@@ -41,7 +41,7 @@ import pandas as pd  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "data" / "raw" / "london"
-OUT = ROOT / "data" / "figures" / "station_busyness"
+OUT = ROOT / "data" / "figures" / "data_exploration" / "station_busyness"
 MOB_FILES = {2021: "lfb_mobilisations_2021_2024.csv", 2022: "lfb_mobilisations_2021_2024.csv",
              2023: "lfb_mobilisations_2021_2024.csv", 2024: "lfb_mobilisations_2021_2024.csv",
              2025: "lfb_mobilisations_2025.csv", 2026: "lfb_mobilisations_2025.csv"}

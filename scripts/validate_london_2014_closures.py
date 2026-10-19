@@ -47,7 +47,7 @@ from firestation.london_closures_2014 import (  # noqa: E402
 )
 from firestation.london_eval import haversine_km, load_london, nearest_station_km  # noqa: E402
 
-OUT_DIR = ROOT / "data" / "figures" / "london_2014_closure_validation"
+OUT_DIR = ROOT / "data" / "figures" / "validation" / "closure_2014_ranking"
 
 
 def _pred(model, inc, lat, lon):

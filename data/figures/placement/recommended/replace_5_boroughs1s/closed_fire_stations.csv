@@ -1,0 +1,6 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+33,Hainault,existing_fire_station,0.1043983327517823,51.60617575,True,,1
+40,Heston,existing_fire_station,-0.3431990961907811,51.47502,True,,2
+50,Kingston,existing_fire_station,-0.3065912404057513,51.429441,True,,2
+76,Shadwell,existing_fire_station,-0.0557891963357072,51.5108626,True,,1
+94,Wennington,existing_fire_station,0.2203615409801693,51.50593515,True,,1

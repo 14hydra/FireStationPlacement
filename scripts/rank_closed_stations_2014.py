@@ -31,7 +31,7 @@ from firestation.lfb_standards import DEFAULT_TURNOUT_S, FIRST_ENGINE_P90_S, FIR
 from firestation.london_closures_2014 import CLOSED_2014_APPROX_COORDS  # noqa: E402
 from firestation.london_eval import haversine_km, load_london, nearest_station_km  # noqa: E402
 
-OUT = ROOT / "data" / "figures" / "london_2014_closure_validation" / "closed_station_ranking.csv"
+OUT = ROOT / "data" / "figures" / "validation" / "closure_2014_ranking" / "closed_station_ranking.csv"
 
 
 def main() -> int:

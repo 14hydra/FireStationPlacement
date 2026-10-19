@@ -10,7 +10,7 @@ Built only from saved results, so every number matches the docs:
   5_dispatch_time_of_day.png   nearest station sends the first engine, by time of day
   6_summary_table.png          what was built this week
 
-Writes data/figures/weekly_report_2026-10-19/.
+Writes data/figures/reports/weekly_2026-10-19/.
 
 Run:  PYTHONPATH=src .venv/bin/python scripts/plot_weekly_report.py
 """
@@ -26,7 +26,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 FIG = ROOT / "data" / "figures"
-OUT = FIG / "weekly_report_2026-10-19"
+OUT = FIG / "reports/weekly_2026-10-19"
 
 INK, MUTED, GRID = "#1f2933", "#6b7785", "#e3e7ec"
 BLUE, ORANGE, GREEN, GREY, RED = "#2563eb", "#ea8a1b", "#16a34a", "#9aa5b1", "#dc2626"
@@ -44,7 +44,7 @@ def save(fig, name):
 def fig_accuracy():
     m = json.loads((ROOT / "data/processed/models/travel_time_lfb.metrics.json").read_text())
     mt = m["metrics_test"]
-    pre = json.loads((FIG / "closure_2014/summary.json").read_text())["pre2014_model_accuracy_on_2014_trips"]
+    pre = json.loads((FIG / "validation/closure_2014/summary.json").read_text())["pre2014_model_accuracy_on_2014_trips"]
     rows = [("Constant guess", mt["median"]["mae_s"], GREY),
             ("Straight line, 32 km/h", mt["crow@32kph"]["mae_s"], GREY),
             ("Road distance, fixed speed", next(v["mae_s"] for k, v in mt.items() if k.startswith("road@")), GREY),
@@ -74,7 +74,7 @@ def fig_accuracy():
 
 
 def fig_fairness():
-    rec = FIG / "recommended_placement"
+    rec = FIG / "placement/recommended"
     order = [("expand_3", "Add 3", "no rule"), ("expand_3_boroughs1s", "Add 3", "boroughs ≤ 1 s"),
              ("replace_10", "Move 10", "no rule"), ("replace_10_boroughs5s", "Move 10", "boroughs ≤ 5 s"),
              ("replace_10_boroughs1s", "Move 10", "boroughs ≤ 1 s"),
@@ -108,7 +108,7 @@ def fig_fairness():
 
 
 def fig_three_models():
-    d = pd.read_csv(FIG / "layout_scoring/scores.csv")
+    d = pd.read_csv(FIG / "placement/layout_scoring/scores.csv")
     d = d[d["response"] == "dispatch"]
     layouts = [("lgbm_expand_3", "Add 3"), ("lgbm_replace_10", "Move 10"),
                ("lgbm_replace_10_boroughs1s", "Move 10\n(no borough\nworse)"),
@@ -138,8 +138,8 @@ def fig_three_models():
 
 
 def fig_closure():
-    diag = pd.read_csv(FIG / "closure_2014/diagnostic.csv", index_col=0)
-    disp = pd.read_csv(FIG / "dispatch/closure_areas.csv", index_col=0)
+    diag = pd.read_csv(FIG / "validation/closure_2014/diagnostic.csv", index_col=0)
+    disp = pd.read_csv(FIG / "validation/dispatch/closure_areas.csv", index_col=0)
     rec = diag["drive_s"]
     panels = [(diag["model_nearest_drive"], "Assume nearest station responds", GREY),
               (disp["dispatch_all_day"], "Learned dispatch model", ORANGE),
@@ -169,7 +169,7 @@ def fig_closure():
 
 
 def fig_time_of_day():
-    t = pd.read_csv(FIG / "dispatch/by_time_of_day.csv")
+    t = pd.read_csv(FIG / "validation/dispatch/by_time_of_day.csv")
     fig, ax = plt.subplots(figsize=(9.5, 4.6))
     x = np.arange(len(t))
     ax.plot(x, 100 * t["recorded_nearest"], "-o", color=INK, lw=2.4, label="Recorded (2025)")

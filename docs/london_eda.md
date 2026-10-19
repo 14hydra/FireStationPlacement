@@ -2,7 +2,7 @@
 
 Produced by `scripts/analyze_london.py` from 1,024,833 LFB engine trips (2021 → mid-2026,
 mobilisation records joined to incident locations) and the 2024–25 planner incidents.
-Figures and every number below are in `data/figures/london_eda/` (`summary.json`).
+Figures and every number below are in `data/figures/data_exploration/london_eda/` (`summary.json`).
 
 Street features describe each trip's **shortest legal route** on the OpenStreetMap
 drive graph (one-way streets respected), not the route the engine actually drove.
@@ -26,8 +26,8 @@ All street effects are **associations, not causes**.
 
 | | |
 |---|---|
-| ![](../data/figures/london_eda/02_time_vs_distance.png) | ![](../data/figures/london_eda/03_by_hour.png) |
-| ![](../data/figures/london_eda/04_attendance_by_borough.png) | ![](../data/figures/london_eda/05_delay_reasons.png) |
+| ![](../data/figures/data_exploration/london_eda/02_time_vs_distance.png) | ![](../data/figures/data_exploration/london_eda/03_by_hour.png) |
+| ![](../data/figures/data_exploration/london_eda/04_attendance_by_borough.png) | ![](../data/figures/data_exploration/london_eda/05_delay_reasons.png) |
 
 Also: `01_time_distributions.png`, `06_monthly_drive_time.png`.
 
@@ -47,7 +47,7 @@ Yes, modestly. Trained on 2021–24, tested on 200,624 trips in 2025:
 
 Street features take another **2.5 s (4 %)** off the error on top of road distance.
 
-![](../data/figures/london_eda/07_model_comparison.png)
+![](../data/figures/data_exploration/london_eda/07_model_comparison.png)
 
 ## Which street features matter most
 
@@ -58,14 +58,14 @@ Top five: **20 mph share (4.9 s)**, **traffic calming per km (3.2 s)**, **turns 
 (3.0 s)**, residential-street share (2.2 s), A-road share (2.0 s). For scale, road
 distance moves predictions by 64 s on average.
 
-![](../data/figures/london_eda/08_street_shap.png)
+![](../data/figures/data_exploration/london_eda/08_street_shap.png)
 
 **2. Drop one group at a time.** Removing all street features costs 2.44 s of MAE, but
 removing any single group costs at most 0.2 s (road class mix), because the groups
 overlap: 20 mph streets are mostly residential, calmed and turny. The street signal is
 real but shared across correlated features.
 
-![](../data/figures/london_eda/09_street_ablation.png)
+![](../data/figures/data_exploration/london_eda/09_street_ablation.png)
 
 **3. Seconds per km (pace regression, 95 % bootstrap CIs).** On trips ≥ 1 km,
 controlling for distance, hour and busy engines (median pace ≈ 100 s/km), converted to
@@ -82,13 +82,13 @@ natural units:
 | Each extra lane (average) | −2.4 s/km |
 | Route entirely bus lane (vs none) | −4.7 s/km |
 
-![](../data/figures/london_eda/10_street_effects_per_km.png)
+![](../data/figures/data_exploration/london_eda/10_street_effects_per_km.png)
 
 How the top features act (SHAP dependence): the 20 mph effect rises steadily from about
 −8 s to +5 s as a route goes from no 20 mph streets to mostly 20 mph; traffic calming and
 turns rise steeply at first and then level off.
 
-![](../data/figures/london_eda/11_shap_dependence.png)
+![](../data/figures/data_exploration/london_eda/11_shap_dependence.png)
 
 ## Reading these honestly
 

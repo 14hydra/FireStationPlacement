@@ -1,0 +1,165 @@
+{
+  "scenario": "expand_5_boroughs1s",
+  "rules": "alpha 1; busy engines; slowest 10% and average no worse than today; 10-minute cap; pumps move with stations; street refinement; every borough's average within 1 s of today",
+  "borough_tolerance_s": 1.0,
+  "average_s": {
+    "today": 309.5,
+    "plan": 304.5,
+    "best_possible": 304.8
+  },
+  "slowest10_s": {
+    "today": 423.2,
+    "plan": 421.5
+  },
+  "area_average_s": {
+    "today": 354.0,
+    "plan": 351.9,
+    "best_possible": 346.9
+  },
+  "efficiency_score": 106.0,
+  "equity_score": 29.8,
+  "within_6min": {
+    "today": 0.8156846565212562,
+    "plan": 0.8348540869923988
+  },
+  "eval_2025_mean_s": {
+    "today": 311.7,
+    "plan": 307.0,
+    "recorded": 332.0
+  },
+  "boroughs_worse_by_1s_or_more": [],
+  "boroughs_better_by_5s_or_more": 8,
+  "opened": [
+    "New site on Hanover Street / Regent Street",
+    "Demand cell 36",
+    "New site on Kilburn High Road",
+    "New site on Cranbrook Road / Ilford Hill",
+    "New site on Sterling Way"
+  ],
+  "closed": [],
+  "pump_moves": [
+    {
+      "from": 79,
+      "to": 375,
+      "pumps": 1,
+      "km": 0.8,
+      "second_pump": true,
+      "from_name": "Soho",
+      "to_name": "New site on Hanover Street / Regent Street"
+    },
+    {
+      "from": 51,
+      "to": 138,
+      "pumps": 1,
+      "km": 0.66,
+      "second_pump": true,
+      "from_name": "Lambeth",
+      "to_name": "Demand cell 36"
+    },
+    {
+      "from": 95,
+      "to": 387,
+      "pumps": 1,
+      "km": 1.65,
+      "second_pump": true,
+      "from_name": "West Hampstead",
+      "to_name": "New site on Kilburn High Road"
+    },
+    {
+      "from": 46,
+      "to": 388,
+      "pumps": 1,
+      "km": 1.44,
+      "second_pump": true,
+      "from_name": "Ilford",
+      "to_name": "New site on Cranbrook Road / Ilford Hill"
+    },
+    {
+      "from": 23,
+      "to": 396,
+      "pumps": 1,
+      "km": 1.41,
+      "second_pump": true,
+      "from_name": "Edmonton",
+      "to_name": "New site on Sterling Way"
+    }
+  ],
+  "floors": {
+    "keep_slowest": true,
+    "keep_average": true,
+    "keep_boroughs": {
+      "n_boroughs": 33,
+      "tolerance_s": 1.0
+    },
+    "today_mean_s": 309.49,
+    "today_slowest10_s": 423.22
+  },
+  "solver": {
+    "solver": "HiGHS integer program (scipy.optimize.milp)",
+    "status": "busy-aware: best of 3 rounds (round 2)",
+    "optimal": true,
+    "objective_value": 305.2545,
+    "lower_bound": 305.0553,
+    "gap": 6.617801058516662e-05,
+    "solve_s": 115.02,
+    "n_vars": 0,
+    "warm_start": null,
+    "bound_note": "lower bound of the round that produced the layout, busy rates held fixed"
+  },
+  "street_refinement": {
+    "radius_km": 1.0,
+    "solve_s": 26.5,
+    "n_moved": 4,
+    "moves": [
+      {
+        "pass": 1,
+        "from": 106,
+        "to": 375,
+        "from_lat": 51.51752281400114,
+        "from_lon": -0.14879986704018586,
+        "to_lat": 51.514031,
+        "to_lon": -0.1414097,
+        "moved_m": 641,
+        "gain_s": 0.096,
+        "n_junctions_considered": 329
+      },
+      {
+        "pass": 1,
+        "from": 149,
+        "to": 387,
+        "from_lat": 51.534688689781056,
+        "from_lon": -0.18968726098076977,
+        "to_lat": 51.5367646,
+        "to_lon": -0.1919941,
+        "moved_m": 280,
+        "gain_s": 0.249,
+        "n_junctions_considered": 169
+      },
+      {
+        "pass": 1,
+        "from": 176,
+        "to": 388,
+        "from_lat": 51.55869336797664,
+        "from_lon": 0.07056864000586578,
+        "to_lat": 51.558586,
+        "to_lon": 0.0701292,
+        "moved_m": 33,
+        "gain_s": 0.094,
+        "n_junctions_considered": 125
+      },
+      {
+        "pass": 1,
+        "from": 225,
+        "to": 396,
+        "from_lat": 51.60766000149922,
+        "from_lon": -0.06967968370582238,
+        "to_lat": 51.6146091,
+        "to_lon": -0.0717478,
+        "moved_m": 782,
+        "gain_s": 0.296,
+        "n_junctions_considered": 112
+      }
+    ]
+  },
+  "run_minutes": 2.6
+}

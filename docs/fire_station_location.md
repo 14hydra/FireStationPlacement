@@ -65,7 +65,7 @@ The project's position: **favour busy areas, but leave no one worse off than tod
 Then the alpha check: efficiency score (share of the best possible average improvement)
 and equity score (share of the best possible area-average improvement), plus a
 per-borough table, so the cost of favouring busy areas is visible.
-Outputs: `data/figures/recommended_placement/<scenario>/` (map, figures, stations,
+Outputs: `data/figures/placement/recommended/<scenario>/` (map, figures, stations,
 `boroughs.csv`, `summary.json`).
 
 Results (busy engines; today 309.5 s average, 423.2 s slowest 10 %, 81.6 % within 6 min;
@@ -184,7 +184,7 @@ close to its best junction; the point is a real, buildable street location.
   CVaR problems are harder: move-10 and redesign hit the 15-minute limit and report a gap.
 - `scripts/placement_slow_calls.py` solves each mode four ways (average or CVaR, median
   or 90th-percentile times) and scores every layout on all measures
-  (`data/figures/placement_slow_calls/`). Move up to 10, all calls:
+  (`data/figures/placement/slow_calls/`). Move up to 10, all calls:
 
   | Objective | Average | Slowest 10 % | Avg 90th pct |
   |---|---|---|---|
@@ -450,9 +450,9 @@ the hours away), so use the **time-of-day model for rush-hour / night analyses**
 all-day model for all-day placement scores.
 
 Model (both versions): `data/processed/models/dispatch_lfb.joblib`; results
-`data/figures/dispatch/` (`rank_shares.csv`, `by_time_of_day.csv`, `closure_areas.csv`).
+`data/figures/validation/dispatch/` (`rank_shares.csv`, `by_time_of_day.csv`, `closure_areas.csv`).
 
-Outputs: `data/figures/closure_2014/` (`closure_test.csv`, `closed_station_ranking.csv`,
+Outputs: `data/figures/validation/closure_2014/` (`closure_test.csv`, `closed_station_ranking.csv`,
 `diagnostic.csv`, `diagnostic.json`, `summary.json`); model
 `data/processed/models/travel_time_lfb_pre2014.joblib`.
 
@@ -501,7 +501,7 @@ PYTHONPATH=src python scripts/plan_fire_station_locations.py \
 `london` in `firestation.cities` uses `data/raw/london/london_fire_stations.csv` and
 `lfb_incidents_planner.csv`.
 
-## Outputs (`data/figures/fire_station_plan/`)
+## Outputs (`data/figures/placement/planner_runs/default/`)
 
 | File | Content |
 |---|---|

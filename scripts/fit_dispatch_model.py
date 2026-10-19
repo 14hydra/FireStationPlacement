@@ -16,7 +16,7 @@ Part B - the 2014 closures: trained on 2009-2013 only (pre-2014 LightGBM travel 
   the "nearest station" assumption reached a correlation of 0.42 across the 10 areas and
   the actual responding station 0.88.
 
-Writes data/figures/dispatch/summary.json, rank_shares.csv, closure_areas.csv.
+Writes data/figures/validation/dispatch/summary.json, rank_shares.csv, closure_areas.csv.
 
 Run:  PYTHONPATH=src .venv/bin/python scripts/fit_dispatch_model.py
 """
@@ -39,7 +39,7 @@ from firestation.dispatch import K, SLOTS, DispatchModel, candidates, responder_
 from firestation.facility import build_demand_grid  # noqa: E402
 from firestation.fire_station_location import snap_to_cells  # noqa: E402
 
-OUT = ROOT / "data" / "figures" / "dispatch"
+OUT = ROOT / "data" / "figures" / "validation" / "dispatch"
 MODEL = ROOT / "data" / "processed" / "models" / "dispatch_lfb.joblib"
 
 

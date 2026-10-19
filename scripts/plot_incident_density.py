@@ -2,7 +2,7 @@
 """
 Visualize London Fire Brigade (LFB) incident density on an interactive map.
 
-Produces data/figures/london_incident_density.html: a smoothed incident-density
+Produces data/figures/data_exploration/london_incident_density.html: a smoothed incident-density
 surface (kernel density, incidents per km² per year) for every LFB incident in
 data/raw/london/lfb_incidents_2024_onwards.csv over a real London basemap, with
 a per-incident-type switch, the ten densest 500 m hotspots, a hover readout,
@@ -517,7 +517,7 @@ def main():
     p.add_argument(
         "--incidents", type=Path, default=ROOT / "data" / "raw" / "london" / "lfb_incidents_2024_onwards.csv"
     )
-    p.add_argument("--out", type=Path, default=ROOT / "data" / "figures")
+    p.add_argument("--out", type=Path, default=ROOT / "data" / "figures" / "data_exploration")
     args = p.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
 

@@ -1,0 +1,178 @@
+{
+  "scenario": "replace_5_boroughs1s",
+  "rules": "alpha 1; busy engines; slowest 10% and average no worse than today; 10-minute cap; pumps move with stations; street refinement; every borough's average within 1 s of today",
+  "borough_tolerance_s": 1.0,
+  "average_s": {
+    "today": 309.5,
+    "plan": 306.7,
+    "best_possible": 306.0
+  },
+  "slowest10_s": {
+    "today": 423.2,
+    "plan": 420.5
+  },
+  "area_average_s": {
+    "today": 354.0,
+    "plan": 351.0,
+    "best_possible": 345.6
+  },
+  "efficiency_score": 79.4,
+  "equity_score": 35.6,
+  "within_6min": {
+    "today": 0.8156846565212562,
+    "plan": 0.8244997381658917
+  },
+  "eval_2025_mean_s": {
+    "today": 311.7,
+    "plan": 308.9,
+    "recorded": 332.0
+  },
+  "boroughs_worse_by_1s_or_more": [],
+  "boroughs_better_by_5s_or_more": 7,
+  "opened": [
+    "New site on Bow Road / Fairfield Road",
+    "New site on London Road",
+    "New site on High Street / School Road",
+    "New site on Mossford Green / High Street",
+    "New site on Manor Way / New Road"
+  ],
+  "closed": [
+    "Hainault",
+    "Heston",
+    "Kingston",
+    "Shadwell",
+    "Wennington"
+  ],
+  "pump_moves": [
+    {
+      "from": 33,
+      "to": 392,
+      "pumps": 1,
+      "km": 2.54,
+      "from_name": "Hainault",
+      "to_name": "New site on Mossford Green / High Street"
+    },
+    {
+      "from": 40,
+      "to": 385,
+      "pumps": 2,
+      "km": 1.1,
+      "from_name": "Heston",
+      "to_name": "New site on High Street / School Road"
+    },
+    {
+      "from": 50,
+      "to": 378,
+      "pumps": 2,
+      "km": 2.19,
+      "from_name": "Kingston",
+      "to_name": "New site on London Road"
+    },
+    {
+      "from": 76,
+      "to": 373,
+      "pumps": 1,
+      "km": 3.17,
+      "from_name": "Shadwell",
+      "to_name": "New site on Bow Road / Fairfield Road"
+    },
+    {
+      "from": 94,
+      "to": 396,
+      "pumps": 1,
+      "km": 3.29,
+      "from_name": "Wennington",
+      "to_name": "New site on Manor Way / New Road"
+    }
+  ],
+  "floors": {
+    "keep_slowest": true,
+    "keep_average": true,
+    "keep_boroughs": {
+      "n_boroughs": 33,
+      "tolerance_s": 1.0
+    },
+    "today_mean_s": 309.49,
+    "today_slowest10_s": 423.22
+  },
+  "solver": {
+    "solver": "HiGHS integer program (scipy.optimize.milp)",
+    "status": "fallback: feasible-swap search from genetic algorithm (0 swaps); exact rounds gave no valid improvement",
+    "optimal": false,
+    "objective_value": 307.4363,
+    "lower_bound": 0.0,
+    "gap": 1.0,
+    "solve_s": 0.1,
+    "n_vars": 0,
+    "warm_start": null,
+    "bound_note": "lower bound of the round that produced the layout, busy rates held fixed"
+  },
+  "street_refinement": {
+    "radius_km": 1.0,
+    "solve_s": 103.6,
+    "n_moved": 5,
+    "moves": [
+      {
+        "pass": 1,
+        "from": 174,
+        "to": 373,
+        "from_lat": 51.52643480951722,
+        "from_lon": -0.019495767131243437,
+        "to_lat": 51.5281522,
+        "to_lon": -0.0192682,
+        "moved_m": 191,
+        "gain_s": 0.287,
+        "n_junctions_considered": 124
+      },
+      {
+        "pass": 1,
+        "from": 286,
+        "to": 378,
+        "from_lat": 51.411422056434915,
+        "from_lon": -0.3042548286670999,
+        "to_lat": 51.4106835,
+        "to_lon": -0.2963309,
+        "moved_m": 555,
+        "gain_s": 0.067,
+        "n_junctions_considered": 159
+      },
+      {
+        "pass": 1,
+        "from": 298,
+        "to": 385,
+        "from_lat": 51.469584872234016,
+        "from_lon": -0.3585768624101135,
+        "to_lat": 51.4700189,
+        "to_lon": -0.3569488,
+        "moved_m": 123,
+        "gain_s": 0.106,
+        "n_junctions_considered": 137
+      },
+      {
+        "pass": 1,
+        "from": 328,
+        "to": 392,
+        "from_lat": 51.59063233205816,
+        "from_lon": 0.08280560544820252,
+        "to_lat": 51.588531,
+        "to_lon": 0.080842,
+        "moved_m": 269,
+        "gain_s": 0.132,
+        "n_junctions_considered": 85
+      },
+      {
+        "pass": 1,
+        "from": 356,
+        "to": 396,
+        "from_lat": 51.52462324996682,
+        "from_lon": 0.18812638083004196,
+        "to_lat": 51.5228728,
+        "to_lon": 0.1812489,
+        "moved_m": 514,
+        "gain_s": 0.126,
+        "n_junctions_considered": 81
+      }
+    ]
+  },
+  "run_minutes": 33.8
+}

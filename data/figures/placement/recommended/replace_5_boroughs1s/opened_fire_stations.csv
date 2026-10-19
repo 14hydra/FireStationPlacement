@@ -1,0 +1,6 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+373,New site on Bow Road / Fairfield Road,street_junction,-0.0192682,51.5281522,False,,
+378,New site on London Road,street_junction,-0.2963309,51.4106835,False,,
+385,New site on High Street / School Road,street_junction,-0.3569488,51.4700189,False,,
+392,New site on Mossford Green / High Street,street_junction,0.080842,51.588531,False,,
+396,New site on Manor Way / New Road,street_junction,0.1812489,51.5228728,False,,

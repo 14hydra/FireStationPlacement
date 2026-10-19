@@ -430,12 +430,12 @@ def main():
     p.add_argument("--fire-stations", type=Path, default=None)
     p.add_argument("--incidents", type=Path, default=None)
     p.add_argument("--max-incidents", type=int, default=200_000)
-    p.add_argument("--out-dir", type=Path, default=ROOT / "data" / "figures" / "fire_station_plan")
+    p.add_argument("--out-dir", type=Path, default=ROOT / "data" / "figures" / "placement" / "planner_runs" / "default")
     p.add_argument("--demo", action="store_true", help="Synthetic city (no data files needed)")
     p.add_argument("--seed", type=int, default=42)
     args = p.parse_args()
-    if args.mode == "resize" and args.out_dir == ROOT / "data" / "figures" / "fire_station_plan":
-        args.out_dir = ROOT / "data" / "figures" / "fire_station_plan_resize"
+    if args.mode == "resize" and args.out_dir == ROOT / "data" / "figures" / "placement" / "planner_runs" / "default":
+        args.out_dir = ROOT / "data" / "figures" / "placement" / "planner_runs" / "resize"
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
 

@@ -28,7 +28,7 @@ Measures:
   each layout minus today, with a 95 % paired bootstrap interval (resampling 2025 calls).
   wins_all_three: the interval for the average is below 0 under every model.
 
-Writes data/figures/layout_scoring/: scores.csv, summary.json, layouts/ (distance-based).
+Writes data/figures/placement/layout_scoring/: scores.csv, summary.json, layouts/ (distance-based).
 
 Run:  PYTHONPATH=src .venv/bin/python scripts/score_layouts.py [--make-distance-layouts]
 """
@@ -63,8 +63,8 @@ from firestation.fire_station_location import (  # noqa: E402
 )
 from firestation.station_capacity import default_pump_table  # noqa: E402
 
-OUT = ROOT / "data" / "figures" / "layout_scoring"
-REC = ROOT / "data" / "figures" / "recommended_placement"
+OUT = ROOT / "data" / "figures" / "placement" / "layout_scoring"
+REC = ROOT / "data" / "figures" / "placement" / "recommended"
 SCORERS = ("lgbm", "road", "kolesar")
 SCENARIOS = {"expand_3": {"mode": "expand", "add_stations": 3},
              "replace_10": {"mode": "replace", "replace_r": 10},

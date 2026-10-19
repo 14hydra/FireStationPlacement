@@ -1,0 +1,2107 @@
+{
+  "doc": "Robustness of the placement results: time of day, call severity and borough.\n\nEvery layout from scripts/score_layouts.py (today's stations, the recommended layouts and\nthe distance-based ones) is scored on held-out 2025 calls, split three ways, each layout\nminus today with a 95 % paired bootstrap interval (resampling calls within the group):\n\n  time of day   LightGBM travel times predicted for each period's representative hour\n                (night 00-07 at 03h, morning rush 07-10 at 08h, day 10-16 at 13h,\n                evening rush 16-20 at 18h, evening 20-24 at 21h) and the hourly dispatch\n                model, whose busy chances use each 4-hour slot's calibrated load factor.\n                Each call is scored with the times for its own hour of call.\n  severity      all calls; fires and special services (\"serious\"); fires in homes.\n  borough       each of the 33 boroughs (where the call happened).\n\nSeverity and borough are reported under all three travel-time models (LightGBM with the\nhour-specific times above; the two Kolesar formulas have no hour, so they use the all-day\ndispatch model). A result holds up if it holds under all three.\n\nWrites data/figures/placement/robustness/: robustness.csv (every layout x group), summary.json,\ntime_of_day.png, boroughs.png.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/placement_robustness.py\n",
+  "n_calls_2025": 129268,
+  "bootstrap": 500,
+  "layouts": {
+    "lgbm_expand_1_boroughs1s": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -1.09,
+          "d_mean_lo": -1.13,
+          "d_mean_hi": -1.04,
+          "d_slowest10_s": -0.7
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -0.83,
+          "d_mean_lo": -0.94,
+          "d_mean_hi": -0.73,
+          "d_slowest10_s": 0.03
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -1.35,
+          "d_mean_lo": -1.54,
+          "d_mean_hi": -1.15,
+          "d_slowest10_s": 0.02
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -1.33,
+          "d_mean_lo": -1.43,
+          "d_mean_hi": -1.25,
+          "d_slowest10_s": -1.23
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -0.96,
+          "d_mean_lo": -1.06,
+          "d_mean_hi": -0.87,
+          "d_slowest10_s": -0.05
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -0.98,
+          "d_mean_lo": -1.08,
+          "d_mean_hi": -0.88,
+          "d_slowest10_s": -0.25
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -1.07,
+          "d_mean_lo": -1.16,
+          "d_mean_hi": -0.99,
+          "d_slowest10_s": -0.05
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -1.09,
+            "d_mean_lo": -1.14,
+            "d_mean_hi": -1.04,
+            "d_slowest10_s": -0.7
+          },
+          "road": {
+            "d_mean_s": -0.91,
+            "d_mean_lo": -0.94,
+            "d_mean_hi": -0.87,
+            "d_slowest10_s": -0.01
+          },
+          "kolesar": {
+            "d_mean_s": -0.47,
+            "d_mean_lo": -0.49,
+            "d_mean_hi": -0.45,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -0.64,
+            "d_mean_lo": -0.68,
+            "d_mean_hi": -0.59,
+            "d_slowest10_s": -0.36
+          },
+          "road": {
+            "d_mean_s": -0.54,
+            "d_mean_lo": -0.58,
+            "d_mean_hi": -0.5,
+            "d_slowest10_s": -0.0
+          },
+          "kolesar": {
+            "d_mean_s": -0.26,
+            "d_mean_lo": -0.28,
+            "d_mean_hi": -0.23,
+            "d_slowest10_s": -0.0
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -0.39,
+            "d_mean_lo": -0.54,
+            "d_mean_hi": -0.25,
+            "d_slowest10_s": -0.05
+          },
+          "road": {
+            "d_mean_s": -0.33,
+            "d_mean_lo": -0.42,
+            "d_mean_hi": -0.22,
+            "d_slowest10_s": -0.0
+          },
+          "kolesar": {
+            "d_mean_s": -0.16,
+            "d_mean_lo": -0.25,
+            "d_mean_hi": -0.09,
+            "d_slowest10_s": -0.0
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "boroughs_worse_by_1s_any_model": [],
+      "boroughs_significantly_worse_lgbm": [
+        "BARNET",
+        "BRENT",
+        "BROMLEY",
+        "CROYDON",
+        "HARROW",
+        "HILLINGDON",
+        "KENSINGTON AND CHELSEA",
+        "KINGSTON UPON THAMES",
+        "LAMBETH",
+        "RICHMOND UPON THAMES"
+      ]
+    },
+    "lgbm_expand_3": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -2.54,
+          "d_mean_lo": -2.61,
+          "d_mean_hi": -2.46,
+          "d_slowest10_s": -0.77
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -2.08,
+          "d_mean_lo": -2.25,
+          "d_mean_hi": -1.92,
+          "d_slowest10_s": -0.0
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -2.79,
+          "d_mean_lo": -3.06,
+          "d_mean_hi": -2.52,
+          "d_slowest10_s": -0.06
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -2.86,
+          "d_mean_lo": -2.99,
+          "d_mean_hi": -2.72,
+          "d_slowest10_s": -1.23
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -2.54,
+          "d_mean_lo": -2.69,
+          "d_mean_hi": -2.37,
+          "d_slowest10_s": -0.08
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -2.32,
+          "d_mean_lo": -2.49,
+          "d_mean_hi": -2.16,
+          "d_slowest10_s": -0.28
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -2.61,
+          "d_mean_lo": -2.75,
+          "d_mean_hi": -2.49,
+          "d_slowest10_s": -0.08
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -2.54,
+            "d_mean_lo": -2.61,
+            "d_mean_hi": -2.45,
+            "d_slowest10_s": -0.77
+          },
+          "road": {
+            "d_mean_s": -2.16,
+            "d_mean_lo": -2.23,
+            "d_mean_hi": -2.09,
+            "d_slowest10_s": 0.04
+          },
+          "kolesar": {
+            "d_mean_s": -1.4,
+            "d_mean_lo": -1.44,
+            "d_mean_hi": -1.35,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -1.67,
+            "d_mean_lo": -1.75,
+            "d_mean_hi": -1.58,
+            "d_slowest10_s": -0.39
+          },
+          "road": {
+            "d_mean_s": -1.45,
+            "d_mean_lo": -1.52,
+            "d_mean_hi": -1.37,
+            "d_slowest10_s": 0.0
+          },
+          "kolesar": {
+            "d_mean_s": -0.94,
+            "d_mean_lo": -1.0,
+            "d_mean_hi": -0.88,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -1.52,
+            "d_mean_lo": -1.82,
+            "d_mean_hi": -1.25,
+            "d_slowest10_s": -0.07
+          },
+          "road": {
+            "d_mean_s": -1.38,
+            "d_mean_lo": -1.66,
+            "d_mean_hi": -1.12,
+            "d_slowest10_s": 0.02
+          },
+          "kolesar": {
+            "d_mean_s": -0.95,
+            "d_mean_lo": -1.18,
+            "d_mean_hi": -0.75,
+            "d_slowest10_s": 0.0
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "boroughs_worse_by_1s_any_model": [
+        "LAMBETH",
+        "SOUTHWARK"
+      ],
+      "boroughs_significantly_worse_lgbm": [
+        "BROMLEY",
+        "CROYDON",
+        "ENFIELD",
+        "HARROW",
+        "HILLINGDON",
+        "KINGSTON UPON THAMES",
+        "LAMBETH",
+        "RICHMOND UPON THAMES",
+        "SOUTHWARK"
+      ]
+    },
+    "lgbm_expand_3_boroughs0s": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -1.9,
+          "d_mean_lo": -1.97,
+          "d_mean_hi": -1.84,
+          "d_slowest10_s": -0.8
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -1.55,
+          "d_mean_lo": -1.7,
+          "d_mean_hi": -1.42,
+          "d_slowest10_s": 0.07
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -2.32,
+          "d_mean_lo": -2.57,
+          "d_mean_hi": -2.1,
+          "d_slowest10_s": -0.12
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -2.22,
+          "d_mean_lo": -2.34,
+          "d_mean_hi": -2.1,
+          "d_slowest10_s": -1.38
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -1.78,
+          "d_mean_lo": -1.92,
+          "d_mean_hi": -1.65,
+          "d_slowest10_s": -0.23
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -1.68,
+          "d_mean_lo": -1.81,
+          "d_mean_hi": -1.54,
+          "d_slowest10_s": -0.31
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -1.94,
+          "d_mean_lo": -2.06,
+          "d_mean_hi": -1.81,
+          "d_slowest10_s": -0.2
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -1.9,
+            "d_mean_lo": -1.96,
+            "d_mean_hi": -1.84,
+            "d_slowest10_s": -0.8
+          },
+          "road": {
+            "d_mean_s": -1.74,
+            "d_mean_lo": -1.8,
+            "d_mean_hi": -1.68,
+            "d_slowest10_s": 0.06
+          },
+          "kolesar": {
+            "d_mean_s": -1.32,
+            "d_mean_lo": -1.39,
+            "d_mean_hi": -1.27,
+            "d_slowest10_s": -0.0
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -1.39,
+            "d_mean_lo": -1.47,
+            "d_mean_hi": -1.31,
+            "d_slowest10_s": -0.44
+          },
+          "road": {
+            "d_mean_s": -1.32,
+            "d_mean_lo": -1.39,
+            "d_mean_hi": -1.24,
+            "d_slowest10_s": 0.03
+          },
+          "kolesar": {
+            "d_mean_s": -1.05,
+            "d_mean_lo": -1.12,
+            "d_mean_hi": -0.96,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -1.42,
+            "d_mean_lo": -1.72,
+            "d_mean_hi": -1.12,
+            "d_slowest10_s": -0.17
+          },
+          "road": {
+            "d_mean_s": -1.46,
+            "d_mean_lo": -1.84,
+            "d_mean_hi": -1.14,
+            "d_slowest10_s": 0.05
+          },
+          "kolesar": {
+            "d_mean_s": -1.3,
+            "d_mean_lo": -1.68,
+            "d_mean_hi": -0.94,
+            "d_slowest10_s": -0.01
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "boroughs_worse_by_1s_any_model": [],
+      "boroughs_significantly_worse_lgbm": [
+        "BROMLEY",
+        "CITY OF LONDON",
+        "CROYDON",
+        "HILLINGDON",
+        "KENSINGTON AND CHELSEA",
+        "KINGSTON UPON THAMES",
+        "RICHMOND UPON THAMES",
+        "WANDSWORTH"
+      ]
+    },
+    "lgbm_expand_3_boroughs1s": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -2.15,
+          "d_mean_lo": -2.22,
+          "d_mean_hi": -2.08,
+          "d_slowest10_s": -0.57
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -1.81,
+          "d_mean_lo": -1.95,
+          "d_mean_hi": -1.66,
+          "d_slowest10_s": 0.29
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -2.58,
+          "d_mean_lo": -2.83,
+          "d_mean_hi": -2.36,
+          "d_slowest10_s": 0.22
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -2.44,
+          "d_mean_lo": -2.57,
+          "d_mean_hi": -2.3,
+          "d_slowest10_s": -1.07
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -1.98,
+          "d_mean_lo": -2.13,
+          "d_mean_hi": -1.84,
+          "d_slowest10_s": 0.26
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -2.0,
+          "d_mean_lo": -2.16,
+          "d_mean_hi": -1.86,
+          "d_slowest10_s": -0.05
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -2.16,
+          "d_mean_lo": -2.28,
+          "d_mean_hi": -2.04,
+          "d_slowest10_s": 0.26
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -2.15,
+            "d_mean_lo": -2.21,
+            "d_mean_hi": -2.08,
+            "d_slowest10_s": -0.57
+          },
+          "road": {
+            "d_mean_s": -1.83,
+            "d_mean_lo": -1.89,
+            "d_mean_hi": -1.76,
+            "d_slowest10_s": 0.08
+          },
+          "kolesar": {
+            "d_mean_s": -1.28,
+            "d_mean_lo": -1.34,
+            "d_mean_hi": -1.23,
+            "d_slowest10_s": 0.06
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -1.6,
+            "d_mean_lo": -1.68,
+            "d_mean_hi": -1.51,
+            "d_slowest10_s": -0.23
+          },
+          "road": {
+            "d_mean_s": -1.38,
+            "d_mean_lo": -1.45,
+            "d_mean_hi": -1.31,
+            "d_slowest10_s": 0.03
+          },
+          "kolesar": {
+            "d_mean_s": -0.99,
+            "d_mean_lo": -1.06,
+            "d_mean_hi": -0.93,
+            "d_slowest10_s": 0.04
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -1.59,
+            "d_mean_lo": -1.92,
+            "d_mean_hi": -1.31,
+            "d_slowest10_s": 0.11
+          },
+          "road": {
+            "d_mean_s": -1.42,
+            "d_mean_lo": -1.73,
+            "d_mean_hi": -1.13,
+            "d_slowest10_s": 0.04
+          },
+          "kolesar": {
+            "d_mean_s": -1.08,
+            "d_mean_lo": -1.38,
+            "d_mean_hi": -0.84,
+            "d_slowest10_s": 0.07
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "boroughs_worse_by_1s_any_model": [
+        "BARNET"
+      ],
+      "boroughs_significantly_worse_lgbm": [
+        "BARNET",
+        "BROMLEY",
+        "CITY OF LONDON",
+        "CROYDON",
+        "ENFIELD",
+        "HARROW",
+        "HAVERING",
+        "HILLINGDON",
+        "KINGSTON UPON THAMES",
+        "RICHMOND UPON THAMES",
+        "WANDSWORTH"
+      ]
+    },
+    "lgbm_expand_3_boroughs5s": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -2.54,
+          "d_mean_lo": -2.61,
+          "d_mean_hi": -2.45,
+          "d_slowest10_s": -0.77
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -2.08,
+          "d_mean_lo": -2.26,
+          "d_mean_hi": -1.93,
+          "d_slowest10_s": -0.0
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -2.79,
+          "d_mean_lo": -3.06,
+          "d_mean_hi": -2.55,
+          "d_slowest10_s": -0.06
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -2.86,
+          "d_mean_lo": -3.0,
+          "d_mean_hi": -2.72,
+          "d_slowest10_s": -1.23
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -2.54,
+          "d_mean_lo": -2.71,
+          "d_mean_hi": -2.36,
+          "d_slowest10_s": -0.08
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -2.32,
+          "d_mean_lo": -2.47,
+          "d_mean_hi": -2.16,
+          "d_slowest10_s": -0.28
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -2.61,
+          "d_mean_lo": -2.75,
+          "d_mean_hi": -2.47,
+          "d_slowest10_s": -0.08
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -2.54,
+            "d_mean_lo": -2.61,
+            "d_mean_hi": -2.46,
+            "d_slowest10_s": -0.77
+          },
+          "road": {
+            "d_mean_s": -2.16,
+            "d_mean_lo": -2.23,
+            "d_mean_hi": -2.09,
+            "d_slowest10_s": 0.04
+          },
+          "kolesar": {
+            "d_mean_s": -1.4,
+            "d_mean_lo": -1.45,
+            "d_mean_hi": -1.35,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -1.67,
+            "d_mean_lo": -1.75,
+            "d_mean_hi": -1.58,
+            "d_slowest10_s": -0.39
+          },
+          "road": {
+            "d_mean_s": -1.45,
+            "d_mean_lo": -1.53,
+            "d_mean_hi": -1.38,
+            "d_slowest10_s": 0.0
+          },
+          "kolesar": {
+            "d_mean_s": -0.94,
+            "d_mean_lo": -1.0,
+            "d_mean_hi": -0.88,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -1.52,
+            "d_mean_lo": -1.83,
+            "d_mean_hi": -1.22,
+            "d_slowest10_s": -0.07
+          },
+          "road": {
+            "d_mean_s": -1.38,
+            "d_mean_lo": -1.68,
+            "d_mean_hi": -1.09,
+            "d_slowest10_s": 0.02
+          },
+          "kolesar": {
+            "d_mean_s": -0.95,
+            "d_mean_lo": -1.17,
+            "d_mean_hi": -0.72,
+            "d_slowest10_s": 0.0
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "boroughs_worse_by_1s_any_model": [
+        "LAMBETH",
+        "SOUTHWARK"
+      ],
+      "boroughs_significantly_worse_lgbm": [
+        "BROMLEY",
+        "CROYDON",
+        "ENFIELD",
+        "HARROW",
+        "HILLINGDON",
+        "KINGSTON UPON THAMES",
+        "LAMBETH",
+        "RICHMOND UPON THAMES",
+        "SOUTHWARK"
+      ]
+    },
+    "lgbm_redesign": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -17.11,
+          "d_mean_lo": -17.43,
+          "d_mean_hi": -16.81,
+          "d_slowest10_s": -18.1
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -15.72,
+          "d_mean_lo": -16.43,
+          "d_mean_hi": -15.02,
+          "d_slowest10_s": -16.69
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -16.22,
+          "d_mean_lo": -17.28,
+          "d_mean_hi": -15.27,
+          "d_slowest10_s": -14.5
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -18.52,
+          "d_mean_lo": -19.05,
+          "d_mean_hi": -18.0,
+          "d_slowest10_s": -18.67
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -17.4,
+          "d_mean_lo": -18.09,
+          "d_mean_hi": -16.73,
+          "d_slowest10_s": -17.75
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -16.29,
+          "d_mean_lo": -16.95,
+          "d_mean_hi": -15.62,
+          "d_slowest10_s": -17.07
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -17.05,
+          "d_mean_lo": -17.58,
+          "d_mean_hi": -16.55,
+          "d_slowest10_s": -16.92
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -17.11,
+            "d_mean_lo": -17.41,
+            "d_mean_hi": -16.82,
+            "d_slowest10_s": -18.1
+          },
+          "road": {
+            "d_mean_s": -12.74,
+            "d_mean_lo": -13.05,
+            "d_mean_hi": -12.44,
+            "d_slowest10_s": -7.87
+          },
+          "kolesar": {
+            "d_mean_s": -5.45,
+            "d_mean_lo": -5.74,
+            "d_mean_hi": -5.17,
+            "d_slowest10_s": -0.58
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -16.2,
+            "d_mean_lo": -16.64,
+            "d_mean_hi": -15.76,
+            "d_slowest10_s": -18.85
+          },
+          "road": {
+            "d_mean_s": -11.67,
+            "d_mean_lo": -12.12,
+            "d_mean_hi": -11.27,
+            "d_slowest10_s": -9.2
+          },
+          "kolesar": {
+            "d_mean_s": -4.44,
+            "d_mean_lo": -4.78,
+            "d_mean_hi": -4.07,
+            "d_slowest10_s": -1.96
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -17.74,
+            "d_mean_lo": -19.19,
+            "d_mean_hi": -16.14,
+            "d_slowest10_s": -19.53
+          },
+          "road": {
+            "d_mean_s": -13.67,
+            "d_mean_lo": -15.24,
+            "d_mean_hi": -12.14,
+            "d_slowest10_s": -10.28
+          },
+          "kolesar": {
+            "d_mean_s": -6.6,
+            "d_mean_lo": -7.96,
+            "d_mean_hi": -5.32,
+            "d_slowest10_s": -4.52
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "boroughs_worse_by_1s_any_model": [
+        "BARNET",
+        "BEXLEY",
+        "CITY OF LONDON",
+        "GREENWICH",
+        "HACKNEY",
+        "HAMMERSMITH AND FULHAM",
+        "ISLINGTON",
+        "LAMBETH",
+        "LEWISHAM",
+        "MERTON",
+        "RICHMOND UPON THAMES",
+        "SOUTHWARK",
+        "TOWER HAMLETS",
+        "WALTHAM FOREST",
+        "WANDSWORTH"
+      ],
+      "boroughs_significantly_worse_lgbm": [
+        "CITY OF LONDON",
+        "ISLINGTON",
+        "LAMBETH",
+        "MERTON",
+        "TOWER HAMLETS",
+        "WANDSWORTH"
+      ]
+    },
+    "lgbm_redesign_boroughs1s": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -14.34,
+          "d_mean_lo": -14.58,
+          "d_mean_hi": -14.1,
+          "d_slowest10_s": -14.89
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -12.18,
+          "d_mean_lo": -12.69,
+          "d_mean_hi": -11.69,
+          "d_slowest10_s": -13.32
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -13.77,
+          "d_mean_lo": -14.58,
+          "d_mean_hi": -12.94,
+          "d_slowest10_s": -12.55
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -16.06,
+          "d_mean_lo": -16.44,
+          "d_mean_hi": -15.72,
+          "d_slowest10_s": -16.08
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -15.06,
+          "d_mean_lo": -15.54,
+          "d_mean_hi": -14.57,
+          "d_slowest10_s": -14.25
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -13.06,
+          "d_mean_lo": -13.52,
+          "d_mean_hi": -12.6,
+          "d_slowest10_s": -12.92
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -14.68,
+          "d_mean_lo": -15.15,
+          "d_mean_hi": -14.27,
+          "d_slowest10_s": -13.88
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -14.34,
+            "d_mean_lo": -14.54,
+            "d_mean_hi": -14.11,
+            "d_slowest10_s": -14.89
+          },
+          "road": {
+            "d_mean_s": -10.6,
+            "d_mean_lo": -10.83,
+            "d_mean_hi": -10.4,
+            "d_slowest10_s": -9.78
+          },
+          "kolesar": {
+            "d_mean_s": -5.06,
+            "d_mean_lo": -5.26,
+            "d_mean_hi": -4.86,
+            "d_slowest10_s": -3.72
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -13.88,
+            "d_mean_lo": -14.15,
+            "d_mean_hi": -13.55,
+            "d_slowest10_s": -15.38
+          },
+          "road": {
+            "d_mean_s": -10.02,
+            "d_mean_lo": -10.31,
+            "d_mean_hi": -9.72,
+            "d_slowest10_s": -10.65
+          },
+          "kolesar": {
+            "d_mean_s": -4.44,
+            "d_mean_lo": -4.73,
+            "d_mean_hi": -4.15,
+            "d_slowest10_s": -4.44
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -14.89,
+            "d_mean_lo": -16.11,
+            "d_mean_hi": -13.82,
+            "d_slowest10_s": -16.03
+          },
+          "road": {
+            "d_mean_s": -11.15,
+            "d_mean_lo": -12.41,
+            "d_mean_hi": -10.12,
+            "d_slowest10_s": -12.17
+          },
+          "kolesar": {
+            "d_mean_s": -5.94,
+            "d_mean_lo": -6.85,
+            "d_mean_hi": -4.93,
+            "d_slowest10_s": -6.72
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "boroughs_worse_by_1s_any_model": [
+        "HARINGEY",
+        "LAMBETH",
+        "LEWISHAM",
+        "RICHMOND UPON THAMES",
+        "TOWER HAMLETS"
+      ],
+      "boroughs_significantly_worse_lgbm": []
+    },
+    "lgbm_replace_10": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -5.53,
+          "d_mean_lo": -5.7,
+          "d_mean_hi": -5.36,
+          "d_slowest10_s": -2.72
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -4.81,
+          "d_mean_lo": -5.18,
+          "d_mean_hi": -4.45,
+          "d_slowest10_s": -2.59
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -5.91,
+          "d_mean_lo": -6.52,
+          "d_mean_hi": -5.35,
+          "d_slowest10_s": -1.55
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -6.31,
+          "d_mean_lo": -6.61,
+          "d_mean_hi": -5.99,
+          "d_slowest10_s": -3.3
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -5.25,
+          "d_mean_lo": -5.63,
+          "d_mean_hi": -4.87,
+          "d_slowest10_s": -0.73
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -5.14,
+          "d_mean_lo": -5.49,
+          "d_mean_hi": -4.77,
+          "d_slowest10_s": -2.44
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -5.44,
+          "d_mean_lo": -5.73,
+          "d_mean_hi": -5.11,
+          "d_slowest10_s": -0.99
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -5.53,
+            "d_mean_lo": -5.71,
+            "d_mean_hi": -5.37,
+            "d_slowest10_s": -2.72
+          },
+          "road": {
+            "d_mean_s": -4.56,
+            "d_mean_lo": -4.72,
+            "d_mean_hi": -4.4,
+            "d_slowest10_s": -3.24
+          },
+          "kolesar": {
+            "d_mean_s": -2.18,
+            "d_mean_lo": -2.31,
+            "d_mean_hi": -2.03,
+            "d_slowest10_s": -2.35
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -4.69,
+            "d_mean_lo": -4.91,
+            "d_mean_hi": -4.49,
+            "d_slowest10_s": -2.1
+          },
+          "road": {
+            "d_mean_s": -3.87,
+            "d_mean_lo": -4.11,
+            "d_mean_hi": -3.67,
+            "d_slowest10_s": -3.16
+          },
+          "kolesar": {
+            "d_mean_s": -1.75,
+            "d_mean_lo": -1.92,
+            "d_mean_hi": -1.55,
+            "d_slowest10_s": -2.5
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -5.51,
+            "d_mean_lo": -6.27,
+            "d_mean_hi": -4.81,
+            "d_slowest10_s": -2.37
+          },
+          "road": {
+            "d_mean_s": -4.71,
+            "d_mean_lo": -5.53,
+            "d_mean_hi": -3.99,
+            "d_slowest10_s": -3.92
+          },
+          "kolesar": {
+            "d_mean_s": -2.89,
+            "d_mean_lo": -3.65,
+            "d_mean_hi": -2.21,
+            "d_slowest10_s": -3.75
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "boroughs_worse_by_1s_any_model": [
+        "CITY OF LONDON",
+        "EALING",
+        "GREENWICH",
+        "HACKNEY",
+        "ISLINGTON",
+        "KINGSTON UPON THAMES",
+        "LEWISHAM",
+        "RICHMOND UPON THAMES",
+        "SOUTHWARK",
+        "TOWER HAMLETS"
+      ],
+      "boroughs_significantly_worse_lgbm": [
+        "BROMLEY",
+        "CITY OF LONDON",
+        "GREENWICH",
+        "HACKNEY",
+        "HILLINGDON",
+        "HOUNSLOW",
+        "KINGSTON UPON THAMES",
+        "LEWISHAM",
+        "MERTON",
+        "RICHMOND UPON THAMES",
+        "SOUTHWARK",
+        "SUTTON",
+        "TOWER HAMLETS"
+      ]
+    },
+    "lgbm_replace_10_boroughs0s": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -3.43,
+          "d_mean_lo": -3.54,
+          "d_mean_hi": -3.32,
+          "d_slowest10_s": -2.25
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -2.97,
+          "d_mean_lo": -3.24,
+          "d_mean_hi": -2.73,
+          "d_slowest10_s": -2.33
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -2.92,
+          "d_mean_lo": -3.3,
+          "d_mean_hi": -2.54,
+          "d_slowest10_s": -1.46
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -3.9,
+          "d_mean_lo": -4.09,
+          "d_mean_hi": -3.72,
+          "d_slowest10_s": -2.24
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -3.62,
+          "d_mean_lo": -3.87,
+          "d_mean_hi": -3.35,
+          "d_slowest10_s": -2.1
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -3.16,
+          "d_mean_lo": -3.43,
+          "d_mean_hi": -2.93,
+          "d_slowest10_s": -2.2
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -3.42,
+          "d_mean_lo": -3.64,
+          "d_mean_hi": -3.19,
+          "d_slowest10_s": -1.88
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -3.43,
+            "d_mean_lo": -3.55,
+            "d_mean_hi": -3.31,
+            "d_slowest10_s": -2.25
+          },
+          "road": {
+            "d_mean_s": -2.65,
+            "d_mean_lo": -2.77,
+            "d_mean_hi": -2.53,
+            "d_slowest10_s": -2.1
+          },
+          "kolesar": {
+            "d_mean_s": -1.78,
+            "d_mean_lo": -1.91,
+            "d_mean_hi": -1.67,
+            "d_slowest10_s": -2.79
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -3.45,
+            "d_mean_lo": -3.6,
+            "d_mean_hi": -3.3,
+            "d_slowest10_s": -2.36
+          },
+          "road": {
+            "d_mean_s": -2.61,
+            "d_mean_lo": -2.76,
+            "d_mean_hi": -2.44,
+            "d_slowest10_s": -2.34
+          },
+          "kolesar": {
+            "d_mean_s": -1.8,
+            "d_mean_lo": -1.97,
+            "d_mean_hi": -1.65,
+            "d_slowest10_s": -3.11
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -3.99,
+            "d_mean_lo": -4.6,
+            "d_mean_hi": -3.43,
+            "d_slowest10_s": -2.67
+          },
+          "road": {
+            "d_mean_s": -3.37,
+            "d_mean_lo": -3.98,
+            "d_mean_hi": -2.77,
+            "d_slowest10_s": -3.68
+          },
+          "kolesar": {
+            "d_mean_s": -2.52,
+            "d_mean_lo": -3.08,
+            "d_mean_hi": -1.97,
+            "d_slowest10_s": -4.38
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "boroughs_worse_by_1s_any_model": [
+        "CITY OF LONDON",
+        "HILLINGDON"
+      ],
+      "boroughs_significantly_worse_lgbm": [
+        "CITY OF LONDON",
+        "ENFIELD",
+        "ISLINGTON",
+        "RICHMOND UPON THAMES",
+        "SUTTON"
+      ]
+    },
+    "lgbm_replace_10_boroughs1s": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -5.18,
+          "d_mean_lo": -5.32,
+          "d_mean_hi": -5.04,
+          "d_slowest10_s": -4.62
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -4.66,
+          "d_mean_lo": -4.99,
+          "d_mean_hi": -4.36,
+          "d_slowest10_s": -3.86
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -4.62,
+          "d_mean_lo": -5.1,
+          "d_mean_hi": -4.14,
+          "d_slowest10_s": -3.4
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -5.59,
+          "d_mean_lo": -5.83,
+          "d_mean_hi": -5.35,
+          "d_slowest10_s": -5.55
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -5.41,
+          "d_mean_lo": -5.68,
+          "d_mean_hi": -5.13,
+          "d_slowest10_s": -3.3
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -5.0,
+          "d_mean_lo": -5.26,
+          "d_mean_hi": -4.72,
+          "d_slowest10_s": -3.66
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -5.18,
+          "d_mean_lo": -5.45,
+          "d_mean_hi": -4.96,
+          "d_slowest10_s": -3.36
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -5.18,
+            "d_mean_lo": -5.32,
+            "d_mean_hi": -5.04,
+            "d_slowest10_s": -4.62
+          },
+          "road": {
+            "d_mean_s": -4.72,
+            "d_mean_lo": -4.86,
+            "d_mean_hi": -4.59,
+            "d_slowest10_s": -4.87
+          },
+          "kolesar": {
+            "d_mean_s": -2.47,
+            "d_mean_lo": -2.6,
+            "d_mean_hi": -2.35,
+            "d_slowest10_s": -3.57
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -4.7,
+            "d_mean_lo": -4.9,
+            "d_mean_hi": -4.52,
+            "d_slowest10_s": -4.16
+          },
+          "road": {
+            "d_mean_s": -4.34,
+            "d_mean_lo": -4.55,
+            "d_mean_hi": -4.14,
+            "d_slowest10_s": -5.0
+          },
+          "kolesar": {
+            "d_mean_s": -2.24,
+            "d_mean_lo": -2.42,
+            "d_mean_hi": -2.08,
+            "d_slowest10_s": -3.63
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -5.5,
+            "d_mean_lo": -6.09,
+            "d_mean_hi": -4.92,
+            "d_slowest10_s": -4.0
+          },
+          "road": {
+            "d_mean_s": -5.2,
+            "d_mean_lo": -5.88,
+            "d_mean_hi": -4.55,
+            "d_slowest10_s": -5.94
+          },
+          "kolesar": {
+            "d_mean_s": -3.36,
+            "d_mean_lo": -3.97,
+            "d_mean_hi": -2.71,
+            "d_slowest10_s": -4.97
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "boroughs_worse_by_1s_any_model": [
+        "CAMDEN",
+        "CITY OF LONDON",
+        "HOUNSLOW",
+        "ISLINGTON",
+        "RICHMOND UPON THAMES"
+      ],
+      "boroughs_significantly_worse_lgbm": [
+        "BROMLEY",
+        "CITY OF LONDON",
+        "ENFIELD",
+        "ISLINGTON"
+      ]
+    },
+    "lgbm_replace_10_boroughs5s": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -4.89,
+          "d_mean_lo": -5.03,
+          "d_mean_hi": -4.74,
+          "d_slowest10_s": -4.91
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -3.9,
+          "d_mean_lo": -4.21,
+          "d_mean_hi": -3.6,
+          "d_slowest10_s": -4.22
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -4.7,
+          "d_mean_lo": -5.22,
+          "d_mean_hi": -4.19,
+          "d_slowest10_s": -3.66
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -5.52,
+          "d_mean_lo": -5.78,
+          "d_mean_hi": -5.25,
+          "d_slowest10_s": -5.78
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -5.19,
+          "d_mean_lo": -5.51,
+          "d_mean_hi": -4.87,
+          "d_slowest10_s": -3.28
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -4.52,
+          "d_mean_lo": -4.83,
+          "d_mean_hi": -4.2,
+          "d_slowest10_s": -4.17
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -5.05,
+          "d_mean_lo": -5.33,
+          "d_mean_hi": -4.75,
+          "d_slowest10_s": -3.39
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -4.89,
+            "d_mean_lo": -5.03,
+            "d_mean_hi": -4.75,
+            "d_slowest10_s": -4.91
+          },
+          "road": {
+            "d_mean_s": -4.14,
+            "d_mean_lo": -4.29,
+            "d_mean_hi": -4.0,
+            "d_slowest10_s": -5.18
+          },
+          "kolesar": {
+            "d_mean_s": -1.99,
+            "d_mean_lo": -2.13,
+            "d_mean_hi": -1.86,
+            "d_slowest10_s": -4.11
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -4.33,
+            "d_mean_lo": -4.53,
+            "d_mean_hi": -4.15,
+            "d_slowest10_s": -4.3
+          },
+          "road": {
+            "d_mean_s": -3.74,
+            "d_mean_lo": -3.93,
+            "d_mean_hi": -3.54,
+            "d_slowest10_s": -5.14
+          },
+          "kolesar": {
+            "d_mean_s": -1.64,
+            "d_mean_lo": -1.83,
+            "d_mean_hi": -1.44,
+            "d_slowest10_s": -4.02
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -4.36,
+            "d_mean_lo": -5.02,
+            "d_mean_hi": -3.68,
+            "d_slowest10_s": -4.83
+          },
+          "road": {
+            "d_mean_s": -3.82,
+            "d_mean_lo": -4.42,
+            "d_mean_hi": -3.19,
+            "d_slowest10_s": -6.48
+          },
+          "kolesar": {
+            "d_mean_s": -2.16,
+            "d_mean_lo": -2.79,
+            "d_mean_hi": -1.6,
+            "d_slowest10_s": -5.53
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "boroughs_worse_by_1s_any_model": [
+        "CAMDEN",
+        "CITY OF LONDON",
+        "GREENWICH",
+        "HACKNEY",
+        "HOUNSLOW",
+        "ISLINGTON",
+        "RICHMOND UPON THAMES",
+        "SOUTHWARK",
+        "TOWER HAMLETS"
+      ],
+      "boroughs_significantly_worse_lgbm": [
+        "CITY OF LONDON",
+        "GREENWICH",
+        "HACKNEY",
+        "SOUTHWARK",
+        "WALTHAM FOREST"
+      ]
+    },
+    "kolesar_expand_3": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -2.11,
+          "d_mean_lo": -2.17,
+          "d_mean_hi": -2.04,
+          "d_slowest10_s": -0.73
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -1.76,
+          "d_mean_lo": -1.94,
+          "d_mean_hi": -1.61,
+          "d_slowest10_s": 0.09
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -2.21,
+          "d_mean_lo": -2.47,
+          "d_mean_hi": -1.99,
+          "d_slowest10_s": -0.02
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -2.35,
+          "d_mean_lo": -2.48,
+          "d_mean_hi": -2.23,
+          "d_slowest10_s": -1.28
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -2.09,
+          "d_mean_lo": -2.22,
+          "d_mean_hi": -1.94,
+          "d_slowest10_s": -0.11
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -2.0,
+          "d_mean_lo": -2.12,
+          "d_mean_hi": -1.86,
+          "d_slowest10_s": -0.27
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -2.13,
+          "d_mean_lo": -2.25,
+          "d_mean_hi": -2.0,
+          "d_slowest10_s": -0.1
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -2.11,
+            "d_mean_lo": -2.18,
+            "d_mean_hi": -2.03,
+            "d_slowest10_s": -0.73
+          },
+          "road": {
+            "d_mean_s": -1.96,
+            "d_mean_lo": -2.03,
+            "d_mean_hi": -1.89,
+            "d_slowest10_s": 0.05
+          },
+          "kolesar": {
+            "d_mean_s": -1.84,
+            "d_mean_lo": -1.91,
+            "d_mean_hi": -1.77,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -1.41,
+            "d_mean_lo": -1.49,
+            "d_mean_hi": -1.34,
+            "d_slowest10_s": -0.39
+          },
+          "road": {
+            "d_mean_s": -1.32,
+            "d_mean_lo": -1.4,
+            "d_mean_hi": -1.25,
+            "d_slowest10_s": 0.01
+          },
+          "kolesar": {
+            "d_mean_s": -1.27,
+            "d_mean_lo": -1.36,
+            "d_mean_hi": -1.19,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -1.34,
+            "d_mean_lo": -1.65,
+            "d_mean_hi": -1.06,
+            "d_slowest10_s": -0.08
+          },
+          "road": {
+            "d_mean_s": -1.26,
+            "d_mean_lo": -1.55,
+            "d_mean_hi": -0.97,
+            "d_slowest10_s": 0.04
+          },
+          "kolesar": {
+            "d_mean_s": -1.23,
+            "d_mean_lo": -1.51,
+            "d_mean_hi": -0.96,
+            "d_slowest10_s": 0.0
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "boroughs_worse_by_1s_any_model": [
+        "CITY OF LONDON",
+        "LAMBETH",
+        "SOUTHWARK"
+      ],
+      "boroughs_significantly_worse_lgbm": [
+        "CITY OF LONDON",
+        "LAMBETH",
+        "SOUTHWARK"
+      ]
+    },
+    "kolesar_replace_10": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -3.07,
+          "d_mean_lo": -3.22,
+          "d_mean_hi": -2.91,
+          "d_slowest10_s": -1.57
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -2.86,
+          "d_mean_lo": -3.19,
+          "d_mean_hi": -2.48,
+          "d_slowest10_s": -1.17
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -2.93,
+          "d_mean_lo": -3.43,
+          "d_mean_hi": -2.43,
+          "d_slowest10_s": -1.09
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -3.68,
+          "d_mean_lo": -3.96,
+          "d_mean_hi": -3.43,
+          "d_slowest10_s": -2.22
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -2.87,
+          "d_mean_lo": -3.2,
+          "d_mean_hi": -2.51,
+          "d_slowest10_s": -0.63
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -2.62,
+          "d_mean_lo": -2.94,
+          "d_mean_hi": -2.3,
+          "d_slowest10_s": -0.59
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -2.88,
+          "d_mean_lo": -3.18,
+          "d_mean_hi": -2.59,
+          "d_slowest10_s": -0.77
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -3.07,
+            "d_mean_lo": -3.21,
+            "d_mean_hi": -2.91,
+            "d_slowest10_s": -1.57
+          },
+          "road": {
+            "d_mean_s": -3.7,
+            "d_mean_lo": -3.87,
+            "d_mean_hi": -3.55,
+            "d_slowest10_s": -3.48
+          },
+          "kolesar": {
+            "d_mean_s": -4.16,
+            "d_mean_lo": -4.33,
+            "d_mean_hi": -3.99,
+            "d_slowest10_s": -4.03
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -1.94,
+            "d_mean_lo": -2.14,
+            "d_mean_hi": -1.75,
+            "d_slowest10_s": -1.11
+          },
+          "road": {
+            "d_mean_s": -2.6,
+            "d_mean_lo": -2.81,
+            "d_mean_hi": -2.4,
+            "d_slowest10_s": -3.79
+          },
+          "kolesar": {
+            "d_mean_s": -3.06,
+            "d_mean_lo": -3.28,
+            "d_mean_hi": -2.83,
+            "d_slowest10_s": -4.08
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -2.49,
+            "d_mean_lo": -3.23,
+            "d_mean_hi": -1.71,
+            "d_slowest10_s": -0.84
+          },
+          "road": {
+            "d_mean_s": -3.12,
+            "d_mean_lo": -3.91,
+            "d_mean_hi": -2.33,
+            "d_slowest10_s": -4.6
+          },
+          "kolesar": {
+            "d_mean_s": -3.69,
+            "d_mean_lo": -4.49,
+            "d_mean_hi": -2.92,
+            "d_slowest10_s": -5.7
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "boroughs_worse_by_1s_any_model": [
+        "CITY OF LONDON",
+        "HACKNEY",
+        "ISLINGTON",
+        "LEWISHAM",
+        "RICHMOND UPON THAMES",
+        "SOUTHWARK",
+        "TOWER HAMLETS"
+      ],
+      "boroughs_significantly_worse_lgbm": [
+        "CITY OF LONDON",
+        "CROYDON",
+        "HACKNEY",
+        "HARINGEY",
+        "ISLINGTON",
+        "LEWISHAM",
+        "SOUTHWARK",
+        "SUTTON",
+        "TOWER HAMLETS"
+      ]
+    },
+    "road_expand_3": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -2.04,
+          "d_mean_lo": -2.12,
+          "d_mean_hi": -1.97,
+          "d_slowest10_s": -0.7
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -1.78,
+          "d_mean_lo": -1.96,
+          "d_mean_hi": -1.63,
+          "d_slowest10_s": 0.06
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -2.35,
+          "d_mean_lo": -2.63,
+          "d_mean_hi": -2.12,
+          "d_slowest10_s": 0.0
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -2.23,
+          "d_mean_lo": -2.36,
+          "d_mean_hi": -2.1,
+          "d_slowest10_s": -1.22
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -2.03,
+          "d_mean_lo": -2.17,
+          "d_mean_hi": -1.88,
+          "d_slowest10_s": -0.07
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -1.88,
+          "d_mean_lo": -2.02,
+          "d_mean_hi": -1.72,
+          "d_slowest10_s": -0.27
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -2.12,
+          "d_mean_lo": -2.26,
+          "d_mean_hi": -1.98,
+          "d_slowest10_s": -0.07
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -2.04,
+            "d_mean_lo": -2.11,
+            "d_mean_hi": -1.98,
+            "d_slowest10_s": -0.7
+          },
+          "road": {
+            "d_mean_s": -2.15,
+            "d_mean_lo": -2.23,
+            "d_mean_hi": -2.07,
+            "d_slowest10_s": 0.05
+          },
+          "kolesar": {
+            "d_mean_s": -1.61,
+            "d_mean_lo": -1.68,
+            "d_mean_hi": -1.54,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -1.34,
+            "d_mean_lo": -1.42,
+            "d_mean_hi": -1.26,
+            "d_slowest10_s": -0.36
+          },
+          "road": {
+            "d_mean_s": -1.42,
+            "d_mean_lo": -1.52,
+            "d_mean_hi": -1.34,
+            "d_slowest10_s": 0.0
+          },
+          "kolesar": {
+            "d_mean_s": -1.03,
+            "d_mean_lo": -1.12,
+            "d_mean_hi": -0.95,
+            "d_slowest10_s": -0.0
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -1.11,
+            "d_mean_lo": -1.38,
+            "d_mean_hi": -0.84,
+            "d_slowest10_s": -0.06
+          },
+          "road": {
+            "d_mean_s": -1.17,
+            "d_mean_lo": -1.48,
+            "d_mean_hi": -0.86,
+            "d_slowest10_s": 0.04
+          },
+          "kolesar": {
+            "d_mean_s": -0.88,
+            "d_mean_lo": -1.19,
+            "d_mean_hi": -0.61,
+            "d_slowest10_s": -0.0
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "boroughs_worse_by_1s_any_model": [
+        "CAMDEN",
+        "KENSINGTON AND CHELSEA",
+        "LAMBETH",
+        "SOUTHWARK"
+      ],
+      "boroughs_significantly_worse_lgbm": [
+        "BRENT",
+        "CAMDEN",
+        "LAMBETH",
+        "SOUTHWARK"
+      ]
+    },
+    "road_replace_10": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -3.33,
+          "d_mean_lo": -3.5,
+          "d_mean_hi": -3.16,
+          "d_slowest10_s": 2.45
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -3.21,
+          "d_mean_lo": -3.57,
+          "d_mean_hi": -2.86,
+          "d_slowest10_s": 1.3
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -3.65,
+          "d_mean_lo": -4.31,
+          "d_mean_hi": -3.08,
+          "d_slowest10_s": 2.35
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -3.62,
+          "d_mean_lo": -3.92,
+          "d_mean_hi": -3.28,
+          "d_slowest10_s": 2.37
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -2.98,
+          "d_mean_lo": -3.33,
+          "d_mean_hi": -2.57,
+          "d_slowest10_s": 5.38
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -3.28,
+          "d_mean_lo": -3.64,
+          "d_mean_hi": -2.89,
+          "d_slowest10_s": 1.82
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -3.17,
+          "d_mean_lo": -3.5,
+          "d_mean_hi": -2.87,
+          "d_slowest10_s": 4.46
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -3.33,
+            "d_mean_lo": -3.51,
+            "d_mean_hi": -3.17,
+            "d_slowest10_s": 2.45
+          },
+          "road": {
+            "d_mean_s": -5.21,
+            "d_mean_lo": -5.39,
+            "d_mean_hi": -5.05,
+            "d_slowest10_s": 0.1
+          },
+          "kolesar": {
+            "d_mean_s": -3.23,
+            "d_mean_lo": -3.41,
+            "d_mean_hi": -3.04,
+            "d_slowest10_s": 1.63
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -2.38,
+            "d_mean_lo": -2.58,
+            "d_mean_hi": -2.18,
+            "d_slowest10_s": 2.97
+          },
+          "road": {
+            "d_mean_s": -4.06,
+            "d_mean_lo": -4.28,
+            "d_mean_hi": -3.81,
+            "d_slowest10_s": -0.02
+          },
+          "kolesar": {
+            "d_mean_s": -2.22,
+            "d_mean_lo": -2.5,
+            "d_mean_hi": -1.97,
+            "d_slowest10_s": 1.76
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -3.32,
+            "d_mean_lo": -4.13,
+            "d_mean_hi": -2.55,
+            "d_slowest10_s": 2.65
+          },
+          "road": {
+            "d_mean_s": -4.94,
+            "d_mean_lo": -5.81,
+            "d_mean_hi": -4.07,
+            "d_slowest10_s": -0.42
+          },
+          "kolesar": {
+            "d_mean_s": -3.52,
+            "d_mean_lo": -4.37,
+            "d_mean_hi": -2.71,
+            "d_slowest10_s": 0.66
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "boroughs_worse_by_1s_any_model": [
+        "CITY OF LONDON",
+        "GREENWICH",
+        "KINGSTON UPON THAMES",
+        "LEWISHAM",
+        "MERTON",
+        "RICHMOND UPON THAMES",
+        "SOUTHWARK",
+        "TOWER HAMLETS",
+        "WALTHAM FOREST"
+      ],
+      "boroughs_significantly_worse_lgbm": [
+        "BARNET",
+        "CITY OF LONDON",
+        "ENFIELD",
+        "GREENWICH",
+        "HILLINGDON",
+        "HOUNSLOW",
+        "KINGSTON UPON THAMES",
+        "LEWISHAM",
+        "MERTON",
+        "RICHMOND UPON THAMES",
+        "SOUTHWARK",
+        "TOWER HAMLETS",
+        "WALTHAM FOREST"
+      ]
+    }
+  }
+}
