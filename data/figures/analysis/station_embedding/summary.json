@@ -98,6 +98,13 @@
   },
   "clusters": {
     "k": 5,
+    "names": [
+      "Outer long-drive",
+      "Outer two-pump",
+      "Busy multi-pump",
+      "Strained 1-pump urban",
+      "Central demand outliers"
+    ],
     "silhouette_by_k": {
       "3": 0.248,
       "4": 0.242,
