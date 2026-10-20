@@ -31,7 +31,7 @@
   "boroughs_better_by_5s_or_more": 8,
   "opened": [
     "New site on Shepherds Bush Road / Shepherds Bush Green",
-    "Demand cell 67",
+    "New site near Mason Street / Old Kent Road",
     "New site on Bow Road / Fairfield Road",
     "New site on Inner Ring West / Cirrus Road",
     "New site on Beckenham Road / Birkbeck Road",
@@ -76,7 +76,7 @@
       "pumps": 1,
       "km": 1.26,
       "from_name": "Dockhead",
-      "to_name": "Demand cell 67"
+      "to_name": "New site near Mason Street / Old Kent Road"
     },
     {
       "from": 34,

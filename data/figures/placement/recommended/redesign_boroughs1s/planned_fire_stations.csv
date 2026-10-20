@@ -60,7 +60,7 @@ candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline,plan_r
 387,New site on St John's Wood Road / Maida Vale,street_junction,-0.1782656,51.5257526,False,,1,58,73.0,2,1,2538.0,0.02013742323500008
 388,New site on Marloes Road / Cromwell Road,street_junction,-0.1921101,51.4947247,False,,1,59,73.0,1,0,2122.0,0.01683672659758478
 398,New site on New Road / Whitechapel Road,street_junction,-0.0628246,51.5183955,False,,1,60,73.0,1,0,1623.0,0.01287747750606979
-124,Demand cell 22,demand_cell,-0.11098183706694556,51.525640925178614,False,,1,61,73.0,1,0,1263.0,0.010021105415998858
+124,New site near Easton Street / Rosebery Avenue,demand_cell,-0.11098183706694556,51.525640925178614,False,,1,61,73.0,1,0,1263.0,0.010021105415998858
 409,New site on Uxbridge Road / Boscombe Road,street_junction,-0.2372425,51.5064522,False,,1,62,73.0,2,1,1662.0,0.013186917815827474
 413,New site on Lower Clapton Road,street_junction,-0.0520059,51.5508403,False,,1,63,73.0,2,1,2288.0,0.018153831505784153
 418,New site on King William Street / Gracechurch Street,street_junction,-0.0865475,51.5108992,False,,1,64,73.0,1,0,1729.0,0.013718520399257344
@@ -91,7 +91,7 @@ candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline,plan_r
 568,New site on High Street / School Road,street_junction,-0.3569488,51.4700189,False,,1,89,73.0,2,1,1293.0,0.010259136423504768
 578,New site on Jail Lane / Main Road,street_junction,0.03287,51.3167829,False,,1,90,73.0,1,0,177.0,0.0014043829442848756
 585,New site on Tweedy Road,street_junction,0.0173687,51.4076972,False,,1,91,73.0,2,1,1302.0,0.010330545725756542
-314,Demand cell 85,demand_cell,0.007295922931113259,51.55938367250367,False,,1,92,73.0,1,0,1001.0,0.007942301283780567
+314,New site near Mayville Road / High Road Leytonstone,demand_cell,0.007295922931113259,51.55938367250367,False,,1,92,73.0,1,0,1001.0,0.007942301283780567
 592,New site on High Road Woodford Green,street_junction,0.0187567,51.6046815,False,,1,93,73.0,1,0,662.0,0.005252550898963771
 601,New site on John Wilson Street / Wellington Street,street_junction,0.0628016,51.4884007,False,,1,94,73.0,2,1,1170.0,0.009283209292730533
 606,New site on King Edward's Road / Ripple Road,street_junction,0.0840727,51.5341878,False,,1,95,73.0,2,1,1026.0,0.00814066045670216

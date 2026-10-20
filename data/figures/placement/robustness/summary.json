@@ -1,5 +1,5 @@
 {
-  "doc": "Robustness of the placement results: time of day, call severity and borough.\n\nEvery layout from scripts/score_layouts.py (today's stations, the recommended layouts and\nthe distance-based ones) is scored on held-out 2025 calls, split three ways, each layout\nminus today with a 95 % paired bootstrap interval (resampling calls within the group):\n\n  time of day   LightGBM travel times predicted for each period's representative hour\n                (night 00-07 at 03h, morning rush 07-10 at 08h, day 10-16 at 13h,\n                evening rush 16-20 at 18h, evening 20-24 at 21h) and the hourly dispatch\n                model, whose busy chances use each 4-hour slot's calibrated load factor.\n                Each call is scored with the times for its own hour of call.\n  severity      all calls; fires and special services (\"serious\"); fires in homes.\n  borough       each of the 33 boroughs (where the call happened).\n\nSeverity and borough are reported under all three travel-time models (LightGBM with the\nhour-specific times above; the two Kolesar formulas have no hour, so they use the all-day\ndispatch model). A result holds up if it holds under all three.\n\nWrites data/figures/placement/robustness/: robustness.csv (every layout x group), summary.json,\ntime_of_day.png, boroughs.png.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/placement_robustness.py\n",
+  "doc": "Robustness of the placement results: time of day, call severity and borough.\n\nEvery layout from scripts/score_layouts.py (today's stations, the recommended layouts and\nthe distance-based ones) is scored on held-out 2025 calls, split three ways, each layout\nminus today with a 95 % paired bootstrap interval (resampling calls within the group):\n\n  time of day   LightGBM travel times predicted for each period's representative hour\n                (night 00-07 at 03h, morning rush 07-10 at 08h, day 10-16 at 13h,\n                evening rush 16-20 at 18h, evening 20-24 at 21h) and the hourly dispatch\n                model, whose busy chances use each 4-hour slot's calibrated load factor.\n                Each call is scored with the times for its own hour of call.\n  severity      all calls; fires and special services (\"serious\"); fires in homes.\n  borough       each of the 33 boroughs (where the call happened).\n  income        quintile of neighbourhood income: each call takes the ONS FYE 2020 net\n                household income after housing costs (equivalised) of the nearest London\n                MSOA population-weighted centroid; quintiles split London's ~980 MSOAs\n                into fifths (Q1 poorest). Data: data/raw/income/ (ONS, Open Government Licence).\n\nSeverity, borough and income are reported under all three travel-time models (LightGBM with the\nhour-specific times above; the two Kolesar formulas have no hour, so they use the all-day\ndispatch model). A result holds up if it holds under all three.\n\nWrites data/figures/placement/robustness/: robustness.csv (every layout x group), summary.json,\ntime_of_day.png, boroughs.png, income.png.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/placement_robustness.py\n",
   "n_calls_2025": 129268,
   "bootstrap": 500,
   "layouts": {
@@ -78,7 +78,7 @@
           },
           "kolesar": {
             "d_mean_s": -0.47,
-            "d_mean_lo": -0.49,
+            "d_mean_lo": -0.5,
             "d_mean_hi": -0.45,
             "d_slowest10_s": 0.0
           }
@@ -98,7 +98,7 @@
           },
           "kolesar": {
             "d_mean_s": -0.26,
-            "d_mean_lo": -0.28,
+            "d_mean_lo": -0.29,
             "d_mean_hi": -0.23,
             "d_slowest10_s": -0.0
           }
@@ -112,8 +112,8 @@
           },
           "road": {
             "d_mean_s": -0.33,
-            "d_mean_lo": -0.42,
-            "d_mean_hi": -0.22,
+            "d_mean_lo": -0.43,
+            "d_mean_hi": -0.23,
             "d_slowest10_s": -0.0
           },
           "kolesar": {
@@ -126,6 +126,138 @@
       },
       "faster_in_every_period_lgbm": true,
       "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -0.08,
+            "d_mean_lo": -0.1,
+            "d_mean_hi": -0.06,
+            "d_slowest10_s": -0.0
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -0.01,
+            "d_mean_lo": -0.03,
+            "d_mean_hi": 0.0,
+            "d_slowest10_s": -0.0
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": 0.01,
+            "d_mean_lo": -0.0,
+            "d_mean_hi": 0.02,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": -0.1,
+            "d_mean_lo": -0.12,
+            "d_mean_hi": -0.09,
+            "d_slowest10_s": 0.01
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": -0.12,
+            "d_mean_lo": -0.13,
+            "d_mean_hi": -0.11,
+            "d_slowest10_s": -0.0
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": -0.01,
+            "d_mean_lo": -0.02,
+            "d_mean_hi": -0.01,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": -0.16,
+            "d_mean_lo": -0.19,
+            "d_mean_hi": -0.13,
+            "d_slowest10_s": 0.05
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": -0.26,
+            "d_mean_lo": -0.28,
+            "d_mean_hi": -0.23,
+            "d_slowest10_s": -0.0
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": -0.03,
+            "d_mean_lo": -0.05,
+            "d_mean_hi": -0.02,
+            "d_slowest10_s": -0.0
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -1.59,
+            "d_mean_lo": -1.72,
+            "d_mean_hi": -1.47,
+            "d_slowest10_s": -0.66
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -1.21,
+            "d_mean_lo": -1.3,
+            "d_mean_hi": -1.11,
+            "d_slowest10_s": -0.03
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": -0.64,
+            "d_mean_lo": -0.72,
+            "d_mean_hi": -0.57,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -4.13,
+            "d_mean_lo": -4.36,
+            "d_mean_hi": -3.91,
+            "d_slowest10_s": -4.25
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -3.45,
+            "d_mean_lo": -3.64,
+            "d_mean_hi": -3.28,
+            "d_slowest10_s": -0.02
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -1.97,
+            "d_mean_lo": -2.09,
+            "d_mean_hi": -1.85,
+            "d_slowest10_s": 0.0
+          }
+        }
+      },
       "boroughs_worse_by_1s_any_model": [],
       "boroughs_significantly_worse_lgbm": [
         "BARNET",
@@ -138,6 +270,276 @@
         "KINGSTON UPON THAMES",
         "LAMBETH",
         "RICHMOND UPON THAMES"
+      ]
+    },
+    "lgbm_expand_2_boroughs1s": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -1.32,
+          "d_mean_lo": -1.36,
+          "d_mean_hi": -1.26,
+          "d_slowest10_s": -0.68
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -1.1,
+          "d_mean_lo": -1.23,
+          "d_mean_hi": -0.98,
+          "d_slowest10_s": 0.12
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -1.63,
+          "d_mean_lo": -1.81,
+          "d_mean_hi": -1.43,
+          "d_slowest10_s": 0.02
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -1.5,
+          "d_mean_lo": -1.6,
+          "d_mean_hi": -1.4,
+          "d_slowest10_s": -1.2
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -1.2,
+          "d_mean_lo": -1.3,
+          "d_mean_hi": -1.09,
+          "d_slowest10_s": -0.04
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -1.2,
+          "d_mean_lo": -1.32,
+          "d_mean_hi": -1.08,
+          "d_slowest10_s": -0.21
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -1.33,
+          "d_mean_lo": -1.43,
+          "d_mean_hi": -1.23,
+          "d_slowest10_s": -0.03
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -1.32,
+            "d_mean_lo": -1.37,
+            "d_mean_hi": -1.26,
+            "d_slowest10_s": -0.68
+          },
+          "road": {
+            "d_mean_s": -1.03,
+            "d_mean_lo": -1.08,
+            "d_mean_hi": -0.99,
+            "d_slowest10_s": 0.03
+          },
+          "kolesar": {
+            "d_mean_s": -0.7,
+            "d_mean_lo": -0.74,
+            "d_mean_hi": -0.66,
+            "d_slowest10_s": -0.0
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -0.87,
+            "d_mean_lo": -0.93,
+            "d_mean_hi": -0.82,
+            "d_slowest10_s": -0.34
+          },
+          "road": {
+            "d_mean_s": -0.69,
+            "d_mean_lo": -0.75,
+            "d_mean_hi": -0.64,
+            "d_slowest10_s": -0.01
+          },
+          "kolesar": {
+            "d_mean_s": -0.5,
+            "d_mean_lo": -0.55,
+            "d_mean_hi": -0.46,
+            "d_slowest10_s": -0.0
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -0.6,
+            "d_mean_lo": -0.8,
+            "d_mean_hi": -0.43,
+            "d_slowest10_s": -0.03
+          },
+          "road": {
+            "d_mean_s": -0.44,
+            "d_mean_lo": -0.61,
+            "d_mean_hi": -0.28,
+            "d_slowest10_s": 0.02
+          },
+          "kolesar": {
+            "d_mean_s": -0.36,
+            "d_mean_lo": -0.53,
+            "d_mean_hi": -0.2,
+            "d_slowest10_s": 0.0
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -0.18,
+            "d_mean_lo": -0.2,
+            "d_mean_hi": -0.15,
+            "d_slowest10_s": 0.02
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": 0.1,
+            "d_mean_lo": 0.07,
+            "d_mean_hi": 0.13,
+            "d_slowest10_s": 0.03
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": 0.02,
+            "d_mean_lo": 0.0,
+            "d_mean_hi": 0.04,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": -0.92,
+            "d_mean_lo": -1.01,
+            "d_mean_hi": -0.84,
+            "d_slowest10_s": 0.02
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": -1.04,
+            "d_mean_lo": -1.15,
+            "d_mean_hi": -0.94,
+            "d_slowest10_s": -0.0
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": -1.11,
+            "d_mean_lo": -1.23,
+            "d_mean_hi": -0.99,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": -0.95,
+            "d_mean_lo": -1.03,
+            "d_mean_hi": -0.87,
+            "d_slowest10_s": 0.06
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": -0.86,
+            "d_mean_lo": -0.94,
+            "d_mean_hi": -0.78,
+            "d_slowest10_s": 0.04
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": -0.69,
+            "d_mean_lo": -0.77,
+            "d_mean_hi": -0.62,
+            "d_slowest10_s": -0.0
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -1.21,
+            "d_mean_lo": -1.35,
+            "d_mean_hi": -1.08,
+            "d_slowest10_s": -0.62
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -0.72,
+            "d_mean_lo": -0.82,
+            "d_mean_hi": -0.63,
+            "d_slowest10_s": 0.19
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": -0.23,
+            "d_mean_lo": -0.31,
+            "d_mean_hi": -0.16,
+            "d_slowest10_s": -0.0
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -3.74,
+            "d_mean_lo": -3.99,
+            "d_mean_hi": -3.54,
+            "d_slowest10_s": -4.2
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -2.93,
+            "d_mean_lo": -3.09,
+            "d_mean_hi": -2.77,
+            "d_slowest10_s": -0.04
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -1.56,
+            "d_mean_lo": -1.68,
+            "d_mean_hi": -1.45,
+            "d_slowest10_s": -0.0
+          }
+        }
+      },
+      "boroughs_worse_by_1s_any_model": [],
+      "boroughs_significantly_worse_lgbm": [
+        "BARNET",
+        "BRENT",
+        "BROMLEY",
+        "CITY OF LONDON",
+        "CROYDON",
+        "HARROW",
+        "HILLINGDON",
+        "KENSINGTON AND CHELSEA",
+        "KINGSTON UPON THAMES",
+        "RICHMOND UPON THAMES",
+        "WANDSWORTH"
       ]
     },
     "lgbm_expand_3": {
@@ -154,8 +556,8 @@
           "n_calls": 21939,
           "today_mean_s": 288.13,
           "d_mean_s": -2.08,
-          "d_mean_lo": -2.25,
-          "d_mean_hi": -1.92,
+          "d_mean_lo": -2.23,
+          "d_mean_hi": -1.93,
           "d_slowest10_s": -0.0
         },
         "morning rush 07-10": {
@@ -163,22 +565,22 @@
           "today_mean_s": 318.45,
           "d_mean_s": -2.79,
           "d_mean_lo": -3.06,
-          "d_mean_hi": -2.52,
+          "d_mean_hi": -2.51,
           "d_slowest10_s": -0.06
         },
         "day 10-16": {
           "n_calls": 38789,
           "today_mean_s": 328.75,
           "d_mean_s": -2.86,
-          "d_mean_lo": -2.99,
-          "d_mean_hi": -2.72,
+          "d_mean_lo": -3.02,
+          "d_mean_hi": -2.71,
           "d_slowest10_s": -1.23
         },
         "evening rush 16-20": {
           "n_calls": 30027,
           "today_mean_s": 326.52,
           "d_mean_s": -2.54,
-          "d_mean_lo": -2.69,
+          "d_mean_lo": -2.7,
           "d_mean_hi": -2.37,
           "d_slowest10_s": -0.08
         },
@@ -186,8 +588,8 @@
           "n_calls": 26193,
           "today_mean_s": 297.74,
           "d_mean_s": -2.32,
-          "d_mean_lo": -2.49,
-          "d_mean_hi": -2.16,
+          "d_mean_lo": -2.5,
+          "d_mean_hi": -2.17,
           "d_slowest10_s": -0.28
         },
         "rush hours (07-10, 16-20)": {
@@ -195,7 +597,7 @@
           "today_mean_s": 324.17,
           "d_mean_s": -2.61,
           "d_mean_lo": -2.75,
-          "d_mean_hi": -2.49,
+          "d_mean_hi": -2.48,
           "d_slowest10_s": -0.08
         }
       },
@@ -204,7 +606,7 @@
           "lgbm": {
             "d_mean_s": -2.54,
             "d_mean_lo": -2.61,
-            "d_mean_hi": -2.45,
+            "d_mean_hi": -2.47,
             "d_slowest10_s": -0.77
           },
           "road": {
@@ -215,7 +617,7 @@
           },
           "kolesar": {
             "d_mean_s": -1.4,
-            "d_mean_lo": -1.44,
+            "d_mean_lo": -1.45,
             "d_mean_hi": -1.35,
             "d_slowest10_s": 0.0
           }
@@ -223,39 +625,39 @@
         "serious": {
           "lgbm": {
             "d_mean_s": -1.67,
-            "d_mean_lo": -1.75,
+            "d_mean_lo": -1.76,
             "d_mean_hi": -1.58,
             "d_slowest10_s": -0.39
           },
           "road": {
             "d_mean_s": -1.45,
-            "d_mean_lo": -1.52,
+            "d_mean_lo": -1.53,
             "d_mean_hi": -1.37,
             "d_slowest10_s": 0.0
           },
           "kolesar": {
             "d_mean_s": -0.94,
             "d_mean_lo": -1.0,
-            "d_mean_hi": -0.88,
+            "d_mean_hi": -0.87,
             "d_slowest10_s": 0.0
           }
         },
         "dwelling_fire": {
           "lgbm": {
             "d_mean_s": -1.52,
-            "d_mean_lo": -1.82,
-            "d_mean_hi": -1.25,
+            "d_mean_lo": -1.84,
+            "d_mean_hi": -1.22,
             "d_slowest10_s": -0.07
           },
           "road": {
             "d_mean_s": -1.38,
-            "d_mean_lo": -1.66,
+            "d_mean_lo": -1.67,
             "d_mean_hi": -1.12,
             "d_slowest10_s": 0.02
           },
           "kolesar": {
             "d_mean_s": -0.95,
-            "d_mean_lo": -1.18,
+            "d_mean_lo": -1.17,
             "d_mean_hi": -0.75,
             "d_slowest10_s": 0.0
           }
@@ -263,6 +665,138 @@
       },
       "faster_in_every_period_lgbm": true,
       "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -1.41,
+            "d_mean_lo": -1.54,
+            "d_mean_hi": -1.3,
+            "d_slowest10_s": -0.0
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -1.41,
+            "d_mean_lo": -1.52,
+            "d_mean_hi": -1.3,
+            "d_slowest10_s": 0.05
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -1.0,
+            "d_mean_lo": -1.08,
+            "d_mean_hi": -0.92,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": 0.24,
+            "d_mean_lo": 0.22,
+            "d_mean_hi": 0.28,
+            "d_slowest10_s": 0.01
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": 0.26,
+            "d_mean_lo": 0.25,
+            "d_mean_hi": 0.28,
+            "d_slowest10_s": -0.0
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": 0.23,
+            "d_mean_lo": 0.22,
+            "d_mean_hi": 0.25,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": -0.14,
+            "d_mean_lo": -0.21,
+            "d_mean_hi": -0.06,
+            "d_slowest10_s": 0.07
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": -0.08,
+            "d_mean_lo": -0.14,
+            "d_mean_hi": -0.03,
+            "d_slowest10_s": 0.05
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": -0.05,
+            "d_mean_lo": -0.11,
+            "d_mean_hi": 0.0,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -4.47,
+            "d_mean_lo": -4.7,
+            "d_mean_hi": -4.25,
+            "d_slowest10_s": -1.0
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -3.97,
+            "d_mean_lo": -4.21,
+            "d_mean_hi": -3.77,
+            "d_slowest10_s": 0.18
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": -2.58,
+            "d_mean_lo": -2.76,
+            "d_mean_hi": -2.41,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -8.18,
+            "d_mean_lo": -8.51,
+            "d_mean_hi": -7.87,
+            "d_slowest10_s": -4.34
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -6.66,
+            "d_mean_lo": -6.9,
+            "d_mean_hi": -6.42,
+            "d_slowest10_s": -0.02
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -4.25,
+            "d_mean_lo": -4.43,
+            "d_mean_hi": -4.06,
+            "d_slowest10_s": 0.0
+          }
+        }
+      },
       "boroughs_worse_by_1s_any_model": [
         "LAMBETH",
         "SOUTHWARK"
@@ -285,7 +819,7 @@
           "n_calls": 129268,
           "today_mean_s": 314.07,
           "d_mean_s": -1.9,
-          "d_mean_lo": -1.97,
+          "d_mean_lo": -1.96,
           "d_mean_hi": -1.84,
           "d_slowest10_s": -0.8
         },
@@ -293,23 +827,23 @@
           "n_calls": 21939,
           "today_mean_s": 288.13,
           "d_mean_s": -1.55,
-          "d_mean_lo": -1.7,
-          "d_mean_hi": -1.42,
+          "d_mean_lo": -1.71,
+          "d_mean_hi": -1.4,
           "d_slowest10_s": 0.07
         },
         "morning rush 07-10": {
           "n_calls": 12320,
           "today_mean_s": 318.45,
           "d_mean_s": -2.32,
-          "d_mean_lo": -2.57,
-          "d_mean_hi": -2.1,
+          "d_mean_lo": -2.56,
+          "d_mean_hi": -2.07,
           "d_slowest10_s": -0.12
         },
         "day 10-16": {
           "n_calls": 38789,
           "today_mean_s": 328.75,
           "d_mean_s": -2.22,
-          "d_mean_lo": -2.34,
+          "d_mean_lo": -2.33,
           "d_mean_hi": -2.1,
           "d_slowest10_s": -1.38
         },
@@ -317,15 +851,15 @@
           "n_calls": 30027,
           "today_mean_s": 326.52,
           "d_mean_s": -1.78,
-          "d_mean_lo": -1.92,
-          "d_mean_hi": -1.65,
+          "d_mean_lo": -1.9,
+          "d_mean_hi": -1.64,
           "d_slowest10_s": -0.23
         },
         "evening 20-24": {
           "n_calls": 26193,
           "today_mean_s": 297.74,
           "d_mean_s": -1.68,
-          "d_mean_lo": -1.81,
+          "d_mean_lo": -1.82,
           "d_mean_hi": -1.54,
           "d_slowest10_s": -0.31
         },
@@ -333,7 +867,7 @@
           "n_calls": 42347,
           "today_mean_s": 324.17,
           "d_mean_s": -1.94,
-          "d_mean_lo": -2.06,
+          "d_mean_lo": -2.05,
           "d_mean_hi": -1.81,
           "d_slowest10_s": -0.2
         }
@@ -355,53 +889,185 @@
           "kolesar": {
             "d_mean_s": -1.32,
             "d_mean_lo": -1.39,
-            "d_mean_hi": -1.27,
+            "d_mean_hi": -1.26,
             "d_slowest10_s": -0.0
           }
         },
         "serious": {
           "lgbm": {
             "d_mean_s": -1.39,
-            "d_mean_lo": -1.47,
-            "d_mean_hi": -1.31,
+            "d_mean_lo": -1.46,
+            "d_mean_hi": -1.32,
             "d_slowest10_s": -0.44
           },
           "road": {
             "d_mean_s": -1.32,
-            "d_mean_lo": -1.39,
+            "d_mean_lo": -1.4,
             "d_mean_hi": -1.24,
             "d_slowest10_s": 0.03
           },
           "kolesar": {
             "d_mean_s": -1.05,
             "d_mean_lo": -1.12,
-            "d_mean_hi": -0.96,
+            "d_mean_hi": -0.97,
             "d_slowest10_s": 0.0
           }
         },
         "dwelling_fire": {
           "lgbm": {
             "d_mean_s": -1.42,
-            "d_mean_lo": -1.72,
-            "d_mean_hi": -1.12,
+            "d_mean_lo": -1.7,
+            "d_mean_hi": -1.11,
             "d_slowest10_s": -0.17
           },
           "road": {
             "d_mean_s": -1.46,
-            "d_mean_lo": -1.84,
-            "d_mean_hi": -1.14,
+            "d_mean_lo": -1.82,
+            "d_mean_hi": -1.13,
             "d_slowest10_s": 0.05
           },
           "kolesar": {
             "d_mean_s": -1.3,
-            "d_mean_lo": -1.68,
-            "d_mean_hi": -0.94,
+            "d_mean_lo": -1.67,
+            "d_mean_hi": -0.98,
             "d_slowest10_s": -0.01
           }
         }
       },
       "faster_in_every_period_lgbm": true,
       "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -1.21,
+            "d_mean_lo": -1.34,
+            "d_mean_hi": -1.1,
+            "d_slowest10_s": -0.05
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -1.28,
+            "d_mean_lo": -1.44,
+            "d_mean_hi": -1.13,
+            "d_slowest10_s": 0.15
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -1.19,
+            "d_mean_lo": -1.36,
+            "d_mean_hi": -1.03,
+            "d_slowest10_s": 0.11
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": -1.61,
+            "d_mean_lo": -1.71,
+            "d_mean_hi": -1.5,
+            "d_slowest10_s": -0.07
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": -1.52,
+            "d_mean_lo": -1.65,
+            "d_mean_hi": -1.41,
+            "d_slowest10_s": 0.0
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": -1.48,
+            "d_mean_lo": -1.61,
+            "d_mean_hi": -1.35,
+            "d_slowest10_s": -0.0
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": -1.22,
+            "d_mean_lo": -1.31,
+            "d_mean_hi": -1.14,
+            "d_slowest10_s": 0.05
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": -1.23,
+            "d_mean_lo": -1.32,
+            "d_mean_hi": -1.15,
+            "d_slowest10_s": 0.05
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": -1.01,
+            "d_mean_lo": -1.09,
+            "d_mean_hi": -0.93,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -1.41,
+            "d_mean_lo": -1.55,
+            "d_mean_hi": -1.27,
+            "d_slowest10_s": -0.86
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -1.02,
+            "d_mean_lo": -1.13,
+            "d_mean_hi": -0.92,
+            "d_slowest10_s": 0.19
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": -0.34,
+            "d_mean_lo": -0.43,
+            "d_mean_hi": -0.26,
+            "d_slowest10_s": -0.17
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -4.36,
+            "d_mean_lo": -4.62,
+            "d_mean_hi": -4.12,
+            "d_slowest10_s": -4.46
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -3.86,
+            "d_mean_lo": -4.09,
+            "d_mean_hi": -3.65,
+            "d_slowest10_s": -0.03
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -2.62,
+            "d_mean_lo": -2.81,
+            "d_mean_hi": -2.43,
+            "d_slowest10_s": 0.02
+          }
+        }
+      },
       "boroughs_worse_by_1s_any_model": [],
       "boroughs_significantly_worse_lgbm": [
         "BROMLEY",
@@ -420,15 +1086,15 @@
           "n_calls": 129268,
           "today_mean_s": 314.07,
           "d_mean_s": -2.15,
-          "d_mean_lo": -2.22,
-          "d_mean_hi": -2.08,
+          "d_mean_lo": -2.21,
+          "d_mean_hi": -2.09,
           "d_slowest10_s": -0.57
         },
         "night 00-07": {
           "n_calls": 21939,
           "today_mean_s": 288.13,
           "d_mean_s": -1.81,
-          "d_mean_lo": -1.95,
+          "d_mean_lo": -1.97,
           "d_mean_hi": -1.66,
           "d_slowest10_s": 0.29
         },
@@ -436,8 +1102,8 @@
           "n_calls": 12320,
           "today_mean_s": 318.45,
           "d_mean_s": -2.58,
-          "d_mean_lo": -2.83,
-          "d_mean_hi": -2.36,
+          "d_mean_lo": -2.86,
+          "d_mean_hi": -2.37,
           "d_slowest10_s": 0.22
         },
         "day 10-16": {
@@ -460,7 +1126,7 @@
           "n_calls": 26193,
           "today_mean_s": 297.74,
           "d_mean_s": -2.0,
-          "d_mean_lo": -2.16,
+          "d_mean_lo": -2.15,
           "d_mean_hi": -1.86,
           "d_slowest10_s": -0.05
         },
@@ -468,8 +1134,8 @@
           "n_calls": 42347,
           "today_mean_s": 324.17,
           "d_mean_s": -2.16,
-          "d_mean_lo": -2.28,
-          "d_mean_hi": -2.04,
+          "d_mean_lo": -2.29,
+          "d_mean_hi": -2.05,
           "d_slowest10_s": 0.26
         }
       },
@@ -477,19 +1143,19 @@
         "all": {
           "lgbm": {
             "d_mean_s": -2.15,
-            "d_mean_lo": -2.21,
+            "d_mean_lo": -2.22,
             "d_mean_hi": -2.08,
             "d_slowest10_s": -0.57
           },
           "road": {
             "d_mean_s": -1.83,
             "d_mean_lo": -1.89,
-            "d_mean_hi": -1.76,
+            "d_mean_hi": -1.77,
             "d_slowest10_s": 0.08
           },
           "kolesar": {
             "d_mean_s": -1.28,
-            "d_mean_lo": -1.34,
+            "d_mean_lo": -1.33,
             "d_mean_hi": -1.23,
             "d_slowest10_s": 0.06
           }
@@ -504,12 +1170,12 @@
           "road": {
             "d_mean_s": -1.38,
             "d_mean_lo": -1.45,
-            "d_mean_hi": -1.31,
+            "d_mean_hi": -1.3,
             "d_slowest10_s": 0.03
           },
           "kolesar": {
             "d_mean_s": -0.99,
-            "d_mean_lo": -1.06,
+            "d_mean_lo": -1.05,
             "d_mean_hi": -0.93,
             "d_slowest10_s": 0.04
           }
@@ -517,19 +1183,19 @@
         "dwelling_fire": {
           "lgbm": {
             "d_mean_s": -1.59,
-            "d_mean_lo": -1.92,
-            "d_mean_hi": -1.31,
+            "d_mean_lo": -1.9,
+            "d_mean_hi": -1.27,
             "d_slowest10_s": 0.11
           },
           "road": {
             "d_mean_s": -1.42,
-            "d_mean_lo": -1.73,
-            "d_mean_hi": -1.13,
+            "d_mean_lo": -1.74,
+            "d_mean_hi": -1.14,
             "d_slowest10_s": 0.04
           },
           "kolesar": {
             "d_mean_s": -1.08,
-            "d_mean_lo": -1.38,
+            "d_mean_lo": -1.35,
             "d_mean_hi": -0.84,
             "d_slowest10_s": 0.07
           }
@@ -537,6 +1203,138 @@
       },
       "faster_in_every_period_lgbm": true,
       "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -1.52,
+            "d_mean_lo": -1.64,
+            "d_mean_hi": -1.39,
+            "d_slowest10_s": 0.12
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -1.42,
+            "d_mean_lo": -1.55,
+            "d_mean_hi": -1.29,
+            "d_slowest10_s": 0.17
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -1.15,
+            "d_mean_lo": -1.26,
+            "d_mean_hi": -1.04,
+            "d_slowest10_s": -0.06
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": -1.71,
+            "d_mean_lo": -1.81,
+            "d_mean_hi": -1.59,
+            "d_slowest10_s": 0.04
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": -1.53,
+            "d_mean_lo": -1.66,
+            "d_mean_hi": -1.41,
+            "d_slowest10_s": -0.0
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": -1.37,
+            "d_mean_lo": -1.49,
+            "d_mean_hi": -1.24,
+            "d_slowest10_s": 0.06
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": -1.27,
+            "d_mean_lo": -1.36,
+            "d_mean_hi": -1.18,
+            "d_slowest10_s": 0.08
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": -1.31,
+            "d_mean_lo": -1.4,
+            "d_mean_hi": -1.22,
+            "d_slowest10_s": 0.04
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": -1.01,
+            "d_mean_lo": -1.11,
+            "d_mean_hi": -0.93,
+            "d_slowest10_s": 0.01
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -1.95,
+            "d_mean_lo": -2.1,
+            "d_mean_hi": -1.81,
+            "d_slowest10_s": -0.66
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -1.35,
+            "d_mean_lo": -1.46,
+            "d_mean_hi": -1.23,
+            "d_slowest10_s": 0.45
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": -0.46,
+            "d_mean_lo": -0.55,
+            "d_mean_hi": -0.39,
+            "d_slowest10_s": 0.29
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -4.68,
+            "d_mean_lo": -4.95,
+            "d_mean_hi": -4.42,
+            "d_slowest10_s": -3.63
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -3.75,
+            "d_mean_lo": -3.96,
+            "d_mean_hi": -3.53,
+            "d_slowest10_s": 0.08
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -2.44,
+            "d_mean_lo": -2.61,
+            "d_mean_hi": -2.29,
+            "d_slowest10_s": 0.09
+          }
+        }
+      },
       "boroughs_worse_by_1s_any_model": [
         "BARNET"
       ],
@@ -560,24 +1358,24 @@
           "n_calls": 129268,
           "today_mean_s": 314.07,
           "d_mean_s": -2.54,
-          "d_mean_lo": -2.61,
-          "d_mean_hi": -2.45,
+          "d_mean_lo": -2.62,
+          "d_mean_hi": -2.46,
           "d_slowest10_s": -0.77
         },
         "night 00-07": {
           "n_calls": 21939,
           "today_mean_s": 288.13,
           "d_mean_s": -2.08,
-          "d_mean_lo": -2.26,
-          "d_mean_hi": -1.93,
+          "d_mean_lo": -2.24,
+          "d_mean_hi": -1.92,
           "d_slowest10_s": -0.0
         },
         "morning rush 07-10": {
           "n_calls": 12320,
           "today_mean_s": 318.45,
           "d_mean_s": -2.79,
-          "d_mean_lo": -3.06,
-          "d_mean_hi": -2.55,
+          "d_mean_lo": -3.05,
+          "d_mean_hi": -2.53,
           "d_slowest10_s": -0.06
         },
         "day 10-16": {
@@ -585,15 +1383,15 @@
           "today_mean_s": 328.75,
           "d_mean_s": -2.86,
           "d_mean_lo": -3.0,
-          "d_mean_hi": -2.72,
+          "d_mean_hi": -2.71,
           "d_slowest10_s": -1.23
         },
         "evening rush 16-20": {
           "n_calls": 30027,
           "today_mean_s": 326.52,
           "d_mean_s": -2.54,
-          "d_mean_lo": -2.71,
-          "d_mean_hi": -2.36,
+          "d_mean_lo": -2.7,
+          "d_mean_hi": -2.39,
           "d_slowest10_s": -0.08
         },
         "evening 20-24": {
@@ -601,14 +1399,14 @@
           "today_mean_s": 297.74,
           "d_mean_s": -2.32,
           "d_mean_lo": -2.47,
-          "d_mean_hi": -2.16,
+          "d_mean_hi": -2.17,
           "d_slowest10_s": -0.28
         },
         "rush hours (07-10, 16-20)": {
           "n_calls": 42347,
           "today_mean_s": 324.17,
           "d_mean_s": -2.61,
-          "d_mean_lo": -2.75,
+          "d_mean_lo": -2.77,
           "d_mean_hi": -2.47,
           "d_slowest10_s": -0.08
         }
@@ -624,12 +1422,12 @@
           "road": {
             "d_mean_s": -2.16,
             "d_mean_lo": -2.23,
-            "d_mean_hi": -2.09,
+            "d_mean_hi": -2.1,
             "d_slowest10_s": 0.04
           },
           "kolesar": {
             "d_mean_s": -1.4,
-            "d_mean_lo": -1.45,
+            "d_mean_lo": -1.44,
             "d_mean_hi": -1.35,
             "d_slowest10_s": 0.0
           }
@@ -643,40 +1441,172 @@
           },
           "road": {
             "d_mean_s": -1.45,
-            "d_mean_lo": -1.53,
-            "d_mean_hi": -1.38,
+            "d_mean_lo": -1.52,
+            "d_mean_hi": -1.36,
             "d_slowest10_s": 0.0
           },
           "kolesar": {
             "d_mean_s": -0.94,
-            "d_mean_lo": -1.0,
-            "d_mean_hi": -0.88,
+            "d_mean_lo": -0.99,
+            "d_mean_hi": -0.87,
             "d_slowest10_s": 0.0
           }
         },
         "dwelling_fire": {
           "lgbm": {
             "d_mean_s": -1.52,
-            "d_mean_lo": -1.83,
-            "d_mean_hi": -1.22,
+            "d_mean_lo": -1.82,
+            "d_mean_hi": -1.23,
             "d_slowest10_s": -0.07
           },
           "road": {
             "d_mean_s": -1.38,
-            "d_mean_lo": -1.68,
-            "d_mean_hi": -1.09,
+            "d_mean_lo": -1.71,
+            "d_mean_hi": -1.1,
             "d_slowest10_s": 0.02
           },
           "kolesar": {
             "d_mean_s": -0.95,
-            "d_mean_lo": -1.17,
-            "d_mean_hi": -0.72,
+            "d_mean_lo": -1.16,
+            "d_mean_hi": -0.76,
             "d_slowest10_s": 0.0
           }
         }
       },
       "faster_in_every_period_lgbm": true,
       "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -1.41,
+            "d_mean_lo": -1.53,
+            "d_mean_hi": -1.3,
+            "d_slowest10_s": -0.0
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -1.41,
+            "d_mean_lo": -1.54,
+            "d_mean_hi": -1.29,
+            "d_slowest10_s": 0.05
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -1.0,
+            "d_mean_lo": -1.08,
+            "d_mean_hi": -0.91,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": 0.24,
+            "d_mean_lo": 0.21,
+            "d_mean_hi": 0.27,
+            "d_slowest10_s": 0.01
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": 0.26,
+            "d_mean_lo": 0.25,
+            "d_mean_hi": 0.28,
+            "d_slowest10_s": -0.0
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": 0.23,
+            "d_mean_lo": 0.22,
+            "d_mean_hi": 0.25,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": -0.14,
+            "d_mean_lo": -0.21,
+            "d_mean_hi": -0.08,
+            "d_slowest10_s": 0.07
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": -0.08,
+            "d_mean_lo": -0.14,
+            "d_mean_hi": -0.03,
+            "d_slowest10_s": 0.05
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": -0.05,
+            "d_mean_lo": -0.11,
+            "d_mean_hi": 0.0,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -4.47,
+            "d_mean_lo": -4.69,
+            "d_mean_hi": -4.24,
+            "d_slowest10_s": -1.0
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -3.97,
+            "d_mean_lo": -4.19,
+            "d_mean_hi": -3.76,
+            "d_slowest10_s": 0.18
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": -2.58,
+            "d_mean_lo": -2.76,
+            "d_mean_hi": -2.43,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -8.18,
+            "d_mean_lo": -8.47,
+            "d_mean_hi": -7.87,
+            "d_slowest10_s": -4.34
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -6.66,
+            "d_mean_lo": -6.91,
+            "d_mean_hi": -6.45,
+            "d_slowest10_s": -0.02
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -4.25,
+            "d_mean_lo": -4.43,
+            "d_mean_hi": -4.08,
+            "d_slowest10_s": 0.0
+          }
+        }
+      },
       "boroughs_worse_by_1s_any_model": [
         "LAMBETH",
         "SOUTHWARK"
@@ -693,13 +1623,282 @@
         "SOUTHWARK"
       ]
     },
+    "lgbm_expand_5_boroughs1s": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -3.64,
+          "d_mean_lo": -3.73,
+          "d_mean_hi": -3.54,
+          "d_slowest10_s": -2.33
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -3.19,
+          "d_mean_lo": -3.41,
+          "d_mean_hi": -2.97,
+          "d_slowest10_s": -0.89
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -4.09,
+          "d_mean_lo": -4.41,
+          "d_mean_hi": -3.75,
+          "d_slowest10_s": -1.28
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -3.98,
+          "d_mean_lo": -4.14,
+          "d_mean_hi": -3.83,
+          "d_slowest10_s": -2.69
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -3.56,
+          "d_mean_lo": -3.76,
+          "d_mean_hi": -3.38,
+          "d_slowest10_s": -1.61
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -3.41,
+          "d_mean_lo": -3.61,
+          "d_mean_hi": -3.22,
+          "d_slowest10_s": -1.69
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -3.71,
+          "d_mean_lo": -3.88,
+          "d_mean_hi": -3.55,
+          "d_slowest10_s": -1.55
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -3.64,
+            "d_mean_lo": -3.74,
+            "d_mean_hi": -3.55,
+            "d_slowest10_s": -2.33
+          },
+          "road": {
+            "d_mean_s": -3.22,
+            "d_mean_lo": -3.31,
+            "d_mean_hi": -3.14,
+            "d_slowest10_s": -0.99
+          },
+          "kolesar": {
+            "d_mean_s": -2.41,
+            "d_mean_lo": -2.49,
+            "d_mean_hi": -2.33,
+            "d_slowest10_s": -0.68
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -3.28,
+            "d_mean_lo": -3.4,
+            "d_mean_hi": -3.16,
+            "d_slowest10_s": -2.04
+          },
+          "road": {
+            "d_mean_s": -2.92,
+            "d_mean_lo": -3.03,
+            "d_mean_hi": -2.8,
+            "d_slowest10_s": -1.08
+          },
+          "kolesar": {
+            "d_mean_s": -2.26,
+            "d_mean_lo": -2.35,
+            "d_mean_hi": -2.17,
+            "d_slowest10_s": -0.75
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -3.46,
+            "d_mean_lo": -3.96,
+            "d_mean_hi": -3.02,
+            "d_slowest10_s": -1.75
+          },
+          "road": {
+            "d_mean_s": -3.14,
+            "d_mean_lo": -3.58,
+            "d_mean_hi": -2.69,
+            "d_slowest10_s": -0.87
+          },
+          "kolesar": {
+            "d_mean_s": -2.58,
+            "d_mean_lo": -3.05,
+            "d_mean_hi": -2.21,
+            "d_slowest10_s": -0.64
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -6.38,
+            "d_mean_lo": -6.63,
+            "d_mean_hi": -6.17,
+            "d_slowest10_s": -3.03
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -6.19,
+            "d_mean_lo": -6.45,
+            "d_mean_hi": -5.93,
+            "d_slowest10_s": -0.74
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -5.17,
+            "d_mean_lo": -5.43,
+            "d_mean_hi": -4.92,
+            "d_slowest10_s": -0.99
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": -2.42,
+            "d_mean_lo": -2.57,
+            "d_mean_hi": -2.27,
+            "d_slowest10_s": -0.27
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": -2.22,
+            "d_mean_lo": -2.38,
+            "d_mean_hi": -2.05,
+            "d_slowest10_s": -0.13
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": -1.92,
+            "d_mean_lo": -2.07,
+            "d_mean_hi": -1.78,
+            "d_slowest10_s": -0.28
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": -2.14,
+            "d_mean_lo": -2.28,
+            "d_mean_hi": -2.01,
+            "d_slowest10_s": -3.53
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": -1.93,
+            "d_mean_lo": -2.04,
+            "d_mean_hi": -1.81,
+            "d_slowest10_s": -2.73
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": -1.35,
+            "d_mean_lo": -1.45,
+            "d_mean_hi": -1.26,
+            "d_slowest10_s": -1.34
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -2.07,
+            "d_mean_lo": -2.22,
+            "d_mean_hi": -1.91,
+            "d_slowest10_s": -0.85
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -1.43,
+            "d_mean_lo": -1.56,
+            "d_mean_hi": -1.32,
+            "d_slowest10_s": 0.05
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": -0.54,
+            "d_mean_lo": -0.61,
+            "d_mean_hi": -0.46,
+            "d_slowest10_s": 0.26
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -4.91,
+            "d_mean_lo": -5.15,
+            "d_mean_hi": -4.66,
+            "d_slowest10_s": -5.13
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -3.9,
+            "d_mean_lo": -4.11,
+            "d_mean_hi": -3.71,
+            "d_slowest10_s": -1.12
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -2.55,
+            "d_mean_lo": -2.71,
+            "d_mean_hi": -2.38,
+            "d_slowest10_s": -0.79
+          }
+        }
+      },
+      "boroughs_worse_by_1s_any_model": [
+        "BARNET"
+      ],
+      "boroughs_significantly_worse_lgbm": [
+        "BARNET",
+        "BROMLEY",
+        "CITY OF LONDON",
+        "CROYDON",
+        "HILLINGDON",
+        "KINGSTON UPON THAMES",
+        "RICHMOND UPON THAMES",
+        "WANDSWORTH"
+      ]
+    },
     "lgbm_redesign": {
       "time_of_day_lgbm": {
         "all day": {
           "n_calls": 129268,
           "today_mean_s": 314.07,
           "d_mean_s": -17.11,
-          "d_mean_lo": -17.43,
+          "d_mean_lo": -17.41,
           "d_mean_hi": -16.81,
           "d_slowest10_s": -18.1
         },
@@ -707,40 +1906,40 @@
           "n_calls": 21939,
           "today_mean_s": 288.13,
           "d_mean_s": -15.72,
-          "d_mean_lo": -16.43,
-          "d_mean_hi": -15.02,
+          "d_mean_lo": -16.35,
+          "d_mean_hi": -15.05,
           "d_slowest10_s": -16.69
         },
         "morning rush 07-10": {
           "n_calls": 12320,
           "today_mean_s": 318.45,
           "d_mean_s": -16.22,
-          "d_mean_lo": -17.28,
-          "d_mean_hi": -15.27,
+          "d_mean_lo": -17.23,
+          "d_mean_hi": -15.29,
           "d_slowest10_s": -14.5
         },
         "day 10-16": {
           "n_calls": 38789,
           "today_mean_s": 328.75,
           "d_mean_s": -18.52,
-          "d_mean_lo": -19.05,
-          "d_mean_hi": -18.0,
+          "d_mean_lo": -19.03,
+          "d_mean_hi": -17.98,
           "d_slowest10_s": -18.67
         },
         "evening rush 16-20": {
           "n_calls": 30027,
           "today_mean_s": 326.52,
           "d_mean_s": -17.4,
-          "d_mean_lo": -18.09,
-          "d_mean_hi": -16.73,
+          "d_mean_lo": -18.11,
+          "d_mean_hi": -16.65,
           "d_slowest10_s": -17.75
         },
         "evening 20-24": {
           "n_calls": 26193,
           "today_mean_s": 297.74,
           "d_mean_s": -16.29,
-          "d_mean_lo": -16.95,
-          "d_mean_hi": -15.62,
+          "d_mean_lo": -16.91,
+          "d_mean_hi": -15.72,
           "d_slowest10_s": -17.07
         },
         "rush hours (07-10, 16-20)": {
@@ -748,7 +1947,7 @@
           "today_mean_s": 324.17,
           "d_mean_s": -17.05,
           "d_mean_lo": -17.58,
-          "d_mean_hi": -16.55,
+          "d_mean_hi": -16.38,
           "d_slowest10_s": -16.92
         }
       },
@@ -756,20 +1955,20 @@
         "all": {
           "lgbm": {
             "d_mean_s": -17.11,
-            "d_mean_lo": -17.41,
+            "d_mean_lo": -17.4,
             "d_mean_hi": -16.82,
             "d_slowest10_s": -18.1
           },
           "road": {
             "d_mean_s": -12.74,
-            "d_mean_lo": -13.05,
-            "d_mean_hi": -12.44,
+            "d_mean_lo": -13.07,
+            "d_mean_hi": -12.4,
             "d_slowest10_s": -7.87
           },
           "kolesar": {
             "d_mean_s": -5.45,
-            "d_mean_lo": -5.74,
-            "d_mean_hi": -5.17,
+            "d_mean_lo": -5.75,
+            "d_mean_hi": -5.16,
             "d_slowest10_s": -0.58
           }
         },
@@ -777,45 +1976,177 @@
           "lgbm": {
             "d_mean_s": -16.2,
             "d_mean_lo": -16.64,
-            "d_mean_hi": -15.76,
+            "d_mean_hi": -15.75,
             "d_slowest10_s": -18.85
           },
           "road": {
             "d_mean_s": -11.67,
-            "d_mean_lo": -12.12,
-            "d_mean_hi": -11.27,
+            "d_mean_lo": -12.09,
+            "d_mean_hi": -11.3,
             "d_slowest10_s": -9.2
           },
           "kolesar": {
             "d_mean_s": -4.44,
-            "d_mean_lo": -4.78,
-            "d_mean_hi": -4.07,
+            "d_mean_lo": -4.83,
+            "d_mean_hi": -4.08,
             "d_slowest10_s": -1.96
           }
         },
         "dwelling_fire": {
           "lgbm": {
             "d_mean_s": -17.74,
-            "d_mean_lo": -19.19,
-            "d_mean_hi": -16.14,
+            "d_mean_lo": -19.24,
+            "d_mean_hi": -16.19,
             "d_slowest10_s": -19.53
           },
           "road": {
             "d_mean_s": -13.67,
-            "d_mean_lo": -15.24,
-            "d_mean_hi": -12.14,
+            "d_mean_lo": -15.29,
+            "d_mean_hi": -12.06,
             "d_slowest10_s": -10.28
           },
           "kolesar": {
             "d_mean_s": -6.6,
-            "d_mean_lo": -7.96,
-            "d_mean_hi": -5.32,
+            "d_mean_lo": -7.9,
+            "d_mean_hi": -5.12,
             "d_slowest10_s": -4.52
           }
         }
       },
       "faster_in_every_period_lgbm": true,
       "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -24.89,
+            "d_mean_lo": -25.5,
+            "d_mean_hi": -24.28,
+            "d_slowest10_s": -31.82
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -21.24,
+            "d_mean_lo": -21.81,
+            "d_mean_hi": -20.64,
+            "d_slowest10_s": -27.31
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -11.67,
+            "d_mean_lo": -12.18,
+            "d_mean_hi": -11.1,
+            "d_slowest10_s": -19.73
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": -17.18,
+            "d_mean_lo": -17.73,
+            "d_mean_hi": -16.58,
+            "d_slowest10_s": -19.07
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": -13.53,
+            "d_mean_lo": -14.18,
+            "d_mean_hi": -12.95,
+            "d_slowest10_s": -13.75
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": -7.83,
+            "d_mean_lo": -8.38,
+            "d_mean_hi": -7.26,
+            "d_slowest10_s": -12.12
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": -14.13,
+            "d_mean_lo": -14.71,
+            "d_mean_hi": -13.45,
+            "d_slowest10_s": -16.45
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": -8.85,
+            "d_mean_lo": -9.57,
+            "d_mean_hi": -8.14,
+            "d_slowest10_s": -6.1
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": -3.94,
+            "d_mean_lo": -4.55,
+            "d_mean_hi": -3.4,
+            "d_slowest10_s": 3.82
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -10.71,
+            "d_mean_lo": -11.35,
+            "d_mean_hi": -9.99,
+            "d_slowest10_s": -8.29
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -6.38,
+            "d_mean_lo": -7.13,
+            "d_mean_hi": -5.61,
+            "d_slowest10_s": 7.07
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": 1.91,
+            "d_mean_lo": 1.21,
+            "d_mean_hi": 2.62,
+            "d_slowest10_s": 21.45
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -16.81,
+            "d_mean_lo": -17.61,
+            "d_mean_hi": -16.02,
+            "d_slowest10_s": -17.56
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -11.6,
+            "d_mean_lo": -12.32,
+            "d_mean_hi": -10.86,
+            "d_slowest10_s": -2.68
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -3.57,
+            "d_mean_lo": -4.31,
+            "d_mean_hi": -2.84,
+            "d_slowest10_s": 7.44
+          }
+        }
+      },
       "boroughs_worse_by_1s_any_model": [
         "BARNET",
         "BEXLEY",
@@ -848,56 +2179,56 @@
           "n_calls": 129268,
           "today_mean_s": 314.07,
           "d_mean_s": -14.34,
-          "d_mean_lo": -14.58,
-          "d_mean_hi": -14.1,
+          "d_mean_lo": -14.55,
+          "d_mean_hi": -14.12,
           "d_slowest10_s": -14.89
         },
         "night 00-07": {
           "n_calls": 21939,
           "today_mean_s": 288.13,
           "d_mean_s": -12.18,
-          "d_mean_lo": -12.69,
-          "d_mean_hi": -11.69,
+          "d_mean_lo": -12.73,
+          "d_mean_hi": -11.7,
           "d_slowest10_s": -13.32
         },
         "morning rush 07-10": {
           "n_calls": 12320,
           "today_mean_s": 318.45,
           "d_mean_s": -13.77,
-          "d_mean_lo": -14.58,
-          "d_mean_hi": -12.94,
+          "d_mean_lo": -14.53,
+          "d_mean_hi": -13.07,
           "d_slowest10_s": -12.55
         },
         "day 10-16": {
           "n_calls": 38789,
           "today_mean_s": 328.75,
           "d_mean_s": -16.06,
-          "d_mean_lo": -16.44,
-          "d_mean_hi": -15.72,
+          "d_mean_lo": -16.48,
+          "d_mean_hi": -15.69,
           "d_slowest10_s": -16.08
         },
         "evening rush 16-20": {
           "n_calls": 30027,
           "today_mean_s": 326.52,
           "d_mean_s": -15.06,
-          "d_mean_lo": -15.54,
-          "d_mean_hi": -14.57,
+          "d_mean_lo": -15.57,
+          "d_mean_hi": -14.51,
           "d_slowest10_s": -14.25
         },
         "evening 20-24": {
           "n_calls": 26193,
           "today_mean_s": 297.74,
           "d_mean_s": -13.06,
-          "d_mean_lo": -13.52,
-          "d_mean_hi": -12.6,
+          "d_mean_lo": -13.56,
+          "d_mean_hi": -12.57,
           "d_slowest10_s": -12.92
         },
         "rush hours (07-10, 16-20)": {
           "n_calls": 42347,
           "today_mean_s": 324.17,
           "d_mean_s": -14.68,
-          "d_mean_lo": -15.15,
-          "d_mean_hi": -14.27,
+          "d_mean_lo": -15.09,
+          "d_mean_hi": -14.22,
           "d_slowest10_s": -13.88
         }
       },
@@ -905,66 +2236,198 @@
         "all": {
           "lgbm": {
             "d_mean_s": -14.34,
-            "d_mean_lo": -14.54,
-            "d_mean_hi": -14.11,
+            "d_mean_lo": -14.56,
+            "d_mean_hi": -14.14,
             "d_slowest10_s": -14.89
           },
           "road": {
             "d_mean_s": -10.6,
-            "d_mean_lo": -10.83,
-            "d_mean_hi": -10.4,
+            "d_mean_lo": -10.81,
+            "d_mean_hi": -10.39,
             "d_slowest10_s": -9.78
           },
           "kolesar": {
             "d_mean_s": -5.06,
-            "d_mean_lo": -5.26,
-            "d_mean_hi": -4.86,
+            "d_mean_lo": -5.27,
+            "d_mean_hi": -4.87,
             "d_slowest10_s": -3.72
           }
         },
         "serious": {
           "lgbm": {
             "d_mean_s": -13.88,
-            "d_mean_lo": -14.15,
-            "d_mean_hi": -13.55,
+            "d_mean_lo": -14.17,
+            "d_mean_hi": -13.63,
             "d_slowest10_s": -15.38
           },
           "road": {
             "d_mean_s": -10.02,
             "d_mean_lo": -10.31,
-            "d_mean_hi": -9.72,
+            "d_mean_hi": -9.71,
             "d_slowest10_s": -10.65
           },
           "kolesar": {
             "d_mean_s": -4.44,
-            "d_mean_lo": -4.73,
-            "d_mean_hi": -4.15,
+            "d_mean_lo": -4.74,
+            "d_mean_hi": -4.18,
             "d_slowest10_s": -4.44
           }
         },
         "dwelling_fire": {
           "lgbm": {
             "d_mean_s": -14.89,
-            "d_mean_lo": -16.11,
-            "d_mean_hi": -13.82,
+            "d_mean_lo": -16.05,
+            "d_mean_hi": -13.87,
             "d_slowest10_s": -16.03
           },
           "road": {
             "d_mean_s": -11.15,
-            "d_mean_lo": -12.41,
-            "d_mean_hi": -10.12,
+            "d_mean_lo": -12.25,
+            "d_mean_hi": -9.97,
             "d_slowest10_s": -12.17
           },
           "kolesar": {
             "d_mean_s": -5.94,
-            "d_mean_lo": -6.85,
-            "d_mean_hi": -4.93,
+            "d_mean_lo": -6.89,
+            "d_mean_hi": -5.04,
             "d_slowest10_s": -6.72
           }
         }
       },
       "faster_in_every_period_lgbm": true,
       "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -19.22,
+            "d_mean_lo": -19.6,
+            "d_mean_hi": -18.82,
+            "d_slowest10_s": -18.16
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -16.41,
+            "d_mean_lo": -16.87,
+            "d_mean_hi": -15.99,
+            "d_slowest10_s": -15.11
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -9.68,
+            "d_mean_lo": -10.08,
+            "d_mean_hi": -9.3,
+            "d_slowest10_s": -12.79
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": -15.56,
+            "d_mean_lo": -16.06,
+            "d_mean_hi": -15.12,
+            "d_slowest10_s": -14.86
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": -11.86,
+            "d_mean_lo": -12.33,
+            "d_mean_hi": -11.36,
+            "d_slowest10_s": -10.46
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": -7.81,
+            "d_mean_lo": -8.25,
+            "d_mean_hi": -7.39,
+            "d_slowest10_s": -10.6
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": -14.3,
+            "d_mean_lo": -14.76,
+            "d_mean_hi": -13.76,
+            "d_slowest10_s": -14.16
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": -8.86,
+            "d_mean_lo": -9.4,
+            "d_mean_hi": -8.33,
+            "d_slowest10_s": -6.9
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": -4.56,
+            "d_mean_lo": -5.07,
+            "d_mean_hi": -4.07,
+            "d_slowest10_s": 3.68
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -9.78,
+            "d_mean_lo": -10.22,
+            "d_mean_hi": -9.28,
+            "d_slowest10_s": -10.4
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -6.21,
+            "d_mean_lo": -6.71,
+            "d_mean_hi": -5.79,
+            "d_slowest10_s": -4.4
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": -0.11,
+            "d_mean_lo": -0.59,
+            "d_mean_hi": 0.37,
+            "d_slowest10_s": 6.32
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -11.2,
+            "d_mean_lo": -11.75,
+            "d_mean_hi": -10.6,
+            "d_slowest10_s": -17.31
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -7.94,
+            "d_mean_lo": -8.41,
+            "d_mean_hi": -7.36,
+            "d_slowest10_s": -10.23
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -1.21,
+            "d_mean_lo": -1.68,
+            "d_mean_hi": -0.72,
+            "d_slowest10_s": -0.1
+          }
+        }
+      },
       "boroughs_worse_by_1s_any_model": [
         "HARINGEY",
         "LAMBETH",
@@ -980,55 +2443,55 @@
           "n_calls": 129268,
           "today_mean_s": 314.07,
           "d_mean_s": -5.53,
-          "d_mean_lo": -5.7,
-          "d_mean_hi": -5.36,
+          "d_mean_lo": -5.69,
+          "d_mean_hi": -5.37,
           "d_slowest10_s": -2.72
         },
         "night 00-07": {
           "n_calls": 21939,
           "today_mean_s": 288.13,
           "d_mean_s": -4.81,
-          "d_mean_lo": -5.18,
-          "d_mean_hi": -4.45,
+          "d_mean_lo": -5.15,
+          "d_mean_hi": -4.41,
           "d_slowest10_s": -2.59
         },
         "morning rush 07-10": {
           "n_calls": 12320,
           "today_mean_s": 318.45,
           "d_mean_s": -5.91,
-          "d_mean_lo": -6.52,
-          "d_mean_hi": -5.35,
+          "d_mean_lo": -6.53,
+          "d_mean_hi": -5.36,
           "d_slowest10_s": -1.55
         },
         "day 10-16": {
           "n_calls": 38789,
           "today_mean_s": 328.75,
           "d_mean_s": -6.31,
-          "d_mean_lo": -6.61,
-          "d_mean_hi": -5.99,
+          "d_mean_lo": -6.63,
+          "d_mean_hi": -6.05,
           "d_slowest10_s": -3.3
         },
         "evening rush 16-20": {
           "n_calls": 30027,
           "today_mean_s": 326.52,
           "d_mean_s": -5.25,
-          "d_mean_lo": -5.63,
-          "d_mean_hi": -4.87,
+          "d_mean_lo": -5.62,
+          "d_mean_hi": -4.88,
           "d_slowest10_s": -0.73
         },
         "evening 20-24": {
           "n_calls": 26193,
           "today_mean_s": 297.74,
           "d_mean_s": -5.14,
-          "d_mean_lo": -5.49,
-          "d_mean_hi": -4.77,
+          "d_mean_lo": -5.48,
+          "d_mean_hi": -4.75,
           "d_slowest10_s": -2.44
         },
         "rush hours (07-10, 16-20)": {
           "n_calls": 42347,
           "today_mean_s": 324.17,
           "d_mean_s": -5.44,
-          "d_mean_lo": -5.73,
+          "d_mean_lo": -5.77,
           "d_mean_hi": -5.11,
           "d_slowest10_s": -0.99
         }
@@ -1038,19 +2501,19 @@
           "lgbm": {
             "d_mean_s": -5.53,
             "d_mean_lo": -5.71,
-            "d_mean_hi": -5.37,
+            "d_mean_hi": -5.36,
             "d_slowest10_s": -2.72
           },
           "road": {
             "d_mean_s": -4.56,
-            "d_mean_lo": -4.72,
+            "d_mean_lo": -4.71,
             "d_mean_hi": -4.4,
             "d_slowest10_s": -3.24
           },
           "kolesar": {
             "d_mean_s": -2.18,
             "d_mean_lo": -2.31,
-            "d_mean_hi": -2.03,
+            "d_mean_hi": -2.04,
             "d_slowest10_s": -2.35
           }
         },
@@ -1058,45 +2521,177 @@
           "lgbm": {
             "d_mean_s": -4.69,
             "d_mean_lo": -4.91,
-            "d_mean_hi": -4.49,
+            "d_mean_hi": -4.45,
             "d_slowest10_s": -2.1
           },
           "road": {
             "d_mean_s": -3.87,
-            "d_mean_lo": -4.11,
-            "d_mean_hi": -3.67,
+            "d_mean_lo": -4.1,
+            "d_mean_hi": -3.66,
             "d_slowest10_s": -3.16
           },
           "kolesar": {
             "d_mean_s": -1.75,
-            "d_mean_lo": -1.92,
-            "d_mean_hi": -1.55,
+            "d_mean_lo": -1.94,
+            "d_mean_hi": -1.57,
             "d_slowest10_s": -2.5
           }
         },
         "dwelling_fire": {
           "lgbm": {
             "d_mean_s": -5.51,
-            "d_mean_lo": -6.27,
-            "d_mean_hi": -4.81,
+            "d_mean_lo": -6.34,
+            "d_mean_hi": -4.67,
             "d_slowest10_s": -2.37
           },
           "road": {
             "d_mean_s": -4.71,
-            "d_mean_lo": -5.53,
-            "d_mean_hi": -3.99,
+            "d_mean_lo": -5.52,
+            "d_mean_hi": -3.96,
             "d_slowest10_s": -3.92
           },
           "kolesar": {
             "d_mean_s": -2.89,
-            "d_mean_lo": -3.65,
-            "d_mean_hi": -2.21,
+            "d_mean_lo": -3.56,
+            "d_mean_hi": -2.2,
             "d_slowest10_s": -3.75
           }
         }
       },
       "faster_in_every_period_lgbm": true,
       "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -10.21,
+            "d_mean_lo": -10.59,
+            "d_mean_hi": -9.84,
+            "d_slowest10_s": -10.96
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -9.64,
+            "d_mean_lo": -9.99,
+            "d_mean_hi": -9.27,
+            "d_slowest10_s": -10.92
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -6.25,
+            "d_mean_lo": -6.57,
+            "d_mean_hi": -5.94,
+            "d_slowest10_s": -9.32
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": -3.22,
+            "d_mean_lo": -3.5,
+            "d_mean_hi": -2.92,
+            "d_slowest10_s": -4.32
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": -3.19,
+            "d_mean_lo": -3.47,
+            "d_mean_hi": -2.89,
+            "d_slowest10_s": -8.29
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": -1.54,
+            "d_mean_lo": -1.82,
+            "d_mean_hi": -1.28,
+            "d_slowest10_s": -8.68
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": 0.11,
+            "d_mean_lo": -0.26,
+            "d_mean_hi": 0.47,
+            "d_slowest10_s": -1.02
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": 1.8,
+            "d_mean_lo": 1.43,
+            "d_mean_hi": 2.19,
+            "d_slowest10_s": 0.09
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": 2.95,
+            "d_mean_lo": 2.67,
+            "d_mean_hi": 3.26,
+            "d_slowest10_s": 2.28
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -3.64,
+            "d_mean_lo": -3.99,
+            "d_mean_hi": -3.32,
+            "d_slowest10_s": 3.23
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -2.63,
+            "d_mean_lo": -2.99,
+            "d_mean_hi": -2.31,
+            "d_slowest10_s": 3.8
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": -0.84,
+            "d_mean_lo": -1.09,
+            "d_mean_hi": -0.58,
+            "d_slowest10_s": 2.4
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -10.65,
+            "d_mean_lo": -11.14,
+            "d_mean_hi": -10.17,
+            "d_slowest10_s": 0.38
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -8.85,
+            "d_mean_lo": -9.27,
+            "d_mean_hi": -8.36,
+            "d_slowest10_s": 3.3
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -4.87,
+            "d_mean_lo": -5.28,
+            "d_mean_hi": -4.45,
+            "d_slowest10_s": 6.83
+          }
+        }
+      },
       "boroughs_worse_by_1s_any_model": [
         "CITY OF LONDON",
         "EALING",
@@ -1139,16 +2734,16 @@
           "n_calls": 21939,
           "today_mean_s": 288.13,
           "d_mean_s": -2.97,
-          "d_mean_lo": -3.24,
-          "d_mean_hi": -2.73,
+          "d_mean_lo": -3.25,
+          "d_mean_hi": -2.67,
           "d_slowest10_s": -2.33
         },
         "morning rush 07-10": {
           "n_calls": 12320,
           "today_mean_s": 318.45,
           "d_mean_s": -2.92,
-          "d_mean_lo": -3.3,
-          "d_mean_hi": -2.54,
+          "d_mean_lo": -3.32,
+          "d_mean_hi": -2.56,
           "d_slowest10_s": -1.46
         },
         "day 10-16": {
@@ -1156,31 +2751,31 @@
           "today_mean_s": 328.75,
           "d_mean_s": -3.9,
           "d_mean_lo": -4.09,
-          "d_mean_hi": -3.72,
+          "d_mean_hi": -3.7,
           "d_slowest10_s": -2.24
         },
         "evening rush 16-20": {
           "n_calls": 30027,
           "today_mean_s": 326.52,
           "d_mean_s": -3.62,
-          "d_mean_lo": -3.87,
-          "d_mean_hi": -3.35,
+          "d_mean_lo": -3.91,
+          "d_mean_hi": -3.36,
           "d_slowest10_s": -2.1
         },
         "evening 20-24": {
           "n_calls": 26193,
           "today_mean_s": 297.74,
           "d_mean_s": -3.16,
-          "d_mean_lo": -3.43,
-          "d_mean_hi": -2.93,
+          "d_mean_lo": -3.4,
+          "d_mean_hi": -2.9,
           "d_slowest10_s": -2.2
         },
         "rush hours (07-10, 16-20)": {
           "n_calls": 42347,
           "today_mean_s": 324.17,
           "d_mean_s": -3.42,
-          "d_mean_lo": -3.64,
-          "d_mean_hi": -3.19,
+          "d_mean_lo": -3.61,
+          "d_mean_hi": -3.22,
           "d_slowest10_s": -1.88
         }
       },
@@ -1189,18 +2784,18 @@
           "lgbm": {
             "d_mean_s": -3.43,
             "d_mean_lo": -3.55,
-            "d_mean_hi": -3.31,
+            "d_mean_hi": -3.32,
             "d_slowest10_s": -2.25
           },
           "road": {
             "d_mean_s": -2.65,
-            "d_mean_lo": -2.77,
+            "d_mean_lo": -2.78,
             "d_mean_hi": -2.53,
             "d_slowest10_s": -2.1
           },
           "kolesar": {
             "d_mean_s": -1.78,
-            "d_mean_lo": -1.91,
+            "d_mean_lo": -1.9,
             "d_mean_hi": -1.67,
             "d_slowest10_s": -2.79
           }
@@ -1208,14 +2803,14 @@
         "serious": {
           "lgbm": {
             "d_mean_s": -3.45,
-            "d_mean_lo": -3.6,
-            "d_mean_hi": -3.3,
+            "d_mean_lo": -3.61,
+            "d_mean_hi": -3.29,
             "d_slowest10_s": -2.36
           },
           "road": {
             "d_mean_s": -2.61,
             "d_mean_lo": -2.76,
-            "d_mean_hi": -2.44,
+            "d_mean_hi": -2.43,
             "d_slowest10_s": -2.34
           },
           "kolesar": {
@@ -1228,26 +2823,158 @@
         "dwelling_fire": {
           "lgbm": {
             "d_mean_s": -3.99,
-            "d_mean_lo": -4.6,
-            "d_mean_hi": -3.43,
+            "d_mean_lo": -4.53,
+            "d_mean_hi": -3.41,
             "d_slowest10_s": -2.67
           },
           "road": {
             "d_mean_s": -3.37,
-            "d_mean_lo": -3.98,
+            "d_mean_lo": -3.95,
             "d_mean_hi": -2.77,
             "d_slowest10_s": -3.68
           },
           "kolesar": {
             "d_mean_s": -2.52,
-            "d_mean_lo": -3.08,
-            "d_mean_hi": -1.97,
+            "d_mean_lo": -3.04,
+            "d_mean_hi": -2.02,
             "d_slowest10_s": -4.38
           }
         }
       },
       "faster_in_every_period_lgbm": true,
       "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -5.57,
+            "d_mean_lo": -5.82,
+            "d_mean_hi": -5.33,
+            "d_slowest10_s": -4.09
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -5.25,
+            "d_mean_lo": -5.5,
+            "d_mean_hi": -5.0,
+            "d_slowest10_s": -8.14
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -3.72,
+            "d_mean_lo": -3.96,
+            "d_mean_hi": -3.5,
+            "d_slowest10_s": -8.6
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": -4.22,
+            "d_mean_lo": -4.54,
+            "d_mean_hi": -3.94,
+            "d_slowest10_s": -0.98
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": -3.38,
+            "d_mean_lo": -3.73,
+            "d_mean_hi": -3.02,
+            "d_slowest10_s": 0.53
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": -3.04,
+            "d_mean_lo": -3.34,
+            "d_mean_hi": -2.72,
+            "d_slowest10_s": -5.72
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": -4.93,
+            "d_mean_lo": -5.16,
+            "d_mean_hi": -4.65,
+            "d_slowest10_s": -4.32
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": -3.57,
+            "d_mean_lo": -3.84,
+            "d_mean_hi": -3.26,
+            "d_slowest10_s": -1.48
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": -2.72,
+            "d_mean_lo": -2.98,
+            "d_mean_hi": -2.46,
+            "d_slowest10_s": 2.39
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -0.54,
+            "d_mean_lo": -0.69,
+            "d_mean_hi": -0.37,
+            "d_slowest10_s": 0.96
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": 0.2,
+            "d_mean_lo": 0.02,
+            "d_mean_hi": 0.39,
+            "d_slowest10_s": 1.42
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": 1.0,
+            "d_mean_lo": 0.84,
+            "d_mean_hi": 1.17,
+            "d_slowest10_s": 1.19
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -0.92,
+            "d_mean_lo": -1.09,
+            "d_mean_hi": -0.72,
+            "d_slowest10_s": -2.38
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -0.23,
+            "d_mean_lo": -0.41,
+            "d_mean_hi": -0.05,
+            "d_slowest10_s": -1.11
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": 0.55,
+            "d_mean_lo": 0.38,
+            "d_mean_hi": 0.72,
+            "d_slowest10_s": -1.08
+          }
+        }
+      },
       "boroughs_worse_by_1s_any_model": [
         "CITY OF LONDON",
         "HILLINGDON"
@@ -1256,7 +2983,7 @@
         "CITY OF LONDON",
         "ENFIELD",
         "ISLINGTON",
-        "RICHMOND UPON THAMES",
+        "KINGSTON UPON THAMES",
         "SUTTON"
       ]
     },
@@ -1266,8 +2993,8 @@
           "n_calls": 129268,
           "today_mean_s": 314.07,
           "d_mean_s": -5.18,
-          "d_mean_lo": -5.32,
-          "d_mean_hi": -5.04,
+          "d_mean_lo": -5.31,
+          "d_mean_hi": -5.06,
           "d_slowest10_s": -4.62
         },
         "night 00-07": {
@@ -1275,15 +3002,15 @@
           "today_mean_s": 288.13,
           "d_mean_s": -4.66,
           "d_mean_lo": -4.99,
-          "d_mean_hi": -4.36,
+          "d_mean_hi": -4.39,
           "d_slowest10_s": -3.86
         },
         "morning rush 07-10": {
           "n_calls": 12320,
           "today_mean_s": 318.45,
           "d_mean_s": -4.62,
-          "d_mean_lo": -5.1,
-          "d_mean_hi": -4.14,
+          "d_mean_lo": -5.12,
+          "d_mean_hi": -4.18,
           "d_slowest10_s": -3.4
         },
         "day 10-16": {
@@ -1291,31 +3018,31 @@
           "today_mean_s": 328.75,
           "d_mean_s": -5.59,
           "d_mean_lo": -5.83,
-          "d_mean_hi": -5.35,
+          "d_mean_hi": -5.38,
           "d_slowest10_s": -5.55
         },
         "evening rush 16-20": {
           "n_calls": 30027,
           "today_mean_s": 326.52,
           "d_mean_s": -5.41,
-          "d_mean_lo": -5.68,
-          "d_mean_hi": -5.13,
+          "d_mean_lo": -5.71,
+          "d_mean_hi": -5.14,
           "d_slowest10_s": -3.3
         },
         "evening 20-24": {
           "n_calls": 26193,
           "today_mean_s": 297.74,
           "d_mean_s": -5.0,
-          "d_mean_lo": -5.26,
-          "d_mean_hi": -4.72,
+          "d_mean_lo": -5.3,
+          "d_mean_hi": -4.7,
           "d_slowest10_s": -3.66
         },
         "rush hours (07-10, 16-20)": {
           "n_calls": 42347,
           "today_mean_s": 324.17,
           "d_mean_s": -5.18,
-          "d_mean_lo": -5.45,
-          "d_mean_hi": -4.96,
+          "d_mean_lo": -5.42,
+          "d_mean_hi": -4.93,
           "d_slowest10_s": -3.36
         }
       },
@@ -1323,39 +3050,39 @@
         "all": {
           "lgbm": {
             "d_mean_s": -5.18,
-            "d_mean_lo": -5.32,
-            "d_mean_hi": -5.04,
+            "d_mean_lo": -5.31,
+            "d_mean_hi": -5.05,
             "d_slowest10_s": -4.62
           },
           "road": {
             "d_mean_s": -4.72,
             "d_mean_lo": -4.86,
-            "d_mean_hi": -4.59,
+            "d_mean_hi": -4.6,
             "d_slowest10_s": -4.87
           },
           "kolesar": {
             "d_mean_s": -2.47,
-            "d_mean_lo": -2.6,
-            "d_mean_hi": -2.35,
+            "d_mean_lo": -2.59,
+            "d_mean_hi": -2.33,
             "d_slowest10_s": -3.57
           }
         },
         "serious": {
           "lgbm": {
             "d_mean_s": -4.7,
-            "d_mean_lo": -4.9,
+            "d_mean_lo": -4.88,
             "d_mean_hi": -4.52,
             "d_slowest10_s": -4.16
           },
           "road": {
             "d_mean_s": -4.34,
-            "d_mean_lo": -4.55,
-            "d_mean_hi": -4.14,
+            "d_mean_lo": -4.53,
+            "d_mean_hi": -4.16,
             "d_slowest10_s": -5.0
           },
           "kolesar": {
             "d_mean_s": -2.24,
-            "d_mean_lo": -2.42,
+            "d_mean_lo": -2.43,
             "d_mean_hi": -2.08,
             "d_slowest10_s": -3.63
           }
@@ -1363,26 +3090,158 @@
         "dwelling_fire": {
           "lgbm": {
             "d_mean_s": -5.5,
-            "d_mean_lo": -6.09,
-            "d_mean_hi": -4.92,
+            "d_mean_lo": -6.14,
+            "d_mean_hi": -4.86,
             "d_slowest10_s": -4.0
           },
           "road": {
             "d_mean_s": -5.2,
             "d_mean_lo": -5.88,
-            "d_mean_hi": -4.55,
+            "d_mean_hi": -4.5,
             "d_slowest10_s": -5.94
           },
           "kolesar": {
             "d_mean_s": -3.36,
-            "d_mean_lo": -3.97,
-            "d_mean_hi": -2.71,
+            "d_mean_lo": -3.95,
+            "d_mean_hi": -2.74,
             "d_slowest10_s": -4.97
           }
         }
       },
       "faster_in_every_period_lgbm": true,
       "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -9.64,
+            "d_mean_lo": -10.0,
+            "d_mean_hi": -9.31,
+            "d_slowest10_s": -9.98
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -9.32,
+            "d_mean_lo": -9.64,
+            "d_mean_hi": -8.97,
+            "d_slowest10_s": -12.94
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -5.92,
+            "d_mean_lo": -6.2,
+            "d_mean_hi": -5.63,
+            "d_slowest10_s": -9.87
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": -4.06,
+            "d_mean_lo": -4.35,
+            "d_mean_hi": -3.77,
+            "d_slowest10_s": -3.19
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": -3.77,
+            "d_mean_lo": -4.07,
+            "d_mean_hi": -3.45,
+            "d_slowest10_s": -6.04
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": -2.89,
+            "d_mean_lo": -3.18,
+            "d_mean_hi": -2.63,
+            "d_slowest10_s": -8.21
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": -3.11,
+            "d_mean_lo": -3.33,
+            "d_mean_hi": -2.88,
+            "d_slowest10_s": -2.86
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": -2.25,
+            "d_mean_lo": -2.5,
+            "d_mean_hi": -2.0,
+            "d_slowest10_s": -1.6
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": -0.89,
+            "d_mean_lo": -1.12,
+            "d_mean_hi": -0.62,
+            "d_slowest10_s": 2.43
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -2.83,
+            "d_mean_lo": -3.07,
+            "d_mean_hi": -2.61,
+            "d_slowest10_s": -1.73
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -2.14,
+            "d_mean_lo": -2.36,
+            "d_mean_hi": -1.95,
+            "d_slowest10_s": -0.05
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": 0.01,
+            "d_mean_lo": -0.17,
+            "d_mean_hi": 0.21,
+            "d_slowest10_s": 0.2
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -5.55,
+            "d_mean_lo": -5.9,
+            "d_mean_hi": -5.14,
+            "d_slowest10_s": -5.66
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -5.39,
+            "d_mean_lo": -5.72,
+            "d_mean_hi": -5.06,
+            "d_slowest10_s": -1.38
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -1.78,
+            "d_mean_lo": -2.05,
+            "d_mean_hi": -1.5,
+            "d_slowest10_s": 0.68
+          }
+        }
+      },
       "boroughs_worse_by_1s_any_model": [
         "CAMDEN",
         "CITY OF LONDON",
@@ -1404,23 +3263,23 @@
           "today_mean_s": 314.07,
           "d_mean_s": -4.89,
           "d_mean_lo": -5.03,
-          "d_mean_hi": -4.74,
+          "d_mean_hi": -4.75,
           "d_slowest10_s": -4.91
         },
         "night 00-07": {
           "n_calls": 21939,
           "today_mean_s": 288.13,
           "d_mean_s": -3.9,
-          "d_mean_lo": -4.21,
-          "d_mean_hi": -3.6,
+          "d_mean_lo": -4.23,
+          "d_mean_hi": -3.55,
           "d_slowest10_s": -4.22
         },
         "morning rush 07-10": {
           "n_calls": 12320,
           "today_mean_s": 318.45,
           "d_mean_s": -4.7,
-          "d_mean_lo": -5.22,
-          "d_mean_hi": -4.19,
+          "d_mean_lo": -5.24,
+          "d_mean_hi": -4.16,
           "d_slowest10_s": -3.66
         },
         "day 10-16": {
@@ -1428,7 +3287,7 @@
           "today_mean_s": 328.75,
           "d_mean_s": -5.52,
           "d_mean_lo": -5.78,
-          "d_mean_hi": -5.25,
+          "d_mean_hi": -5.24,
           "d_slowest10_s": -5.78
         },
         "evening rush 16-20": {
@@ -1436,7 +3295,7 @@
           "today_mean_s": 326.52,
           "d_mean_s": -5.19,
           "d_mean_lo": -5.51,
-          "d_mean_hi": -4.87,
+          "d_mean_hi": -4.88,
           "d_slowest10_s": -3.28
         },
         "evening 20-24": {
@@ -1444,15 +3303,15 @@
           "today_mean_s": 297.74,
           "d_mean_s": -4.52,
           "d_mean_lo": -4.83,
-          "d_mean_hi": -4.2,
+          "d_mean_hi": -4.19,
           "d_slowest10_s": -4.17
         },
         "rush hours (07-10, 16-20)": {
           "n_calls": 42347,
           "today_mean_s": 324.17,
           "d_mean_s": -5.05,
-          "d_mean_lo": -5.33,
-          "d_mean_hi": -4.75,
+          "d_mean_lo": -5.3,
+          "d_mean_hi": -4.76,
           "d_slowest10_s": -3.39
         }
       },
@@ -1460,40 +3319,40 @@
         "all": {
           "lgbm": {
             "d_mean_s": -4.89,
-            "d_mean_lo": -5.03,
-            "d_mean_hi": -4.75,
+            "d_mean_lo": -5.04,
+            "d_mean_hi": -4.74,
             "d_slowest10_s": -4.91
           },
           "road": {
             "d_mean_s": -4.14,
-            "d_mean_lo": -4.29,
-            "d_mean_hi": -4.0,
+            "d_mean_lo": -4.28,
+            "d_mean_hi": -3.99,
             "d_slowest10_s": -5.18
           },
           "kolesar": {
             "d_mean_s": -1.99,
-            "d_mean_lo": -2.13,
-            "d_mean_hi": -1.86,
+            "d_mean_lo": -2.12,
+            "d_mean_hi": -1.85,
             "d_slowest10_s": -4.11
           }
         },
         "serious": {
           "lgbm": {
             "d_mean_s": -4.33,
-            "d_mean_lo": -4.53,
-            "d_mean_hi": -4.15,
+            "d_mean_lo": -4.51,
+            "d_mean_hi": -4.13,
             "d_slowest10_s": -4.3
           },
           "road": {
             "d_mean_s": -3.74,
             "d_mean_lo": -3.93,
-            "d_mean_hi": -3.54,
+            "d_mean_hi": -3.56,
             "d_slowest10_s": -5.14
           },
           "kolesar": {
             "d_mean_s": -1.64,
-            "d_mean_lo": -1.83,
-            "d_mean_hi": -1.44,
+            "d_mean_lo": -1.81,
+            "d_mean_hi": -1.46,
             "d_slowest10_s": -4.02
           }
         },
@@ -1501,25 +3360,157 @@
           "lgbm": {
             "d_mean_s": -4.36,
             "d_mean_lo": -5.02,
-            "d_mean_hi": -3.68,
+            "d_mean_hi": -3.65,
             "d_slowest10_s": -4.83
           },
           "road": {
             "d_mean_s": -3.82,
-            "d_mean_lo": -4.42,
-            "d_mean_hi": -3.19,
+            "d_mean_lo": -4.51,
+            "d_mean_hi": -3.11,
             "d_slowest10_s": -6.48
           },
           "kolesar": {
             "d_mean_s": -2.16,
-            "d_mean_lo": -2.79,
-            "d_mean_hi": -1.6,
+            "d_mean_lo": -2.74,
+            "d_mean_hi": -1.52,
             "d_slowest10_s": -5.53
           }
         }
       },
       "faster_in_every_period_lgbm": true,
       "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -6.41,
+            "d_mean_lo": -6.74,
+            "d_mean_hi": -6.13,
+            "d_slowest10_s": -11.43
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -6.07,
+            "d_mean_lo": -6.4,
+            "d_mean_hi": -5.74,
+            "d_slowest10_s": -13.81
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -3.44,
+            "d_mean_lo": -3.72,
+            "d_mean_hi": -3.16,
+            "d_slowest10_s": -11.77
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": -4.16,
+            "d_mean_lo": -4.47,
+            "d_mean_hi": -3.86,
+            "d_slowest10_s": -4.63
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": -4.0,
+            "d_mean_lo": -4.3,
+            "d_mean_hi": -3.68,
+            "d_slowest10_s": -6.62
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": -2.46,
+            "d_mean_lo": -2.76,
+            "d_mean_hi": -2.15,
+            "d_slowest10_s": -9.48
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": -2.43,
+            "d_mean_lo": -2.7,
+            "d_mean_hi": -2.17,
+            "d_slowest10_s": -1.7
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": -1.29,
+            "d_mean_lo": -1.58,
+            "d_mean_hi": -1.01,
+            "d_slowest10_s": -0.87
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": 0.68,
+            "d_mean_lo": 0.41,
+            "d_mean_hi": 0.99,
+            "d_slowest10_s": 2.99
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -2.36,
+            "d_mean_lo": -2.6,
+            "d_mean_hi": -2.13,
+            "d_slowest10_s": -0.79
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -1.43,
+            "d_mean_lo": -1.63,
+            "d_mean_hi": -1.23,
+            "d_slowest10_s": 0.34
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": 0.32,
+            "d_mean_lo": 0.11,
+            "d_mean_hi": 0.53,
+            "d_slowest10_s": 0.71
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -9.09,
+            "d_mean_lo": -9.54,
+            "d_mean_hi": -8.62,
+            "d_slowest10_s": -5.64
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -7.7,
+            "d_mean_lo": -8.14,
+            "d_mean_hi": -7.23,
+            "d_slowest10_s": -1.89
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -4.85,
+            "d_mean_lo": -5.2,
+            "d_mean_hi": -4.53,
+            "d_slowest10_s": 0.66
+          }
+        }
+      },
       "boroughs_worse_by_1s_any_model": [
         "CAMDEN",
         "CITY OF LONDON",
@@ -1539,13 +3530,286 @@
         "WALTHAM FOREST"
       ]
     },
+    "lgbm_replace_5_boroughs1s": {
+      "time_of_day_lgbm": {
+        "all day": {
+          "n_calls": 129268,
+          "today_mean_s": 314.07,
+          "d_mean_s": -2.47,
+          "d_mean_lo": -2.59,
+          "d_mean_hi": -2.36,
+          "d_slowest10_s": -2.72
+        },
+        "night 00-07": {
+          "n_calls": 21939,
+          "today_mean_s": 288.13,
+          "d_mean_s": -2.24,
+          "d_mean_lo": -2.48,
+          "d_mean_hi": -1.99,
+          "d_slowest10_s": -3.1
+        },
+        "morning rush 07-10": {
+          "n_calls": 12320,
+          "today_mean_s": 318.45,
+          "d_mean_s": -2.03,
+          "d_mean_lo": -2.39,
+          "d_mean_hi": -1.72,
+          "d_slowest10_s": -2.59
+        },
+        "day 10-16": {
+          "n_calls": 38789,
+          "today_mean_s": 328.75,
+          "d_mean_s": -2.47,
+          "d_mean_lo": -2.66,
+          "d_mean_hi": -2.31,
+          "d_slowest10_s": -2.5
+        },
+        "evening rush 16-20": {
+          "n_calls": 30027,
+          "today_mean_s": 326.52,
+          "d_mean_s": -2.64,
+          "d_mean_lo": -2.89,
+          "d_mean_hi": -2.39,
+          "d_slowest10_s": -2.51
+        },
+        "evening 20-24": {
+          "n_calls": 26193,
+          "today_mean_s": 297.74,
+          "d_mean_s": -2.66,
+          "d_mean_lo": -2.87,
+          "d_mean_hi": -2.43,
+          "d_slowest10_s": -2.79
+        },
+        "rush hours (07-10, 16-20)": {
+          "n_calls": 42347,
+          "today_mean_s": 324.17,
+          "d_mean_s": -2.47,
+          "d_mean_lo": -2.66,
+          "d_mean_hi": -2.28,
+          "d_slowest10_s": -2.52
+        }
+      },
+      "severity": {
+        "all": {
+          "lgbm": {
+            "d_mean_s": -2.47,
+            "d_mean_lo": -2.58,
+            "d_mean_hi": -2.37,
+            "d_slowest10_s": -2.72
+          },
+          "road": {
+            "d_mean_s": -2.42,
+            "d_mean_lo": -2.54,
+            "d_mean_hi": -2.31,
+            "d_slowest10_s": -4.78
+          },
+          "kolesar": {
+            "d_mean_s": -1.54,
+            "d_mean_lo": -1.65,
+            "d_mean_hi": -1.44,
+            "d_slowest10_s": -3.41
+          }
+        },
+        "serious": {
+          "lgbm": {
+            "d_mean_s": -2.48,
+            "d_mean_lo": -2.62,
+            "d_mean_hi": -2.34,
+            "d_slowest10_s": -2.56
+          },
+          "road": {
+            "d_mean_s": -2.43,
+            "d_mean_lo": -2.58,
+            "d_mean_hi": -2.28,
+            "d_slowest10_s": -4.94
+          },
+          "kolesar": {
+            "d_mean_s": -1.5,
+            "d_mean_lo": -1.65,
+            "d_mean_hi": -1.35,
+            "d_slowest10_s": -3.35
+          }
+        },
+        "dwelling_fire": {
+          "lgbm": {
+            "d_mean_s": -2.98,
+            "d_mean_lo": -3.55,
+            "d_mean_hi": -2.48,
+            "d_slowest10_s": -3.04
+          },
+          "road": {
+            "d_mean_s": -2.88,
+            "d_mean_lo": -3.48,
+            "d_mean_hi": -2.31,
+            "d_slowest10_s": -5.6
+          },
+          "kolesar": {
+            "d_mean_s": -2.25,
+            "d_mean_lo": -2.79,
+            "d_mean_hi": -1.71,
+            "d_slowest10_s": -5.22
+          }
+        }
+      },
+      "faster_in_every_period_lgbm": true,
+      "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -2.91,
+            "d_mean_lo": -3.16,
+            "d_mean_hi": -2.69,
+            "d_slowest10_s": -1.38
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -2.9,
+            "d_mean_lo": -3.15,
+            "d_mean_hi": -2.68,
+            "d_slowest10_s": -5.64
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -1.4,
+            "d_mean_lo": -1.64,
+            "d_mean_hi": -1.18,
+            "d_slowest10_s": -4.93
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": -4.58,
+            "d_mean_lo": -4.87,
+            "d_mean_hi": -4.31,
+            "d_slowest10_s": -4.85
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": -4.61,
+            "d_mean_lo": -4.9,
+            "d_mean_hi": -4.33,
+            "d_slowest10_s": -8.33
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": -4.35,
+            "d_mean_lo": -4.64,
+            "d_mean_hi": -4.08,
+            "d_slowest10_s": -10.13
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": -1.98,
+            "d_mean_lo": -2.26,
+            "d_mean_hi": -1.72,
+            "d_slowest10_s": -3.47
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": -1.49,
+            "d_mean_lo": -1.78,
+            "d_mean_hi": -1.22,
+            "d_slowest10_s": -3.58
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": -0.59,
+            "d_mean_lo": -0.87,
+            "d_mean_hi": -0.3,
+            "d_slowest10_s": 0.8
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -0.15,
+            "d_mean_lo": -0.31,
+            "d_mean_hi": 0.0,
+            "d_slowest10_s": -0.55
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -0.14,
+            "d_mean_lo": -0.3,
+            "d_mean_hi": 0.02,
+            "d_slowest10_s": -1.28
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": 0.4,
+            "d_mean_lo": 0.24,
+            "d_mean_hi": 0.55,
+            "d_slowest10_s": -0.25
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -2.11,
+            "d_mean_lo": -2.31,
+            "d_mean_hi": -1.89,
+            "d_slowest10_s": -2.48
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -2.38,
+            "d_mean_lo": -2.61,
+            "d_mean_hi": -2.16,
+            "d_slowest10_s": -2.76
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -1.19,
+            "d_mean_lo": -1.38,
+            "d_mean_hi": -1.0,
+            "d_slowest10_s": 0.24
+          }
+        }
+      },
+      "boroughs_worse_by_1s_any_model": [
+        "CITY OF LONDON",
+        "RICHMOND UPON THAMES",
+        "SOUTHWARK"
+      ],
+      "boroughs_significantly_worse_lgbm": [
+        "BROMLEY",
+        "CAMDEN",
+        "CITY OF LONDON",
+        "EALING",
+        "ENFIELD",
+        "HAMMERSMITH AND FULHAM",
+        "HARROW",
+        "ISLINGTON",
+        "KENSINGTON AND CHELSEA",
+        "SOUTHWARK"
+      ]
+    },
     "kolesar_expand_3": {
       "time_of_day_lgbm": {
         "all day": {
           "n_calls": 129268,
           "today_mean_s": 314.07,
           "d_mean_s": -2.11,
-          "d_mean_lo": -2.17,
+          "d_mean_lo": -2.18,
           "d_mean_hi": -2.04,
           "d_slowest10_s": -0.73
         },
@@ -1553,7 +3817,7 @@
           "n_calls": 21939,
           "today_mean_s": 288.13,
           "d_mean_s": -1.76,
-          "d_mean_lo": -1.94,
+          "d_mean_lo": -1.93,
           "d_mean_hi": -1.61,
           "d_slowest10_s": 0.09
         },
@@ -1561,32 +3825,32 @@
           "n_calls": 12320,
           "today_mean_s": 318.45,
           "d_mean_s": -2.21,
-          "d_mean_lo": -2.47,
-          "d_mean_hi": -1.99,
+          "d_mean_lo": -2.43,
+          "d_mean_hi": -1.97,
           "d_slowest10_s": -0.02
         },
         "day 10-16": {
           "n_calls": 38789,
           "today_mean_s": 328.75,
           "d_mean_s": -2.35,
-          "d_mean_lo": -2.48,
-          "d_mean_hi": -2.23,
+          "d_mean_lo": -2.49,
+          "d_mean_hi": -2.24,
           "d_slowest10_s": -1.28
         },
         "evening rush 16-20": {
           "n_calls": 30027,
           "today_mean_s": 326.52,
           "d_mean_s": -2.09,
-          "d_mean_lo": -2.22,
-          "d_mean_hi": -1.94,
+          "d_mean_lo": -2.24,
+          "d_mean_hi": -1.95,
           "d_slowest10_s": -0.11
         },
         "evening 20-24": {
           "n_calls": 26193,
           "today_mean_s": 297.74,
           "d_mean_s": -2.0,
-          "d_mean_lo": -2.12,
-          "d_mean_hi": -1.86,
+          "d_mean_lo": -2.15,
+          "d_mean_hi": -1.87,
           "d_slowest10_s": -0.27
         },
         "rush hours (07-10, 16-20)": {
@@ -1603,7 +3867,7 @@
           "lgbm": {
             "d_mean_s": -2.11,
             "d_mean_lo": -2.18,
-            "d_mean_hi": -2.03,
+            "d_mean_hi": -2.04,
             "d_slowest10_s": -0.73
           },
           "road": {
@@ -1615,7 +3879,7 @@
           "kolesar": {
             "d_mean_s": -1.84,
             "d_mean_lo": -1.91,
-            "d_mean_hi": -1.77,
+            "d_mean_hi": -1.76,
             "d_slowest10_s": 0.0
           }
         },
@@ -1623,13 +3887,13 @@
           "lgbm": {
             "d_mean_s": -1.41,
             "d_mean_lo": -1.49,
-            "d_mean_hi": -1.34,
+            "d_mean_hi": -1.33,
             "d_slowest10_s": -0.39
           },
           "road": {
             "d_mean_s": -1.32,
-            "d_mean_lo": -1.4,
-            "d_mean_hi": -1.25,
+            "d_mean_lo": -1.42,
+            "d_mean_hi": -1.24,
             "d_slowest10_s": 0.01
           },
           "kolesar": {
@@ -1642,19 +3906,19 @@
         "dwelling_fire": {
           "lgbm": {
             "d_mean_s": -1.34,
-            "d_mean_lo": -1.65,
-            "d_mean_hi": -1.06,
+            "d_mean_lo": -1.61,
+            "d_mean_hi": -1.08,
             "d_slowest10_s": -0.08
           },
           "road": {
             "d_mean_s": -1.26,
-            "d_mean_lo": -1.55,
+            "d_mean_lo": -1.54,
             "d_mean_hi": -0.97,
             "d_slowest10_s": 0.04
           },
           "kolesar": {
             "d_mean_s": -1.23,
-            "d_mean_lo": -1.51,
+            "d_mean_lo": -1.54,
             "d_mean_hi": -0.96,
             "d_slowest10_s": 0.0
           }
@@ -1662,6 +3926,138 @@
       },
       "faster_in_every_period_lgbm": true,
       "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -1.29,
+            "d_mean_lo": -1.39,
+            "d_mean_hi": -1.19,
+            "d_slowest10_s": 0.02
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -1.23,
+            "d_mean_lo": -1.33,
+            "d_mean_hi": -1.11,
+            "d_slowest10_s": 0.04
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -1.38,
+            "d_mean_lo": -1.51,
+            "d_mean_hi": -1.27,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": 0.27,
+            "d_mean_lo": 0.24,
+            "d_mean_hi": 0.3,
+            "d_slowest10_s": -0.01
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": 0.31,
+            "d_mean_lo": 0.29,
+            "d_mean_hi": 0.32,
+            "d_slowest10_s": -0.0
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": 0.28,
+            "d_mean_lo": 0.26,
+            "d_mean_hi": 0.3,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": -0.18,
+            "d_mean_lo": -0.25,
+            "d_mean_hi": -0.11,
+            "d_slowest10_s": -0.02
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": -0.16,
+            "d_mean_lo": -0.23,
+            "d_mean_hi": -0.1,
+            "d_slowest10_s": 0.07
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": -0.24,
+            "d_mean_lo": -0.31,
+            "d_mean_hi": -0.18,
+            "d_slowest10_s": -0.0
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -4.8,
+            "d_mean_lo": -5.05,
+            "d_mean_hi": -4.54,
+            "d_slowest10_s": -0.73
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -4.75,
+            "d_mean_lo": -5.02,
+            "d_mean_hi": -4.49,
+            "d_slowest10_s": 0.23
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": -4.81,
+            "d_mean_lo": -5.11,
+            "d_mean_hi": -4.52,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -5.59,
+            "d_mean_lo": -5.83,
+            "d_mean_hi": -5.34,
+            "d_slowest10_s": -4.31
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -4.95,
+            "d_mean_lo": -5.16,
+            "d_mean_hi": -4.71,
+            "d_slowest10_s": -0.01
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -3.92,
+            "d_mean_lo": -4.13,
+            "d_mean_hi": -3.71,
+            "d_slowest10_s": 0.0
+          }
+        }
+      },
       "boroughs_worse_by_1s_any_model": [
         "CITY OF LONDON",
         "LAMBETH",
@@ -1679,24 +4075,24 @@
           "n_calls": 129268,
           "today_mean_s": 314.07,
           "d_mean_s": -3.07,
-          "d_mean_lo": -3.22,
-          "d_mean_hi": -2.91,
+          "d_mean_lo": -3.21,
+          "d_mean_hi": -2.9,
           "d_slowest10_s": -1.57
         },
         "night 00-07": {
           "n_calls": 21939,
           "today_mean_s": 288.13,
           "d_mean_s": -2.86,
-          "d_mean_lo": -3.19,
-          "d_mean_hi": -2.48,
+          "d_mean_lo": -3.22,
+          "d_mean_hi": -2.55,
           "d_slowest10_s": -1.17
         },
         "morning rush 07-10": {
           "n_calls": 12320,
           "today_mean_s": 318.45,
           "d_mean_s": -2.93,
-          "d_mean_lo": -3.43,
-          "d_mean_hi": -2.43,
+          "d_mean_lo": -3.46,
+          "d_mean_hi": -2.36,
           "d_slowest10_s": -1.09
         },
         "day 10-16": {
@@ -1704,31 +4100,31 @@
           "today_mean_s": 328.75,
           "d_mean_s": -3.68,
           "d_mean_lo": -3.96,
-          "d_mean_hi": -3.43,
+          "d_mean_hi": -3.39,
           "d_slowest10_s": -2.22
         },
         "evening rush 16-20": {
           "n_calls": 30027,
           "today_mean_s": 326.52,
           "d_mean_s": -2.87,
-          "d_mean_lo": -3.2,
-          "d_mean_hi": -2.51,
+          "d_mean_lo": -3.19,
+          "d_mean_hi": -2.52,
           "d_slowest10_s": -0.63
         },
         "evening 20-24": {
           "n_calls": 26193,
           "today_mean_s": 297.74,
           "d_mean_s": -2.62,
-          "d_mean_lo": -2.94,
-          "d_mean_hi": -2.3,
+          "d_mean_lo": -2.97,
+          "d_mean_hi": -2.31,
           "d_slowest10_s": -0.59
         },
         "rush hours (07-10, 16-20)": {
           "n_calls": 42347,
           "today_mean_s": 324.17,
           "d_mean_s": -2.88,
-          "d_mean_lo": -3.18,
-          "d_mean_hi": -2.59,
+          "d_mean_lo": -3.14,
+          "d_mean_hi": -2.61,
           "d_slowest10_s": -0.77
         }
       },
@@ -1736,19 +4132,19 @@
         "all": {
           "lgbm": {
             "d_mean_s": -3.07,
-            "d_mean_lo": -3.21,
+            "d_mean_lo": -3.24,
             "d_mean_hi": -2.91,
             "d_slowest10_s": -1.57
           },
           "road": {
             "d_mean_s": -3.7,
             "d_mean_lo": -3.87,
-            "d_mean_hi": -3.55,
+            "d_mean_hi": -3.53,
             "d_slowest10_s": -3.48
           },
           "kolesar": {
             "d_mean_s": -4.16,
-            "d_mean_lo": -4.33,
+            "d_mean_lo": -4.34,
             "d_mean_hi": -3.99,
             "d_slowest10_s": -4.03
           }
@@ -1757,45 +4153,177 @@
           "lgbm": {
             "d_mean_s": -1.94,
             "d_mean_lo": -2.14,
-            "d_mean_hi": -1.75,
+            "d_mean_hi": -1.74,
             "d_slowest10_s": -1.11
           },
           "road": {
             "d_mean_s": -2.6,
-            "d_mean_lo": -2.81,
-            "d_mean_hi": -2.4,
+            "d_mean_lo": -2.82,
+            "d_mean_hi": -2.39,
             "d_slowest10_s": -3.79
           },
           "kolesar": {
             "d_mean_s": -3.06,
-            "d_mean_lo": -3.28,
-            "d_mean_hi": -2.83,
+            "d_mean_lo": -3.29,
+            "d_mean_hi": -2.84,
             "d_slowest10_s": -4.08
           }
         },
         "dwelling_fire": {
           "lgbm": {
             "d_mean_s": -2.49,
-            "d_mean_lo": -3.23,
-            "d_mean_hi": -1.71,
+            "d_mean_lo": -3.27,
+            "d_mean_hi": -1.85,
             "d_slowest10_s": -0.84
           },
           "road": {
             "d_mean_s": -3.12,
-            "d_mean_lo": -3.91,
-            "d_mean_hi": -2.33,
+            "d_mean_lo": -3.99,
+            "d_mean_hi": -2.38,
             "d_slowest10_s": -4.6
           },
           "kolesar": {
             "d_mean_s": -3.69,
-            "d_mean_lo": -4.49,
-            "d_mean_hi": -2.92,
+            "d_mean_lo": -4.51,
+            "d_mean_hi": -2.95,
             "d_slowest10_s": -5.7
           }
         }
       },
       "faster_in_every_period_lgbm": true,
       "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -4.19,
+            "d_mean_lo": -4.49,
+            "d_mean_hi": -3.9,
+            "d_slowest10_s": -4.39
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -5.04,
+            "d_mean_lo": -5.33,
+            "d_mean_hi": -4.72,
+            "d_slowest10_s": -9.19
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -5.13,
+            "d_mean_lo": -5.47,
+            "d_mean_hi": -4.77,
+            "d_slowest10_s": -8.5
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": -0.14,
+            "d_mean_lo": -0.48,
+            "d_mean_hi": 0.16,
+            "d_slowest10_s": -1.44
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": -1.21,
+            "d_mean_lo": -1.56,
+            "d_mean_hi": -0.88,
+            "d_slowest10_s": -5.73
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": -2.59,
+            "d_mean_lo": -2.93,
+            "d_mean_hi": -2.23,
+            "d_slowest10_s": -9.95
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": 1.65,
+            "d_mean_lo": 1.36,
+            "d_mean_hi": 1.97,
+            "d_slowest10_s": 1.02
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": 1.38,
+            "d_mean_lo": 1.03,
+            "d_mean_hi": 1.69,
+            "d_slowest10_s": 0.01
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": 0.87,
+            "d_mean_lo": 0.56,
+            "d_mean_hi": 1.18,
+            "d_slowest10_s": 0.54
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -4.99,
+            "d_mean_lo": -5.38,
+            "d_mean_hi": -4.64,
+            "d_slowest10_s": 0.07
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -5.28,
+            "d_mean_lo": -5.64,
+            "d_mean_hi": -4.91,
+            "d_slowest10_s": 1.02
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": -5.78,
+            "d_mean_lo": -6.25,
+            "d_mean_hi": -5.4,
+            "d_slowest10_s": 0.05
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -8.66,
+            "d_mean_lo": -9.07,
+            "d_mean_hi": -8.23,
+            "d_slowest10_s": -3.64
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -9.24,
+            "d_mean_lo": -9.76,
+            "d_mean_hi": -8.7,
+            "d_slowest10_s": -0.57
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -8.93,
+            "d_mean_lo": -9.39,
+            "d_mean_hi": -8.46,
+            "d_slowest10_s": 0.97
+          }
+        }
+      },
       "boroughs_worse_by_1s_any_model": [
         "CITY OF LONDON",
         "HACKNEY",
@@ -1839,15 +4367,15 @@
           "n_calls": 12320,
           "today_mean_s": 318.45,
           "d_mean_s": -2.35,
-          "d_mean_lo": -2.63,
-          "d_mean_hi": -2.12,
+          "d_mean_lo": -2.61,
+          "d_mean_hi": -2.08,
           "d_slowest10_s": 0.0
         },
         "day 10-16": {
           "n_calls": 38789,
           "today_mean_s": 328.75,
           "d_mean_s": -2.23,
-          "d_mean_lo": -2.36,
+          "d_mean_lo": -2.37,
           "d_mean_hi": -2.1,
           "d_slowest10_s": -1.22
         },
@@ -1855,16 +4383,16 @@
           "n_calls": 30027,
           "today_mean_s": 326.52,
           "d_mean_s": -2.03,
-          "d_mean_lo": -2.17,
-          "d_mean_hi": -1.88,
+          "d_mean_lo": -2.18,
+          "d_mean_hi": -1.87,
           "d_slowest10_s": -0.07
         },
         "evening 20-24": {
           "n_calls": 26193,
           "today_mean_s": 297.74,
           "d_mean_s": -1.88,
-          "d_mean_lo": -2.02,
-          "d_mean_hi": -1.72,
+          "d_mean_lo": -2.04,
+          "d_mean_hi": -1.73,
           "d_slowest10_s": -0.27
         },
         "rush hours (07-10, 16-20)": {
@@ -1872,7 +4400,7 @@
           "today_mean_s": 324.17,
           "d_mean_s": -2.12,
           "d_mean_lo": -2.26,
-          "d_mean_hi": -1.98,
+          "d_mean_hi": -1.99,
           "d_slowest10_s": -0.07
         }
       },
@@ -1881,13 +4409,13 @@
           "lgbm": {
             "d_mean_s": -2.04,
             "d_mean_lo": -2.11,
-            "d_mean_hi": -1.98,
+            "d_mean_hi": -1.97,
             "d_slowest10_s": -0.7
           },
           "road": {
             "d_mean_s": -2.15,
             "d_mean_lo": -2.23,
-            "d_mean_hi": -2.07,
+            "d_mean_hi": -2.06,
             "d_slowest10_s": 0.05
           },
           "kolesar": {
@@ -1900,19 +4428,19 @@
         "serious": {
           "lgbm": {
             "d_mean_s": -1.34,
-            "d_mean_lo": -1.42,
+            "d_mean_lo": -1.43,
             "d_mean_hi": -1.26,
             "d_slowest10_s": -0.36
           },
           "road": {
             "d_mean_s": -1.42,
-            "d_mean_lo": -1.52,
-            "d_mean_hi": -1.34,
+            "d_mean_lo": -1.51,
+            "d_mean_hi": -1.33,
             "d_slowest10_s": 0.0
           },
           "kolesar": {
             "d_mean_s": -1.03,
-            "d_mean_lo": -1.12,
+            "d_mean_lo": -1.11,
             "d_mean_hi": -0.95,
             "d_slowest10_s": -0.0
           }
@@ -1920,26 +4448,158 @@
         "dwelling_fire": {
           "lgbm": {
             "d_mean_s": -1.11,
-            "d_mean_lo": -1.38,
-            "d_mean_hi": -0.84,
+            "d_mean_lo": -1.43,
+            "d_mean_hi": -0.8,
             "d_slowest10_s": -0.06
           },
           "road": {
             "d_mean_s": -1.17,
-            "d_mean_lo": -1.48,
-            "d_mean_hi": -0.86,
+            "d_mean_lo": -1.47,
+            "d_mean_hi": -0.89,
             "d_slowest10_s": 0.04
           },
           "kolesar": {
             "d_mean_s": -0.88,
-            "d_mean_lo": -1.19,
-            "d_mean_hi": -0.61,
+            "d_mean_lo": -1.2,
+            "d_mean_hi": -0.58,
             "d_slowest10_s": -0.0
           }
         }
       },
       "faster_in_every_period_lgbm": true,
       "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -0.94,
+            "d_mean_lo": -1.04,
+            "d_mean_hi": -0.85,
+            "d_slowest10_s": 0.01
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -0.83,
+            "d_mean_lo": -0.94,
+            "d_mean_hi": -0.73,
+            "d_slowest10_s": 0.04
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -0.34,
+            "d_mean_lo": -0.41,
+            "d_mean_hi": -0.27,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": 0.3,
+            "d_mean_lo": 0.27,
+            "d_mean_hi": 0.32,
+            "d_slowest10_s": 0.0
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": 0.23,
+            "d_mean_lo": 0.21,
+            "d_mean_hi": 0.24,
+            "d_slowest10_s": -0.0
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": 0.39,
+            "d_mean_lo": 0.37,
+            "d_mean_hi": 0.41,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": 0.0,
+            "d_mean_lo": -0.05,
+            "d_mean_hi": 0.05,
+            "d_slowest10_s": -0.03
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": 0.04,
+            "d_mean_lo": 0.0,
+            "d_mean_hi": 0.09,
+            "d_slowest10_s": 0.07
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": 0.21,
+            "d_mean_lo": 0.16,
+            "d_mean_hi": 0.26,
+            "d_slowest10_s": -0.0
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": -3.06,
+            "d_mean_lo": -3.26,
+            "d_mean_hi": -2.87,
+            "d_slowest10_s": -0.63
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -3.22,
+            "d_mean_lo": -3.46,
+            "d_mean_hi": -2.98,
+            "d_slowest10_s": 0.23
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": -2.58,
+            "d_mean_lo": -2.79,
+            "d_mean_hi": -2.36,
+            "d_slowest10_s": 0.0
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -7.62,
+            "d_mean_lo": -7.95,
+            "d_mean_hi": -7.32,
+            "d_slowest10_s": -4.24
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -8.14,
+            "d_mean_lo": -8.48,
+            "d_mean_hi": -7.83,
+            "d_slowest10_s": -0.01
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -6.75,
+            "d_mean_lo": -7.08,
+            "d_mean_hi": -6.46,
+            "d_slowest10_s": 0.0
+          }
+        }
+      },
       "boroughs_worse_by_1s_any_model": [
         "CAMDEN",
         "KENSINGTON AND CHELSEA",
@@ -1960,7 +4620,7 @@
           "today_mean_s": 314.07,
           "d_mean_s": -3.33,
           "d_mean_lo": -3.5,
-          "d_mean_hi": -3.16,
+          "d_mean_hi": -3.17,
           "d_slowest10_s": 2.45
         },
         "night 00-07": {
@@ -1968,47 +4628,47 @@
           "today_mean_s": 288.13,
           "d_mean_s": -3.21,
           "d_mean_lo": -3.57,
-          "d_mean_hi": -2.86,
+          "d_mean_hi": -2.83,
           "d_slowest10_s": 1.3
         },
         "morning rush 07-10": {
           "n_calls": 12320,
           "today_mean_s": 318.45,
           "d_mean_s": -3.65,
-          "d_mean_lo": -4.31,
-          "d_mean_hi": -3.08,
+          "d_mean_lo": -4.19,
+          "d_mean_hi": -3.06,
           "d_slowest10_s": 2.35
         },
         "day 10-16": {
           "n_calls": 38789,
           "today_mean_s": 328.75,
           "d_mean_s": -3.62,
-          "d_mean_lo": -3.92,
-          "d_mean_hi": -3.28,
+          "d_mean_lo": -3.91,
+          "d_mean_hi": -3.3,
           "d_slowest10_s": 2.37
         },
         "evening rush 16-20": {
           "n_calls": 30027,
           "today_mean_s": 326.52,
           "d_mean_s": -2.98,
-          "d_mean_lo": -3.33,
-          "d_mean_hi": -2.57,
+          "d_mean_lo": -3.32,
+          "d_mean_hi": -2.56,
           "d_slowest10_s": 5.38
         },
         "evening 20-24": {
           "n_calls": 26193,
           "today_mean_s": 297.74,
           "d_mean_s": -3.28,
-          "d_mean_lo": -3.64,
-          "d_mean_hi": -2.89,
+          "d_mean_lo": -3.57,
+          "d_mean_hi": -2.92,
           "d_slowest10_s": 1.82
         },
         "rush hours (07-10, 16-20)": {
           "n_calls": 42347,
           "today_mean_s": 324.17,
           "d_mean_s": -3.17,
-          "d_mean_lo": -3.5,
-          "d_mean_hi": -2.87,
+          "d_mean_lo": -3.51,
+          "d_mean_hi": -2.85,
           "d_slowest10_s": 4.46
         }
       },
@@ -2022,13 +4682,13 @@
           },
           "road": {
             "d_mean_s": -5.21,
-            "d_mean_lo": -5.39,
-            "d_mean_hi": -5.05,
+            "d_mean_lo": -5.38,
+            "d_mean_hi": -5.02,
             "d_slowest10_s": 0.1
           },
           "kolesar": {
             "d_mean_s": -3.23,
-            "d_mean_lo": -3.41,
+            "d_mean_lo": -3.39,
             "d_mean_hi": -3.04,
             "d_slowest10_s": 1.63
           }
@@ -2036,19 +4696,19 @@
         "serious": {
           "lgbm": {
             "d_mean_s": -2.38,
-            "d_mean_lo": -2.58,
-            "d_mean_hi": -2.18,
+            "d_mean_lo": -2.59,
+            "d_mean_hi": -2.14,
             "d_slowest10_s": 2.97
           },
           "road": {
             "d_mean_s": -4.06,
-            "d_mean_lo": -4.28,
+            "d_mean_lo": -4.29,
             "d_mean_hi": -3.81,
             "d_slowest10_s": -0.02
           },
           "kolesar": {
             "d_mean_s": -2.22,
-            "d_mean_lo": -2.5,
+            "d_mean_lo": -2.45,
             "d_mean_hi": -1.97,
             "d_slowest10_s": 1.76
           }
@@ -2056,19 +4716,19 @@
         "dwelling_fire": {
           "lgbm": {
             "d_mean_s": -3.32,
-            "d_mean_lo": -4.13,
-            "d_mean_hi": -2.55,
+            "d_mean_lo": -4.06,
+            "d_mean_hi": -2.6,
             "d_slowest10_s": 2.65
           },
           "road": {
             "d_mean_s": -4.94,
-            "d_mean_lo": -5.81,
-            "d_mean_hi": -4.07,
+            "d_mean_lo": -5.72,
+            "d_mean_hi": -4.12,
             "d_slowest10_s": -0.42
           },
           "kolesar": {
             "d_mean_s": -3.52,
-            "d_mean_lo": -4.37,
+            "d_mean_lo": -4.42,
             "d_mean_hi": -2.71,
             "d_slowest10_s": 0.66
           }
@@ -2076,6 +4736,138 @@
       },
       "faster_in_every_period_lgbm": true,
       "faster_for_every_severity_all_models": true,
+      "income_quintiles": {
+        "Q1 (poorest)": {
+          "lgbm": {
+            "n_calls": 29137,
+            "today_mean_s": 311.31,
+            "d_mean_s": -6.04,
+            "d_mean_lo": -6.33,
+            "d_mean_hi": -5.77,
+            "d_slowest10_s": -3.34
+          },
+          "road": {
+            "n_calls": 29137,
+            "today_mean_s": 324.45,
+            "d_mean_s": -7.64,
+            "d_mean_lo": -7.97,
+            "d_mean_hi": -7.3,
+            "d_slowest10_s": -6.21
+          },
+          "kolesar": {
+            "n_calls": 29137,
+            "today_mean_s": 330.16,
+            "d_mean_s": -5.56,
+            "d_mean_lo": -5.94,
+            "d_mean_hi": -5.24,
+            "d_slowest10_s": -6.46
+          }
+        },
+        "Q2": {
+          "lgbm": {
+            "n_calls": 28558,
+            "today_mean_s": 317.81,
+            "d_mean_s": -2.68,
+            "d_mean_lo": -2.97,
+            "d_mean_hi": -2.41,
+            "d_slowest10_s": -2.91
+          },
+          "road": {
+            "n_calls": 28558,
+            "today_mean_s": 331.41,
+            "d_mean_s": -4.0,
+            "d_mean_lo": -4.33,
+            "d_mean_hi": -3.69,
+            "d_slowest10_s": -7.43
+          },
+          "kolesar": {
+            "n_calls": 28558,
+            "today_mean_s": 334.45,
+            "d_mean_s": -3.01,
+            "d_mean_lo": -3.32,
+            "d_mean_hi": -2.68,
+            "d_slowest10_s": -8.44
+          }
+        },
+        "Q3": {
+          "lgbm": {
+            "n_calls": 25886,
+            "today_mean_s": 314.13,
+            "d_mean_s": -1.64,
+            "d_mean_lo": -2.0,
+            "d_mean_hi": -1.24,
+            "d_slowest10_s": 1.13
+          },
+          "road": {
+            "n_calls": 25886,
+            "today_mean_s": 325.22,
+            "d_mean_s": -2.86,
+            "d_mean_lo": -3.33,
+            "d_mean_hi": -2.45,
+            "d_slowest10_s": 0.03
+          },
+          "kolesar": {
+            "n_calls": 25886,
+            "today_mean_s": 333.9,
+            "d_mean_s": -1.05,
+            "d_mean_lo": -1.41,
+            "d_mean_hi": -0.67,
+            "d_slowest10_s": 2.75
+          }
+        },
+        "Q4": {
+          "lgbm": {
+            "n_calls": 22532,
+            "today_mean_s": 314.13,
+            "d_mean_s": 0.43,
+            "d_mean_lo": -0.04,
+            "d_mean_hi": 0.92,
+            "d_slowest10_s": 15.7
+          },
+          "road": {
+            "n_calls": 22532,
+            "today_mean_s": 323.26,
+            "d_mean_s": -2.55,
+            "d_mean_lo": -2.98,
+            "d_mean_hi": -2.08,
+            "d_slowest10_s": 12.55
+          },
+          "kolesar": {
+            "n_calls": 22532,
+            "today_mean_s": 328.31,
+            "d_mean_s": 0.23,
+            "d_mean_lo": -0.27,
+            "d_mean_hi": 0.72,
+            "d_slowest10_s": 18.06
+          }
+        },
+        "Q5 (richest)": {
+          "lgbm": {
+            "n_calls": 23155,
+            "today_mean_s": 312.82,
+            "d_mean_s": -6.29,
+            "d_mean_lo": -6.74,
+            "d_mean_hi": -5.79,
+            "d_slowest10_s": 4.45
+          },
+          "road": {
+            "n_calls": 23155,
+            "today_mean_s": 316.9,
+            "d_mean_s": -8.86,
+            "d_mean_lo": -9.32,
+            "d_mean_hi": -8.31,
+            "d_slowest10_s": 7.14
+          },
+          "kolesar": {
+            "n_calls": 23155,
+            "today_mean_s": 324.52,
+            "d_mean_s": -6.35,
+            "d_mean_lo": -6.91,
+            "d_mean_hi": -5.73,
+            "d_slowest10_s": 9.92
+          }
+        }
+      },
       "boroughs_worse_by_1s_any_model": [
         "CITY OF LONDON",
         "GREENWICH",
@@ -2088,7 +4880,6 @@
         "WALTHAM FOREST"
       ],
       "boroughs_significantly_worse_lgbm": [
-        "BARNET",
         "CITY OF LONDON",
         "ENFIELD",
         "GREENWICH",

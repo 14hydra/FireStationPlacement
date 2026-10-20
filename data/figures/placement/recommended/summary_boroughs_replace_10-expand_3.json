@@ -59,7 +59,7 @@
     "opened": [
       "New site on Great Marlborough Street / Maddox Street",
       "New site on St John's Wood Road / Maida Vale",
-      "Demand cell 67",
+      "New site near Mason Street / Old Kent Road",
       "New site on Greenwich High Road / Deals Gateway",
       "New site on Bow Road / Fairfield Road",
       "New site on Coldharbour Lane / Uxbridge Road",
@@ -165,8 +165,8 @@
     "boroughs_worse_by_1s_or_more": [],
     "opened": [
       "New site on Hanover Street / Regent Street",
-      "Demand cell 36",
-      "Demand cell 47"
+      "New site near Kennington Road / Wincott Street",
+      "New site near Kilburn Park Road / Andover Place"
     ],
     "closed": []
   },
@@ -199,7 +199,7 @@
     "boroughs_worse_by_1s_or_more": [],
     "opened": [
       "New site on Hanover Street / Regent Street",
-      "Demand cell 36",
+      "New site near Kennington Road / Wincott Street",
       "New site on Kilburn High Road"
     ],
     "closed": []

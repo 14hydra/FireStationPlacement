@@ -102,4 +102,4 @@ candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline,plan_r
 100,Woodford,existing_fire_station,0.0239671628839159,51.60954165,True,,1,100,86.0,1,0,578.0,0.004586064077947221
 101,Woodside,existing_fire_station,-0.0621930777407106,51.3857831,True,,1,101,77.0,1,0,1113.0,0.008830950378469302
 375,New site on Hanover Street / Regent Street,street_junction,-0.1414097,51.514031,False,,1,102,73.0,1,0,2709.0,0.021494199977783773
-138,Demand cell 36,demand_cell,-0.11171050559332164,51.49263166522957,False,,1,103,73.0,1,0,1375.0,0.010909754510687592
+138,New site near Kennington Road / Wincott Street,demand_cell,-0.11171050559332164,51.49263166522957,False,,1,103,73.0,1,0,1375.0,0.010909754510687592

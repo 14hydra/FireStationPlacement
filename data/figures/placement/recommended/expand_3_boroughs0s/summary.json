@@ -31,8 +31,8 @@
   "boroughs_better_by_5s_or_more": 4,
   "opened": [
     "New site on Hanover Street / Regent Street",
-    "Demand cell 36",
-    "Demand cell 47"
+    "New site near Kennington Road / Wincott Street",
+    "New site near Kilburn Park Road / Andover Place"
   ],
   "closed": [],
   "pump_moves": [
@@ -52,7 +52,7 @@
       "km": 0.66,
       "second_pump": true,
       "from_name": "Lambeth",
-      "to_name": "Demand cell 36"
+      "to_name": "New site near Kennington Road / Wincott Street"
     },
     {
       "from": 66,
@@ -61,7 +61,7 @@
       "km": 1.68,
       "second_pump": true,
       "from_name": "Paddington",
-      "to_name": "Demand cell 47"
+      "to_name": "New site near Kilburn Park Road / Andover Place"
     }
   ],
   "floors": {

@@ -35,7 +35,7 @@
     "New site on St John's Wood Road / Maida Vale",
     "New site on Marloes Road / Cromwell Road",
     "New site on New Road / Whitechapel Road",
-    "Demand cell 22",
+    "New site near Easton Street / Rosebery Avenue",
     "New site on Uxbridge Road / Boscombe Road",
     "New site on Lower Clapton Road",
     "New site on King William Street / Gracechurch Street",
@@ -66,7 +66,7 @@
     "New site on High Street / School Road",
     "New site on Jail Lane / Main Road",
     "New site on Tweedy Road",
-    "Demand cell 85",
+    "New site near Mayville Road / High Road Leytonstone",
     "New site on High Road Woodford Green",
     "New site on John Wilson Street / Wellington Street",
     "New site on King Edward's Road / Ripple Road",
@@ -300,7 +300,7 @@
       "pumps": 1,
       "km": 1.73,
       "from_name": "Islington",
-      "to_name": "Demand cell 22"
+      "to_name": "New site near Easton Street / Rosebery Avenue"
     },
     {
       "from": 48,
@@ -332,7 +332,7 @@
       "pumps": 1,
       "km": 0.17,
       "from_name": "Leytonstone",
-      "to_name": "Demand cell 85"
+      "to_name": "New site near Mayville Road / High Road Leytonstone"
     },
     {
       "from": 56,

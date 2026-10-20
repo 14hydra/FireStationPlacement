@@ -1,0 +1,112 @@
+{
+  "doc": "New-location test: how accurate is the travel time model for a station it has never seen?\n\nPlacement scores sites that have no station yet, so the accuracy that matters is on trips\nfrom stations left out of training. Stations are split into ``--folds`` groups (default\n20, about 5 stations each; every station is held out exactly once). For each group, a\nLightGBM model (tuned settings, 1 seed) is trained on the other stations' 2021-24 trips\nand predicts this group's 2025 trips. A reference model trained on every station (also 1\nseed) gives the \"seen\" error on the same 2025 trips, so the gap is the cost of a new site.\n\nThis is leave-one-firehouse-out in effect: each held-out station's trips are predicted by\na model that never saw that station, with 95 % rather than 99 % of the training data. The\nKolesar road-distance formula is refit inside each fold for comparison.\n\nReports overall, per station (does LightGBM beat Kolesar at a station it has never seen?)\nand by trip length (new sites far from today's stations make longer trips).\n\nWrites data/figures/validation/new_stations/: summary.json, per_station.csv, by_distance.csv,\nper_station.png.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/new_station_check.py [--folds 20]\n",
+  "folds": 20,
+  "folds_done": 20,
+  "params": {
+    "learning_rate": 0.05,
+    "num_leaves": 255,
+    "min_child_samples": 50,
+    "colsample_bytree": 0.7,
+    "subsample": 0.85,
+    "reg_lambda": 3.0,
+    "n_estimators": 2110
+  },
+  "n_trips_2025": 200624,
+  "n_stations": 102,
+  "overall": {
+    "seen": {
+      "mae_s": 58.25,
+      "medae_s": 35.6,
+      "bias_s": -18.57
+    },
+    "unseen": {
+      "mae_s": 62.3,
+      "medae_s": 41.19,
+      "bias_s": -11.49
+    },
+    "kolesar": {
+      "mae_s": 68.76,
+      "medae_s": 45.85,
+      "bias_s": -16.15
+    }
+  },
+  "stations_where_lgbm_beats_kolesar_unseen": 98,
+  "median_new_site_penalty_s": 3.625,
+  "worst_stations_unseen": {
+    "Wembley": {
+      "trips": 1977,
+      "mae_seen": 69.96,
+      "mae_unseen": 77.49,
+      "mae_kolesar": 80.35
+    },
+    "Richmond": {
+      "trips": 1209,
+      "mae_seen": 68.58,
+      "mae_unseen": 77.94,
+      "mae_kolesar": 82.42
+    },
+    "Ruislip": {
+      "trips": 835,
+      "mae_seen": 66.98,
+      "mae_unseen": 78.01,
+      "mae_kolesar": 87.13
+    },
+    "Wennington": {
+      "trips": 538,
+      "mae_seen": 72.75,
+      "mae_unseen": 80.47,
+      "mae_kolesar": 91.56
+    },
+    "Heathrow": {
+      "trips": 848,
+      "mae_seen": 80.39,
+      "mae_unseen": 90.5,
+      "mae_kolesar": 94.87
+    }
+  },
+  "by_distance": {
+    "<1": {
+      "trips": 17336.0,
+      "mae_seen": 45.43,
+      "mae_unseen": 48.31,
+      "mae_kolesar": 50.51,
+      "bias_unseen": -12.57
+    },
+    "1-2": {
+      "trips": 51525.0,
+      "mae_seen": 48.12,
+      "mae_unseen": 52.12,
+      "mae_kolesar": 55.17,
+      "bias_unseen": -9.86
+    },
+    "2-3": {
+      "trips": 54690.0,
+      "mae_seen": 53.98,
+      "mae_unseen": 57.77,
+      "mae_kolesar": 63.1,
+      "bias_unseen": -11.51
+    },
+    "3-4": {
+      "trips": 36913.0,
+      "mae_seen": 61.16,
+      "mae_unseen": 66.0,
+      "mae_kolesar": 73.98,
+      "bias_unseen": -13.87
+    },
+    "4-6": {
+      "trips": 30900.0,
+      "mae_seen": 72.82,
+      "mae_unseen": 76.84,
+      "mae_kolesar": 88.31,
+      "bias_unseen": -13.01
+    },
+    "6+": {
+      "trips": 9260.0,
+      "mae_seen": 103.63,
+      "mae_unseen": 108.57,
+      "mae_kolesar": 125.9,
+      "bias_unseen": -3.86
+    }
+  },
+  "run_minutes": 0.0
+}

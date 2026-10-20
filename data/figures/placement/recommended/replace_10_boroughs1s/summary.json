@@ -32,7 +32,7 @@
   "opened": [
     "New site on Great Marlborough Street / Maddox Street",
     "New site on St John's Wood Road / Maida Vale",
-    "Demand cell 67",
+    "New site near Mason Street / Old Kent Road",
     "New site on Greenwich High Road / Deals Gateway",
     "New site on Bow Road / Fairfield Road",
     "New site on Coldharbour Lane / Uxbridge Road",
@@ -60,7 +60,7 @@
       "pumps": 1,
       "km": 1.26,
       "from_name": "Dockhead",
-      "to_name": "Demand cell 67"
+      "to_name": "New site near Mason Street / Old Kent Road"
     },
     {
       "from": 32,

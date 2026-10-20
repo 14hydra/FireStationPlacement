@@ -1,6 +1,6 @@
 candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
 370,New site on Shepherds Bush Road / Shepherds Bush Green,street_junction,-0.223079,51.5030931,False,,
-169,Demand cell 67,demand_cell,-0.08459595126026956,51.49347275072606,False,,1.0
+169,New site near Mason Street / Old Kent Road,demand_cell,-0.08459595126026956,51.49347275072606,False,,1.0
 385,New site on Bow Road / Fairfield Road,street_junction,-0.0192682,51.5281522,False,,
 390,New site on Inner Ring West / Cirrus Road,street_junction,-0.4540551,51.4717278,False,,
 395,New site on Beckenham Road / Birkbeck Road,street_junction,-0.0459512,51.4101828,False,,

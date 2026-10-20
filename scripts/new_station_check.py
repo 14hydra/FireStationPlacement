@@ -24,6 +24,7 @@ Run:  PYTHONPATH=src .venv/bin/python scripts/new_station_check.py [--folds 20]
 from __future__ import annotations
 
 import argparse
+import gc
 import json
 import sys
 import time
@@ -47,30 +48,51 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--folds", type=int, default=20)
     ap.add_argument("--trees", type=int, default=None, help="n_estimators (default: from the saved model's metrics)")
+    ap.add_argument("--summarize-only", action="store_true",
+                    help="Report from the folds already saved in folds/ (no training)")
     args = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     m = json.loads((ROOT / "data" / "processed" / "models" / "travel_time_lfb.metrics.json").read_text())
     params = {**TUNED_PARAMS, "n_estimators": args.trees or int(m["lightgbm_params"]["n_estimators"])}
     print("params:", params, flush=True)
 
+    if args.summarize_only:
+        return summarize(args, params, sorted((OUT / "folds").glob(f"fold_{args.folds}_*.parquet")),
+                         pd.read_parquet(OUT / "folds" / "seen.parquet")["seen"], time.time())
     inc = pd.read_csv(DATA, low_memory=False)
     inc = attach_weather(inc, load_weather(ROOT / "data" / "processed" / "weather_hourly_london.csv"))
     inc = inc[inc.cal_year.isin(TRAIN_YEARS + (2025,))].reset_index(drop=True)
+    floats = [c for c in inc.select_dtypes("float64").columns if c not in ("incident_number", "drive_s")]
+    inc[floats] = inc[floats].astype("float32")  # halves memory; LightGBM bins features anyway
     clip = lambda p: np.clip(p, *DRIVE_CLIP_S)  # noqa: E731
 
     t0 = time.time()
-    ref = Split(inc[inc.cal_year.isin(TRAIN_YEARS)], inc[inc.cal_year == 2025])
-    xtr, xte = ref.x(FINAL_GROUPS)
-    seen = pd.Series(clip(fit_one(xtr, ref.ytr, params).predict(xte)), index=ref.te["incident_number"].astype(str)
-                     + "|" + ref.te["deployed_from_station"].astype(str))
-    seen = seen[~seen.index.duplicated()]
-    print(f"reference model (all stations): {time.time() - t0:.0f} s", flush=True)
+    cache = OUT / "folds"  # one parquet per fold, so an interrupted run resumes
+    cache.mkdir(exist_ok=True)
+    seen_path = cache / "seen.parquet"
+    if seen_path.exists():
+        seen = pd.read_parquet(seen_path)["seen"]
+    else:
+        seen = None
+    ref = None if seen is not None else Split(inc[inc.cal_year.isin(TRAIN_YEARS)], inc[inc.cal_year == 2025])
+    if seen is None:
+        xtr, xte = ref.x(FINAL_GROUPS)
+        seen = pd.Series(clip(fit_one(xtr, ref.ytr, params).predict(xte)), index=ref.te["incident_number"].astype(str)
+                         + "|" + ref.te["deployed_from_station"].astype(str))
+        seen = seen[~seen.index.duplicated()]
+        seen.rename("seen").to_frame().to_parquet(seen_path)
+        del ref, xtr, xte
+        print(f"reference model (all stations): {time.time() - t0:.0f} s", flush=True)
 
     stations = np.array(sorted(inc["deployed_from_station"].dropna().unique()))
     fold_of = dict(zip(stations, np.random.default_rng(0).permutation(len(stations)) % args.folds))
     f = inc["deployed_from_station"].map(fold_of)
     parts = []
     for i in range(args.folds):
+        fp = cache / f"fold_{args.folds}_{i}.parquet"
+        if fp.exists():
+            parts.append(pd.read_parquet(fp))
+            continue
         t1 = time.time()
         s = Split(inc[inc.cal_year.isin(TRAIN_YEARS) & (f != i)], inc[(inc.cal_year == 2025) & (f == i)])
         xtr, xte = s.x(FINAL_GROUPS)
@@ -78,9 +100,18 @@ def main() -> int:
         te["y"] = s.yte
         te["unseen"] = clip(fit_one(xtr, s.ytr, params).predict(xte))
         te["kolesar"] = clip(s.kol.predict(s.te["road_km"].to_numpy(float)))
+        te.to_parquet(fp)
         parts.append(te)
+        del s, xtr, xte
+        gc.collect()
         print(f"  fold {i + 1}/{args.folds}: {len(te):,} trips, "
               f"{int((pd.Series(fold_of) == i).sum())} stations, {time.time() - t1:.0f} s", flush=True)
+    return summarize(args, params, parts, seen, t0)
+
+
+def summarize(args, params, parts, seen, t0) -> int:
+    parts = [pd.read_parquet(x) if isinstance(x, Path) else x for x in parts]
+    n_done = len(parts)
     d = pd.concat(parts, ignore_index=True)
     key = d["incident_number"].astype(str) + "|" + d["deployed_from_station"].astype(str)
     d["seen"] = key.map(seen).to_numpy()
@@ -105,7 +136,7 @@ def main() -> int:
     bd.to_csv(OUT / "by_distance.csv")
 
     summary = {
-        "doc": __doc__, "folds": args.folds, "params": params, "n_trips_2025": int(len(d)),
+        "doc": __doc__, "folds": args.folds, "folds_done": n_done, "params": params, "n_trips_2025": int(len(d)),
         "n_stations": int(len(st)),
         "overall": {c: metrics(d["y"].to_numpy(), d[c].to_numpy()) for c in ("seen", "unseen", "kolesar")},
         "stations_where_lgbm_beats_kolesar_unseen": int(st["lgbm_beats_kolesar"].sum()),

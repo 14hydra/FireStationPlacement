@@ -37,17 +37,17 @@ candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline,plan_r
 96,West Norwood,existing_fire_station,-0.1054584646052626,51.42590975,True,,2,35,74.0,2,0,1295.0,0.010275005157338497
 371,New site on Great Marlborough Street / Regent Street,street_junction,-0.1411476,51.5137155,False,,1,36,73.0,2,1,2027.0,0.016082961740482727
 380,New site on Kingsway,street_junction,-0.1201019,51.5171028,False,,1,37,73.0,1,0,1960.0,0.01555135915705286
-105,Demand cell 3,demand_cell,-0.13550883399416652,51.493407595307715,False,,1,38,73.0,2,1,1909.0,0.01514670644429281
-106,Demand cell 4,demand_cell,-0.14879986704018586,51.51752281400114,False,,1,39,73.0,1,0,1148.0,0.009108653220559532
+105,New site near Vane Street / Vincent Square,demand_cell,-0.13550883399416652,51.493407595307715,False,,1,38,73.0,2,1,1909.0,0.01514670644429281
+106,New site near Welbeck Street / Bentinck Street,demand_cell,-0.14879986704018586,51.51752281400114,False,,1,39,73.0,1,0,1148.0,0.009108653220559532
 399,New site on St John's Wood Road / Maida Vale,street_junction,-0.1782656,51.5257526,False,,1,40,73.0,2,1,1383.0,0.010973229446022501
 404,New site on Bishopsgate,street_junction,-0.0793662,51.5189952,False,,1,41,73.0,1,0,2082.0,0.01651935192091023
 406,New site on Bishop's Bridge Road / Inverness Terrace,street_junction,-0.1874599,51.516089,False,,1,42,73.0,1,0,1681.0,0.013337670787247886
-118,Demand cell 16,demand_cell,-0.18999435199867326,51.49333089788615,False,,1,43,73.0,2,1,1246.0,0.009886221178412175
+118,New site near Courtfield Gardens / Collingham Place,demand_cell,-0.18999435199867326,51.49333089788615,False,,1,43,73.0,2,1,1246.0,0.009886221178412175
 420,New site on King's Road / Anderson Street,street_junction,-0.1620692,51.4903825,False,,1,44,73.0,1,0,1398.0,0.011092244949775457
 426,New site on Percy Road / Uxbridge Road,street_junction,-0.2383697,51.506444,False,,1,45,73.0,2,1,1662.0,0.013186917815827474
 431,New site on North End Road / Lillie Road,street_junction,-0.2025308,51.4855394,False,,1,46,73.0,1,0,1902.0,0.015091165875874763
 437,New site on Lower Clapton Road,street_junction,-0.0520059,51.5508403,False,,1,47,73.0,2,1,2288.0,0.018153831505784153
-146,Demand cell 44,demand_cell,-0.09848982543836655,51.493173338875025,False,,1,48,73.0,1,0,1884.0,0.014948347271371218
+146,New site near Elephant Road,demand_cell,-0.09848982543836655,51.493173338875025,False,,1,48,73.0,1,0,1884.0,0.014948347271371218
 449,New site on Kilburn High Road / Gascony Avenue,street_junction,-0.1978804,51.5418279,False,,1,49,73.0,2,1,1921.0,0.015241918847295175
 455,New site on Belsize Avenue / Haverstock Hill,street_junction,-0.1662876,51.55144,False,,1,50,73.0,2,1,1327.0,0.010528904898678134
 460,New site on Clapham Road / Bedford Road,street_junction,-0.1296199,51.4653986,False,,1,51,73.0,1,0,1678.0,0.013313867686497295
@@ -89,7 +89,7 @@ candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline,plan_r
 680,New site on Main Road / Lunar Close,street_junction,0.0330515,51.3161105,False,,1,87,73.0,1,0,141.0,0.0011187457352777822
 686,New site on Tweedy Road / College Road,street_junction,0.0143358,51.4089397,False,,1,88,73.0,2,1,1259.0,0.009989367948331402
 692,New site on Barking Road / Beckton Road,street_junction,0.0134415,51.5181605,False,,1,89,73.0,1,0,1145.0,0.00908485011980894
-314,Demand cell 85,demand_cell,0.007295922931113259,51.55938367250367,False,,1,90,73.0,1,0,956.0,0.007585254772521701
+314,New site near Mayville Road / High Road Leytonstone,demand_cell,0.007295922931113259,51.55938367250367,False,,1,90,73.0,1,0,956.0,0.007585254772521701
 702,New site on Chingford Lane / The Charter Road,street_junction,0.0195753,51.6077899,False,,1,91,73.0,1,0,947.0,0.007513845470269927
 707,New site on Farnborough Common / High Street,street_junction,0.0638687,51.3608266,False,,1,92,73.0,2,1,452.0,0.003586333846422394
 713,New site on Herbert Road / Sandy Hill Road,street_junction,0.0699673,51.4821463,False,,1,93,73.0,2,1,1644.0,0.013044099211323929

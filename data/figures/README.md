@@ -16,6 +16,7 @@ collected in [docs/results.md](../../docs/results.md).
 | `placement/robustness/` | Layouts by time of day, severity, borough and neighbourhood income | `scripts/placement_robustness.py` |
 | `placement/tradeoff/`, `tradeoff_busy/` | The α curve (efficiency vs equal coverage), without / with busy engines | `scripts/placement_tradeoff.py` |
 | `placement/slow_calls/` | Optimising the slowest 10 % of calls | `scripts/placement_slow_calls.py` |
+| `placement/station_sweep.png`, `validation/dispatch/rank_shares.png` | Saving vs number of stations; who sends the first engine | `scripts/plot_results_figures.py` |
 | `placement/exact_runs/` | Early exact-solver runs (nearest engine free) | `scripts/plan_fire_station_locations.py` |
 | `placement/planner_runs/` | Single planner runs from the command line; 3D race visual | `scripts/plan_fire_station_locations.py`, `build_fire_station_race_3d.py` |
 | `validation/closure_2014/` | The 2014 closure test and its diagnostic | `scripts/closure_2014_test.py`, `closure_2014_diagnostic.py` |
