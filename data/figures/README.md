@@ -1,16 +1,26 @@
 # Figures and results
 
-Every output the scripts write, grouped by part of the project. The numbers that matter are
-collected in [docs/results.md](../../docs/results.md).
+Every output the scripts write, grouped by part of the project.
+
+```
+data/figures/
+├── analysis/station_embedding/   # all station metrics → 2D (PCA / UMAP / t-SNE)
+├── data_exploration/             # EDA, busyness, capacity, incident density
+├── travel_time/                  # area maps + model outlier panels
+├── placement/                    # recommended layouts, scoring, tradeoffs, planner
+├── validation/                   # 2014 closures, dispatch model
+└── reports/                      # slide-ready weekly packs
+```
 
 | Folder | What | Written by |
 |---|---|---|
+| `analysis/station_embedding/` | Every joinable station metric condensed to 2D; archetypes + ANALYSIS.md | `scripts/embed_analysis_metrics_2d.py` |
 | `data_exploration/london_eda/` | First look at LFB response data; street feature effects (SHAP, ablation) | `scripts/analyze_london.py` |
 | `data_exploration/station_busyness/` | How often each station's own engine is out | `scripts/plot_station_busyness.py`, `build_live_day.py` |
 | `data_exploration/station_capacity/` | Pumps per station vs demand | `scripts/analyze_station_capacity.py` |
 | `data_exploration/london_incident_density.html` | Incident density map | `scripts/plot_incident_density.py` |
 | `travel_time/maps/` | Predicted first-engine time across London | `scripts/plot_travel_time_maps.py` |
-| `travel_time/outliers/` | Where the travel time model is most wrong | (outlier analysis) |
+| `travel_time/outliers/` | Where the travel time model is most wrong | `scripts/train_travel_time_lfb.py` (outlier pass) |
 | `placement/recommended/` | Recommended layouts (add / move / redesign; borough floors; station-count sweep) | `scripts/recommended_placement.py` |
 | `placement/layout_scoring/` | Every layout scored under three travel time models, bootstrap intervals | `scripts/score_layouts.py` |
 | `placement/robustness/` | Layouts by time of day, severity, borough and neighbourhood income | `scripts/placement_robustness.py` |
@@ -24,3 +34,5 @@ collected in [docs/results.md](../../docs/results.md).
 | `validation/dispatch/` | Dispatch model: which station sends the first engine | `scripts/fit_dispatch_model.py` |
 | `validation/new_stations/` | Travel time accuracy for stations the model never saw | `scripts/new_station_check.py` |
 | `reports/` | Slide-ready figures for progress reports | `scripts/plot_weekly_report.py` |
+
+**Start here for the cross-metric picture:** [`analysis/station_embedding/ANALYSIS.md`](analysis/station_embedding/ANALYSIS.md) (also mirrored at [`docs/station_embedding_analysis.md`](../../docs/station_embedding_analysis.md)).

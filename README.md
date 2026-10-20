@@ -107,6 +107,9 @@ fetches them; see [`docs/datasets.md`](docs/datasets.md).
 | Incident density map | `scripts/plot_incident_density.py` |
 | Street features along each route | `src/firestation/route_features.py` |
 | Initial data analysis + street feature impact | `scripts/analyze_london.py` → `data/figures/data_exploration/london_eda/` |
+| Station capacity / busyness | `scripts/analyze_station_capacity.py`, `plot_station_busyness.py` |
+| All station metrics → 2D embedding | `scripts/embed_analysis_metrics_2d.py` → `data/figures/analysis/station_embedding/` |
+| Figure index | [`data/figures/README.md`](data/figures/README.md) · [`scripts/README.md`](scripts/README.md) |
 
 Still **PLANNED**: OS NGD download,
 SHAP/ablations, leave-one-firehouse-out CV, pre-2014 LFB ingest, a multi-scorer comparison table.
@@ -137,6 +140,9 @@ PYTHONPATH=src python scripts/plot_incident_density.py
 
 # 4b. Initial analysis + street feature impact -> data/figures/data_exploration/london_eda/ (~15 min)
 python scripts/analyze_london.py
+
+# 4c. All station metrics condensed to 2D -> data/figures/analysis/station_embedding/
+python scripts/embed_analysis_metrics_2d.py
 
 # 5. Placement planner
 PYTHONPATH=src python scripts/plan_fire_station_locations.py \
@@ -169,6 +175,7 @@ rates are optimistic vs observed attendance (nearest engine always free unless `
 | [`docs/fire_station_location.md`](docs/fire_station_location.md) | Placement: modes, KPIs, scorers, closures, busy engines |
 | [`docs/datasets.md`](docs/datasets.md) | London data sources and how they are joined |
 | [`docs/london_eda.md`](docs/london_eda.md) | Initial analysis; which street features affect driving time |
+| [`docs/station_embedding_analysis.md`](docs/station_embedding_analysis.md) | Reading the 2D station-metric embedding (PCA / UMAP / archetypes) |
 | [`docs/model_log.md`](docs/model_log.md) | Catalog of model implementations + blank entry |
 
 ## Limits and honesty

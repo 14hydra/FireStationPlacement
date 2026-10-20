@@ -23,10 +23,11 @@ Not joinable to current stations (documented in summary.json): validation/closur
 (the 10 stations closed in 2014 no longer exist), validation/dispatch (city / closure-area
 level), placement/tradeoff* and slow_calls (layout level, different layout keys).
 
-Writes data/figures/analysis_embedding/:
+Writes data/figures/analysis/station_embedding/:
   station_feature_matrix.csv, station_embedding_2d.csv, pca_loadings.csv, top_features.txt,
-  layout_feature_matrix.csv, layout_embedding_2d.csv, summary.json,
-  00_summary.png, 01_pca.png, 02_umap.png, 02b_tsne.png, 03_feature_loadings.png, 04_layout_pca.png
+  layout_feature_matrix.csv, layout_embedding_2d.csv, summary.json, ANALYSIS.md,
+  00_summary.png, 01_pca.png, 02_umap.png, 02b_tsne.png, 03_feature_loadings.png,
+  04_layout_pca.png, 05_archetypes.png
 
 Run:  .venv/bin/python scripts/embed_analysis_metrics_2d.py [--refresh-trips]
 """
@@ -51,7 +52,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 FIG = ROOT / "data" / "figures"
 PROC = ROOT / "data" / "processed"
-OUT = FIG / "analysis_embedding"
+OUT = FIG / "analysis" / "station_embedding"
 TRIP_CACHE = OUT / "station_trip_metrics_2025.csv"
 EVAL_YEAR = 2025
 SEED = 42
@@ -62,7 +63,16 @@ BASEMAP = PROC / "london_basemap.pkl"
 SURFACE, INK, INK2, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#e4e3df"
 SEQ = ["#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b"]
 BLUE, ORANGE, GRAY = "#256abf", "#eb6834", "#9a9893"
+GREEN = "#3f8f5b"
 CLUSTER_COLORS = ["#256abf", "#eb6834", "#3f8f5b", "#b5892b", "#7a6f9b", "#52514e"]
+# Stable names for k-means groups ordered by mean PC1 (quiet → busy). Filled after embed.
+CLUSTER_NAME_TEMPLATE = [
+    "Outer long-drive",
+    "Two-pump suburban",
+    "Busy multi-pump",
+    "Strained 1-pump urban",
+    "Extreme demand cores",
+]
 
 SOURCES = {
     "capacity": ["n_pumps", "n_incidents", "busy_rate", "nearest_station_km", "incidents_per_nn_km",
@@ -375,40 +385,54 @@ def _label_extremes(ax, E: pd.DataFrame, x: str, y: str, n: int = 10):
     xy = E[[x, y]].to_numpy()
     r = np.hypot(*((xy - np.median(xy, axis=0)) / xy.std(axis=0)).T)
     for i in np.argsort(-r)[:n]:
-        ax.annotate(E.index[i], xy[i], xytext=(4, 3), textcoords="offset points", fontsize=7, color=INK2)
+        ax.annotate(E.index[i], xy[i], xytext=(5, 4), textcoords="offset points", fontsize=7.5,
+                    color=INK2, fontweight="medium")
+
+
+def _pca_quadrants(ax, x0=0.0, y0=0.0):
+    """Label the four PCA quadrants: busy×capacity vs quiet×strain."""
+    ax.axhline(y0, color=GRID, lw=1.0, zorder=0)
+    ax.axvline(x0, color=GRID, lw=1.0, zorder=0)
+    kw = dict(fontsize=8, color=INK2, alpha=0.85, fontstyle="italic")
+    ax.text(0.98, 0.98, "busy · multi-pump", transform=ax.transAxes, ha="right", va="top", **kw)
+    ax.text(0.98, 0.02, "busy · 1-pump strain", transform=ax.transAxes, ha="right", va="bottom", **kw)
+    ax.text(0.02, 0.98, "quiet · spare capacity", transform=ax.transAxes, ha="left", va="top", **kw)
+    ax.text(0.02, 0.02, "quiet · long drives", transform=ax.transAxes, ha="left", va="bottom", **kw)
 
 
 def _scatter_pumps(ax, E, F, x, y):
     for pumps, color in [(1, GRAY), (2, ORANGE)]:
         m = F["n_pumps"] == pumps
-        ax.scatter(E.loc[m, x], E.loc[m, y], s=34, c=color, edgecolor="white", linewidth=0.6,
-                   label=f"{pumps} pump{'s' if pumps > 1 else ''} ({m.sum()})")
-    ax.legend(frameon=False, fontsize=8, loc="best")
+        ax.scatter(E.loc[m, x], E.loc[m, y], s=42, c=color, edgecolor="white", linewidth=0.7,
+                   label=f"{pumps} pump{'s' if pumps > 1 else ''}  ({m.sum()})", zorder=2)
+    ax.legend(frameon=False, fontsize=8.5, loc="best")
 
 
 def _scatter_seq(fig, ax, E, F, x, y, col):
     from matplotlib.colors import LinearSegmentedColormap
 
     cmap = LinearSegmentedColormap.from_list("seq", SEQ)
-    sc = ax.scatter(E[x], E[y], s=34, c=F[col], cmap=cmap, edgecolor="white", linewidth=0.6)
-    cb = fig.colorbar(sc, ax=ax, shrink=0.8, pad=0.01)
+    sc = ax.scatter(E[x], E[y], s=42, c=F[col], cmap=cmap, edgecolor="white", linewidth=0.7, zorder=2)
+    cb = fig.colorbar(sc, ax=ax, shrink=0.82, pad=0.015)
     cb.outline.set_visible(False)
     cb.set_label(LABELS.get(col, col), color=INK2, fontsize=8)
 
 
-def plot_pair(E, F, x, y, title, axis_labels, path):
+def plot_pair(E, F, x, y, title, axis_labels, path, *, pca_axes: bool = False):
     style()
-    fig, (a1, a2) = plt.subplots(1, 2, figsize=(13, 5.6), layout="constrained")
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(13.5, 5.8), layout="constrained")
     _scatter_pumps(a1, E, F, x, y)
     a1.set_title("Coloured by number of pumps")
     _scatter_seq(fig, a2, E, F, x, y, "incidents_per_pump")
     a2.set_title("Coloured by incidents per pump")
     for a in (a1, a2):
+        if pca_axes:
+            _pca_quadrants(a)
         _label_extremes(a, E, x, y)
         a.set_xlabel(axis_labels[0])
         a.set_ylabel(axis_labels[1])
     fig.suptitle(title, x=0.01, ha="left", fontsize=14, fontweight="bold", color=INK)
-    fig.savefig(path, dpi=160)
+    fig.savefig(path, dpi=180)
     plt.close(fig)
 
 
@@ -456,34 +480,79 @@ def plot_loadings(pca, cols, path):
     plt.close(fig)
 
 
+def cluster_names(k: int, E: pd.DataFrame | None = None, F: pd.DataFrame | None = None) -> list[str]:
+    """Name clusters quiet→busy (PC1 order). Prefer profile-based labels when F is given."""
+    if E is None or F is None or "cluster" not in E.columns:
+        names = list(CLUSTER_NAME_TEMPLATE[:k])
+        while len(names) < k:
+            names.append(f"Group {len(names) + 1}")
+        return names
+    names = []
+    for c in range(k):
+        m = E["cluster"] == c
+        g = F.loc[m]
+        n = int(m.sum())
+        mean_pc1 = float(E.loc[m, "pca1"].mean())
+        mean_pumps = float(g["n_pumps"].mean())
+        mean_util = float(g["utilisation_pct"].mean())
+        # Tiny far-right clusters are central demand outliers (e.g. Soho / Euston).
+        if n <= 3 and mean_pc1 > E["pca1"].quantile(0.85):
+            names.append("Central demand outliers")
+        elif mean_pc1 < E["pca1"].quantile(0.35):
+            names.append("Outer two-pump" if mean_pumps >= 1.6 else "Outer long-drive")
+        elif mean_pc1 > E["pca1"].quantile(0.70):
+            if mean_util >= F["utilisation_pct"].median() and mean_pumps < 1.5:
+                names.append("Strained 1-pump urban")
+            else:
+                names.append("Busy multi-pump")
+        elif mean_pumps >= 1.6:
+            names.append("Outer two-pump" if mean_pc1 < E["pca1"].median() else "Busy multi-pump")
+        elif mean_util >= F["utilisation_pct"].quantile(0.60):
+            names.append("Strained 1-pump urban")
+        else:
+            names.append("Mid-load single-pump")
+    # De-dupe if profiles collide
+    seen: dict[str, int] = {}
+    out = []
+    for n in names:
+        if n in seen:
+            seen[n] += 1
+            out.append(f"{n} ({seen[n]})")
+        else:
+            seen[n] = 1
+            out.append(n)
+    return out
+
+
 def plot_summary(E, F, Z, loc, pca, meta, path):
     style()
     k = meta["k"]
     colors = CLUSTER_COLORS[:k]
-    fig = plt.figure(figsize=(16, 10), layout="constrained")
-    gs = fig.add_gridspec(2, 3, width_ratios=[1, 1, 1.15])
-    panels = [("pca1", "pca2", "PCA"), ("umap1", "umap2", "UMAP"), ("tsne1", "tsne2", "t-SNE")]
-    for j, (x, y, name) in enumerate(panels[:2]):
+    names = cluster_names(k, E, F)
+    fig = plt.figure(figsize=(16.5, 10.5), layout="constrained")
+    gs = fig.add_gridspec(2, 3, width_ratios=[1, 1, 1.15], height_ratios=[1.05, 1])
+    for j, (x, y, name) in enumerate([("pca1", "pca2", "PCA"), ("umap1", "umap2", "UMAP")]):
         ax = fig.add_subplot(gs[0, j])
         for c in range(k):
             m = E["cluster"] == c
-            ax.scatter(E.loc[m, x], E.loc[m, y], s=30, c=colors[c], edgecolor="white", linewidth=0.5,
-                       label=f"group {c + 1} ({m.sum()})")
+            ax.scatter(E.loc[m, x], E.loc[m, y], s=36, c=colors[c], edgecolor="white", linewidth=0.55,
+                       label=f"{names[c]}  ({m.sum()})", zorder=2)
         if name == "PCA":
+            _pca_quadrants(ax)
             _label_extremes(ax, E, x, y, n=8)
             ev = 100 * pca.explained_variance_ratio_
-            ax.set_xlabel(f"PC1 ({ev[0]:.0f}%)")
-            ax.set_ylabel(f"PC2 ({ev[1]:.0f}%)")
+            ax.set_xlabel(f"PC1 · demand / density ({ev[0]:.0f}%)")
+            ax.set_ylabel(f"PC2 · capacity vs strain ({ev[1]:.0f}%)")
         else:
             ax.set_xticks([])
             ax.set_yticks([])
-        ax.set_title(f"{name} of {Z.shape[1]} station metrics")
-    fig.axes[0].legend(frameon=False, fontsize=8)
+        ax.set_title(f"{name} · {Z.shape[1]} metrics → 2D")
+    fig.axes[0].legend(frameon=False, fontsize=7.5, loc="upper left",
+                       title="Archetype (PC1 order)", title_fontsize=8)
 
     ax = fig.add_subplot(gs[0, 2])
     if BASEMAP.exists():
         import pickle
-
         from matplotlib.collections import LineCollection
 
         bm = pickle.loads(BASEMAP.read_bytes())
@@ -491,40 +560,205 @@ def plot_summary(E, F, Z, loc, pca, meta, path):
         ax.add_collection(LineCollection(bm["river"], colors="#b9d6ee", linewidths=3.5, zorder=1))
     for c in range(k):
         m = E["cluster"] == c
-        ax.scatter(loc.loc[m, "lon"], loc.loc[m, "lat"], s=34, c=colors[c], edgecolor="white", linewidth=0.5,
-                   zorder=3)
+        ax.scatter(loc.loc[m, "lon"], loc.loc[m, "lat"], s=40, c=colors[c], edgecolor="white",
+                   linewidth=0.55, zorder=3)
     pad = 0.03
     ax.set_xlim(loc["lon"].min() - pad, loc["lon"].max() + pad)
     ax.set_ylim(loc["lat"].min() - pad, loc["lat"].max() + pad)
     ax.grid(False)
     ax.set_aspect(1 / np.cos(np.deg2rad(51.5)))
-    ax.set_title("Same groups on the map")
+    ax.set_title("Same groups on the city map")
     ax.set_xticks([])
     ax.set_yticks([])
 
     ax = fig.add_subplot(gs[1, :])
     prof = Z.groupby(E["cluster"]).mean()
-    spread = prof.abs().max().sort_values(ascending=False).index[:22]
+    spread = prof.abs().max().sort_values(ascending=False).index[:20]
     prof = prof[spread]
     im = ax.imshow(prof.to_numpy(), aspect="auto", cmap="RdBu_r", vmin=-1.6, vmax=1.6)
-    ax.set_yticks(range(k), [f"group {c + 1} (n={int((E['cluster'] == c).sum())})" for c in range(k)])
+    ax.set_yticks(range(k), [f"{names[c]}  (n={int((E['cluster'] == c).sum())})" for c in range(k)])
     for t, c in zip(ax.get_yticklabels(), colors):
         t.set_color(c)
         t.set_fontweight("bold")
-    ax.set_xticks(range(len(spread)), [LABELS.get(c, c) for c in spread], rotation=40, ha="right", fontsize=8)
+    ax.set_xticks(range(len(spread)), [LABELS.get(c, c) for c in spread], rotation=35, ha="right", fontsize=8)
     for i in range(k):
         for j in range(len(spread)):
             v = prof.iloc[i, j]
-            ax.text(j, i, f"{v:+.1f}", ha="center", va="center", fontsize=7, color="white" if abs(v) > 1 else INK)
+            ax.text(j, i, f"{v:+.1f}", ha="center", va="center", fontsize=7,
+                    color="white" if abs(v) > 1 else INK)
     ax.grid(False)
-    ax.set_title("Group profiles: mean z-score of the 22 metrics that separate groups most")
+    ax.set_title("Archetype profiles · mean z-score on the 20 most separating metrics")
     cb = fig.colorbar(im, ax=ax, shrink=0.9, pad=0.01)
     cb.outline.set_visible(False)
-    cb.set_label("z-score (blue below, red above city median)", fontsize=8, color=INK2)
-    fig.suptitle(f"London's {len(E)} fire stations, every analysis metric condensed to 2D", x=0.01, ha="left",
-                 fontsize=15, fontweight="bold", color=INK)
-    fig.savefig(path, dpi=150)
+    cb.set_label("z-score (blue = below city median · red = above)", fontsize=8, color=INK2)
+    fig.suptitle(f"London's {len(E)} fire stations · all analysis metrics condensed to 2D",
+                 x=0.01, ha="left", fontsize=15, fontweight="bold", color=INK)
+    fig.savefig(path, dpi=170)
     plt.close(fig)
+
+
+def plot_archetypes(E, F, Z, pca, meta, path):
+    """Single-page reading aid: PCA with named archetypes + key contrasts."""
+    style()
+    k = meta["k"]
+    colors = CLUSTER_COLORS[:k]
+    names = cluster_names(k, E, F)
+    fig = plt.figure(figsize=(14.5, 8.2), layout="constrained")
+    gs = fig.add_gridspec(2, 2, width_ratios=[1.35, 1], height_ratios=[1.2, 1])
+
+    ax = fig.add_subplot(gs[:, 0])
+    for c in range(k):
+        m = E["cluster"] == c
+        ax.scatter(E.loc[m, "pca1"], E.loc[m, "pca2"], s=48, c=colors[c], edgecolor="white",
+                   linewidth=0.7, label=f"{names[c]}  ({m.sum()})", zorder=2)
+    _pca_quadrants(ax)
+    _label_extremes(ax, E, "pca1", "pca2", n=12)
+    ev = 100 * pca.explained_variance_ratio_
+    ax.set_xlabel(f"PC1 · busy / dense streets  ←→  quiet / long drives   ({ev[0]:.0f}%)")
+    ax.set_ylabel(f"PC2 · multi-pump capacity  ←→  1-pump strain   ({ev[1]:.0f}%)")
+    ax.legend(frameon=False, fontsize=8.5, loc="upper left")
+    ax.set_title("Station archetypes in PCA space")
+
+    # Contrast table: 1-pump high util vs 2-pump low util
+    ax = fig.add_subplot(gs[0, 1])
+    ax.axis("off")
+    strained = F[(F["n_pumps"] == 1) & (F["utilisation_pct"] >= F["utilisation_pct"].quantile(0.75))]
+    spare = F[(F["n_pumps"] >= 2) & (F["utilisation_pct"] <= F["utilisation_pct"].quantile(0.40))]
+    lines = [
+        "Capacity mismatches (from the same metrics)",
+        "",
+        f"High-utilisation 1-pump stations: {len(strained)}",
+        "  " + ", ".join(strained.sort_values("utilisation_pct", ascending=False).index[:8]),
+        "",
+        f"Lower-utilisation 2-pump stations: {len(spare)}",
+        "  " + ", ".join(spare.sort_values("utilisation_pct").index[:8]),
+        "",
+        f"PCA 2D captures {ev[0] + ev[1]:.0f}% of variance across {Z.shape[1]} features.",
+        "Read loadings (fig 03) — correlated demand columns dominate PC1.",
+    ]
+    ax.text(0.02, 0.98, "\n".join(lines), transform=ax.transAxes, va="top", fontsize=10,
+            color=INK, linespacing=1.45, family="sans-serif")
+    ax.set_title("What to notice", loc="left", fontsize=11, fontweight="bold", color=INK)
+
+    ax = fig.add_subplot(gs[1, 1])
+    # small bars: mean incidents/pump and util by archetype
+    g = F.copy()
+    g["cluster"] = E["cluster"].to_numpy()
+    g["archetype"] = g["cluster"].map(dict(enumerate(names)))
+    order = list(range(k))
+    means = g.groupby("cluster")[["incidents_per_pump", "utilisation_pct"]].mean().reindex(order)
+    x = np.arange(k)
+    w = 0.38
+    ax.bar(x - w / 2, means["incidents_per_pump"] / means["incidents_per_pump"].max(), w,
+           color=BLUE, label="incidents / pump (scaled)")
+    ax.bar(x + w / 2, means["utilisation_pct"] / means["utilisation_pct"].max(), w,
+           color=ORANGE, label="utilisation % (scaled)")
+    ax.set_xticks(x, [names[c].replace(" ", "\n") for c in order], fontsize=7.5)
+    ax.set_ylabel("scaled within-panel")
+    ax.set_title("Load pressure by archetype")
+    ax.legend(frameon=False, fontsize=8)
+    ax.set_ylim(0, 1.15)
+    fig.suptitle("Reading the embedding · where capacity and demand pull apart",
+                 x=0.01, ha="left", fontsize=14, fontweight="bold", color=INK)
+    fig.savefig(path, dpi=180)
+    plt.close(fig)
+
+
+def write_analysis_md(E, F, Z, L, ev, meta, names, path: Path):
+    """Human-readable analysis of the embedding figures (also mirrored under docs/)."""
+    k = meta["k"]
+    sil = meta["silhouette_by_k"][meta["k"]]
+    strained = F[(F["n_pumps"] == 1) & (F["utilisation_pct"] >= F["utilisation_pct"].quantile(0.75))]
+    spare = F[(F["n_pumps"] >= 2) & (F["utilisation_pct"] <= F["utilisation_pct"].quantile(0.40))]
+    # Per-archetype one-liners from profiles
+    blurbs = []
+    for c in range(k):
+        m = E["cluster"] == c
+        g = F.loc[m]
+        blurbs.append(
+            f"- **{names[c]}** (n={int(m.sum())}): "
+            f"mean util {g['utilisation_pct'].mean():.0f}%, "
+            f"mean pumps {g['n_pumps'].mean():.1f}, "
+            f"median drive {g['drive_median_s'].mean():.0f}s · "
+            f"e.g. {', '.join(E.index[m][:5])}"
+        )
+    lines = [
+        "# Station metric embedding — analysis",
+        "",
+        f"{len(E)} current LFB stations · **{Z.shape[1]} standardised metrics** · PCA / UMAP / t-SNE.",
+        "Figures: `data/figures/analysis/station_embedding/`.",
+        "",
+        "## How to read the figures",
+        "",
+        "| File | What it shows |",
+        "|---|---|",
+        "| `00_summary.png` | PCA + UMAP + map of archetypes, plus a z-score profile heatmap |",
+        "| `01_pca.png` | Same PCA coloured by pumps and by incidents/pump (actionable axes) |",
+        "| `02_umap.png` / `02b_tsne.png` | Local neighbourhood views (axes have no units) |",
+        "| `03_feature_loadings.png` | What PC1/PC2 actually load on; share by data source |",
+        "| `04_layout_pca.png` | Separate PCA of *named placement layouts* (not stations) |",
+        "| `05_archetypes.png` | Named groups + capacity-mismatch callouts |",
+        "",
+        "## What the 2D view is",
+        "",
+        "Every joinable per-station number in the project (capacity, busyness, 2025 trips,",
+        "LightGBM error, area maps, plan flags) is z-scored and projected.",
+        f"**PCA PC1+PC2 explain {100 * (ev[0] + ev[1]):.0f}%** of variance "
+        f"({100 * ev[0]:.0f}% + {100 * ev[1]:.0f}%). "
+        f"k-means on the leading PCs picks **k={meta['k']}** "
+        f"(silhouette {sil:.2f}). UMAP/t-SNE are for local neighbourhoods only.",
+        "",
+        "## Axis reading (PCA)",
+        "",
+        f"- **PC1 ({100 * ev[0]:.0f}%) — busyness / street density:** "
+        f"{_axis_name(L['PC1'], 5)}. Right = high utilisation and dense junctions/signals "
+        "(inner London); left = longer median drives, quieter outskirts.",
+        f"- **PC2 ({100 * ev[1]:.0f}%) — capacity vs strain:** "
+        f"{_axis_name(L['PC2'], 5)}. Up = two-pump / multi-dispatch houses; "
+        "down = single-pump stations with high all-out / neighbour-cover rates.",
+        f"- **PC3 ({100 * ev[2]:.0f}%) — model hard cases + volume:** "
+        f"{_axis_name(L['PC3'], 4)}. Stations where both LightGBM and Kolesar struggle, "
+        "plus sheer incident volume.",
+        "",
+        "The pump-coloured PCA (`01_pca.png`) almost splits horizontally: almost all "
+        "2-pump stations sit above PC2 ≈ 0. The incidents/pump colouring darkens on the "
+        "**right** — Soho, Euston, Shoreditch are the load extremes.",
+        "",
+        "## Archetypes",
+        "",
+        *blurbs,
+        "",
+        "On the map (`00_summary.png`), outer long-drive / outer two-pump ring London; "
+        "strained 1-pump and busy multi-pump fill the inner boroughs; the central outliers "
+        "are the densest cores.",
+        "",
+        "## Capacity mismatches the embedding surfaces",
+        "",
+        f"- **{len(strained)} high-utilisation 1-pump stations** "
+        f"(top quartile util): {', '.join(strained.sort_values('utilisation_pct', ascending=False).index[:10])}.",
+        f"- **{len(spare)} lower-utilisation 2-pump stations** "
+        f"(bottom 40% util): {', '.join(spare.sort_values('utilisation_pct').index[:10])}.",
+        "",
+        "These are the stations the **resize** planner tends to upsize / downsize. "
+        "They sit in opposite PCA quadrants: bottom-right (busy · 1-pump strain) vs "
+        "top-left (quiet · spare capacity).",
+        "",
+        "## Layout embedding (separate matrix)",
+        "",
+        "Named placement layouts (recommended / exact / scored) form a second PCA "
+        "(`04_layout_pca.png`). Layout PC1 is essentially **seconds saved vs today** — "
+        "redesign / large replace at one end, status quo at the other.",
+        "",
+        "## Honesty",
+        "",
+        "- Correlated demand / util columns inflate PC1; always check loadings "
+        "(`03_feature_loadings.png`).",
+        "- Area-map cells are assigned by crow-fly nearest station, not LFB ground.",
+        f"- Clusters are a reading aid (silhouette {sil:.2f}), not operational station types.",
+        "- 2014 closed stations and city-level tradeoff tables are not in the station matrix.",
+        "",
+    ]
+    path.write_text("\n".join(lines))
 
 
 def plot_layouts(LE, LF, lpca, path):
@@ -592,10 +826,16 @@ def main() -> int:
         lines.append(f"  e.g. {', '.join(E.index[m][:8])}")
     (OUT / "top_features.txt").write_text("\n".join(lines) + "\n")
 
+    names = cluster_names(meta["k"], E, F)
+    E = E.copy()
+    E["archetype"] = E["cluster"].map(dict(enumerate(names)))
+    # Re-write embedding CSV with archetype labels for downstream use.
+    loc.join(E).to_csv(OUT / "station_embedding_2d.csv")
+
     plot_summary(E, F, Z, loc, pca, meta, OUT / "00_summary.png")
     plot_pair(E, F, "pca1", "pca2", "Stations in PCA space",
               (f"PC1 ({100 * ev[0]:.0f}%): {_axis_name(L['PC1'])}", f"PC2 ({100 * ev[1]:.0f}%): "
-               f"{_axis_name(L['PC2'])}"), OUT / "01_pca.png")
+               f"{_axis_name(L['PC2'])}"), OUT / "01_pca.png", pca_axes=True)
     plot_pair(E, F, "umap1", "umap2", "Stations in UMAP space (axes have no units)", ("UMAP 1", "UMAP 2"),
               OUT / "02_umap.png")
     plot_pair(E, F, "tsne1", "tsne2", "Stations in t-SNE space (axes have no units)", ("t-SNE 1", "t-SNE 2"),
@@ -609,6 +849,16 @@ def main() -> int:
     LE = pd.DataFrame({"pca1": lpcs[:, 0], "pca2": lpcs[:, 1]}, index=LZ.index)
     LE.to_csv(OUT / "layout_embedding_2d.csv")
     plot_layouts(LE, LZ, lpca, OUT / "04_layout_pca.png")
+    plot_archetypes(E, F, Z, pca, meta, OUT / "05_archetypes.png")
+    write_analysis_md(E, F, Z, L, ev, meta, names, OUT / "ANALYSIS.md")
+    # Mirror under docs/ for the project doc tree
+    docs_md = ROOT / "docs" / "station_embedding_analysis.md"
+    docs_md.write_text(
+        (OUT / "ANALYSIS.md").read_text()
+        + "\n## How to regenerate\n\n"
+        + "```bash\n.venv/bin/python scripts/embed_analysis_metrics_2d.py\n```\n"
+        + "\nFigures and CSVs: `data/figures/analysis/station_embedding/`.\n"
+    )
 
     from scipy.stats import spearmanr
 
@@ -629,8 +879,8 @@ def main() -> int:
         "umap_vs_pca_spearman": {
             "umap1~pca1": round(float(spearmanr(E["umap1"], E["pca1"])[0]), 3),
             "umap2~pca2": round(float(spearmanr(E["umap2"], E["pca2"])[0]), 3)},
-        "clusters": {"k": meta["k"], "silhouette_by_k": {str(k): round(v, 3) for k, v in
-                                                          meta["silhouette_by_k"].items()},
+        "clusters": {"k": meta["k"], "names": names,
+                     "silhouette_by_k": {str(k): round(v, 3) for k, v in meta["silhouette_by_k"].items()},
                      "sizes": E["cluster"].value_counts().sort_index().tolist()},
         "trip_and_model_metrics": f"{EVAL_YEAR} trips from data/processed/lfb_travel_training.csv grouped by "
                                   "deployed_from_station; LightGBM error is held out (model trained 2021-24); "
