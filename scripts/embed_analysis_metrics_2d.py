@@ -381,31 +381,163 @@ def style():
     })
 
 
-def _label_extremes(ax, E: pd.DataFrame, x: str, y: str, n: int = 10):
+# Compact heatmap tick labels (vertical ticks need short strings).
+HEAT_SHORT = {
+    "plan_assigned_share": "plan demand",
+    "incidents_per_nn_km": "inc / nn-km",
+    "n_incidents": "incidents",
+    "incidents_per_pump": "inc / pump",
+    "share_lost_expand5_pct": "% lost to 5 sites",
+    "signals_per_km_mean": "signals / km",
+    "n_home_trips": "home trips",
+    "util_night_pct": "util 00–06",
+    "trips_2025": "trips 2025",
+    "calls_per_day": "calls / day",
+    "utilisation_pct": "utilisation %",
+    "resize_delta_pumps": "resize Δ pumps",
+    "engine_hours_per_day": "engine h / day",
+    "util_peak_pct": "util peak",
+    "n_multi_dispatch": "multi-dispatch",
+    "multi_dispatch_rate": "multi-disp. rate",
+    "junctions_per_km_mean": "junctions / km",
+    "drive_median_s": "median drive",
+    "lgbm_mae_s": "LGBM MAE",
+}
+
+
+def _short_label(name: str, max_len: int = 18) -> str:
+    s = HEAT_SHORT.get(name) or LABELS.get(name, name)
+    return s if len(s) <= max_len else s[: max_len - 1] + "…"
+
+
+def _pick_extremes(E: pd.DataFrame, x: str, y: str, n: int = 6) -> list[str]:
+    """A few stations that define the axes / corners — not a crowd of near-duplicates."""
     xy = E[[x, y]].to_numpy()
-    r = np.hypot(*((xy - np.median(xy, axis=0)) / xy.std(axis=0)).T)
-    for i in np.argsort(-r)[:n]:
-        ax.annotate(E.index[i], xy[i], xytext=(5, 4), textcoords="offset points", fontsize=7.5,
-                    color=INK2, fontweight="medium")
+    med = np.median(xy, axis=0)
+    std = xy.std(axis=0) + 1e-9
+    zn = (xy - med) / std
+    picks: list[str] = []
+    # True corners of the cloud
+    for sx, sy in ((1, 1), (1, -1), (-1, 1), (-1, -1)):
+        score = sx * zn[:, 0] + sy * zn[:, 1]
+        picks.append(E.index[int(np.argmax(score))])
+    # Farthest from centre for any remaining slots
+    r = np.hypot(zn[:, 0], zn[:, 1])
+    for i in np.argsort(-r):
+        if len(picks) >= n:
+            break
+        name = E.index[int(i)]
+        if name not in picks:
+            picks.append(name)
+    # Drop near-duplicates in data space so labels don't pile up
+    kept: list[str] = []
+    for name in picks:
+        p = E.loc[name, [x, y]].to_numpy(dtype=float)
+        if any(np.hypot(*(p - E.loc[k, [x, y]].to_numpy(dtype=float)) / std) < 0.55 for k in kept):
+            continue
+        kept.append(name)
+        if len(kept) >= n:
+            break
+    return kept
 
 
-def _pca_quadrants(ax, x0=0.0, y0=0.0):
-    """Label the four PCA quadrants: busy×capacity vs quiet×strain."""
+def _annotate_sparse(ax, E: pd.DataFrame, x: str, y: str, n: int = 6):
+    """Callouts with short leader lines; kept inside the axes so they never hit tick labels."""
+    from matplotlib import patheffects
+
+    names = _pick_extremes(E, x, y, n=n)
+    if not names:
+        return
+    xs, ys = E[x].to_numpy(dtype=float), E[y].to_numpy(dtype=float)
+    x0, x1 = float(xs.min()), float(xs.max())
+    y0, y1 = float(ys.min()), float(ys.max())
+    dx, dy = (x1 - x0) or 1.0, (y1 - y0) or 1.0
+    # Modest pad — labels stay inside these limits
+    pad_x, pad_y = 0.08 * dx, 0.10 * dy
+    ax.set_xlim(x0 - pad_x, x1 + pad_x)
+    ax.set_ylim(y0 - pad_y, y1 + pad_y)
+    xlim, ylim = ax.get_xlim(), ax.get_ylim()
+    # Keep text away from spines (room for axis titles / ticks)
+    margin_x, margin_y = 0.10 * (xlim[1] - xlim[0]), 0.08 * (ylim[1] - ylim[0])
+    cx, cy = float(np.median(xs)), float(np.median(ys))
+    halo = [patheffects.withStroke(linewidth=3.4, foreground=SURFACE)]
+    placed_xy: list[tuple[float, float]] = []
+
+    def _clamp(tx, ty):
+        return (
+            float(np.clip(tx, xlim[0] + margin_x, xlim[1] - margin_x)),
+            float(np.clip(ty, ylim[0] + margin_y, ylim[1] - margin_y)),
+        )
+
+    for name in names:
+        px, py = float(E.loc[name, x]), float(E.loc[name, y])
+        vx, vy = px - cx, py - cy
+        norm = (vx ** 2 + vy ** 2) ** 0.5 or 1.0
+        # Prefer offset along the larger radial component; for left-edge points,
+        # bias upward/downward so we don't collide with the y-axis title.
+        near_left = (px - xlim[0]) < 0.22 * (xlim[1] - xlim[0])
+        near_right = (xlim[1] - px) < 0.22 * (xlim[1] - xlim[0])
+        if near_left:
+            ox, oy = 0.04 * dx, (0.08 * dy if vy >= 0 else -0.08 * dy)
+        elif near_right:
+            ox, oy = -0.04 * dx, (0.07 * dy if abs(vy) > 1e-9 else 0.06 * dy)
+        else:
+            ox = 0.055 * dx * (vx / norm)
+            oy = 0.055 * dy * (vy / norm)
+        tx, ty = _clamp(px + ox, py + oy)
+        for _ in range(10):
+            hit = False
+            for qx, qy in placed_xy:
+                if abs(tx - qx) < 0.16 * dx and abs(ty - qy) < 0.11 * dy:
+                    ty += 0.07 * dy * (1 if ty >= cy else -1)
+                    tx, ty = _clamp(tx, ty)
+                    hit = True
+                    break
+            if not hit:
+                break
+        placed_xy.append((tx, ty))
+        ax.annotate(
+            name, (px, py), xytext=(tx, ty),
+            textcoords="data", fontsize=8, color=INK, fontweight="medium",
+            ha="center", va="center",
+            arrowprops=dict(arrowstyle="-", color=INK2, lw=0.65, shrinkA=2, shrinkB=4),
+            path_effects=halo, zorder=5,
+        )
+
+
+def _pca_crosshairs(ax, x0=0.0, y0=0.0):
     ax.axhline(y0, color=GRID, lw=1.0, zorder=0)
     ax.axvline(x0, color=GRID, lw=1.0, zorder=0)
-    kw = dict(fontsize=8, color=INK2, alpha=0.85, fontstyle="italic")
-    ax.text(0.98, 0.98, "busy · multi-pump", transform=ax.transAxes, ha="right", va="top", **kw)
-    ax.text(0.98, 0.02, "busy · 1-pump strain", transform=ax.transAxes, ha="right", va="bottom", **kw)
-    ax.text(0.02, 0.98, "quiet · spare capacity", transform=ax.transAxes, ha="left", va="top", **kw)
-    ax.text(0.02, 0.02, "quiet · long drives", transform=ax.transAxes, ha="left", va="bottom", **kw)
+
+
+def _draw_basemap(ax, loc: pd.DataFrame):
+    """Major roads + Thames; builds the cache on first use via plot_station_busyness."""
+    from matplotlib.collections import LineCollection
+
+    try:
+        from plot_station_busyness import load_basemap
+        bm = load_basemap()
+        ax.add_collection(LineCollection(bm["roads"], colors="#e4e3df", linewidths=0.55, zorder=1))
+        ax.add_collection(LineCollection(bm["river"], colors="#b9d6ee", linewidths=3.2, zorder=1,
+                                         capstyle="round"))
+    except Exception:
+        pass  # points-only map is fine if OSM graph is unavailable
+    pad = 0.025
+    ax.set_xlim(loc["lon"].min() - pad, loc["lon"].max() + pad)
+    ax.set_ylim(loc["lat"].min() - pad, loc["lat"].max() + pad)
+    ax.set_aspect(1 / np.cos(np.deg2rad(51.5)))
+    ax.grid(False)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    for spine in ax.spines.values():
+        spine.set_visible(False)
 
 
 def _scatter_pumps(ax, E, F, x, y):
     for pumps, color in [(1, GRAY), (2, ORANGE)]:
         m = F["n_pumps"] == pumps
         ax.scatter(E.loc[m, x], E.loc[m, y], s=42, c=color, edgecolor="white", linewidth=0.7,
-                   label=f"{pumps} pump{'s' if pumps > 1 else ''}  ({m.sum()})", zorder=2)
-    ax.legend(frameon=False, fontsize=8.5, loc="best")
+                   label=f"{pumps} pump{'s' if pumps > 1 else ''}  ({int(m.sum())})", zorder=2)
 
 
 def _scatter_seq(fig, ax, E, F, x, y, col):
@@ -413,25 +545,56 @@ def _scatter_seq(fig, ax, E, F, x, y, col):
 
     cmap = LinearSegmentedColormap.from_list("seq", SEQ)
     sc = ax.scatter(E[x], E[y], s=42, c=F[col], cmap=cmap, edgecolor="white", linewidth=0.7, zorder=2)
-    cb = fig.colorbar(sc, ax=ax, shrink=0.82, pad=0.015)
+    cb = fig.colorbar(sc, ax=ax, shrink=0.78, pad=0.02)
     cb.outline.set_visible(False)
     cb.set_label(LABELS.get(col, col), color=INK2, fontsize=8)
+    return sc
 
 
 def plot_pair(E, F, x, y, title, axis_labels, path, *, pca_axes: bool = False):
     style()
-    fig, (a1, a2) = plt.subplots(1, 2, figsize=(13.5, 5.8), layout="constrained")
+    fig = plt.figure(figsize=(14.5, 7.2))
+    # Leave a clear band under the figure title so subplot titles never collide
+    gs = fig.add_gridspec(1, 2, left=0.08, right=0.97, top=0.80, bottom=0.22, wspace=0.30)
+    a1 = fig.add_subplot(gs[0, 0])
+    a2 = fig.add_subplot(gs[0, 1])
     _scatter_pumps(a1, E, F, x, y)
-    a1.set_title("Coloured by number of pumps")
+    a1.set_title("Coloured by number of pumps", pad=8)
+    a1.legend(frameon=False, fontsize=8.5, loc="upper center", bbox_to_anchor=(0.5, -0.16), ncol=2)
     _scatter_seq(fig, a2, E, F, x, y, "incidents_per_pump")
-    a2.set_title("Coloured by incidents per pump")
+    a2.set_title("Coloured by incidents per pump", pad=8)
+    short_x = axis_labels[0].split(":")[0].strip() if ":" in axis_labels[0] else axis_labels[0]
+    short_y = axis_labels[1].split(":")[0].strip() if ":" in axis_labels[1] else axis_labels[1]
     for a in (a1, a2):
         if pca_axes:
-            _pca_quadrants(a)
-        _label_extremes(a, E, x, y)
-        a.set_xlabel(axis_labels[0])
-        a.set_ylabel(axis_labels[1])
-    fig.suptitle(title, x=0.01, ha="left", fontsize=14, fontweight="bold", color=INK)
+            _pca_crosshairs(a)
+        a.set_xlabel(short_x)
+        a.set_ylabel(short_y)
+        a.yaxis.labelpad = 8
+    if pca_axes:
+        # Only the two farthest stations — keeps the panel readable
+        from matplotlib import patheffects
+        r = np.hypot(
+            (E[x] - E[x].median()) / (float(E[x].std()) or 1.0),
+            (E[y] - E[y].median()) / (float(E[y].std()) or 1.0),
+        )
+        halo = [patheffects.withStroke(linewidth=3.2, foreground=SURFACE)]
+        for name in r.nlargest(2).index:
+            px, py = float(E.loc[name, x]), float(E.loc[name, y])
+            off = (10, 10) if py >= float(E[y].median()) else (10, -12)
+            a1.annotate(name, (px, py), xytext=off, textcoords="offset points",
+                        fontsize=8.5, color=INK, fontweight="medium", path_effects=halo,
+                        arrowprops=dict(arrowstyle="-", color=INK2, lw=0.6))
+    fig.text(0.08, 0.955, title, fontsize=14, fontweight="bold", color=INK, ha="left", va="top")
+    if pca_axes:
+        # One compact loadings line — not stacked under the title
+        fig.text(0.08, 0.045,
+                 f"{axis_labels[0]}   ·   {axis_labels[1]}",
+                 fontsize=7.5, color=INK2, ha="left", va="bottom")
+        fig.text(0.08, 0.018,
+                 "← quiet / long drives · busy / dense → on PC1"
+                 "      ↑ multi-pump capacity · 1-pump strain ↓ on PC2",
+                 fontsize=8, color=INK2, ha="left", va="bottom")
     fig.savefig(path, dpi=180)
     plt.close(fig)
 
@@ -529,70 +692,89 @@ def plot_summary(E, F, Z, loc, pca, meta, path):
     k = meta["k"]
     colors = CLUSTER_COLORS[:k]
     names = cluster_names(k, E, F)
-    fig = plt.figure(figsize=(16.5, 10.5), layout="constrained")
-    gs = fig.add_gridspec(2, 3, width_ratios=[1, 1, 1.15], height_ratios=[1.05, 1])
-    for j, (x, y, name) in enumerate([("pca1", "pca2", "PCA"), ("umap1", "umap2", "UMAP")]):
-        ax = fig.add_subplot(gs[0, j])
-        for c in range(k):
-            m = E["cluster"] == c
-            ax.scatter(E.loc[m, x], E.loc[m, y], s=36, c=colors[c], edgecolor="white", linewidth=0.55,
-                       label=f"{names[c]}  ({m.sum()})", zorder=2)
-        if name == "PCA":
-            _pca_quadrants(ax)
-            _label_extremes(ax, E, x, y, n=8)
-            ev = 100 * pca.explained_variance_ratio_
-            ax.set_xlabel(f"PC1 · demand / density ({ev[0]:.0f}%)")
-            ax.set_ylabel(f"PC2 · capacity vs strain ({ev[1]:.0f}%)")
-        else:
-            ax.set_xticks([])
-            ax.set_yticks([])
-        ax.set_title(f"{name} · {Z.shape[1]} metrics → 2D")
-    fig.axes[0].legend(frameon=False, fontsize=7.5, loc="upper left",
-                       title="Archetype (PC1 order)", title_fontsize=8)
+    ev = 100 * pca.explained_variance_ratio_
+    # Extra room for shared legend + vertical heatmap tick labels
+    fig = plt.figure(figsize=(17.5, 13.2))
+    gs = fig.add_gridspec(
+        3, 3, width_ratios=[1, 1, 1.05], height_ratios=[1.05, 0.12, 1.15],
+        left=0.11, right=0.96, top=0.91, bottom=0.05, hspace=0.24, wspace=0.24,
+    )
 
-    ax = fig.add_subplot(gs[0, 2])
-    if BASEMAP.exists():
-        import pickle
-        from matplotlib.collections import LineCollection
-
-        bm = pickle.loads(BASEMAP.read_bytes())
-        ax.add_collection(LineCollection(bm["roads"], colors="#e4e3df", linewidths=0.5, zorder=1))
-        ax.add_collection(LineCollection(bm["river"], colors="#b9d6ee", linewidths=3.5, zorder=1))
+    # --- PCA: colour only — station names live on 01_pca / 05_archetypes ---
+    ax = fig.add_subplot(gs[0, 0])
+    handles = []
     for c in range(k):
         m = E["cluster"] == c
-        ax.scatter(loc.loc[m, "lon"], loc.loc[m, "lat"], s=40, c=colors[c], edgecolor="white",
-                   linewidth=0.55, zorder=3)
-    pad = 0.03
-    ax.set_xlim(loc["lon"].min() - pad, loc["lon"].max() + pad)
-    ax.set_ylim(loc["lat"].min() - pad, loc["lat"].max() + pad)
-    ax.grid(False)
-    ax.set_aspect(1 / np.cos(np.deg2rad(51.5)))
-    ax.set_title("Same groups on the city map")
+        h = ax.scatter(E.loc[m, "pca1"], E.loc[m, "pca2"], s=38, c=colors[c], edgecolor="white",
+                       linewidth=0.55, label=f"{names[c]}  ({int(m.sum())})", zorder=2)
+        handles.append(h)
+    _pca_crosshairs(ax)
+    ax.set_xlabel(f"PC1 · demand / density ({ev[0]:.0f}%)")
+    ax.set_ylabel(f"PC2 · capacity vs strain ({ev[1]:.0f}%)")
+    ax.yaxis.labelpad = 8
+    ax.set_title(f"PCA · {Z.shape[1]} metrics → 2D")
+
+    # --- UMAP ---
+    ax = fig.add_subplot(gs[0, 1])
+    for c in range(k):
+        m = E["cluster"] == c
+        ax.scatter(E.loc[m, "umap1"], E.loc[m, "umap2"], s=38, c=colors[c], edgecolor="white",
+                   linewidth=0.55, zorder=2)
     ax.set_xticks([])
     ax.set_yticks([])
+    ax.set_title(f"UMAP · {Z.shape[1]} metrics → 2D")
 
-    ax = fig.add_subplot(gs[1, :])
+    # --- Map ---
+    ax = fig.add_subplot(gs[0, 2])
+    _draw_basemap(ax, loc)
+    for c in range(k):
+        m = E["cluster"] == c
+        ax.scatter(loc.loc[m, "lon"], loc.loc[m, "lat"], s=36, c=colors[c], edgecolor="white",
+                   linewidth=0.55, zorder=3)
+    ax.set_title("Same groups on the city map")
+
+    # --- Shared legend row ---
+    leg_ax = fig.add_subplot(gs[1, :])
+    leg_ax.axis("off")
+    leg = leg_ax.legend(
+        handles, [f"{names[c]}  ({int((E['cluster'] == c).sum())})" for c in range(k)],
+        loc="center", ncol=min(k, 5), frameon=False, fontsize=9,
+        title="Archetype (ordered quiet → busy on PC1)", title_fontsize=9,
+        handletextpad=0.4, columnspacing=1.4,
+    )
+    leg.get_title().set_color(INK2)
+
+    # --- Heatmap transposed: metrics as rows (horizontal labels never collide) ---
+    ax = fig.add_subplot(gs[2, :])
     prof = Z.groupby(E["cluster"]).mean()
-    spread = prof.abs().max().sort_values(ascending=False).index[:20]
-    prof = prof[spread]
-    im = ax.imshow(prof.to_numpy(), aspect="auto", cmap="RdBu_r", vmin=-1.6, vmax=1.6)
-    ax.set_yticks(range(k), [f"{names[c]}  (n={int((E['cluster'] == c).sum())})" for c in range(k)])
-    for t, c in zip(ax.get_yticklabels(), colors):
+    n_feat = 10
+    spread = prof.abs().max().sort_values(ascending=False).index[:n_feat]
+    mat = prof[spread].T  # metrics × archetypes
+    im = ax.imshow(mat.to_numpy(), aspect="auto", cmap="RdBu_r", vmin=-1.8, vmax=1.8)
+    ax.set_yticks(range(len(spread)), [_short_label(c, 20) for c in spread], fontsize=9)
+    ax.tick_params(axis="y", pad=6, length=0)
+    col_labels = [f"{names[c]}\n(n={int((E['cluster'] == c).sum())})" for c in range(k)]
+    ax.set_xticks(range(k), col_labels, fontsize=8.5)
+    ax.tick_params(axis="x", pad=4, length=0, labeltop=True, labelbottom=False)
+    for t, c in zip(ax.get_xticklabels(), colors):
         t.set_color(c)
         t.set_fontweight("bold")
-    ax.set_xticks(range(len(spread)), [LABELS.get(c, c) for c in spread], rotation=35, ha="right", fontsize=8)
-    for i in range(k):
-        for j in range(len(spread)):
-            v = prof.iloc[i, j]
-            ax.text(j, i, f"{v:+.1f}", ha="center", va="center", fontsize=7,
-                    color="white" if abs(v) > 1 else INK)
+        t.set_linespacing(1.1)
+    for i in range(len(spread)):
+        for j in range(k):
+            v = float(mat.iloc[i, j])
+            ax.text(j, i, f"{v:+.1f}", ha="center", va="center", fontsize=8.5,
+                    color="white" if abs(v) >= 0.85 else INK, fontweight="medium")
     ax.grid(False)
-    ax.set_title("Archetype profiles · mean z-score on the 20 most separating metrics")
-    cb = fig.colorbar(im, ax=ax, shrink=0.9, pad=0.01)
+    ax.set_title(f"Archetype profiles · mean z-score on the {n_feat} most separating metrics", pad=10)
+    cb = fig.colorbar(im, ax=ax, shrink=0.85, pad=0.015, fraction=0.025)
     cb.outline.set_visible(False)
-    cb.set_label("z-score (blue = below city median · red = above)", fontsize=8, color=INK2)
-    fig.suptitle(f"London's {len(E)} fire stations · all analysis metrics condensed to 2D",
-                 x=0.01, ha="left", fontsize=15, fontweight="bold", color=INK)
+    cb.set_label("z-score", fontsize=8, color=INK2)
+    fig.text(0.12, 0.965, f"London's {len(E)} fire stations · all analysis metrics condensed to 2D",
+             fontsize=15, fontweight="bold", color=INK, ha="left", va="top")
+    fig.text(0.12, 0.935,
+             "PC1 → busy / dense streets   ·   PC2 ↑ multi-pump capacity / ↓ 1-pump strain",
+             fontsize=8.5, color=INK2, ha="left", va="top")
     fig.savefig(path, dpi=170)
     plt.close(fig)
 
@@ -603,63 +785,81 @@ def plot_archetypes(E, F, Z, pca, meta, path):
     k = meta["k"]
     colors = CLUSTER_COLORS[:k]
     names = cluster_names(k, E, F)
-    fig = plt.figure(figsize=(14.5, 8.2), layout="constrained")
-    gs = fig.add_gridspec(2, 2, width_ratios=[1.35, 1], height_ratios=[1.2, 1])
+    ev = 100 * pca.explained_variance_ratio_
+    fig = plt.figure(figsize=(15.5, 9.8))
+    gs = fig.add_gridspec(
+        3, 2, width_ratios=[1.35, 1], height_ratios=[1.2, 1.05, 0.20],
+        left=0.09, right=0.97, top=0.90, bottom=0.06, hspace=0.28, wspace=0.30,
+    )
 
-    ax = fig.add_subplot(gs[:, 0])
+    ax = fig.add_subplot(gs[:2, 0])
+    handles = []
     for c in range(k):
         m = E["cluster"] == c
-        ax.scatter(E.loc[m, "pca1"], E.loc[m, "pca2"], s=48, c=colors[c], edgecolor="white",
-                   linewidth=0.7, label=f"{names[c]}  ({m.sum()})", zorder=2)
-    _pca_quadrants(ax)
-    _label_extremes(ax, E, "pca1", "pca2", n=12)
-    ev = 100 * pca.explained_variance_ratio_
-    ax.set_xlabel(f"PC1 · busy / dense streets  ←→  quiet / long drives   ({ev[0]:.0f}%)")
-    ax.set_ylabel(f"PC2 · multi-pump capacity  ←→  1-pump strain   ({ev[1]:.0f}%)")
-    ax.legend(frameon=False, fontsize=8.5, loc="upper left")
+        h = ax.scatter(E.loc[m, "pca1"], E.loc[m, "pca2"], s=52, c=colors[c], edgecolor="white",
+                       linewidth=0.7, label=f"{names[c]}  ({int(m.sum())})", zorder=2)
+        handles.append(h)
+    _pca_crosshairs(ax)
+    # Only the two true outliers — names for the rest live in the text panel
+    outliers = E.nlargest(2, "pca1").index.tolist()
+    from matplotlib import patheffects
+    halo = [patheffects.withStroke(linewidth=3.2, foreground=SURFACE)]
+    for name in outliers:
+        px, py = float(E.loc[name, "pca1"]), float(E.loc[name, "pca2"])
+        ax.annotate(name, (px, py), xytext=(8, 8), textcoords="offset points",
+                    fontsize=8.5, color=INK, fontweight="medium", path_effects=halo,
+                    arrowprops=dict(arrowstyle="-", color=INK2, lw=0.6))
+    ax.set_xlabel(f"PC1 ({ev[0]:.0f}%)  quiet ←→ busy")
+    ax.set_ylabel(f"PC2 ({ev[1]:.0f}%)  strain ←→ capacity")
+    ax.yaxis.labelpad = 10
     ax.set_title("Station archetypes in PCA space")
 
-    # Contrast table: 1-pump high util vs 2-pump low util
+    leg_ax = fig.add_subplot(gs[2, 0])
+    leg_ax.axis("off")
+    leg_ax.legend(handles=handles, frameon=False, fontsize=8.5, loc="center",
+                  ncol=2, columnspacing=1.3, handletextpad=0.4)
+
     ax = fig.add_subplot(gs[0, 1])
     ax.axis("off")
     strained = F[(F["n_pumps"] == 1) & (F["utilisation_pct"] >= F["utilisation_pct"].quantile(0.75))]
     spare = F[(F["n_pumps"] >= 2) & (F["utilisation_pct"] <= F["utilisation_pct"].quantile(0.40))]
-    lines = [
-        "Capacity mismatches (from the same metrics)",
-        "",
-        f"High-utilisation 1-pump stations: {len(strained)}",
-        "  " + ", ".join(strained.sort_values("utilisation_pct", ascending=False).index[:8]),
-        "",
-        f"Lower-utilisation 2-pump stations: {len(spare)}",
-        "  " + ", ".join(spare.sort_values("utilisation_pct").index[:8]),
-        "",
-        f"PCA 2D captures {ev[0] + ev[1]:.0f}% of variance across {Z.shape[1]} features.",
-        "Read loadings (fig 03) — correlated demand columns dominate PC1.",
-    ]
-    ax.text(0.02, 0.98, "\n".join(lines), transform=ax.transAxes, va="top", fontsize=10,
-            color=INK, linespacing=1.45, family="sans-serif")
-    ax.set_title("What to notice", loc="left", fontsize=11, fontweight="bold", color=INK)
+    top_s = strained.sort_values("utilisation_pct", ascending=False).index[:6]
+    top_p = spare.sort_values("utilisation_pct").index[:6]
+    block = (
+        f"PCA 2D captures {ev[0] + ev[1]:.0f}% of variance across {Z.shape[1]} features.\n\n"
+        f"Upsize · high-util 1-pump ({len(strained)})\n"
+        + "  " + ", ".join(top_s) + "\n\n"
+        f"Downsize · lower-util 2-pump ({len(spare)})\n"
+        + "  " + ", ".join(top_p) + "\n\n"
+        "Opposite PCA quadrants: bottom-right vs top-left.\n"
+        "Fig 03 loadings — util columns dominate PC1."
+    )
+    ax.text(0.0, 0.98, "What to notice", transform=ax.transAxes, va="top",
+            fontsize=12, fontweight="bold", color=INK)
+    ax.text(0.0, 0.86, block, transform=ax.transAxes, va="top", fontsize=9.5,
+            color=INK, linespacing=1.55)
 
+    # Horizontal bars — long archetype names never collide
     ax = fig.add_subplot(gs[1, 1])
-    # small bars: mean incidents/pump and util by archetype
     g = F.copy()
     g["cluster"] = E["cluster"].to_numpy()
-    g["archetype"] = g["cluster"].map(dict(enumerate(names)))
     order = list(range(k))
     means = g.groupby("cluster")[["incidents_per_pump", "utilisation_pct"]].mean().reindex(order)
-    x = np.arange(k)
-    w = 0.38
-    ax.bar(x - w / 2, means["incidents_per_pump"] / means["incidents_per_pump"].max(), w,
-           color=BLUE, label="incidents / pump (scaled)")
-    ax.bar(x + w / 2, means["utilisation_pct"] / means["utilisation_pct"].max(), w,
-           color=ORANGE, label="utilisation % (scaled)")
-    ax.set_xticks(x, [names[c].replace(" ", "\n") for c in order], fontsize=7.5)
-    ax.set_ylabel("scaled within-panel")
-    ax.set_title("Load pressure by archetype")
-    ax.legend(frameon=False, fontsize=8)
-    ax.set_ylim(0, 1.15)
-    fig.suptitle("Reading the embedding · where capacity and demand pull apart",
-                 x=0.01, ha="left", fontsize=14, fontweight="bold", color=INK)
+    y = np.arange(k)
+    h = 0.36
+    ax.barh(y + h / 2, means["incidents_per_pump"] / means["incidents_per_pump"].max(), h,
+            color=BLUE, label="incidents / pump")
+    ax.barh(y - h / 2, means["utilisation_pct"] / means["utilisation_pct"].max(), h,
+            color=ORANGE, label="utilisation %")
+    ax.set_yticks(y, [f"{names[c]}  ({int((E['cluster'] == c).sum())})" for c in order], fontsize=8)
+    ax.set_xlabel("scaled to panel max")
+    ax.set_title("Load pressure by archetype", pad=18)
+    ax.legend(frameon=False, fontsize=8, loc="lower left", bbox_to_anchor=(0.0, 1.02),
+              ncol=2, borderaxespad=0)
+    ax.set_xlim(0, 1.15)
+    ax.invert_yaxis()
+    fig.text(0.09, 0.96, "Reading the embedding · where capacity and demand pull apart",
+             fontsize=14, fontweight="bold", color=INK, ha="left", va="top")
     fig.savefig(path, dpi=180)
     plt.close(fig)
 
