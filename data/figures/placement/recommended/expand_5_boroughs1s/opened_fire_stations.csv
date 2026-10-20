@@ -1,6 +1,6 @@
 candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
 375,New site on Hanover Street / Regent Street,street_junction,-0.1414097,51.514031,False,,
-138,Demand cell 36,demand_cell,-0.11171050559332164,51.49263166522957,False,,1.0
+138,New site near Kennington Road / Wincott Street,demand_cell,-0.11171050559332164,51.49263166522957,False,,1.0
 387,New site on Kilburn High Road,street_junction,-0.1919941,51.5367646,False,,
 388,New site on Cranbrook Road / Ilford Hill,street_junction,0.0701292,51.558586,False,,
 396,New site on Sterling Way,street_junction,-0.0717478,51.6146091,False,,

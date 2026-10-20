@@ -137,5 +137,10 @@ def refine_sites(
                 changed = True
         if not changed:
             break
+    # A site no junction could improve on keeps its grid position; name it after its nearest street.
+    for site in moving:
+        if not str(cand.at[site, "site_name"]).startswith("New site"):
+            (node,), _ = r.snap(np.array([float(cand.at[site, "lat"])]), np.array([float(cand.at[site, "lon"])]))
+            cand.at[site, "site_name"] = f"New site near {_street(r, node)}"
     return {"candidates": cand, "A": A, "indices": idx, "moved_sites": moving, "value": current_val,
             "log": log, "solve_s": round(time.perf_counter() - t0, 1)}

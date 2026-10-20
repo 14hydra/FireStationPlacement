@@ -354,6 +354,32 @@ turnout. Change in average first-engine time vs today, 95 % paired bootstrap int
   −2.2 s); the road-chosen move-10 layout makes it worse under all three (+0.7 to +2.9 s)
   although it met the floor in planning: floors are enforced on 2024 demand with the
   planner's busy model, and 2025 calls can differ.
+- Station-count sweep (`recommended_placement.py --scenarios expand_1,expand_2,expand_5,replace_5
+  --keep-boroughs 1`), dispatch scoring, LightGBM / road / straight-line: add 1 −1.3 / −0.9
+  / −0.5, add 2 −1.4 / −1.0 / −0.7, add 5 −3.8 / −3.2 / −2.4, move up to 5 −2.3 / −2.4 / −1.5
+  (`data/figures/placement/station_sweep.png`; `scripts/plot_results_figures.py`).
+
+## Robustness (`scripts/placement_robustness.py`)
+
+Every layout on 2025 calls, split by time of day, call severity, borough and neighbourhood
+income, each against today with paired bootstrap intervals. LightGBM rows use travel times
+predicted for each period's hour (`ml_scorer.lgbm_matrices_by_hour`) and the hourly
+dispatch model; the Kolesar rows have no hour. Income: ONS FYE 2020 equivalised household
+income after housing costs of the nearest London MSOA (`data/raw/income/`), in fifths.
+
+- Time of day: move up to 10 (1 s boroughs) saves 4.6–5.6 s in every period (night, both
+  rush hours, daytime, evening), slowest 10 % 3.3–5.6 s; the redesign 12–16 s. Add 3 saves
+  about 2 s in every period but its slowest 10 % is 0.2–0.3 s worse at night and in rush
+  hours (the floor is all-day).
+- Severity: every layout is faster for all calls, serious calls and fires in homes under
+  all three models.
+- Income: moving stations helps the poorest fifth most (move 10: −9.6 s vs −2.8 to −5.6 s;
+  redesign −19.2 s); adding stations helps the richest fifth most (central London sites).
+- Boroughs: under LightGBM the 1 s rule holds except the City of London (+2.6 s, move 10);
+  under the Kolesar formulas some boroughs lose up to 9 s (move 10) and 12 s (redesign).
+
+Outputs: `data/figures/placement/robustness/` (`robustness.csv`, `summary.json`,
+`time_of_day.png`, `income.png`, `boroughs.png`). All results tables: `docs/results.md`.
 
 ## 2014 closure test (`scripts/closure_2014_test.py`)
 

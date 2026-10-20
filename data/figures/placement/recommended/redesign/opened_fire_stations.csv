@@ -1,17 +1,17 @@
 candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
 371,New site on Great Marlborough Street / Regent Street,street_junction,-0.1411476,51.5137155,False,,
 380,New site on Kingsway,street_junction,-0.1201019,51.5171028,False,,
-105,Demand cell 3,demand_cell,-0.13550883399416652,51.493407595307715,False,,1.0
-106,Demand cell 4,demand_cell,-0.14879986704018586,51.51752281400114,False,,1.0
+105,New site near Vane Street / Vincent Square,demand_cell,-0.13550883399416652,51.493407595307715,False,,1.0
+106,New site near Welbeck Street / Bentinck Street,demand_cell,-0.14879986704018586,51.51752281400114,False,,1.0
 399,New site on St John's Wood Road / Maida Vale,street_junction,-0.1782656,51.5257526,False,,
 404,New site on Bishopsgate,street_junction,-0.0793662,51.5189952,False,,
 406,New site on Bishop's Bridge Road / Inverness Terrace,street_junction,-0.1874599,51.516089,False,,
-118,Demand cell 16,demand_cell,-0.18999435199867326,51.49333089788615,False,,1.0
+118,New site near Courtfield Gardens / Collingham Place,demand_cell,-0.18999435199867326,51.49333089788615,False,,1.0
 420,New site on King's Road / Anderson Street,street_junction,-0.1620692,51.4903825,False,,
 426,New site on Percy Road / Uxbridge Road,street_junction,-0.2383697,51.506444,False,,
 431,New site on North End Road / Lillie Road,street_junction,-0.2025308,51.4855394,False,,
 437,New site on Lower Clapton Road,street_junction,-0.0520059,51.5508403,False,,
-146,Demand cell 44,demand_cell,-0.09848982543836655,51.493173338875025,False,,1.0
+146,New site near Elephant Road,demand_cell,-0.09848982543836655,51.493173338875025,False,,1.0
 449,New site on Kilburn High Road / Gascony Avenue,street_junction,-0.1978804,51.5418279,False,,
 455,New site on Belsize Avenue / Haverstock Hill,street_junction,-0.1662876,51.55144,False,,
 460,New site on Clapham Road / Bedford Road,street_junction,-0.1296199,51.4653986,False,,
@@ -53,7 +53,7 @@ candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
 680,New site on Main Road / Lunar Close,street_junction,0.0330515,51.3161105,False,,
 686,New site on Tweedy Road / College Road,street_junction,0.0143358,51.4089397,False,,
 692,New site on Barking Road / Beckton Road,street_junction,0.0134415,51.5181605,False,,
-314,Demand cell 85,demand_cell,0.007295922931113259,51.55938367250367,False,,1.0
+314,New site near Mayville Road / High Road Leytonstone,demand_cell,0.007295922931113259,51.55938367250367,False,,1.0
 702,New site on Chingford Lane / The Charter Road,street_junction,0.0195753,51.6077899,False,,
 707,New site on Farnborough Common / High Street,street_junction,0.0638687,51.3608266,False,,
 713,New site on Herbert Road / Sandy Hill Road,street_junction,0.0699673,51.4821463,False,,

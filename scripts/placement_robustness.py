@@ -184,12 +184,13 @@ def main() -> int:
     per_call = {}  # (scorer, layout) -> response per 2025 call
     for scorer in ("lgbm", "road", "kolesar"):
         print(f"Travel times: {scorer}…", flush=True)
+        if scorer == "lgbm":  # hourly matrices first; their weighted average is the all-day one
+            Th = lgbm_matrices_by_hour(sites, cells, demand)
         T, _ = build_travel_matrix(sites, cells, surrogate=TravelTimeSurrogate(), scorer=scorer,
                                    kolesar=kmodel, incidents=demand)
         A = T + turnout[:, None]
         model = ErlangBusyModel.calibrate(A, today_rows, measured, base_pumps, load_w)
         if scorer == "lgbm":
-            Th = lgbm_matrices_by_hour(sites, cells, demand)
             Ah = {h: Th[h] + turnout[:, None] for h in Th}
             combos = sorted(set(zip(period, dslot)))
         for name, r in rows.items():

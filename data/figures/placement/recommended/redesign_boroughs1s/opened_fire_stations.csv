@@ -4,7 +4,7 @@ candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
 387,New site on St John's Wood Road / Maida Vale,street_junction,-0.1782656,51.5257526,False,,
 388,New site on Marloes Road / Cromwell Road,street_junction,-0.1921101,51.4947247,False,,
 398,New site on New Road / Whitechapel Road,street_junction,-0.0628246,51.5183955,False,,
-124,Demand cell 22,demand_cell,-0.11098183706694556,51.525640925178614,False,,1.0
+124,New site near Easton Street / Rosebery Avenue,demand_cell,-0.11098183706694556,51.525640925178614,False,,1.0
 409,New site on Uxbridge Road / Boscombe Road,street_junction,-0.2372425,51.5064522,False,,
 413,New site on Lower Clapton Road,street_junction,-0.0520059,51.5508403,False,,
 418,New site on King William Street / Gracechurch Street,street_junction,-0.0865475,51.5108992,False,,
@@ -35,7 +35,7 @@ candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
 568,New site on High Street / School Road,street_junction,-0.3569488,51.4700189,False,,
 578,New site on Jail Lane / Main Road,street_junction,0.03287,51.3167829,False,,
 585,New site on Tweedy Road,street_junction,0.0173687,51.4076972,False,,
-314,Demand cell 85,demand_cell,0.007295922931113259,51.55938367250367,False,,1.0
+314,New site near Mayville Road / High Road Leytonstone,demand_cell,0.007295922931113259,51.55938367250367,False,,1.0
 592,New site on High Road Woodford Green,street_junction,0.0187567,51.6046815,False,,
 601,New site on John Wilson Street / Wellington Street,street_junction,0.0628016,51.4884007,False,,
 606,New site on King Edward's Road / Ripple Road,street_junction,0.0840727,51.5341878,False,,

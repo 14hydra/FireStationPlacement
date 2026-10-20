@@ -180,9 +180,11 @@ def lgbm_matrix(
     bundle = _bundle(model_path)
     trips = _lgbm_trips(candidates, cells, boroughs) if trips is None else trips
     T = np.zeros(len(trips))
+    step = 100_000  # chunks keep peak memory low on large matrices
     for hour, w in slots:
         print(f"  predicting hour {hour:02d} (weight {w:.2f})…", flush=True)
-        T += w * predict(bundle, trips.assign(hour_of_call=hour))
+        for a in range(0, len(trips), step):
+            T[a:a + step] += w * predict(bundle, trips.iloc[a:a + step].assign(hour_of_call=hour))
     T = T.reshape(len(candidates), len(cells))
     unreachable = ~np.isfinite(trips["road_km"].to_numpy()).reshape(T.shape)
     meta["n_unreachable_pairs"] = int(unreachable.sum())
@@ -193,7 +195,11 @@ def lgbm_matrix(
 
 def lgbm_matrices_by_hour(candidates: pd.DataFrame, cells: pd.DataFrame, incidents: pd.DataFrame | None = None,
                           hours=tuple(h for h, _ in TIME_SLOTS), **kw) -> dict[int, np.ndarray]:
-    """One LightGBM matrix per representative hour (default: the ``TIME_SLOTS`` hours), routing once."""
+    """One LightGBM matrix per representative hour (default: the ``TIME_SLOTS`` hours), routing once.
+
+    Also caches their demand-weighted average, which is exactly ``lgbm_matrix``'s all-day
+    matrix, so a later ``lgbm_matrix`` call for the same sites and cells is free.
+    """
     out, trips = {}, None
     for h in hours:
         key = _cache_key("lgbm", candidates, cells,
@@ -202,4 +208,11 @@ def lgbm_matrices_by_hour(candidates: pd.DataFrame, cells: pd.DataFrame, inciden
         if trips is None and not key.exists():
             trips = _lgbm_trips(candidates, cells, cell_boroughs(cells, incidents))
         out[h], _ = lgbm_matrix(candidates, cells, incidents, slots=[(h, 1.0)], trips=trips, **kw)
+    slots = slot_weights(incidents)
+    if not kw.get("model_path") and sorted(hours) == sorted(h for h, _ in slots):
+        scenario = {"slots": slots, "date": SCENARIO_DATE, **SCENARIO_CALL,
+                    "busy_flag": 0, "pump_order": 1, "from_home": 1}
+        path = _cache_key("lgbm", candidates, cells, [scenario, list(cell_boroughs(cells, incidents))])
+        if not path.exists():
+            np.save(path, sum(w * out[h] for h, w in slots))
     return out

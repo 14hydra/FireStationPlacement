@@ -31,7 +31,7 @@
   "boroughs_better_by_5s_or_more": 8,
   "opened": [
     "New site on Hanover Street / Regent Street",
-    "Demand cell 36",
+    "New site near Kennington Road / Wincott Street",
     "New site on Kilburn High Road",
     "New site on Cranbrook Road / Ilford Hill",
     "New site on Sterling Way"
@@ -54,7 +54,7 @@
       "km": 0.66,
       "second_pump": true,
       "from_name": "Lambeth",
-      "to_name": "Demand cell 36"
+      "to_name": "New site near Kennington Road / Wincott Street"
     },
     {
       "from": 95,

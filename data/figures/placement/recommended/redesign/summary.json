@@ -36,17 +36,17 @@
   "opened": [
     "New site on Great Marlborough Street / Regent Street",
     "New site on Kingsway",
-    "Demand cell 3",
-    "Demand cell 4",
+    "New site near Vane Street / Vincent Square",
+    "New site near Welbeck Street / Bentinck Street",
     "New site on St John's Wood Road / Maida Vale",
     "New site on Bishopsgate",
     "New site on Bishop's Bridge Road / Inverness Terrace",
-    "Demand cell 16",
+    "New site near Courtfield Gardens / Collingham Place",
     "New site on King's Road / Anderson Street",
     "New site on Percy Road / Uxbridge Road",
     "New site on North End Road / Lillie Road",
     "New site on Lower Clapton Road",
-    "Demand cell 44",
+    "New site near Elephant Road",
     "New site on Kilburn High Road / Gascony Avenue",
     "New site on Belsize Avenue / Haverstock Hill",
     "New site on Clapham Road / Bedford Road",
@@ -88,7 +88,7 @@
     "New site on Main Road / Lunar Close",
     "New site on Tweedy Road / College Road",
     "New site on Barking Road / Beckton Road",
-    "Demand cell 85",
+    "New site near Mayville Road / High Road Leytonstone",
     "New site on Chingford Lane / The Charter Road",
     "New site on Farnborough Common / High Street",
     "New site on Herbert Road / Sandy Hill Road",
@@ -256,7 +256,7 @@
       "pumps": 1,
       "km": 4.15,
       "from_name": "Dowgate",
-      "to_name": "Demand cell 4"
+      "to_name": "New site near Welbeck Street / Bentinck Street"
     },
     {
       "from": 20,
@@ -440,7 +440,7 @@
       "pumps": 2,
       "km": 0.99,
       "from_name": "Lambeth",
-      "to_name": "Demand cell 3"
+      "to_name": "New site near Vane Street / Vincent Square"
     },
     {
       "from": 54,
@@ -456,7 +456,7 @@
       "pumps": 1,
       "km": 0.17,
       "from_name": "Leytonstone",
-      "to_name": "Demand cell 85"
+      "to_name": "New site near Mayville Road / High Road Leytonstone"
     },
     {
       "from": 56,
@@ -496,7 +496,7 @@
       "pumps": 1,
       "km": 1.86,
       "from_name": "Old Kent Road",
-      "to_name": "Demand cell 44"
+      "to_name": "New site near Elephant Road"
     },
     {
       "from": 65,
@@ -624,7 +624,7 @@
       "pumps": 2,
       "km": 6.42,
       "from_name": "Tooting",
-      "to_name": "Demand cell 16"
+      "to_name": "New site near Courtfield Gardens / Collingham Place"
     },
     {
       "from": 90,

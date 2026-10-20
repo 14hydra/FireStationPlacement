@@ -93,7 +93,7 @@ candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline,plan_r
 101,Woodside,existing_fire_station,-0.0621930777407106,51.3857831,True,,1,91,77.0,1,0,1113.0,0.008830950378469302
 370,New site on Great Marlborough Street / Maddox Street,street_junction,-0.1412668,51.5136756,False,,1,92,73.0,2,1,3280.0,0.026024723487312947
 377,New site on St John's Wood Road / Maida Vale,street_junction,-0.1782656,51.5257526,False,,1,93,73.0,2,1,3030.0,0.024041131758097023
-169,Demand cell 67,demand_cell,-0.08459595126026956,51.49347275072606,False,,1,94,73.0,1,0,1546.0,0.012266531253471286
+169,New site near Mason Street / Old Kent Road,demand_cell,-0.08459595126026956,51.49347275072606,False,,1,94,73.0,1,0,1546.0,0.012266531253471286
 391,New site on Greenwich High Road / Deals Gateway,street_junction,-0.0213626,51.4742314,False,,1,95,73.0,1,0,1053.0,0.008354888363457479
 397,New site on Bow Road / Fairfield Road,street_junction,-0.0192682,51.5281522,False,,1,96,73.0,1,0,1339.0,0.010624117301680499
 400,New site on Coldharbour Lane / Uxbridge Road,street_junction,-0.406734,51.5179059,False,,1,97,73.0,1,0,1230.0,0.009759271307742356
