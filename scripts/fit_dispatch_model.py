@@ -53,14 +53,19 @@ def calls_to_cells(trips, cells, row_of):
 def fit_variant(A, open_idx, p_all, p_slots, pumps, cells_n, calls, hourly: bool) -> tuple:
     """Fit the all-day (``hourly=False``) or hour-aware model. ``calls`` = (cells, responder rows, slots)."""
     c, r, h = calls
-    parts, layouts = [], {}
+    parts, layouts, attend_parts = [], {}, []
+    n = np.arange(A.shape[1])
     for slot in (range(len(SLOTS)) if hourly else [None]):
         pb = p_all if slot is None else p_slots[slot]
         rows, feats = candidates(A, open_idx, pb, pumps, slot=slot)
         m = np.ones(len(c), bool) if slot is None else h == slot
         parts.append((feats, responder_counts(rows, c[m], r[m]), np.bincount(c[m], minlength=cells_n).astype(float)))
+        attend_parts.append(A[rows, n[None, :]])
         layouts[slot] = (rows, feats)
-    return DispatchModel(hourly=hourly).fit(parts), layouts
+    model = DispatchModel(hourly=hourly).fit(parts)
+    t = model.calibrate_temperature(parts, attend_parts=attend_parts)
+    print(f"  dispatch temp={t:.2f} ({'hourly' if hourly else 'all-day'})", flush=True)
+    return model, layouts
 
 
 def predict_variant(model, A, open_idx, p_all, p_slots, pumps, cells_n):
@@ -282,6 +287,10 @@ def part_b():
         ev[name] = expected_per_trip(predict_variant(model, A, pre_idx, pb_pre, sp, p13, nc),
                                      predict_variant(model, A, post_idx, pb_post, sq, p14, nc))
         names.append(name)
+    # Ensemble of the three learned variants (often steadier across the 10 areas).
+    ev["dispatch_ensemble"] = (ev["dispatch_all_day"] + ev["dispatch_by_hour_call_rate"]
+                               + ev["dispatch_by_hour_calibrated"]) / 3.0
+    names.append("dispatch_ensemble")
     cols = ["drive_s"] + names
     g = ev.groupby(["area", "post"])[cols].mean().unstack("post")
     did = pd.DataFrame({k: (g[(k, True)] - g[(k, False)]) - (g.loc["rest", (k, True)] - g.loc["rest", (k, False)])

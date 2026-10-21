@@ -176,6 +176,8 @@ rates are optimistic vs observed attendance (nearest engine always free unless `
 | [`docs/datasets.md`](docs/datasets.md) | London data sources and how they are joined |
 | [`docs/london_eda.md`](docs/london_eda.md) | Initial analysis; which street features affect driving time |
 | [`docs/station_embedding_analysis.md`](docs/station_embedding_analysis.md) | Reading the 2D station-metric embedding (PCA / UMAP / archetypes) |
+| [`docs/model_improvements_from_embedding.md`](docs/model_improvements_from_embedding.md) | How the embedding changed the travel-time + resize models |
+| ISEF final figure pack | [`data/figures/final/`](data/figures/final/) (`00_roadmap.png` → `01`…`10`) |
 | [`docs/model_log.md`](docs/model_log.md) | Catalog of model implementations + blank entry |
 
 ## Limits and honesty

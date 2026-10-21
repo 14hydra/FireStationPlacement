@@ -140,31 +140,52 @@ def fig_three_models():
 def fig_closure():
     diag = pd.read_csv(FIG / "validation/closure_2014/diagnostic.csv", index_col=0)
     disp = pd.read_csv(FIG / "validation/dispatch/closure_areas.csv", index_col=0)
+    summary = json.loads((FIG / "validation/dispatch/summary.json").read_text())
     rec = diag["drive_s"]
-    panels = [(diag["model_nearest_drive"], "Assume nearest station responds", GREY),
-              (disp["dispatch_all_day"], "Learned dispatch model", ORANGE),
+    # Middle panel: best learned dispatch variant by area correlation (usually all-day).
+    disp_cols = [c for c in ("dispatch_by_hour_calibrated", "dispatch_ensemble", "dispatch_all_day",
+                             "dispatch_by_hour_call_rate") if c in disp.columns]
+    scores = summary.get("closure_2014", {}).get("closure_score", {})
+    best_name = max(disp_cols, key=lambda c: scores.get(c, {}).get("corr_across_areas", -1))
+    best_pred = disp[best_name]
+    best_label = {
+        "dispatch_all_day": "Learned dispatch (all day)",
+        "dispatch_by_hour_calibrated": "Learned dispatch (by time of day)",
+        "dispatch_by_hour_call_rate": "Learned dispatch (by hour, call rate)",
+        "dispatch_ensemble": "Learned dispatch (ensemble)",
+    }.get(best_name, "Learned dispatch model")
+    nearest_pred = disp["nearest"] if "nearest" in disp.columns else diag["model_nearest_drive"]
+    panels = [(nearest_pred, "Assume nearest station responds", GREY),
+              (best_pred, best_label, ORANGE),
               (diag["pred_lgbm_actual_station"], "Given the station that really responded", BLUE)]
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharex=True, sharey=True)
+    fig, axes = plt.subplots(1, 3, figsize=(15.2, 5.2), sharex=True, sharey=True)
     lim = (30, 130)
     for ax, (pred, title, colr) in zip(axes, panels):
-        ax.plot(lim, lim, color=GRID, lw=1.5, zorder=0)
-        ax.scatter(rec, pred, s=55, color=colr, zorder=2)
+        ax.plot(lim, lim, color=GRID, lw=1.6, zorder=0)
+        err = (pred - rec).abs()
+        # Soft residual colouring: closer to the diagonal = darker
+        sizes = 48 + 28 * (err / max(float(err.max()), 1.0))
+        ax.scatter(rec, pred, s=sizes, color=colr, alpha=0.92, zorder=2,
+                   edgecolors="white", linewidths=0.6)
         shown = []
-        for name in rec.loc[(pred - rec).abs().sort_values(ascending=False).index].index:
-            px, py = rec[name], pred[name]
+        for name in err.sort_values(ascending=False).index:
+            px, py = float(rec[name]), float(pred[name])
             if any(abs(px - a) < 9 and abs(py - b) < 6 for a, b in shown):
-                continue  # skip crowded labels near the diagonal
+                continue
             shown.append((px, py))
-            ax.annotate(name, (px, py), fontsize=8.5, color=MUTED, xytext=(5, 3), textcoords="offset points")
-        r = np.corrcoef(rec, pred)[0, 1]
-        ax.set_title(f"{title}\ncorrelation {r:.2f}", fontsize=11)
+            ax.annotate(name, (px, py), fontsize=8.5, color=MUTED, xytext=(5, 3),
+                        textcoords="offset points")
+        r = float(np.corrcoef(rec, pred)[0, 1])
+        mae = float(err.mean())
+        ax.set_title(f"{title}\ncorr {r:.2f} · MAE {mae:.0f} s", fontsize=11)
         ax.set_xlim(*lim)
         ax.set_ylim(*lim)
+        ax.set_aspect("equal", adjustable="box")
         ax.set_xlabel("Recorded extra driving time (s)")
-        ax.grid(color=GRID)
+        ax.grid(color=GRID, alpha=0.85)
     axes[0].set_ylabel("Predicted extra driving time (s)")
     fig.suptitle("2014 closures: extra driving time in each closed station's former area "
-                 "(LightGBM trained only on 2009–2013)", fontsize=12, color=INK, y=1.04)
+                 "(travel times + dispatch trained only on 2009–2013)", fontsize=12, color=INK, y=1.05)
     save(fig, "4_closure_2014.png")
 
 

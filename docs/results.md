@@ -208,9 +208,9 @@ Effect = change in first-engine attendance in the closed stations' former areas,
 
 | Response model (LightGBM drive, trained 2009–13) | Correlation | Area MAE (s) |
 |---|---|---|
-| Nearest station | 0.42 | 17.2 |
-| Nearest, or next if busy | 0.31 | 16.3 |
-| **Dispatch model** | **0.56** | **13.1** |
+| Nearest station | 0.48 | 16.2 |
+| Nearest, or next if busy | 0.36 | 15.6 |
+| **Dispatch model (by time of day)** | **0.57** | **13.2** |
 
 Reading: the travel time model gets the drive right when it knows who responded; the
 remaining error is dispatch (after the closures the nearest station sent the first engine

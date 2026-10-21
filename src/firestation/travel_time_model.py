@@ -43,6 +43,16 @@ BASE_FEATURES = [
 WEATHER_FEATURES = ["temp_c", "precip_mm", "wind_kph", "rh_pct", "is_rain", "is_heavy_rain", "is_cold", "is_hot"]
 INCIDENT_FEATURES = ["incident_group_code", "property_code", "from_home"]
 DEST_FEATURES = ["dest_resid_300m", "dest_n_300m", "dest_resid_1km", "dest_n_1km"]
+# From the station embedding: PC1 = util + signals/junctions; PC3 = long outer hard trips.
+# These interactions let the trees specialise dense-rush under-prediction and long sparse routes
+# without using station IDs (still placement-safe).
+INTERACTION_FEATURES = [
+    "rush_x_signals_per_km",
+    "rush_x_junctions_per_km",
+    "night_x_signals_per_km",
+    "dense_short",   # signals / (1 + road_km) — central short trips (Soho / Euston regime)
+    "long_sparse",   # road_km / (1 + signals) — outer long-drive hard cases (Heathrow regime)
+]
 CATEGORICAL = ["borough_code", "incident_group_code", "property_code"]
 
 FEATURE_GROUPS = {
@@ -52,6 +62,7 @@ FEATURE_GROUPS = {
     "weather": WEATHER_FEATURES,
     "incident": INCIDENT_FEATURES,
     "dest": DEST_FEATURES,
+    "interaction": INTERACTION_FEATURES,
 }
 
 # Default LightGBM settings; scripts/train_travel_time_lfb.py tunes n_estimators by
@@ -212,8 +223,102 @@ def build_features(
         enc = dest_frame if dest_frame is not None else dest_history.transform(df)
         for c in DEST_FEATURES:
             out[c] = enc[c].to_numpy(dtype=float)
+    if "interaction" in groups:
+        def _num(name: str) -> np.ndarray:
+            if name in out.columns:
+                return pd.to_numeric(out[name], errors="coerce").fillna(0.0).to_numpy(float)
+            if name in df.columns:
+                return pd.to_numeric(df[name], errors="coerce").fillna(0.0).to_numpy(float)
+            return np.zeros(len(df), dtype=float)
+
+        sig, jun = _num("signals_per_km"), _num("junctions_per_km")
+        rush = out["rush"].to_numpy(dtype=float)
+        night = out["night"].to_numpy(dtype=float)
+        out["rush_x_signals_per_km"] = rush * sig
+        out["rush_x_junctions_per_km"] = rush * jun
+        out["night_x_signals_per_km"] = night * sig
+        out["dense_short"] = sig / (1.0 + np.clip(road, 0.0, None))
+        out["long_sparse"] = np.clip(road, 0.0, None) / (1.0 + sig)
     cols = [c for g in groups for c in FEATURE_GROUPS[g]]
     return out[cols]
+
+
+def trip_regime(df: pd.DataFrame) -> np.ndarray:
+    """Placement-safe trip buckets from the embedding hard-case analysis.
+
+    dense_short — high signals/km, short road (central under-prediction)
+    long_sparse — long road, low signals (outer long-drive hard cases)
+    rush_other  — rush hour, neither of the above
+    other
+    """
+    road = pd.to_numeric(df["road_km"], errors="coerce").fillna(2.0).to_numpy(float)
+    sig = (pd.to_numeric(df["signals_per_km"], errors="coerce").fillna(5.0).to_numpy(float)
+           if "signals_per_km" in df.columns else np.full(len(df), 5.0))
+    if "rush" in df.columns:
+        rush = pd.to_numeric(df["rush"], errors="coerce").fillna(0).to_numpy(float)
+    elif "hour_of_call" in df.columns:
+        h = pd.to_numeric(df["hour_of_call"], errors="coerce").fillna(12)
+        rush = (h.between(7, 9) | h.between(16, 19)).astype(float).to_numpy()
+    else:
+        rush = np.zeros(len(df))
+    regime = np.full(len(df), "other", dtype=object)
+    regime[(sig >= 10.0) & (road <= 2.5)] = "dense_short"
+    regime[(road >= 4.0) & (sig <= 6.0)] = "long_sparse"
+    regime[(regime == "other") & (rush >= 1)] = "rush_other"
+    return regime
+
+
+def fit_regime_bias(
+    df: pd.DataFrame,
+    y: np.ndarray,
+    pred: np.ndarray,
+    *,
+    only: tuple[str, ...] = ("long_sparse",),
+) -> dict[str, float]:
+    """Mean (pred − y) by trip regime on training rows — used as a post-hoc correction.
+
+    Default: correct only ``long_sparse`` (outer long-drive / PC3 hard cases). A/B tests
+    showed correcting all regimes (esp. dense_short) can raise overall MAE even when it
+    zeroes average bias, because L1 trees already balance over/under errors.
+    """
+    reg = trip_regime(df)
+    resid = np.asarray(pred, float) - np.asarray(y, float)
+    out = {name: 0.0 for name in ("dense_short", "long_sparse", "rush_other", "other")}
+    for name in only:
+        m = reg == name
+        if m.any():
+            out[name] = float(resid[m].mean())
+    return out
+
+
+def apply_regime_bias(df: pd.DataFrame, pred: np.ndarray, bias: dict[str, float]) -> np.ndarray:
+    reg = trip_regime(df)
+    adj = pred.astype(float).copy()
+    for name, b in bias.items():
+        adj[reg == name] -= b  # remove systematic over/under-prediction
+    return np.clip(adj, *DRIVE_CLIP_S)
+
+
+def sample_weights(df: pd.DataFrame, y: np.ndarray) -> np.ndarray:
+    """Up-weight embedding hard cases; soft-downweight data-quality outliers.
+
+    - Longer road_km trips (PC3 / outer long-drive) get higher weight.
+    - Dense short trips (high signals/km, short road — central under-prediction) get a boost.
+    - Impossible speeds / ultra-long drives are soft-downweighted (not dropped), matching the
+      outlier analysis in data/figures/travel_time/outliers/.
+    """
+    road = pd.to_numeric(df["road_km"], errors="coerce").fillna(2.0).to_numpy(float)
+    y = np.asarray(y, dtype=float)
+    w = 1.0 + 0.12 * np.clip(road, 0.0, 8.0)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        kph = np.where(y > 0, road / y * 3600.0, np.nan)
+    bad = (~np.isfinite(kph)) | (kph < 8.0) | (kph > 70.0) | (y > 900.0)
+    w = np.where(bad, 0.35 * w, w)
+    if "signals_per_km" in df.columns:
+        sig = pd.to_numeric(df["signals_per_km"], errors="coerce").fillna(5.0).to_numpy(float)
+        dense_short = (sig >= 10.0) & (road <= 2.5)
+        w = np.where(dense_short, w * 1.25, w)
+    return w.astype(float)
 
 
 # --------------------------------------------------------------------------- #
@@ -228,12 +333,21 @@ def make_regressor(seed: int, params: dict[str, Any] | None = None):
     return lgb.LGBMRegressor(random_state=seed, n_jobs=-1, verbose=-1, **p)
 
 
-def fit_bag(x: pd.DataFrame, y: np.ndarray, seeds=(42, 43, 44, 45), params: dict[str, Any] | None = None):
+def fit_bag(
+    x: pd.DataFrame,
+    y: np.ndarray,
+    seeds=(42, 43, 44, 45),
+    params: dict[str, Any] | None = None,
+    sample_weight: np.ndarray | None = None,
+):
     cats = [c for c in CATEGORICAL if c in x.columns]
     models = []
     for s in seeds:
         m = make_regressor(s, params)
-        m.fit(x, y, categorical_feature=cats)
+        kw = dict(categorical_feature=cats)
+        if sample_weight is not None:
+            kw["sample_weight"] = sample_weight
+        m.fit(x, y, **kw)
         models.append(m)
     return models
 
@@ -242,23 +356,50 @@ def predict_bag(models, x: pd.DataFrame) -> np.ndarray:
     return np.clip(np.mean([m.predict(x) for m in models], axis=0), *DRIVE_CLIP_S)
 
 
+def _infer_feature_groups(feature_names: list[str]) -> list[str]:
+    """Recover FEATURE_GROUPS keys for older bundles that only stored ``features``."""
+    feats = set(feature_names)
+    return [g for g, cols in FEATURE_GROUPS.items() if any(c in feats for c in cols)]
+
+
 def predict(bundle: dict, trips: pd.DataFrame) -> np.ndarray:
     """Predicted driving seconds for ``trips`` using a saved bundle from the trainer."""
     from .kolesar import KolesarModel
 
-    groups = bundle["feature_groups"]
+    groups = list(bundle.get("feature_groups") or _infer_feature_groups(bundle["features"]))
+    # Drop dest if the bundle has no destination-history tables (legacy models).
+    if "dest" in groups and "dest_history" not in bundle:
+        groups = [g for g in groups if g != "dest"]
     dh = None
     if "dest" in groups:
         dh = DestinationHistory(tuple(bundle["dest_history"]["sizes_m"]), bundle["dest_history"]["shrink"],
                                 {int(k): pd.DataFrame(v) for k, v in bundle["dest_history"]["tables"].items()})
     if "weather" in groups and "temp_c" not in trips.columns:
         trips = attach_weather(trips, None)
+    cats = bundle.get("category_maps")
+    if cats is None:
+        cats = {"borough": list(bundle.get("borough_categories") or []),
+                "incident_group": [], "property_category": []}
     x = build_features(trips, groups, kolesar=KolesarModel.from_dict(bundle["kolesar_baseline_params"]),
-                       cat_maps=bundle["category_maps"], dest_history=dh)
+                       cat_maps=cats, dest_history=dh)
     if bundle.get("base") == "street_speeds":
         # Correction model: learned street-speed time (trips["street_base_s"]) + LightGBM correction.
         base = pd.to_numeric(trips["street_base_s"], errors="coerce").to_numpy(float)
         x["street_base_s"] = base
         corr = np.mean([m.predict(x[bundle["features"]]) for m in bundle["models"]], axis=0)
-        return np.clip(base + corr, *DRIVE_CLIP_S)
-    return predict_bag(bundle["models"], x[bundle["features"]])
+        pred = np.clip(base + corr, *DRIVE_CLIP_S)
+    else:
+        # Legacy bundles may list columns build_features already produced under groups.
+        missing = [c for c in bundle["features"] if c not in x.columns]
+        for c in missing:
+            x[c] = np.nan
+        pred = predict_bag(bundle["models"], x[bundle["features"]])
+    if bundle.get("regime_bias"):
+        # Ensure rush exists for trip_regime (predict callers may only pass training columns).
+        trips2 = trips
+        if "rush" not in trips.columns and "hour_of_call" in trips.columns:
+            trips2 = trips.copy()
+            h = pd.to_numeric(trips2["hour_of_call"], errors="coerce").fillna(12)
+            trips2["rush"] = (h.between(7, 9) | h.between(16, 19)).astype(int)
+        pred = apply_regime_bias(trips2, pred, bundle["regime_bias"])
+    return pred

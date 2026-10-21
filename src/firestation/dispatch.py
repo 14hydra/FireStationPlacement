@@ -7,29 +7,22 @@ assumption, not the travel-time model, is what made closure effects hard to pred
 area (``scripts/closure_2014_diagnostic.py``).
 
 For a call in demand cell j and a layout (open stations), the candidates are the ``K``
-open stations with the fastest predicted attendance to j. A LightGBM classifier (decision
-trees) scores each candidate from features that exist for any layout, real or planned:
+open stations with the fastest predicted attendance to j. A LightGBM binary classifier
+scores each candidate from features that exist for any layout:
 
-  rank            1 = fastest predicted attendance
-  attend_s        predicted attendance (drive + turnout)
-  gap_s           seconds slower than the fastest candidate
-  gap_ratio       attend_s / fastest
-  p_busy          chance the candidate has no free pump (Erlang loss, its pumps and load)
-  pumps           its pumps
-  p_busy_first    chance the fastest candidate is busy
-  p_busy_ahead    chance every faster candidate is busy (product)
-  n_within_60s    open stations within 60 s of the fastest (dense cover = more choice)
-  pumps_first     pumps at the fastest candidate
-  slot            time of day (4-hour slots; hourly models only)
+  rank, attend_s, gap_s, gap_ratio, p_busy, pumps, p_busy_first, p_busy_ahead,
+  n_within_60s / 90s / 120s, pumps_first, second_gap_s, free_when_ahead, pumps_ratio,
+  log_attend_s, is_nearest, and (hourly models) slot.
 
 Time of day: engine availability swings between quiet nights and busy evenings, so the
 hourly version scores each 4-hour slot with that slot's busy chances (each station's
 load scaled by the slot's call rate, ``slot_factors``) and averages the slots, weighted by
 when calls happen.
 
-Scores are normalised within each call to probabilities, so the expected first-engine
-attendance in cell j is ``sum_k P_k * attend_k``. Trained on calls grouped by cell and
-layout (same features), with one weighted row per candidate and outcome.
+Scores are temperature-scaled on the log-odds and normalised within each call to
+probabilities, so the expected first-engine attendance in cell j is ``sum_k P_k * attend_k``.
+Trained on calls grouped by cell (weighted yes/no per candidate), with a mild boost on
+non-nearest successes so the model learns diversion.
 """
 
 from __future__ import annotations
@@ -41,8 +34,15 @@ import numpy as np
 import pandas as pd
 
 K = 8
-FEATURES = ["rank", "attend_s", "gap_s", "gap_ratio", "p_busy", "pumps", "p_busy_first", "p_busy_ahead",
-            "n_within_60s", "pumps_first"]
+# Placement-safe features only (any layout). Extra fields (n_within_90s, free_when_ahead,
+# second_gap_s, …) help the model learn when a slower neighbour takes the call — the gap
+# that limited the 2014-closure area correlations in figure 09.
+FEATURES = [
+    "rank", "attend_s", "gap_s", "gap_ratio", "p_busy", "pumps",
+    "p_busy_first", "p_busy_ahead", "n_within_60s", "pumps_first",
+    "n_within_90s", "n_within_120s", "second_gap_s", "free_when_ahead",
+    "pumps_ratio", "log_attend_s", "is_nearest",
+]
 SLOTS = [(0, 4), (4, 8), (8, 12), (12, 16), (16, 20), (20, 24)]
 
 
@@ -118,18 +118,31 @@ def candidates(A: np.ndarray, open_idx: Sequence[int], p_busy: np.ndarray, pumps
     pb = np.asarray(p_busy, float)[rows]
     ahead = np.vstack([np.ones((1, n)), np.cumprod(pb, axis=0)[:-1]])
     pm = np.asarray(pumps, float)[rows]
-    within = ((att - att[0]) <= 60).sum(axis=0) - 1
+    gap0 = att - att[0]
+    within60 = (gap0 <= 60).sum(axis=0) - 1
+    within90 = (gap0 <= 90).sum(axis=0) - 1
+    within120 = (gap0 <= 120).sum(axis=0) - 1
+    second_gap = np.maximum(att[1] - att[0], 0.0) if k >= 2 else np.zeros(n)
+    free_when_ahead = ahead * (1.0 - pb)  # chance this candidate is free when all faster are busy
+    pumps_ratio = pm / np.maximum(pm[0], 1.0)
     feats = pd.DataFrame({
         "rank": np.repeat(np.arange(1, k + 1)[:, None], n, axis=1).T.ravel(),
         "attend_s": att.T.ravel(),
-        "gap_s": (att - att[0]).T.ravel(),
+        "gap_s": gap0.T.ravel(),
         "gap_ratio": (att / np.maximum(att[0], 1.0)).T.ravel(),
         "p_busy": pb.T.ravel(),
-        "pumps": np.asarray(pumps, float)[rows].T.ravel(),
+        "pumps": pm.T.ravel(),
         "p_busy_first": np.repeat(pb[0][None, :], k, axis=0).T.ravel(),
         "p_busy_ahead": ahead.T.ravel(),
-        "n_within_60s": np.repeat(within[None, :], k, axis=0).T.ravel(),
+        "n_within_60s": np.repeat(within60[None, :], k, axis=0).T.ravel(),
         "pumps_first": np.repeat(pm[0][None, :], k, axis=0).T.ravel(),
+        "n_within_90s": np.repeat(within90[None, :], k, axis=0).T.ravel(),
+        "n_within_120s": np.repeat(within120[None, :], k, axis=0).T.ravel(),
+        "second_gap_s": np.repeat(second_gap[None, :], k, axis=0).T.ravel(),
+        "free_when_ahead": free_when_ahead.T.ravel(),
+        "pumps_ratio": pumps_ratio.T.ravel(),
+        "log_attend_s": np.log1p(att.T.ravel()),
+        "is_nearest": (np.repeat(np.arange(1, k + 1)[:, None], n, axis=1) == 1).T.ravel().astype(float),
     })
     if slot is not None:
         feats["slot"] = int(slot)
@@ -149,36 +162,89 @@ def responder_counts(rows: np.ndarray, call_cells: np.ndarray, responder_rows: n
 @dataclass
 class DispatchModel:
     k: int = K
-    params: dict = field(default_factory=lambda: dict(n_estimators=400, learning_rate=0.05, num_leaves=31,
-                                                      min_child_samples=50, subsample=0.9, subsample_freq=1,
-                                                      colsample_bytree=0.9, reg_lambda=1.0))
+    params: dict = field(default_factory=lambda: dict(
+        n_estimators=700, learning_rate=0.04, num_leaves=63,
+        min_child_samples=35, subsample=0.9, subsample_freq=1,
+        colsample_bytree=0.85, reg_lambda=1.2, reg_alpha=0.05,
+    ))
     model: Any = None
     hourly: bool = False
+    # Softmax temperature on log-odds (<1 sharpens, >1 softens). Calibrated after fit.
+    temperature: float = 1.0
 
     def fit(self, parts: list[tuple[pd.DataFrame, np.ndarray, np.ndarray]]) -> "DispatchModel":
-        """``parts``: (features from ``candidates``, counts [k, cells], calls per cell)."""
+        """``parts``: (features from ``candidates``, counts [k, cells], calls per cell).
+
+        Weighted binary classifier per candidate; scores are temperature-scaled and
+        normalised to a distribution over the K candidates. Diversion (ranks 2+) is
+        mildly up-weighted so the trees learn when a neighbour takes the call.
+        """
         import lightgbm as lgb
 
         X, y, w = [], [], []
         for feats, counts, n_calls in parts:
-            pos = counts.T.ravel()
-            neg = np.repeat(n_calls, counts.shape[0]) - pos
-            keep = np.repeat(n_calls > 0, counts.shape[0])
+            k, _n = counts.shape
+            boost = np.ones(k)
+            boost[1:] = 1.5
+            pos = (counts * boost[:, None]).T.ravel()
+            neg = np.maximum(np.repeat(n_calls, k) - counts.T.ravel(), 0.0)
+            keep = np.repeat(n_calls > 0, k)
             for label, wt in ((1, pos), (0, neg)):
                 m = keep & (wt > 0)
                 X.append(feats[m])
-                y.append(np.full(m.sum(), label))
+                y.append(np.full(int(m.sum()), label))
                 w.append(wt[m])
         self.model = lgb.LGBMClassifier(objective="binary", verbose=-1, random_state=0, **self.params)
         cols = FEATURES + (["slot"] if self.hourly else [])
-        self.model.fit(pd.concat(X, ignore_index=True)[cols], np.concatenate(y), sample_weight=np.concatenate(w))
+        self.model.fit(pd.concat(X, ignore_index=True)[cols], np.concatenate(y),
+                       sample_weight=np.concatenate(w))
         return self
 
     def proba(self, feats: pd.DataFrame, n_cells: int) -> np.ndarray:
         """[k, n_cells] probability that the rank-k candidate responds (sums to 1 per cell)."""
         cols = FEATURES + (["slot"] if self.hourly else [])
-        s = self.model.predict_proba(feats[cols])[:, 1].reshape(n_cells, -1).T
-        return s / np.maximum(s.sum(axis=0, keepdims=True), 1e-12)
+        p = self.model.predict_proba(feats[cols])[:, 1].reshape(n_cells, -1).T  # [k, cells]
+        # Temperature on log-prob: t=1 is plain p/sum(p); t>1 softens toward uniform.
+        t = max(float(self.temperature), 1e-3)
+        p = np.clip(p, 1e-12, None)
+        z = np.log(p) / t
+        z = z - z.max(axis=0, keepdims=True)
+        e = np.exp(z)
+        return e / np.maximum(e.sum(axis=0, keepdims=True), 1e-12)
+
+    def calibrate_temperature(self, parts: list[tuple[pd.DataFrame, np.ndarray, np.ndarray]],
+                              attend_parts: Sequence[np.ndarray] | None = None,
+                              grid: Sequence[float] = (0.85, 1.0, 1.25, 1.5, 2.0, 2.5)) -> float:
+        """Pick temperature minimising expected-attendance MAE vs the empirical responder mix.
+
+        ``attend_parts``: optional list of [k, cells] predicted attendance aligned with ``parts``.
+        Falls back to responder-share overlap when attendance is not supplied.
+        """
+        best_t, best = 1.0, np.inf
+        for t in grid:
+            self.temperature = float(t)
+            err, n = 0.0, 0
+            for i, (feats, counts, n_calls) in enumerate(parts):
+                _k, nc = counts.shape
+                P = self.proba(feats, nc)
+                active = n_calls > 0
+                if not active.any():
+                    continue
+                share = counts / np.maximum(n_calls, 1.0)
+                if attend_parts is not None:
+                    att = attend_parts[i]
+                    emp = (share * att).sum(axis=0)
+                    pred = (P * att).sum(axis=0)
+                    err += float(np.abs(pred[active] - emp[active]).sum())
+                else:
+                    # Negative overlap as an error surrogate
+                    err += -float((P[:, active] * share[:, active]).sum())
+                n += int(active.sum())
+            err = err / max(n, 1)
+            if err < best:
+                best, best_t = err, float(t)
+        self.temperature = best_t
+        return best_t
 
     def expected(self, A: np.ndarray, open_idx: Sequence[int], p_busy, pumps: np.ndarray,
                  values: np.ndarray | None = None, slot_weights: np.ndarray | None = None) -> np.ndarray:

@@ -71,6 +71,7 @@ from .station_capacity import (
     DEFAULT_TOTAL_PUMPS,
     capacity_busy_prob,
     default_pump_table,
+    load_station_utilisation,
     plan_resize_capacity,
     resolve_pump_vector,
 )
@@ -1009,6 +1010,13 @@ def run_fire_station_plan(
             f"Resize: reallocating {budget} pumps across {len(existing_idx)} fixed stations "
             f"(min={min_pumps}, max={max_pumps})…"
         )
+        util_s = load_station_utilisation()
+        util_vec = None
+        if util_s is not None and "station" in candidates.columns:
+            util_vec = candidates["station"].astype(str).map(util_s).to_numpy(dtype=float)
+            n_hit = int(np.isfinite(util_vec).sum())
+            print(f"Resize util blend: {n_hit}/{len(candidates)} stations matched "
+                  f"(embedding mismatch signal)")
         res = plan_resize_capacity(
             A, weights, existing_idx,
             base_busy=busy_base if busy_base is not None else np.full(len(candidates), 0.25),
@@ -1017,6 +1025,7 @@ def run_fire_station_plan(
             min_pumps=min_pumps,
             max_pumps=max_pumps,
             threshold_s=threshold_s,
+            util_pct=util_vec,
         )
         selected_idx = res["indices"]
         plan_value = res["value"]

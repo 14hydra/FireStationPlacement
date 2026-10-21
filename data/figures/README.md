@@ -14,7 +14,8 @@ data/figures/
 
 | Folder | What | Written by |
 |---|---|---|
-| `analysis/station_embedding/` | Every joinable station metric condensed to 2D; archetypes + ANALYSIS.md | `scripts/embed_analysis_metrics_2d.py` |
+| `analysis/station_embedding/` | Every joinable station metric condensed to 2D; **ISEF one-pager** `06_isef_story.png` | `scripts/embed_analysis_metrics_2d.py` |
+| `analysis/model_improvement/` | A/B travel-time results from the embedding (MAE by hard slice) | `scripts/ab_travel_time_embedding.py` |
 | `data_exploration/london_eda/` | First look at LFB response data; street feature effects (SHAP, ablation) | `scripts/analyze_london.py` |
 | `data_exploration/station_busyness/` | How often each station's own engine is out | `scripts/plot_station_busyness.py`, `build_live_day.py` |
 | `data_exploration/station_capacity/` | Pumps per station vs demand | `scripts/analyze_station_capacity.py` |
@@ -36,4 +37,8 @@ data/figures/
 | `validation/new_stations/` | Travel time accuracy for stations the model never saw | `scripts/new_station_check.py` |
 | `reports/` | Slide-ready figures for progress reports | `scripts/plot_weekly_report.py` |
 
-**Start here for the cross-metric picture:** [`analysis/station_embedding/ANALYSIS.md`](analysis/station_embedding/ANALYSIS.md) (also mirrored at [`docs/station_embedding_analysis.md`](../../docs/station_embedding_analysis.md)).
+**ISEF / board — start here:** [`final/`](final/) — ten numbered figures + `00_roadmap.png` + [`INDEX.md`](final/INDEX.md).
+
+Station-types poster: [`analysis/station_embedding/06_isef_story.png`](analysis/station_embedding/06_isef_story.png) · [`ISEF_GUIDE.md`](analysis/station_embedding/ISEF_GUIDE.md).
+
+Rebuild the pack: `.venv/bin/python scripts/build_final_figures.py`

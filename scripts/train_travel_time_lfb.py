@@ -49,7 +49,10 @@ from firestation.travel_time_model import (  # noqa: E402
     fit_bag,
     load_weather,
     make_regressor,
+    apply_regime_bias,
+    fit_regime_bias,
     predict_bag,
+    sample_weights,
 )
 
 TRAIN_YEARS = (2021, 2022, 2023, 2024)
@@ -63,7 +66,8 @@ LADDER = [
 ]
 # Final model: every ladder group except weather, which made the tuned model slightly worse
 # (2025 MAE 58.0 s with vs 57.8 s without, two seeds each; checked 2026-10-12).
-FINAL_GROUPS = ["base", "street", "context", "incident", "dest"]
+# "interaction" adds dense-rush / long-sparse features from the station-embedding analysis.
+FINAL_GROUPS = ["base", "street", "context", "incident", "dest", "interaction"]
 TUNED_PARAMS = dict(learning_rate=0.05, num_leaves=255, min_child_samples=50, colsample_bytree=0.7,
                     subsample=0.85, reg_lambda=3.0)
 
@@ -93,9 +97,12 @@ class Split:
                 build_features(self.te, groups, dest_history=self.dest, **kw))
 
 
-def fit_one(xtr, ytr, params=None, seed=42):
+def fit_one(xtr, ytr, params=None, seed=42, sample_weight=None):
     m = make_regressor(seed, params)
-    m.fit(xtr, ytr, categorical_feature=[c for c in CATEGORICAL if c in xtr.columns])
+    kw = dict(categorical_feature=[c for c in CATEGORICAL if c in xtr.columns])
+    if sample_weight is not None:
+        kw["sample_weight"] = sample_weight
+    m.fit(xtr, ytr, **kw)
     return m
 
 
@@ -141,6 +148,11 @@ def main() -> int:
     ap.add_argument("--weather", type=Path, default=ROOT / "data" / "processed" / "weather_hourly_london.csv")
     ap.add_argument("--test-year", type=int, default=2025)
     ap.add_argument("--quick", action="store_true", help="Skip the ladder and new-station check")
+    ap.add_argument("--fixed-trees", type=int, default=0,
+                    help="Skip early-stopping tune; use this many trees (fast A/B experiments)")
+    ap.add_argument("--seeds", type=int, default=4, help="Number of bag seeds (1 = faster experiment)")
+    ap.add_argument("--no-sample-weights", action="store_true",
+                    help="Disable embedding-informed sample weights")
     ap.add_argument("--out", type=Path, default=ROOT / "data" / "processed" / "models" / "travel_time_lfb.joblib")
     args = ap.parse_args()
     t0 = time.time()
@@ -173,12 +185,23 @@ def main() -> int:
             ladder[name] = metrics(s.yte, clip(fit_one(xtr, s.ytr).predict(xte)))
             print(f"  {name:<40} {xtr.shape[1]:>3} features  MAE {ladder[name]['mae_s']:.2f} s")
 
-    print("\nTuning (early stopping on 2024; 2025 untouched):")
-    tuned = {**TUNED_PARAMS, "n_estimators": tune_trees(inc, full_groups, TUNED_PARAMS)}
     xtr, xte = s.x(full_groups)
-    tuned_1 = metrics(s.yte, clip(fit_one(xtr, s.ytr, tuned).predict(xte)))
-    print(f"  tuned, 1 seed: MAE {tuned_1['mae_s']:.2f} s ({tuned['n_estimators']} trees, {tuned['num_leaves']} leaves)")
-    params = tuned
+    sw = None if args.no_sample_weights else sample_weights(s.tr, s.ytr)
+    if sw is not None:
+        print(f"\nSample weights on: mean={sw.mean():.2f}, "
+              f"dense-short boost share={(sw > 1.2).mean():.1%}, soft-outlier share={(sw < 0.5).mean():.1%}")
+
+    if args.fixed_trees > 0:
+        params = {**TUNED_PARAMS, "n_estimators": int(args.fixed_trees)}
+        print(f"\nFixed trees: {params['n_estimators']} (no early-stopping tune)")
+        tuned_1 = metrics(s.yte, clip(fit_one(xtr, s.ytr, params, sample_weight=sw).predict(xte)))
+        print(f"  1 seed: MAE {tuned_1['mae_s']:.2f} s")
+    else:
+        print("\nTuning (early stopping on 2024; 2025 untouched):")
+        tuned = {**TUNED_PARAMS, "n_estimators": tune_trees(inc, full_groups, TUNED_PARAMS)}
+        tuned_1 = metrics(s.yte, clip(fit_one(xtr, s.ytr, tuned, sample_weight=sw).predict(xte)))
+        print(f"  tuned, 1 seed: MAE {tuned_1['mae_s']:.2f} s ({tuned['n_estimators']} trees, {tuned['num_leaves']} leaves)")
+        params = tuned
 
     new_station = {}
     if not args.quick:
@@ -187,10 +210,24 @@ def main() -> int:
         print(f"  held-out stations, 2025: LightGBM {new_station['lightgbm']['mae_s']:.2f} s | "
               f"Kolesar {new_station['kolesar(road_km)']['mae_s']:.2f} s")
 
-    print("\nFinal model: 4-seed LightGBM bag…")
-    models = fit_bag(xtr, s.ytr, params=params)
-    pred = predict_bag(models, xte)
+    n_seeds = max(1, int(args.seeds))
+    seeds = tuple(range(42, 42 + n_seeds))
+    print(f"\nFinal model: {n_seeds}-seed LightGBM bag…")
+    models = fit_bag(xtr, s.ytr, seeds=seeds, params=params, sample_weight=sw)
+    pred_raw = predict_bag(models, xte)
+    pred_tr = predict_bag(models, xtr)
+    # Embedding-informed post-hoc calibration (dense_short / long_sparse / rush)
+    tr_reg, te_reg = s.tr.copy(), s.te.copy()
+    for frame in (tr_reg, te_reg):
+        h = pd.to_numeric(frame["hour_of_call"], errors="coerce").fillna(12)
+        frame["rush"] = (h.between(7, 9) | h.between(16, 19)).astype(int)
+    regime_bias = fit_regime_bias(tr_reg, s.ytr, pred_tr)
+    pred = apply_regime_bias(te_reg, pred_raw, regime_bias)
+    results["lightgbm(raw)"] = metrics(s.yte, pred_raw)
     results["lightgbm(final)"] = metrics(s.yte, pred)
+    print(f"  regime bias (train pred−y): { {k: round(v, 2) for k, v in regime_bias.items()} }")
+    print(f"  raw MAE {results['lightgbm(raw)']['mae_s']:.2f}s → calibrated "
+          f"{results['lightgbm(final)']['mae_s']:.2f}s")
     nb = (s.te["busy_flag"] == 0).to_numpy()
     results_nonbusy = {"kolesar(road_km)": metrics(s.yte[nb], clip(s.kol.predict(s.te["road_km"].to_numpy(float)))[nb]),
                        "lightgbm(final)": metrics(s.yte[nb], pred[nb])}
@@ -205,8 +242,8 @@ def main() -> int:
     print("top features (gain share):", imp.head(10).round(3).to_dict())
 
     payload = {
-        "kind": "lightgbm_v3",
-        "model": "gradient-boosted decision trees (LightGBM), mean of 4 seeds",
+        "kind": "lightgbm_v4_embedding",
+        "model": "gradient-boosted decision trees (LightGBM), mean of seeds + regime bias calibration",
         "models": models,
         "features": list(xtr.columns),
         "feature_groups": full_groups,
@@ -218,9 +255,11 @@ def main() -> int:
         "kolesar_baseline_params": s.kol.to_dict(),
         "kolesar_baseline_distance": "road_km",
         "lightgbm_params": params,
+        "regime_bias": regime_bias,
         "target": "drive_s = LFB TravelTimeSeconds (station departure -> arrival), 30-1200 s",
         "drive_clip_s": list(DRIVE_CLIP_S),
-        "seeds": [42, 43, 44, 45],
+        "seeds": list(seeds),
+        "sample_weights": not args.no_sample_weights,
         "train_years": list(TRAIN_YEARS),
         "test_year": args.test_year,
         "metrics_test": results,
@@ -234,7 +273,10 @@ def main() -> int:
             "driven route. Weather is city-centre hourly. busy_flag, pump_order, incident type and "
             "from_home are known historically; for new sites use typical values (pump_order=1, "
             "from_home=1, expected busy rate). Destination history uses training trips only "
-            "(out-of-fold for training rows). Use firestation.travel_time_model.predict(bundle, trips)."
+            "(out-of-fold for training rows). Interaction features (dense_short, long_sparse, "
+            "rush×signals) and sample weights follow the station-embedding analysis "
+            "(PC1 dense cores, PC3 outer long drives). "
+            "Use firestation.travel_time_model.predict(bundle, trips)."
         ),
     }
     import joblib

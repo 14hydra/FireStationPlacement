@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Synopsis poster (images + text slots)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Source+Sans+3:wght@400;600&display=swap');
+  :root {
+    --bg: #f4f7fa;
+    --panel: #ffffff;
+    --slot: #e8eef4;
+    --edge: #a8b2be;
+    --rule: #d2dae2;
+    --ink: #1a2330;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #c5ccd4; }
+  .board {
+    width: 17in;
+    height: 11in;
+    margin: 0.4in auto;
+    padding: 0.35in;
+    background:
+      radial-gradient(120% 80% at 80% 10%, #e8eef5 0%, transparent 55%),
+      linear-gradient(165deg, #f7f9fb 0%, var(--bg) 45%, #eef2f6 100%);
+    display: grid;
+    grid-template-rows: 0.9in 1fr 1fr 1fr;
+    gap: 0.18in;
+    box-shadow: 0 12px 40px rgba(20, 30, 40, 0.18);
+  }
+  .header {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 0.18in;
+  }
+  .row1 {
+    display: grid;
+    grid-template-columns: 0.9fr 1.35fr;
+    gap: 0.18in;
+    min-height: 0;
+  }
+  .stack {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 0.18in;
+    min-height: 0;
+  }
+  .pair {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 0.08in;
+    min-height: 0;
+  }
+  .map-block {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 0.08in;
+    min-height: 0;
+  }
+  .row2, .row3 {
+    display: grid;
+    gap: 0.18in;
+    min-height: 0;
+  }
+  .row2 { grid-template-columns: repeat(3, 1fr); }
+  .row3 { grid-template-columns: repeat(4, 1fr); }
+  .fig {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+  }
+  .fig img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .slot {
+    background: var(--slot);
+    border: 1.5px dashed var(--edge);
+    border-radius: 2px;
+    min-height: 0.55in;
+    position: relative;
+  }
+  .slot.hero { min-height: 100%; }
+  /* corner ticks — no text */
+  .slot::before, .slot::after {
+    content: "";
+    position: absolute;
+    width: 10px; height: 10px;
+    border-color: var(--edge);
+    border-style: solid;
+  }
+  .slot::before { top: 4px; left: 4px; border-width: 2px 0 0 2px; }
+  .slot::after { bottom: 4px; right: 4px; border-width: 0 2px 2px 0; }
+  @media print {
+    body { background: white; }
+    .board {
+      margin: 0; box-shadow: none;
+      width: 100%; height: 100vh;
+      page-break-inside: avoid;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="board">
+    <div class="header">
+      <div class="slot hero"></div>
+      <div class="slot hero"></div>
+    </div>
+    <div class="row1">
+      <div class="stack">
+        <div class="pair">
+          <div class="fig"><img src="../final/01_travel_time_accuracy.png" alt="01 travel time accuracy"></div>
+          <div class="slot "></div>
+        </div>
+        <div class="pair">
+          <div class="fig"><img src="../final/02_street_features.png" alt="02 street features"></div>
+          <div class="slot "></div>
+        </div>
+      </div>
+      <div class="map-block">
+        <div class="fig"><img src="../final/03_first_engine_map.png" alt="03 first engine map"></div>
+        <div class="slot "></div>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="pair">
+        <div class="fig"><img src="../final/04_station_busyness.png" alt="04 station busyness"></div>
+        <div class="slot "></div>
+      </div>
+      <div class="pair">
+        <div class="fig"><img src="../final/05_capacity_mismatches.png" alt="05 capacity mismatches"></div>
+        <div class="slot "></div>
+      </div>
+      <div class="pair">
+        <div class="fig"><img src="../final/06_station_types.png" alt="06 station types"></div>
+        <div class="slot "></div>
+      </div>
+    </div>
+    <div class="row3">
+      <div class="pair">
+        <div class="fig"><img src="../final/07_layouts_beat_today.png" alt="07 layouts"></div>
+        <div class="slot "></div>
+      </div>
+      <div class="pair">
+        <div class="fig"><img src="../final/08_price_of_fairness.png" alt="08 price of fairness"></div>
+        <div class="slot "></div>
+      </div>
+      <div class="pair">
+        <div class="fig"><img src="../final/09_closure_2014.png" alt="09 closure 2014"></div>
+        <div class="slot "></div>
+      </div>
+      <div class="pair">
+        <div class="fig"><img src="../final/10_results_summary.png" alt="10 results summary"></div>
+        <div class="slot "></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

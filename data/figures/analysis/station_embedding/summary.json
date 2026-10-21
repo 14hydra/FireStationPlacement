@@ -122,24 +122,23 @@
   "trip_and_model_metrics": "2025 trips from data/processed/lfb_travel_training.csv grouped by deployed_from_station; LightGBM error is held out (model trained 2021-24); cached in station_trip_metrics_2025.csv",
   "n_closing_layouts_for_keep_rate": 7,
   "layout_matrix": {
-    "n_layouts": 15,
-    "n_features_used": 39,
+    "n_layouts": 19,
+    "n_features_used": 50,
     "dropped_columns": [
       "d_mean_s_all_day (duplicate)",
-      "d_mean_s_evening_rush_16_20 (duplicate)",
       "d_mean_s_night_00_07 (duplicate)",
       "d_mean_s_rush_hours_07_10_16_20 (duplicate)",
       "d_slowest10_s_all_day (duplicate)",
       "d_slowest10_s_rush_hours_07_10_16_20 (duplicate)"
     ],
     "pca_variance_explained": [
-      0.8385,
-      0.0856,
-      0.0462,
-      0.0109,
-      0.0083
+      0.7857,
+      0.1005,
+      0.05,
+      0.0328,
+      0.0126
     ],
-    "pc1_top": "+d_mean_s_serious, +d_mean_s_day_10_16, +mean_s_lgbm/dispatch, \u2212within_6min_road/busy_blend, \u2212within_6min_lgbm/dispatch"
+    "pc1_top": "+d_mean_s_serious, +d_mean_s_evening_rush_16_20, \u2212within_6min_road/busy_blend, +d_mean_s_day_10_16, +d_mean_s_evening_20_24"
   },
   "not_joined": {
     "validation/closure_2014*": "the 10 stations closed in 2014 are not current stations",

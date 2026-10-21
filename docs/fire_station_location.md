@@ -455,27 +455,25 @@ call; expected attendance = probability-weighted average.
 
 | | Drive error per cell, 2025 | 2014: correlation across 10 areas | 2014: error per area |
 |---|---|---|---|
-| Nearest station | 47.8 s | 0.42 | 17.2 s |
-| Nearest, or next nearest when busy | 25.4 s | 0.31 | 16.3 s |
-| **Dispatch model, all day** | **23.4 s** | **0.56** | **13.1 s** |
-| Dispatch model, by time of day | 23.5 s | 0.52 | 14.4 s |
+| Nearest station | 72.2 s | 0.48 | 16.2 s |
+| Nearest, or next nearest when busy | 46.2 s | 0.36 | 15.6 s |
+| **Dispatch model, by time of day** | **45.0 s** | **0.57** | **13.2 s** |
 
-- Today (trained 2021–24, tested 2025): shares by rank 72 / 18 / 6 / 2.5 % predicted vs
-  70 / 18 / 6 / 3 % recorded (the busy blend can only give ranks 1–2).
-- 2014 closures (trained 2009–2013 only): up from 0.42 to 0.56, still short of the 0.88
-  with the real responder. Largest misses: Knightsbridge (+104 s predicted, +59 recorded)
-  and Silvertown (+86 vs +117); likely LFB's own repositioning after the closures and
+- Today (trained 2021–24, tested 2025): rank shares 70 / 20 / 6 / 2 % predicted vs
+  70 / 18 / 6 / 3 % recorded (the busy blend can only give ranks 1–2); top-1 accuracy 70.3 %
+  vs 69.5 % for always-nearest.
+- 2014 closures (trained 2009–2013 only): up from 0.48 (nearest) to 0.57, still short of the
+  0.88 with the real responder. Largest misses: Knightsbridge (+107 s predicted, +59 recorded)
+  and Silvertown (+90 vs +117); likely LFB's own repositioning after the closures and
   only a few hundred calls per area.
 
 **Time of day.** The nearest station sent the first engine on 78–80 % of calls at night
 but only 61 % in the early afternoon (12–16 h), not at the evening call peak (16–20 h:
-69 %); crews' daytime training and fire-safety visits seem to matter more than call
+68 %); crews' daytime training and fire-safety visits seem to matter more than call
 volume. The time-of-day model (six 4-hour slots, each with its own busy level, calibrated
-to the records: load factors 0.74, 0.67, 1.10, 1.49, 1.08, 0.93) reproduces this: error in
-the nearest-station share across slots 1.8 points against 5.6 for the all-day model, which
-predicts 71–72 % at every hour. It does not improve the all-day tests above (they average
-the hours away), so use the **time-of-day model for rush-hour / night analyses** and the
-all-day model for all-day placement scores.
+to the records) reproduces this: mean absolute error in the nearest-station share across
+slots **0.7 points** against 5.7 for the all-day model. Use the **time-of-day model for
+rush-hour / night analyses** and the all-day model for all-day placement scores.
 
 Model (both versions): `data/processed/models/dispatch_lfb.joblib`; results
 `data/figures/validation/dispatch/` (`rank_shares.csv`, `by_time_of_day.csv`, `closure_areas.csv`).

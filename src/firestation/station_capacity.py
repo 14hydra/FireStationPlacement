@@ -214,6 +214,23 @@ def station_incident_load(
     return out
 
 
+def load_station_utilisation(path: Path | None = None) -> pd.Series | None:
+    """Per-station utilisation % from the busyness figure pack (embedding PC1 signal)."""
+    root = Path(__file__).resolve().parents[2]
+    path = Path(path) if path is not None else (
+        root / "data" / "figures" / "data_exploration" / "station_busyness" / "station_busyness.csv"
+    )
+    if not path.exists():
+        return None
+    t = pd.read_csv(path)
+    name_col = "station" if "station" in t.columns else t.columns[0]
+    if "utilisation_pct" not in t.columns:
+        return None
+    s = t.set_index(name_col)["utilisation_pct"].astype(float)
+    s.index = s.index.astype(str)
+    return s
+
+
 def plan_resize_capacity(
     A: np.ndarray,
     weights: np.ndarray,
@@ -226,6 +243,8 @@ def plan_resize_capacity(
     max_pumps: int = 3,
     threshold_s: float = 600.0,
     max_moves: int = 80,
+    util_pct: np.ndarray | None = None,
+    util_weight: float = 0.35,
 ) -> dict[str, Any]:
     """Reallocate a fixed pump budget across fixed station sites.
 
@@ -233,6 +252,11 @@ def plan_resize_capacity(
     then greedily moves one pump at a time from a lighter / over-sized station
     to a heavier / under-sized one under a capacity-aware busy blend.
     Locations do not change — only ``n_pumps``.
+
+    ``util_pct`` (optional, length = n candidates / full pump table) blends
+    observed utilisation into move ranking so high-util 1-pump stations
+    (embedding mismatch / PC1 strain) are preferred receivers and low-util
+    2-pump stations preferred donors — matching the station-embedding analysis.
     """
     from .busy_engines import expected_first_arrival
     from .facility import posture_metrics
@@ -286,6 +310,20 @@ def plan_resize_capacity(
 
     # Demand each station is nearest for — used to prioritise move candidates
     nearest_load = np.bincount(i1, weights=w, minlength=n)
+    # Blend utilisation (embedding PC1 / mismatch signal) with catchment load
+    pressure = nearest_load.astype(float).copy()
+    uw = float(np.clip(util_weight, 0.0, 1.0))
+    if util_pct is not None and uw > 0:
+        u = np.asarray(util_pct, dtype=float)
+        if len(u) == len(base_c):
+            u = u[idx]
+        elif len(u) != n:
+            u = None
+        if u is not None and np.isfinite(u).any():
+            u = np.nan_to_num(u, nan=float(np.nanmedian(u)))
+            load_n = nearest_load / max(float(nearest_load.mean()), 1e-9)
+            util_n = u / max(float(u.mean()), 1e-9)
+            pressure = (1.0 - uw) * load_n + uw * util_n
 
     current, resp = score(pumps)
     moves = 0
@@ -294,9 +332,9 @@ def plan_resize_capacity(
         receivers = [j for j in range(n) if pumps[j] < max_p]
         if not donors or not receivers:
             break
-        # Rank: prefer donating from low-load oversized, receiving at high-load undersized
-        donor_score = nearest_load / pumps.clip(min=1)
-        recv_score = nearest_load / pumps.clip(min=1)
+        # Rank: prefer donating from low-pressure oversized, receiving at high-pressure undersized
+        donor_score = pressure / pumps.clip(min=1)
+        recv_score = pressure / pumps.clip(min=1)
         donors = sorted(donors, key=lambda i: donor_score[i])[: min(20, len(donors))]
         receivers = sorted(receivers, key=lambda j: -recv_score[j])[: min(20, len(receivers))]
         best_gain = 0.0

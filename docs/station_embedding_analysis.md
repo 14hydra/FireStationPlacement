@@ -13,6 +13,8 @@ Figures: `data/figures/analysis/station_embedding/`.
 | `03_feature_loadings.png` | What PC1/PC2 actually load on; share by data source |
 | `04_layout_pca.png` | Separate PCA of *named placement layouts* (not stations) |
 | `05_archetypes.png` | Named groups + capacity-mismatch callouts |
+| **`06_isef_story.png`** | **ISEF one-pager — start here** |
+| `ISEF_GUIDE.md` | Plain-language guide for judges |
 
 ## What the 2D view is
 
@@ -63,3 +65,5 @@ Named placement layouts (recommended / exact / scored) form a second PCA (`04_la
 ```
 
 Figures and CSVs: `data/figures/analysis/station_embedding/`.
+
+**ISEF judges:** start with `06_isef_story.png` and `ISEF_GUIDE.md`.

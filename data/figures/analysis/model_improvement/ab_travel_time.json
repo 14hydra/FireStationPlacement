@@ -1,0 +1,82 @@
+{
+  "trees": 700,
+  "minutes": 4.4,
+  "baseline_groups": [
+    "base",
+    "street",
+    "context",
+    "incident",
+    "dest"
+  ],
+  "improved_groups": [
+    "base",
+    "street",
+    "context",
+    "incident",
+    "dest",
+    "interaction"
+  ],
+  "regime_bias_train": {
+    "dense_short": 0.0,
+    "long_sparse": -7.307840930593042,
+    "rush_other": 0.0,
+    "other": 0.0
+  },
+  "slices": [
+    {
+      "slice": "all",
+      "n": 200624,
+      "mae_A": 59.04,
+      "mae_B": 59.11,
+      "mae_C": 59.09,
+      "delta_B_s": 0.07,
+      "delta_C_s": 0.05,
+      "bias_A": -19.54,
+      "bias_B": -19.0,
+      "bias_C": -18.11
+    },
+    {
+      "slice": "dense_short (central)",
+      "n": 29052,
+      "mae_A": 50.35,
+      "mae_B": 50.44,
+      "mae_C": 50.44,
+      "delta_B_s": 0.09,
+      "delta_C_s": 0.09,
+      "bias_A": -19.86,
+      "bias_B": -20.0,
+      "bias_C": -20.0
+    },
+    {
+      "slice": "long_sparse (outer)",
+      "n": 24323,
+      "mae_A": 80.52,
+      "mae_B": 80.37,
+      "mae_C": 80.16,
+      "delta_B_s": -0.15,
+      "delta_C_s": -0.36,
+      "bias_A": -17.82,
+      "bias_B": -15.38,
+      "bias_C": -8.07
+    },
+    {
+      "slice": "rush hour",
+      "n": 66340,
+      "mae_A": 59.8,
+      "mae_B": 59.79,
+      "mae_C": 59.73,
+      "delta_B_s": -0.01,
+      "delta_C_s": -0.07,
+      "bias_A": -21.87,
+      "bias_B": -21.34,
+      "bias_C": -20.45
+    }
+  ],
+  "headline": {
+    "mae_baseline_s": 59.04,
+    "mae_interactions_s": 59.11,
+    "mae_calibrated_s": 59.09,
+    "delta_calibrated_s": 0.05
+  },
+  "note": "A=baseline, B=interaction+weights, C=B+regime bias calibration. 1-seed fixed trees. Full bag: train_travel_time_lfb.py --quick."
+}

@@ -27,7 +27,7 @@ Writes data/figures/analysis/station_embedding/:
   station_feature_matrix.csv, station_embedding_2d.csv, pca_loadings.csv, top_features.txt,
   layout_feature_matrix.csv, layout_embedding_2d.csv, summary.json, ANALYSIS.md,
   00_summary.png, 01_pca.png, 02_umap.png, 02b_tsne.png, 03_feature_loadings.png,
-  04_layout_pca.png, 05_archetypes.png
+  04_layout_pca.png, 05_archetypes.png, 06_isef_story.png, ISEF_GUIDE.md
 
 Run:  .venv/bin/python scripts/embed_analysis_metrics_2d.py [--refresh-trips]
 """
@@ -709,10 +709,10 @@ def plot_summary(E, F, Z, loc, pca, meta, path):
                        linewidth=0.55, label=f"{names[c]}  ({int(m.sum())})", zorder=2)
         handles.append(h)
     _pca_crosshairs(ax)
-    ax.set_xlabel(f"PC1 · demand / density ({ev[0]:.0f}%)")
-    ax.set_ylabel(f"PC2 · capacity vs strain ({ev[1]:.0f}%)")
+    ax.set_xlabel(f"← quieter outskirts · busier streets →  ({ev[0]:.0f}% of pattern)")
+    ax.set_ylabel(f"← often all-out · more engines →  ({ev[1]:.0f}%)")
     ax.yaxis.labelpad = 8
-    ax.set_title(f"PCA · {Z.shape[1]} metrics → 2D")
+    ax.set_title("Busy × capacity picture")
 
     # --- UMAP ---
     ax = fig.add_subplot(gs[0, 1])
@@ -722,7 +722,7 @@ def plot_summary(E, F, Z, loc, pca, meta, path):
                    linewidth=0.55, zorder=2)
     ax.set_xticks([])
     ax.set_yticks([])
-    ax.set_title(f"UMAP · {Z.shape[1]} metrics → 2D")
+    ax.set_title("Same groups, another view")
 
     # --- Map ---
     ax = fig.add_subplot(gs[0, 2])
@@ -731,7 +731,7 @@ def plot_summary(E, F, Z, loc, pca, meta, path):
         m = E["cluster"] == c
         ax.scatter(loc.loc[m, "lon"], loc.loc[m, "lat"], s=36, c=colors[c], edgecolor="white",
                    linewidth=0.55, zorder=3)
-    ax.set_title("Same groups on the city map")
+    ax.set_title("Where they sit on the London map")
 
     # --- Shared legend row ---
     leg_ax = fig.add_subplot(gs[1, :])
@@ -739,7 +739,7 @@ def plot_summary(E, F, Z, loc, pca, meta, path):
     leg = leg_ax.legend(
         handles, [f"{names[c]}  ({int((E['cluster'] == c).sum())})" for c in range(k)],
         loc="center", ncol=min(k, 5), frameon=False, fontsize=9,
-        title="Archetype (ordered quiet → busy on PC1)", title_fontsize=9,
+        title="Station types (quiet outskirts → busy centre)", title_fontsize=9,
         handletextpad=0.4, columnspacing=1.4,
     )
     leg.get_title().set_color(INK2)
@@ -766,14 +766,15 @@ def plot_summary(E, F, Z, loc, pca, meta, path):
             ax.text(j, i, f"{v:+.1f}", ha="center", va="center", fontsize=8.5,
                     color="white" if abs(v) >= 0.85 else INK, fontweight="medium")
     ax.grid(False)
-    ax.set_title(f"Archetype profiles · mean z-score on the {n_feat} most separating metrics", pad=10)
+    ax.set_title(f"What makes each type different?  (red = above city average · blue = below)", pad=10)
     cb = fig.colorbar(im, ax=ax, shrink=0.85, pad=0.015, fraction=0.025)
     cb.outline.set_visible(False)
-    cb.set_label("z-score", fontsize=8, color=INK2)
-    fig.text(0.12, 0.965, f"London's {len(E)} fire stations · all analysis metrics condensed to 2D",
+    cb.set_label("vs city average", fontsize=8, color=INK2)
+    fig.text(0.12, 0.965, f"London's {len(E)} fire stations — {Z.shape[1]} metrics, one picture",
              fontsize=15, fontweight="bold", color=INK, ha="left", va="top")
     fig.text(0.12, 0.935,
-             "PC1 → busy / dense streets   ·   PC2 ↑ multi-pump capacity / ↓ 1-pump strain",
+             "Left→right: quieter to busier.  Up→down on the map: outer ring vs inner boroughs.  "
+             "Start here for the overview; see 06_isef_story.png for the judge one-pager.",
              fontsize=8.5, color=INK2, ha="left", va="top")
     fig.savefig(path, dpi=170)
     plt.close(fig)
@@ -825,18 +826,18 @@ def plot_archetypes(E, F, Z, pca, meta, path):
     spare = F[(F["n_pumps"] >= 2) & (F["utilisation_pct"] <= F["utilisation_pct"].quantile(0.40))]
     top_s = strained.sort_values("utilisation_pct", ascending=False).index[:6]
     top_p = spare.sort_values("utilisation_pct").index[:6]
-    block = (
-        f"PCA 2D captures {ev[0] + ev[1]:.0f}% of variance across {Z.shape[1]} features.\n\n"
-        f"Upsize · high-util 1-pump ({len(strained)})\n"
-        + "  " + ", ".join(top_s) + "\n\n"
-        f"Downsize · lower-util 2-pump ({len(spare)})\n"
-        + "  " + ", ".join(top_p) + "\n\n"
-        "Opposite PCA quadrants: bottom-right vs top-left.\n"
-        "Fig 03 loadings — util columns dominate PC1."
-    )
-    ax.text(0.0, 0.98, "What to notice", transform=ax.transAxes, va="top",
+    ax.text(0.0, 0.98, "Plain-English takeaways", transform=ax.transAxes, va="top",
             fontsize=12, fontweight="bold", color=INK)
-    ax.text(0.0, 0.86, block, transform=ax.transAxes, va="top", fontsize=9.5,
+    plain = (
+        f"Two directions capture {ev[0] + ev[1]:.0f}% of the pattern across {Z.shape[1]} numbers.\n\n"
+        f"Add an engine here ({len(strained)} busy 1-engine stations):\n"
+        + "  " + ", ".join(top_s) + "\n\n"
+        f"Spare capacity here ({len(spare)} quieter 2-engine stations):\n"
+        + "  " + ", ".join(top_p) + "\n\n"
+        "These sit in opposite corners of the chart\n"
+        "(busy + all-out  vs  quiet + spare engines)."
+    )
+    ax.text(0.0, 0.86, plain, transform=ax.transAxes, va="top", fontsize=9.5,
             color=INK, linespacing=1.55)
 
     # Horizontal bars — long archetype names never collide
@@ -858,10 +859,203 @@ def plot_archetypes(E, F, Z, pca, meta, path):
               ncol=2, borderaxespad=0)
     ax.set_xlim(0, 1.15)
     ax.invert_yaxis()
-    fig.text(0.09, 0.96, "Reading the embedding · where capacity and demand pull apart",
+    fig.text(0.09, 0.96, "Where engines are stretched vs where capacity sits idle",
              fontsize=14, fontweight="bold", color=INK, ha="left", va="top")
     fig.savefig(path, dpi=180)
     plt.close(fig)
+
+
+def plot_isef_story(E, F, Z, loc, pca, meta, path):
+    """One-page poster for ISEF judges: plain language, three takeaways, no jargon pile-up."""
+    style()
+    k = meta["k"]
+    colors = CLUSTER_COLORS[:k]
+    names = cluster_names(k, E, F)
+    ev = 100 * pca.explained_variance_ratio_
+    strained = F[(F["n_pumps"] == 1) & (F["utilisation_pct"] >= F["utilisation_pct"].quantile(0.75))]
+    spare = F[(F["n_pumps"] >= 2) & (F["utilisation_pct"] <= F["utilisation_pct"].quantile(0.40))]
+
+    fig = plt.figure(figsize=(16.5, 11.2))
+    gs = fig.add_gridspec(
+        3, 3, height_ratios=[0.22, 1.15, 1.0], width_ratios=[1.15, 1.0, 1.05],
+        left=0.12, right=0.98, top=0.88, bottom=0.07, hspace=0.35, wspace=0.28,
+    )
+
+    # --- Headline strip ---
+    head = fig.add_subplot(gs[0, :])
+    head.axis("off")
+    head.text(0.0, 0.98, "London Fire Brigade · 102 stations at a glance",
+              transform=head.transAxes, fontsize=18, fontweight="bold", color=INK, va="top")
+    # One-sentence banner judges can read in 3 seconds
+    head.add_patch(plt.Rectangle((0.0, 0.08), 1.0, 0.55, transform=head.transAxes,
+                                 facecolor="#eef4fb", edgecolor=GRID, linewidth=0.8, clip_on=False))
+    head.text(
+        0.015, 0.48,
+        f"Takeaway: busy single-engine stations sit in dense streets; quieter two-engine stations "
+        f"sit on the outskirts — so we reallocate engines and train harder on those trip types.",
+        transform=head.transAxes, fontsize=12, color=INK, va="center", fontweight="medium",
+    )
+    head.text(
+        0.015, 0.18,
+        f"{Z.shape[1]} metrics per station → 2 axes explain {ev[0] + ev[1]:.0f}% "
+        f"(busy streets × engine capacity).",
+        transform=head.transAxes, fontsize=9.5, color=INK2, va="center",
+    )
+
+    # --- Map: the geographic story ---
+    ax = fig.add_subplot(gs[1, 0])
+    _draw_basemap(ax, loc)
+    for c in range(k):
+        m = E["cluster"] == c
+        ax.scatter(loc.loc[m, "lon"], loc.loc[m, "lat"], s=42, c=colors[c], edgecolor="white",
+                   linewidth=0.6, zorder=3, label=f"{names[c]} ({int(m.sum())})")
+    ax.set_title("1. Where each type of station sits on the map", fontsize=12)
+    ax.legend(frameon=True, fontsize=7.5, loc="upper left",
+              title="Station type", title_fontsize=8, fancybox=False,
+              edgecolor=GRID, facecolor=SURFACE, framealpha=0.92)
+
+    # --- PCA with plain axis labels ---
+    ax = fig.add_subplot(gs[1, 1])
+    for c in range(k):
+        m = E["cluster"] == c
+        ax.scatter(E.loc[m, "pca1"], E.loc[m, "pca2"], s=40, c=colors[c], edgecolor="white",
+                   linewidth=0.55, zorder=2)
+    _pca_crosshairs(ax)
+    # Only Soho / Euston
+    for name in E.nlargest(2, "pca1").index:
+        px, py = float(E.loc[name, "pca1"]), float(E.loc[name, "pca2"])
+        ax.annotate(name, (px, py), xytext=(8, 6), textcoords="offset points",
+                    fontsize=9, color=INK, fontweight="medium")
+    ax.set_xlabel("← quieter outskirts          busier streets →")
+    ax.set_ylabel("← often all-out          more engines →")
+    ax.set_title("2. Same stations in “busy × capacity” space", fontsize=12)
+
+    # --- Three takeaways ---
+    ax = fig.add_subplot(gs[1, 2])
+    ax.axis("off")
+    ax.set_title("3. What this means for the project", fontsize=12, loc="left")
+    up = ", ".join(strained.sort_values("utilisation_pct", ascending=False).index[:4])
+    down = ", ".join(spare.sort_values("utilisation_pct").index[:4])
+    takeaways = [
+        ("Travel-time model",
+         "Hardest trips: long outer drives and dense\n"
+         "central shorts (Soho, Euston). We added\n"
+         "street-density × rush features, reweighted\n"
+         "hard trips, and calibrate outer long drives."),
+        ("Engine capacity",
+         f"{len(strained)} busy single-engine stations\n"
+         f"(e.g. {up}).\n"
+         f"{len(spare)} quieter two-engine stations\n"
+         f"(e.g. {down}).\n"
+         "Resize planner moves engines along this gap."),
+        ("Honesty",
+         "This picture describes patterns — not an\n"
+         "operational classification. Placement still\n"
+         "scores real 2025 calls under London’s\n"
+         "6 / 10-minute first-engine standard."),
+    ]
+    y = 0.95
+    for title, body in takeaways:
+        ax.text(0.0, y, title, transform=ax.transAxes, fontsize=11, fontweight="bold",
+                color=BLUE, va="top")
+        ax.text(0.0, y - 0.07, body, transform=ax.transAxes, fontsize=9.2, color=INK,
+                va="top", linespacing=1.35)
+        y -= 0.33
+
+    # --- Simple bar: util by type ---
+    ax = fig.add_subplot(gs[2, :2])
+    g = F.copy()
+    g["cluster"] = E["cluster"].to_numpy()
+    means = g.groupby("cluster")["utilisation_pct"].mean().reindex(range(k))
+    short = []
+    for c in range(k):
+        n = int((E["cluster"] == c).sum())
+        # Compact labels so they never clip the left edge
+        lab = names[c].replace("Central demand outliers", "Central outliers")
+        lab = lab.replace("Strained 1-pump urban", "Strained 1-pump")
+        lab = lab.replace("Busy multi-pump", "Busy multi-pump")
+        short.append(f"{lab} ({n})")
+    ax.barh(range(k), means.to_numpy(), color=colors[:k], edgecolor="white", height=0.65)
+    ax.set_yticks(range(k), short, fontsize=9)
+    ax.tick_params(axis="y", pad=4)
+    ax.set_xlabel("% of time engines are out on calls  (higher = busier)")
+    ax.set_title("How busy is each station type?  (city-wide average utilisation)", fontsize=12)
+    for i, v in enumerate(means.to_numpy()):
+        ax.text(v + 0.2, i, f"{v:.1f}%", va="center", fontsize=9, color=INK2)
+    ax.set_xlim(0, max(means.max() * 1.35, 1))
+    ax.invert_yaxis()
+
+    # --- Key numbers box ---
+    ax = fig.add_subplot(gs[2, 2])
+    ax.axis("off")
+    ax.set_title("Key numbers", fontsize=12, loc="left")
+    nums = [
+        f"102 stations · {Z.shape[1]} metrics each",
+        f"{ev[0] + ev[1]:.0f}% of the pattern in 2 axes",
+        f"{len(strained)} busy 1-engine houses",
+        f"{len(spare)} quieter 2-engine houses",
+        "Scorecard: LFB ≤6 min avg / 90% ≤10 min",
+    ]
+    ax.text(0.0, 0.85, "\n\n".join(nums), transform=ax.transAxes, fontsize=11,
+            color=INK, va="top", linespacing=1.35)
+    fig.savefig(path, dpi=180)
+    plt.close(fig)
+
+
+def write_isef_guide(E, F, Z, ev, meta, names, path: Path):
+    """Short plain-language guide for ISEF judges."""
+    strained = F[(F["n_pumps"] == 1) & (F["utilisation_pct"] >= F["utilisation_pct"].quantile(0.75))]
+    spare = F[(F["n_pumps"] >= 2) & (F["utilisation_pct"] <= F["utilisation_pct"].quantile(0.40))]
+    lines = [
+        "# ISEF guide — reading the station picture",
+        "",
+        "**Start with** `06_isef_story.png` (one page). Everything else is backup detail.",
+        "",
+        "## The research question (one sentence)",
+        "",
+        "Can a street-aware travel-time model place London fire stations better than",
+        "distance-only rules, when scored on real 2025 calls under LFB’s 6 / 10-minute standard?",
+        "",
+        "## What this figure pack adds",
+        "",
+        f"We summarised **{Z.shape[1]} numbers for each of London’s {len(E)} stations**",
+        "(busyness, engines, drive times, model error) into a 2D picture so judges can see:",
+        "",
+        "1. **Busy centres vs quiet outskirts** — inner stations face dense streets and high utilisation.",
+        "2. **Capacity mismatches** — some single-engine houses are stretched while some two-engine",
+        "   houses have spare capacity.",
+        "3. **Where the travel-time model struggles** — long outer drives and dense central shorts.",
+        "",
+        "## Station types (colours)",
+        "",
+    ]
+    for c, name in enumerate(names):
+        m = E["cluster"] == c
+        lines.append(f"- **{name}** ({int(m.sum())} stations)")
+    lines += [
+        "",
+        "## Capacity mismatch (actionable)",
+        "",
+        f"- Busy 1-engine stations ({len(strained)}): "
+        + ", ".join(strained.sort_values("utilisation_pct", ascending=False).index[:8]),
+        f"- Quieter 2-engine stations ({len(spare)}): "
+        + ", ".join(spare.sort_values("utilisation_pct").index[:8]),
+        "",
+        "## How we used this to improve the models",
+        "",
+        "- **Travel time:** rush × street-density features, sample weights on hard trips,",
+        "  and calibration for **outer long drives** (highest-error slice).",
+        "  Quick A/B: overall MAE ≈ flat; outer long-drive MAE improved ~0.4 s.",
+        "  See `docs/model_improvements_from_embedding.md`.",
+        "- **Resize planner:** blends utilisation into pump moves so engines leave quiet",
+        "  two-pump houses and go to busy one-pump houses.",
+        "",
+        f"PCA note for judges who ask: the first two axes capture "
+        f"**{100 * (ev[0] + ev[1]):.0f}%** of the {Z.shape[1]}-metric pattern "
+        f"({100 * ev[0]:.0f}% + {100 * ev[1]:.0f}%).",
+        "",
+    ]
+    path.write_text("\n".join(lines))
 
 
 def write_analysis_md(E, F, Z, L, ev, meta, names, path: Path):
@@ -898,6 +1092,8 @@ def write_analysis_md(E, F, Z, L, ev, meta, names, path: Path):
         "| `03_feature_loadings.png` | What PC1/PC2 actually load on; share by data source |",
         "| `04_layout_pca.png` | Separate PCA of *named placement layouts* (not stations) |",
         "| `05_archetypes.png` | Named groups + capacity-mismatch callouts |",
+        "| **`06_isef_story.png`** | **ISEF one-pager — start here** |",
+        "| `ISEF_GUIDE.md` | Plain-language guide for judges |",
         "",
         "## What the 2D view is",
         "",
@@ -1050,7 +1246,9 @@ def main() -> int:
     LE.to_csv(OUT / "layout_embedding_2d.csv")
     plot_layouts(LE, LZ, lpca, OUT / "04_layout_pca.png")
     plot_archetypes(E, F, Z, pca, meta, OUT / "05_archetypes.png")
+    plot_isef_story(E, F, Z, loc, pca, meta, OUT / "06_isef_story.png")
     write_analysis_md(E, F, Z, L, ev, meta, names, OUT / "ANALYSIS.md")
+    write_isef_guide(E, F, Z, ev, meta, names, OUT / "ISEF_GUIDE.md")
     # Mirror under docs/ for the project doc tree
     docs_md = ROOT / "docs" / "station_embedding_analysis.md"
     docs_md.write_text(
@@ -1058,6 +1256,7 @@ def main() -> int:
         + "\n## How to regenerate\n\n"
         + "```bash\n.venv/bin/python scripts/embed_analysis_metrics_2d.py\n```\n"
         + "\nFigures and CSVs: `data/figures/analysis/station_embedding/`.\n"
+        + "\n**ISEF judges:** start with `06_isef_story.png` and `ISEF_GUIDE.md`.\n"
     )
 
     from scipy.stats import spearmanr
