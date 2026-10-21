@@ -1,0 +1,20 @@
+parameter,value,unit,lo,hi,speed_kph
+start_up,69.733,s,69.38,70.142,
+pace_off_graph,38.534,s/km,34.977,41.557,
+pace_major,50.07,s/km,49.75,50.431,71.9
+pace_primary,52.428,s/km,52.152,52.726,68.666
+pace_secondary,58.191,s/km,57.686,58.457,61.865
+pace_tertiary,63.145,s/km,62.96,63.517,57.012
+pace_residential,71.196,s/km,71.087,71.773,50.565
+pace_minor,88.42,s/km,87.292,89.468,40.715
+d_20mph,8.71,s/km,8.55,8.851,
+d_bus_lane,-2.348,s/km,-2.558,-1.703,
+d_oneway,2.072,s/km,1.778,2.328,
+d_multilane,-3.171,s/km,-3.427,-3.012,
+d_bridge_tunnel,1.22,s/km,0.81,1.929,
+per_junction,0.575,s each,0.557,0.596,
+per_signal,0.559,s each,0.545,0.574,
+per_calming,1.029,s each,1.009,1.071,
+per_crossing,0.62,s each,0.562,0.637,
+per_give_way,-0.484,s each,-0.589,-0.439,
+per_roundabout,0.031,s each,-0.031,0.09,

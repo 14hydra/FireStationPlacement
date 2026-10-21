@@ -20,6 +20,7 @@ data/figures/
 | `data_exploration/station_capacity/` | Pumps per station vs demand | `scripts/analyze_station_capacity.py` |
 | `data_exploration/london_incident_density.html` | Incident density map | `scripts/plot_incident_density.py` |
 | `travel_time/maps/` | Predicted first-engine time across London | `scripts/plot_travel_time_maps.py` |
+| `travel_time/street_speeds/` | Learned fire engine speed per street (map, coefficients), comparison with LightGBM | `scripts/train_street_speeds.py` |
 | `travel_time/outliers/` | Where the travel time model is most wrong | `scripts/train_travel_time_lfb.py` (outlier pass) |
 | `placement/recommended/` | Recommended layouts (add / move / redesign; borough floors; station-count sweep) | `scripts/recommended_placement.py` |
 | `placement/layout_scoring/` | Every layout scored under three travel time models, bootstrap intervals | `scripts/score_layouts.py` |

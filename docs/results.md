@@ -67,6 +67,70 @@ Source: `data/figures/validation/closure_2014/summary.json`.
 | Kolesar, road distance | 73.4 | 45.8 | −30.4 |
 | Kolesar, straight line | 74.8 | 48.3 | −30.1 |
 
+### 1.4 Learned street speeds and the correction model
+
+Source: `data/figures/travel_time/street_speeds/` (`scripts/train_street_speeds.py`).
+A pace for every street segment from its characteristics, fitted so summed route times
+match 2021–2024 trips, with routes re-chosen under the learned speeds each round (3
+rounds). LightGBM then predicts only the correction (recorded drive minus street-speed
+time). All LightGBM fits: same settings, one seed.
+
+| Model (2025 trips) | MAE (s) | Median error (s) | Bias (s) |
+|---|---|---|---|
+| Kolesar, road distance | 68.7 | 45.8 | −16.1 |
+| Fastest route at posted speed limits, calibrated to drive time (77.6 s + 0.78 × route time) | 68.6 | 45.2 | −18.5 |
+| Street speeds alone | 65.9 | 42.5 | −17.8 |
+| Street speeds + correction (time, season, turns, busy engines, call density only) | 62.9 | 40.4 | −18.7 |
+| LightGBM alone | 57.8 | 35.5 | −17.7 |
+| **Street speeds + correction (all features)** | **57.8** | **35.3** | −17.7 |
+
+By trip length (MAE, s):
+
+| Road km | Trips | Kolesar | Street speeds | LightGBM | Combined |
+|---|---|---|---|---|---|
+| < 1 | 17,336 | 50.4 | 49.4 | 44.8 | 44.8 |
+| 1–2 | 51,525 | 55.1 | 53.8 | 47.7 | 47.6 |
+| 2–3 | 54,690 | 63.0 | 60.7 | 53.5 | 53.4 |
+| 3–4 | 36,913 | 73.9 | 70.5 | 60.8 | 60.7 |
+| 4–6 | 30,900 | 88.2 | 83.1 | 72.5 | 72.3 |
+| 6+ | 9,260 | 125.8 | 119.3 | 103.3 | 104.5 |
+
+Learned-speed routes beat the fastest route at posted speed limits (calibrated the same robust way on 2021–2024) by 2.7 s overall and by 9.7 s on trips over 6 km (119.3 against 129.0 s). The combined model is as accurate as LightGBM alone; on the longest trips it is about 1 s
+less accurate but slightly less biased (−8.9 vs −10.8 s), so on 2025 trips the street-speed
+base does not yet show the hoped-for advantage on long trips.
+
+Learned street effects (95 % bootstrap intervals, resampling trips):
+
+| Road type | Pace (s/km) | Speed |
+|---|---|---|
+| Motorway / trunk | 50.1 [49.8, 50.4] | 72 km/h |
+| A road | 52.4 [52.2, 52.7] | 69 km/h |
+| B road | 58.2 [57.7, 58.5] | 62 km/h |
+| Local distributor | 63.1 [63.0, 63.5] | 57 km/h |
+| Residential | 71.2 [71.1, 71.8] | 51 km/h |
+| Minor / unclassified | 88.4 [87.3, 89.5] | 41 km/h |
+
+| Street feature | Effect |
+|---|---|
+| 20 mph limit | +8.7 s/km [8.6, 8.9] |
+| One-way | +2.1 s/km [1.8, 2.3] |
+| Bridge / tunnel | +1.2 s/km [0.8, 1.9] |
+| Bus lane | −2.4 s/km [−2.6, −1.7] |
+| 2+ lanes | −3.2 s/km [−3.4, −3.0] |
+| Each traffic calming feature | +1.03 s [1.01, 1.07] |
+| Each pedestrian crossing | +0.62 s [0.56, 0.64] |
+| Each junction | +0.58 s [0.56, 0.60] |
+| Each traffic signal | +0.56 s [0.55, 0.57] |
+| Each roundabout | +0.03 s [−0.03, 0.09] |
+| Each give-way / stop sign | −0.48 s [−0.59, −0.44] |
+| Fixed start-up time per trip | 70 s |
+
+These describe what the model learned, not cause and effect (a 20 mph street may be slow
+because it is narrow and lined with parked cars). The negative give-way effect is likely
+because give-way signs mark side-street exits onto main roads, where engines have priority.
+
+Figures: `travel_time/street_speeds/coefficients.png`, `speed_map.png`.
+
 Figures: `reports/weekly_2026-10-19/1_travel_time_accuracy.png`,
 `data_exploration/london_eda/07_model_comparison.png`, `08_street_shap.png`,
 `09_street_ablation.png`, `10_street_effects_per_km.png`, `travel_time/outliers/`.
@@ -349,7 +413,7 @@ Have (path under `data/figures/`) and still needed for the board / paper.
 | 13 | `placement/robustness/income.png` | Who gains, by income | have |
 | 14 | `placement/robustness/boroughs.png` | Change by borough, three models | have |
 | 15 | Method diagram | Data → travel time → dispatch/busy → solver → validation | **needed** |
-| 16 | Learned fire-engine speed per street segment (map) | Route model output | **needed** (route model not built) |
+| 16 | `travel_time/street_speeds/speed_map.png`, `coefficients.png` | Learned fire engine speed per street; which features slow engines | have |
 
 ---
 

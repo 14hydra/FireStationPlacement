@@ -75,7 +75,7 @@ from .station_capacity import (
     resolve_pump_vector,
 )
 
-SCORERS = ("lgbm", "lgbm_q90", "road", "kolesar", "crow")
+SCORERS = ("lgbm", "lgbm_q90", "lgbm_speeds", "speeds", "road", "kolesar", "crow")
 
 # How much each call counts as demand (LFB IncidentGroup / PropertyCategory).
 SEVERITY_SCHEMES = {
@@ -171,6 +171,8 @@ def build_travel_matrix(
     ``scorer``:
       * ``lgbm``    — LightGBM travel-time model on routes over the London drive graph
                       (``incidents`` sets the hour weights and cell boroughs)
+      * ``lgbm_speeds`` — learned street speeds along quickest routes + LightGBM correction
+      * ``speeds``  — learned street speeds alone (``firestation.street_speeds``)
       * ``road``    — shortest legal road km → Kolesar (road-km fit)
       * ``kolesar`` — crow-flies km → :class:`KolesarModel` (London default if none given)
       * ``crow``    — flat-speed surrogate
@@ -179,11 +181,16 @@ def build_travel_matrix(
         raise ValueError(f"scorer must be one of {SCORERS}, got {scorer!r}")
     surrogate = surrogate or TravelTimeSurrogate()
     meta: dict[str, Any] = {"scorer": scorer, "surrogate_speed_kph": surrogate.speed_kph}
-    if scorer in {"lgbm", "lgbm_q90"}:
-        from .ml_scorer import MODEL_PATH, Q90_MODEL_PATH, lgbm_matrix
+    if scorer in {"lgbm", "lgbm_q90", "lgbm_speeds"}:
+        from .ml_scorer import MODEL_PATH, Q90_MODEL_PATH, STREETSPEED_MODEL_PATH, lgbm_matrix
 
-        T, m = lgbm_matrix(candidates, cells, incidents,
-                           model_path=Q90_MODEL_PATH if scorer == "lgbm_q90" else MODEL_PATH)
+        path = {"lgbm": MODEL_PATH, "lgbm_q90": Q90_MODEL_PATH, "lgbm_speeds": STREETSPEED_MODEL_PATH}[scorer]
+        T, m = lgbm_matrix(candidates, cells, incidents, model_path=path)
+        return T, {**meta, **m}
+    if scorer == "speeds":
+        from .ml_scorer import speeds_matrix
+
+        T, m = speeds_matrix(candidates, cells)
         return T, {**meta, **m}
     if scorer == "road":
         from .ml_scorer import road_matrix

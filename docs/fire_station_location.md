@@ -219,6 +219,8 @@ close to its best junction; the point is a real, buildable street location.
 | **Kolesar** | Piecewise `T = a + b√d` / `c + e·d` on distance; refit on London trips (`firestation.kolesar`) | **EXISTS** (`--scorer kolesar`) |
 | **road** | Kolesar curve (road-km fit from the travel-time trainer) on the shortest legal route over the directed London drive graph | **EXISTS** (`--scorer road`) |
 | **lgbm** (street-aware) | LightGBM travel-time model (`docs/travel_time_training.md`) on the full route features from every site to every demand cell | **EXISTS** (`--scorer lgbm`, `firestation.ml_scorer`) |
+| **speeds** | Learned street speeds: quickest route under a fire engine speed for every segment (`firestation.street_speeds`, `scripts/train_street_speeds.py`) | **EXISTS** (`--scorer speeds`) |
+| **lgbm_speeds** | Learned street-speed time + LightGBM correction (4 seeds); as accurate as **lgbm** on 2025 trips (57.8 s MAE) | **EXISTS** (`--scorer lgbm_speeds`); not yet used for the recommended layouts |
 
 Default scorer: **lgbm** for London (the decision-tree model is London-only), **kolesar** for `--demo` and custom cities.
 

@@ -419,9 +419,10 @@ def main():
     p.add_argument("--cap-min", type=float, default=10.0,
                    help="No area may be served from a site farther than this (minutes; 0 = no cap). "
                         "Areas no candidate reaches in time are exempt")
-    p.add_argument("--scorer", choices=["lgbm", "lgbm_q90", "road", "kolesar", "crow"], default=None,
+    p.add_argument("--scorer", choices=["lgbm", "lgbm_q90", "lgbm_speeds", "speeds", "road", "kolesar", "crow"], default=None,
                    help="Drive-time scorer: lgbm (LightGBM decision-tree travel-time model; default for "
-                        "London), lgbm_q90 (90th-percentile LightGBM: slow-trip times), "
+                        "London), lgbm_q90 (90th-percentile LightGBM: slow-trip times), lgbm_speeds (learned "
+                        "street speeds + LightGBM correction), speeds (learned street speeds alone), "
                         "road (Kolesar on road km), kolesar (Kolesar on straight-line km; default "
                         "elsewhere), crow (flat speed)")
     p.add_argument("--demand-years", type=str, default="2024", help="Comma list of cal_years for demand")

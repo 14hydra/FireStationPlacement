@@ -1,0 +1,192 @@
+{
+  "doc": "Learned street speeds + a LightGBM correction, compared with LightGBM alone.\n\n1. Street speeds (firestation.street_speeds): a pace for every street segment from its\n   characteristics, fitted so the summed route times match 2021-2024 driving times, with\n   routes re-chosen under the learned speeds each round. 95 % intervals on every\n   coefficient by bootstrap (resampling trips, routes fixed).\n2. Correction: LightGBM predicts recorded drive minus the street-speed time, so\n   prediction = street-speed base + correction. Two versions:\n     full        every feature the current model uses, plus the base time\n     restricted  only what street speeds cannot capture: time of day, day of week,\n                 season, turns along the route, busy engines and call density near the\n                 destination, plus the base time\n3. Compared on 2025 trips (MAE, median error, bias), overall and by trip length:\n   Kolesar (road km), street speeds alone, LightGBM alone, and the two combined models.\n   All LightGBM fits use the same settings and one seed, so they compare like for like.\n\nWrites data/figures/travel_time/street_speeds/ (metrics.json, coefficients.csv,\nby_distance.csv, coefficients.png, speed_map.png) and data/processed/models/\nstreet_speeds.joblib, travel_time_lfb_streetspeed.joblib (the full combined model,\nusable with firestation.travel_time_model.predict when trips carry street_base_s).\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/train_street_speeds.py [--seeds 4]\n",
+  "n_train": 701000,
+  "n_test_2025": 200624,
+  "street_speed_rounds": [
+    {
+      "round": 1,
+      "mae_s": 63.07,
+      "mean_rel_change_edge_time": 0.2473
+    },
+    {
+      "round": 2,
+      "mae_s": 62.78,
+      "mean_rel_change_edge_time": 0.0413
+    },
+    {
+      "round": 3,
+      "mae_s": 62.77,
+      "mean_rel_change_edge_time": 0.0069
+    }
+  ],
+  "metrics_2025": {
+    "kolesar": {
+      "mae_s": 68.66,
+      "medae_s": 45.76,
+      "bias_s": -16.13
+    },
+    "street_speeds": {
+      "mae_s": 65.91,
+      "medae_s": 42.52,
+      "bias_s": -17.81
+    },
+    "lightgbm": {
+      "mae_s": 57.8,
+      "medae_s": 35.48,
+      "bias_s": -17.68
+    },
+    "combined_restricted": {
+      "mae_s": 62.9,
+      "medae_s": 40.43,
+      "bias_s": -18.67
+    },
+    "combined": {
+      "mae_s": 57.76,
+      "medae_s": 35.33,
+      "bias_s": -17.69
+    }
+  },
+  "by_distance": [
+    {
+      "road_km": "<1",
+      "trips": 17336,
+      "mae_kolesar": 50.44,
+      "mae_street_speeds": 49.4,
+      "mae_lightgbm": 44.8,
+      "mae_combined_restricted": 48.3,
+      "mae_combined": 44.79,
+      "bias_kolesar": -16.57,
+      "bias_street_speeds": -17.85,
+      "bias_lightgbm": -18.28,
+      "bias_combined_restricted": -19.39,
+      "bias_combined": -18.69
+    },
+    {
+      "road_km": "1-2",
+      "trips": 51525,
+      "mae_kolesar": 55.06,
+      "mae_street_speeds": 53.81,
+      "mae_lightgbm": 47.67,
+      "mae_combined_restricted": 52.43,
+      "mae_combined": 47.61,
+      "bias_kolesar": -15.12,
+      "bias_street_speeds": -16.32,
+      "bias_lightgbm": -17.15,
+      "bias_combined_restricted": -17.76,
+      "bias_combined": -17.35
+    },
+    {
+      "road_km": "2-3",
+      "trips": 54690,
+      "mae_kolesar": 63.04,
+      "mae_street_speeds": 60.73,
+      "mae_lightgbm": 53.5,
+      "mae_combined_restricted": 58.25,
+      "mae_combined": 53.36,
+      "bias_kolesar": -13.27,
+      "bias_street_speeds": -17.01,
+      "bias_lightgbm": -17.33,
+      "bias_combined_restricted": -18.38,
+      "bias_combined": -17.43
+    },
+    {
+      "road_km": "3-4",
+      "trips": 36913,
+      "mae_kolesar": 73.86,
+      "mae_street_speeds": 70.47,
+      "mae_lightgbm": 60.77,
+      "mae_combined_restricted": 66.5,
+      "mae_combined": 60.69,
+      "bias_kolesar": -18.92,
+      "bias_street_speeds": -19.73,
+      "bias_lightgbm": -19.53,
+      "bias_combined_restricted": -20.09,
+      "bias_combined": -19.5
+    },
+    {
+      "road_km": "4-6",
+      "trips": 30900,
+      "mae_kolesar": 88.18,
+      "mae_street_speeds": 83.08,
+      "mae_lightgbm": 72.45,
+      "mae_combined_restricted": 77.76,
+      "mae_combined": 72.27,
+      "bias_kolesar": -23.58,
+      "bias_street_speeds": -22.08,
+      "bias_lightgbm": -18.67,
+      "bias_combined_restricted": -21.07,
+      "bias_combined": -18.66
+    },
+    {
+      "road_km": "6+",
+      "trips": 9260,
+      "mae_kolesar": 125.75,
+      "mae_street_speeds": 119.29,
+      "mae_lightgbm": 103.3,
+      "mae_combined_restricted": 112.05,
+      "mae_combined": 104.46,
+      "bias_kolesar": -1.85,
+      "bias_street_speeds": -8.81,
+      "bias_lightgbm": -10.81,
+      "bias_combined_restricted": -10.52,
+      "bias_combined": -8.94
+    },
+    {
+      "road_km": "longest 5% (>= 5.9 km)",
+      "trips": 10033,
+      "mae_kolesar": 124.46,
+      "mae_street_speeds": 117.99,
+      "mae_lightgbm": 102.28,
+      "mae_combined_restricted": 110.78,
+      "mae_combined": 103.26,
+      "bias_kolesar": -4.01,
+      "bias_street_speeds": -10.45,
+      "bias_lightgbm": -11.39,
+      "bias_combined_restricted": -11.69,
+      "bias_combined": -9.85
+    }
+  ],
+  "correction_importance_gain_share": {
+    "borough_code": 0.0708,
+    "dest_resid_300m": 0.0664,
+    "hour": 0.0439,
+    "circuity": 0.0415,
+    "dest_resid_1km": 0.0374,
+    "dest_main_road_km": 0.0362,
+    "dest_n_300m": 0.036,
+    "mean_lanes": 0.0316,
+    "junctions_per_km": 0.0299,
+    "turns_per_km": 0.0298,
+    "crossings_per_km": 0.0288,
+    "share_oneway": 0.0278,
+    "signals_per_km": 0.0274,
+    "dest_n_1km": 0.0268,
+    "origin_main_road_km": 0.0257
+  },
+  "restricted_features": [
+    "street_base_s",
+    "hour",
+    "dow",
+    "month",
+    "rush",
+    "night",
+    "weekend",
+    "busy_flag",
+    "pump_order",
+    "from_home",
+    "turns_per_km",
+    "sharp_turns_per_km",
+    "dest_n_300m",
+    "dest_n_1km"
+  ],
+  "lightgbm_params": {
+    "learning_rate": 0.05,
+    "num_leaves": 255,
+    "min_child_samples": 50,
+    "colsample_bytree": 0.7,
+    "subsample": 0.85,
+    "reg_lambda": 3.0,
+    "n_estimators": 2110
+  },
+  "minutes": 13.0
+}

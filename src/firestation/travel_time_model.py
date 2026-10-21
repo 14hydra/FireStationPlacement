@@ -255,4 +255,10 @@ def predict(bundle: dict, trips: pd.DataFrame) -> np.ndarray:
         trips = attach_weather(trips, None)
     x = build_features(trips, groups, kolesar=KolesarModel.from_dict(bundle["kolesar_baseline_params"]),
                        cat_maps=bundle["category_maps"], dest_history=dh)
+    if bundle.get("base") == "street_speeds":
+        # Correction model: learned street-speed time (trips["street_base_s"]) + LightGBM correction.
+        base = pd.to_numeric(trips["street_base_s"], errors="coerce").to_numpy(float)
+        x["street_base_s"] = base
+        corr = np.mean([m.predict(x[bundle["features"]]) for m in bundle["models"]], axis=0)
+        return np.clip(base + corr, *DRIVE_CLIP_S)
     return predict_bag(bundle["models"], x[bundle["features"]])

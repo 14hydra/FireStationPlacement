@@ -31,6 +31,8 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[2]
 MODEL_PATH = ROOT / "data" / "processed" / "models" / "travel_time_lfb.joblib"
 Q90_MODEL_PATH = ROOT / "data" / "processed" / "models" / "travel_time_lfb_q90.joblib"  # 90th-percentile
+# Learned street speeds + LightGBM correction (scripts/train_street_speeds.py).
+STREETSPEED_MODEL_PATH = ROOT / "data" / "processed" / "models" / "travel_time_lfb_streetspeed.joblib"
 CACHE_DIR = ROOT / "data" / "processed" / "planner_cache"
 
 # (representative hour, hours it stands for); weights come from demand call hours.
@@ -149,6 +151,21 @@ def _lgbm_trips(candidates: pd.DataFrame, cells: pd.DataFrame, boroughs: np.ndar
     )
 
 
+def speeds_matrix(candidates: pd.DataFrame, cells: pd.DataFrame, *, use_cache: bool = True) -> tuple[np.ndarray, dict]:
+    """Drive seconds along quickest routes under learned street speeds (``firestation.street_speeds``)."""
+    from .street_speeds import MODEL_PATH as SPEEDS_PATH, StreetSpeedModel, speed_matrix
+
+    model = StreetSpeedModel.load()
+    meta = {"scorer": "speeds", "model": str(SPEEDS_PATH.relative_to(ROOT))}
+    path = _cache_key("speeds", candidates, cells, list(np.round(model.coef, 8)), SPEEDS_PATH)
+    if use_cache and path.exists():
+        return np.load(path), {**meta, "cache": str(path.relative_to(ROOT))}
+    T = np.clip(speed_matrix(model, _router(), candidates, cells), 30.0, 1200.0)
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    np.save(path, T)
+    return T, {**meta, "cache": str(path.relative_to(ROOT))}
+
+
 def lgbm_matrix(
     candidates: pd.DataFrame,
     cells: pd.DataFrame,
@@ -171,7 +188,8 @@ def lgbm_matrix(
     boroughs = cell_boroughs(cells, incidents)
     scenario = {"slots": slots, "date": SCENARIO_DATE, **SCENARIO_CALL,
                 "busy_flag": 0, "pump_order": 1, "from_home": 1}
-    name = "lgbm" if model_path == MODEL_PATH else "lgbm_" + model_path.stem.split("_")[-1]
+    name = {MODEL_PATH: "lgbm", STREETSPEED_MODEL_PATH: "lgbm_speeds"}.get(model_path,
+                                                                         "lgbm_" + model_path.stem.split("_")[-1])
     meta = {"scorer": name, "model": str(model_path.relative_to(ROOT)), "scenario": scenario}
     path = _cache_key(name, candidates, cells, [scenario, list(boroughs)], model_path)
     if use_cache and path.exists():
@@ -179,6 +197,8 @@ def lgbm_matrix(
 
     bundle = _bundle(model_path)
     trips = _lgbm_trips(candidates, cells, boroughs) if trips is None else trips
+    if bundle.get("base") == "street_speeds" and "street_base_s" not in trips.columns:
+        trips = trips.assign(street_base_s=speeds_matrix(candidates, cells)[0].ravel())
     T = np.zeros(len(trips))
     step = 100_000  # chunks keep peak memory low on large matrices
     for hour, w in slots:
