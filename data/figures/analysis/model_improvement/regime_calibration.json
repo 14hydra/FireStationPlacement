@@ -1,0 +1,22 @@
+{
+  "bias": {
+    "dense_short": 0.0,
+    "long_sparse": -49.380493027195165,
+    "rush_other": 0.0,
+    "other": 0.0
+  },
+  "before": {
+    "all": 79.9,
+    "dense_short": 68.67,
+    "long_sparse": 98.21,
+    "rush_other": 80.43,
+    "other": 78.43
+  },
+  "after": {
+    "all": 78.57,
+    "dense_short": 68.67,
+    "long_sparse": 87.2,
+    "rush_other": 80.43,
+    "other": 78.43
+  }
+}

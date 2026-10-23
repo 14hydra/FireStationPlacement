@@ -244,7 +244,7 @@ def plan_resize_capacity(
     threshold_s: float = 600.0,
     max_moves: int = 80,
     util_pct: np.ndarray | None = None,
-    util_weight: float = 0.35,
+    util_weight: float = 0.45,
 ) -> dict[str, Any]:
     """Reallocate a fixed pump budget across fixed station sites.
 

@@ -7,7 +7,13 @@ and writes INDEX.md with one-line takeaways for ISEF judges.
 
 Also draws 00_roadmap.png — a one-page “what to look at” board.
 
-Run:  .venv/bin/python scripts/build_final_figures.py
+Prefer the glanceable redraws from ``build_clear_final_figures.py`` (overwrites 01–10
+with plain-language versions). This script still copies upstream sources when you want
+the originals.
+
+Run:
+  .venv/bin/python scripts/build_clear_final_figures.py   # recommended for the board
+  .venv/bin/python scripts/build_final_figures.py         # copy upstream + roadmap
 """
 
 from __future__ import annotations

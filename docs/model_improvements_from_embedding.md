@@ -30,20 +30,26 @@ Fast A/B: `scripts/ab_travel_time_embedding.py` → `data/figures/analysis/model
   preferred donors.
 - Utilisation loaded from `data/figures/data_exploration/station_busyness/station_busyness.csv`.
 
-## Honest results (1-seed, 700 trees, 2025 holdout)
+## Honest results
 
-From `data/figures/analysis/model_improvement/ab_travel_time.json`:
+**Production model** (`travel_time_lfb.joblib`, 1-seed · 900 trees · interactions + sample
+weights + long_sparse calibration), held-out 2025:
 
-| Slice | Baseline MAE | Improved + calibrate | Δ |
-|---|---:|---:|---:|
-| All 2025 trips | 59.04 s | 59.09 s | +0.05 s |
-| Dense short (central) | 50.35 s | 50.44 s | +0.09 s |
-| **Long sparse (outer)** | **80.52 s** | **80.16 s** | **−0.36 s** |
-| Rush hour | 59.80 s | 59.73 s | −0.07 s |
+| Model | MAE |
+|---|---:|
+| Classic Kolesar (road) | 68.7 s |
+| Previous LightGBM (v2, no interactions) | 60.2 s |
+| **Current (embedding-informed)** | **58.9 s** |
 
-Overall MAE is essentially unchanged in this quick A/B; the gain is concentrated on the
-**outer long-drive** slice the embedding flagged (PC3). Full 4-seed bag:
-`python scripts/train_travel_time_lfb.py --quick`.
+Earlier A/B (`data/figures/analysis/model_improvement/ab_travel_time.json`, 700 trees):
+overall MAE was flat; the gain concentrated on **outer long-drive** (−0.36 s). Stronger
+long-trip sample weights + full interaction train moved the citywide number too.
+
+Full 4-seed bag: `python scripts/train_travel_time_lfb.py --quick --seeds 4`.
+
+**Dispatch** (figure 09): cover-density features + temperature calibration → area
+correlation **0.57** (nearest 0.48). Resize `util_weight` default **0.45** so busy
+1-pump houses rank higher as pump receivers.
 
 ## Figures for judges
 

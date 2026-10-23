@@ -309,7 +309,8 @@ def sample_weights(df: pd.DataFrame, y: np.ndarray) -> np.ndarray:
     """
     road = pd.to_numeric(df["road_km"], errors="coerce").fillna(2.0).to_numpy(float)
     y = np.asarray(y, dtype=float)
-    w = 1.0 + 0.12 * np.clip(road, 0.0, 8.0)
+    # Slightly stronger long-trip weight (embedding PC3 / outer hard cases in fig 06).
+    w = 1.0 + 0.18 * np.clip(road, 0.0, 8.0)
     with np.errstate(divide="ignore", invalid="ignore"):
         kph = np.where(y > 0, road / y * 3600.0, np.nan)
     bad = (~np.isfinite(kph)) | (kph < 8.0) | (kph > 70.0) | (y > 900.0)

@@ -42,6 +42,8 @@ FEATURES = [
     "p_busy_first", "p_busy_ahead", "n_within_60s", "pumps_first",
     "n_within_90s", "n_within_120s", "second_gap_s", "free_when_ahead",
     "pumps_ratio", "log_attend_s", "is_nearest",
+    # Dense cover × diversion — and the closed-form busy cascade as a feature.
+    "gap_x_free", "cover_density", "cascade_p", "log_gap_s",
 ]
 SLOTS = [(0, 4), (4, 8), (8, 12), (12, 16), (16, 20), (20, 24)]
 
@@ -124,6 +126,8 @@ def candidates(A: np.ndarray, open_idx: Sequence[int], p_busy: np.ndarray, pumps
     within120 = (gap0 <= 120).sum(axis=0) - 1
     second_gap = np.maximum(att[1] - att[0], 0.0) if k >= 2 else np.zeros(n)
     free_when_ahead = ahead * (1.0 - pb)  # chance this candidate is free when all faster are busy
+    # Closed-form busy cascade (renormalised): P(rank r responds | independent busy).
+    cascade = free_when_ahead / np.maximum(free_when_ahead.sum(axis=0, keepdims=True), 1e-12)
     pumps_ratio = pm / np.maximum(pm[0], 1.0)
     feats = pd.DataFrame({
         "rank": np.repeat(np.arange(1, k + 1)[:, None], n, axis=1).T.ravel(),
@@ -143,6 +147,10 @@ def candidates(A: np.ndarray, open_idx: Sequence[int], p_busy: np.ndarray, pumps
         "pumps_ratio": pumps_ratio.T.ravel(),
         "log_attend_s": np.log1p(att.T.ravel()),
         "is_nearest": (np.repeat(np.arange(1, k + 1)[:, None], n, axis=1) == 1).T.ravel().astype(float),
+        "gap_x_free": (gap0 * free_when_ahead).T.ravel(),
+        "cover_density": np.repeat((within60 / (1.0 + second_gap / 60.0))[None, :], k, axis=0).T.ravel(),
+        "cascade_p": cascade.T.ravel(),
+        "log_gap_s": np.log1p(gap0.T.ravel()),
     })
     if slot is not None:
         feats["slot"] = int(slot)
@@ -163,35 +171,45 @@ def responder_counts(rows: np.ndarray, call_cells: np.ndarray, responder_rows: n
 class DispatchModel:
     k: int = K
     params: dict = field(default_factory=lambda: dict(
-        n_estimators=700, learning_rate=0.04, num_leaves=63,
-        min_child_samples=35, subsample=0.9, subsample_freq=1,
-        colsample_bytree=0.85, reg_lambda=1.2, reg_alpha=0.05,
+        n_estimators=900, learning_rate=0.035, num_leaves=95,
+        min_child_samples=25, subsample=0.9, subsample_freq=1,
+        colsample_bytree=0.8, reg_lambda=1.0, reg_alpha=0.05,
     ))
     model: Any = None
     hourly: bool = False
-    # Softmax temperature on log-odds (<1 sharpens, >1 softens). Calibrated after fit.
+    # Softmax temperature on log-prob (<1 sharpens, >1 softens). Calibrated after fit.
     temperature: float = 1.0
+    # Blend weight on the closed-form busy cascade (rest = learned scores).
+    cascade_blend: float = 0.25
 
     def fit(self, parts: list[tuple[pd.DataFrame, np.ndarray, np.ndarray]]) -> "DispatchModel":
         """``parts``: (features from ``candidates``, counts [k, cells], calls per cell).
 
-        Weighted binary classifier per candidate; scores are temperature-scaled and
-        normalised to a distribution over the K candidates. Diversion (ranks 2+) is
-        mildly up-weighted so the trees learn when a neighbour takes the call.
+        Weighted binary classifier per candidate. Diversion (ranks 2+) is up-weighted
+        more in cells where the nearest station often fails — the figure-09 pattern.
         """
         import lightgbm as lgb
 
         X, y, w = [], [], []
         for feats, counts, n_calls in parts:
-            k, _n = counts.shape
-            boost = np.ones(k)
-            boost[1:] = 1.5
-            pos = (counts * boost[:, None]).T.ravel()
-            neg = np.maximum(np.repeat(n_calls, k) - counts.T.ravel(), 0.0)
-            keep = np.repeat(n_calls > 0, k)
+            k, n = counts.shape
+            active = np.flatnonzero(n_calls > 0)
+            if len(active) == 0:
+                continue
+            nearest_share = counts[0, active] / np.maximum(n_calls[active], 1.0)
+            # Per-cell boost on ranks 2+: up to ~2.6 when nearest rarely responds.
+            cell_boost = 1.25 + 1.35 * (1.0 - nearest_share)
+            boost = np.ones((k, len(active)))
+            boost[1:, :] = cell_boost[None, :]
+            pos = (counts[:, active] * boost).T.ravel()
+            neg = np.maximum(n_calls[active][:, None] - counts[:, active].T, 0.0).ravel()
+            take = (active[:, None] * k + np.arange(k)[None, :]).ravel()
+            block = feats.iloc[take]
             for label, wt in ((1, pos), (0, neg)):
-                m = keep & (wt > 0)
-                X.append(feats[m])
+                m = wt > 0
+                if not m.any():
+                    continue
+                X.append(block.iloc[np.flatnonzero(m)])
                 y.append(np.full(int(m.sum()), label))
                 w.append(wt[m])
         self.model = lgb.LGBMClassifier(objective="binary", verbose=-1, random_state=0, **self.params)
@@ -204,46 +222,51 @@ class DispatchModel:
         """[k, n_cells] probability that the rank-k candidate responds (sums to 1 per cell)."""
         cols = FEATURES + (["slot"] if self.hourly else [])
         p = self.model.predict_proba(feats[cols])[:, 1].reshape(n_cells, -1).T  # [k, cells]
-        # Temperature on log-prob: t=1 is plain p/sum(p); t>1 softens toward uniform.
         t = max(float(self.temperature), 1e-3)
         p = np.clip(p, 1e-12, None)
         z = np.log(p) / t
         z = z - z.max(axis=0, keepdims=True)
         e = np.exp(z)
-        return e / np.maximum(e.sum(axis=0, keepdims=True), 1e-12)
+        Pm = e / np.maximum(e.sum(axis=0, keepdims=True), 1e-12)
+        # Blend with closed-form busy cascade (feature already on the frame).
+        if "cascade_p" in feats.columns and self.cascade_blend > 0:
+            Pc = feats["cascade_p"].to_numpy(float).reshape(n_cells, -1).T
+            Pc = Pc / np.maximum(Pc.sum(axis=0, keepdims=True), 1e-12)
+            a = float(np.clip(self.cascade_blend, 0.0, 1.0))
+            P = (1.0 - a) * Pm + a * Pc
+            return P / np.maximum(P.sum(axis=0, keepdims=True), 1e-12)
+        return Pm
 
     def calibrate_temperature(self, parts: list[tuple[pd.DataFrame, np.ndarray, np.ndarray]],
                               attend_parts: Sequence[np.ndarray] | None = None,
-                              grid: Sequence[float] = (0.85, 1.0, 1.25, 1.5, 2.0, 2.5)) -> float:
-        """Pick temperature minimising expected-attendance MAE vs the empirical responder mix.
-
-        ``attend_parts``: optional list of [k, cells] predicted attendance aligned with ``parts``.
-        Falls back to responder-share overlap when attendance is not supplied.
-        """
-        best_t, best = 1.0, np.inf
+                              grid: Sequence[float] = (0.85, 1.0, 1.25, 1.5, 2.0, 2.5),
+                              blend_grid: Sequence[float] = (0.0, 0.15, 0.25, 0.35, 0.5)) -> float:
+        """Pick temperature + cascade blend minimising expected-attendance MAE."""
+        best_t, best_b, best = 1.0, float(self.cascade_blend), np.inf
         for t in grid:
             self.temperature = float(t)
-            err, n = 0.0, 0
-            for i, (feats, counts, n_calls) in enumerate(parts):
-                _k, nc = counts.shape
-                P = self.proba(feats, nc)
-                active = n_calls > 0
-                if not active.any():
-                    continue
-                share = counts / np.maximum(n_calls, 1.0)
-                if attend_parts is not None:
-                    att = attend_parts[i]
-                    emp = (share * att).sum(axis=0)
-                    pred = (P * att).sum(axis=0)
-                    err += float(np.abs(pred[active] - emp[active]).sum())
-                else:
-                    # Negative overlap as an error surrogate
-                    err += -float((P[:, active] * share[:, active]).sum())
-                n += int(active.sum())
-            err = err / max(n, 1)
-            if err < best:
-                best, best_t = err, float(t)
-        self.temperature = best_t
+            for b in blend_grid:
+                self.cascade_blend = float(b)
+                err, n = 0.0, 0
+                for i, (feats, counts, n_calls) in enumerate(parts):
+                    _k, nc = counts.shape
+                    P = self.proba(feats, nc)
+                    active = n_calls > 0
+                    if not active.any():
+                        continue
+                    share = counts / np.maximum(n_calls, 1.0)
+                    if attend_parts is not None:
+                        att = attend_parts[i]
+                        emp = (share * att).sum(axis=0)
+                        pred = (P * att).sum(axis=0)
+                        err += float(np.abs(pred[active] - emp[active]).sum())
+                    else:
+                        err += -float((P[:, active] * share[:, active]).sum())
+                    n += int(active.sum())
+                err = err / max(n, 1)
+                if err < best:
+                    best, best_t, best_b = err, float(t), float(b)
+        self.temperature, self.cascade_blend = best_t, best_b
         return best_t
 
     def expected(self, A: np.ndarray, open_idx: Sequence[int], p_busy, pumps: np.ndarray,

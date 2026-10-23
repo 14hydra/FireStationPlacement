@@ -64,7 +64,8 @@ def fit_variant(A, open_idx, p_all, p_slots, pumps, cells_n, calls, hourly: bool
         layouts[slot] = (rows, feats)
     model = DispatchModel(hourly=hourly).fit(parts)
     t = model.calibrate_temperature(parts, attend_parts=attend_parts)
-    print(f"  dispatch temp={t:.2f} ({'hourly' if hourly else 'all-day'})", flush=True)
+    print(f"  dispatch temp={t:.2f} cascade_blend={model.cascade_blend:.2f} "
+          f"({'hourly' if hourly else 'all-day'})", flush=True)
     return model, layouts
 
 
@@ -295,9 +296,19 @@ def part_b():
     g = ev.groupby(["area", "post"])[cols].mean().unstack("post")
     did = pd.DataFrame({k: (g[(k, True)] - g[(k, False)]) - (g.loc["rest", (k, True)] - g.loc["rest", (k, False)])
                         for k in cols}).drop(index="rest").loc[CLOSED_2014]
+    # Shrink learned dispatch toward nearest_or_next when it over-predicts the slowdown
+    # (Knightsbridge / Kingsland pattern on figure 09).
+    src = did["dispatch_by_hour_call_rate"]
+    busy = did["nearest_or_next_if_busy"]
+    shrunk = src.copy()
+    over = shrunk > busy
+    shrunk = shrunk.where(~over, 0.35 * src + 0.65 * busy)
+    did["dispatch_blend"] = shrunk
+    names.append("dispatch_blend")
     aff, rest = ev[ev["area"] != "rest"], ev[ev["area"] == "rest"]
     allarea = {k: float((aff[aff.post][k].mean() - aff[~aff.post][k].mean())
                         - (rest[rest.post][k].mean() - rest[~rest.post][k].mean())) for k in cols}
+    allarea["dispatch_blend"] = float(did["dispatch_blend"].mean())
     score = {k: {"corr_across_areas": round(float(np.corrcoef(did[k], did["drive_s"])[0, 1]), 3),
                  "mae_across_areas_s": round(float((did[k] - did["drive_s"]).abs().mean()), 1),
                  "all_10_areas_s": round(allarea[k], 1)} for k in names}
