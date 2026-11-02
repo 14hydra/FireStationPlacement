@@ -1,0 +1,99 @@
+{
+  "doc": "Where the production travel time model's error on 2025 trips comes from.\n\n  slices  error overall and on the trips placement scores (first pump, home station, not busy)\n  trimmed the same with each slice's worst 5 % of trips (largest absolute error) removed\n  routes  one station to one ~100 m spot: average predicted vs average recorded time per route\n  history the same trips predicted by the route's own recorded median from 2021-2024\n  compare the classic formula and the never-seen-stations test on all trips and placement's trips\n\nWrites data/figures/validation/travel_time_error/summary.json.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/travel_time_error_breakdown.py\n",
+  "slices": {
+    "all 2025 trips": {
+      "n": 200624,
+      "mae_s": 57.6,
+      "medae_s": 35.3,
+      "bias_s": -17.7,
+      "mae_without_worst_5pct_s": 44.4,
+      "worst_5pct_share_of_error_pct": 26.8
+    },
+    "first pump, home station, not busy (placement)": {
+      "n": 87937,
+      "mae_s": 45.5,
+      "medae_s": 29.4,
+      "bias_s": -14.5,
+      "mae_without_worst_5pct_s": 35.2,
+      "worst_5pct_share_of_error_pct": 26.4
+    },
+    "placement, exact address": {
+      "n": 32155,
+      "mae_s": 50.3,
+      "medae_s": 31.2,
+      "bias_s": -17.0,
+      "mae_without_worst_5pct_s": 38.3,
+      "worst_5pct_share_of_error_pct": 27.7
+    },
+    "every other trip": {
+      "n": 112687,
+      "mae_s": 67.1,
+      "medae_s": 41.3,
+      "bias_s": -20.2,
+      "mae_without_worst_5pct_s": 52.3,
+      "worst_5pct_share_of_error_pct": 25.9
+    }
+  },
+  "routes": [
+    {
+      "min_trips": 5,
+      "routes": 847,
+      "trips": 6458,
+      "trip_mae_s": 42.9,
+      "route_mean_vs_mean_mae_s": 23.3,
+      "route_mean_bias_s": -10.8,
+      "route_median_vs_median_mae_s": 20.0,
+      "route_median_bias_s": -2.0,
+      "sampling_noise_in_recorded_mean_s": 17.4,
+      "spread_around_route_median_s": 39.0
+    },
+    {
+      "min_trips": 10,
+      "routes": 149,
+      "trips": 2256,
+      "trip_mae_s": 43.7,
+      "route_mean_vs_mean_mae_s": 18.7,
+      "route_mean_bias_s": -13.3,
+      "route_median_vs_median_mae_s": 14.3,
+      "route_median_bias_s": -1.8,
+      "sampling_noise_in_recorded_mean_s": 13.6,
+      "spread_around_route_median_s": 42.3
+    },
+    {
+      "min_trips": 20,
+      "routes": 20,
+      "trips": 647,
+      "trip_mae_s": 42.3,
+      "route_mean_vs_mean_mae_s": 13.3,
+      "route_mean_bias_s": -7.6,
+      "route_median_vs_median_mae_s": 10.7,
+      "route_median_bias_s": 5.0,
+      "sampling_noise_in_recorded_mean_s": 9.3,
+      "spread_around_route_median_s": 42.0
+    }
+  ],
+  "history": {
+    "route": {
+      "trips": 13165,
+      "history_median_mae_s": 47.1,
+      "model_mae_s": 44.0
+    },
+    "route + time of day": {
+      "trips": 3844,
+      "history_median_mae_s": 48.9,
+      "model_mae_s": 45.4
+    }
+  },
+  "compare": {
+    "all": {
+      "model_mae_s": 57.6,
+      "kolesar_mae_s": 68.7,
+      "never_seen_mae_s": 62.3
+    },
+    "placement": {
+      "model_mae_s": 45.5,
+      "kolesar_mae_s": 53.8,
+      "never_seen_mae_s": 50.3
+    }
+  }
+}

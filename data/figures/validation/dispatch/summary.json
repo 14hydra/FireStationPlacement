@@ -4,71 +4,71 @@
     "rank_shares_2025": [
       {
         "rank": 1,
-        "recorded": 0.6971,
-        "dispatch_all_day": 0.6911,
-        "dispatch_by_hour_call_rate": 0.686,
-        "dispatch_by_hour_calibrated": 0.6862,
-        "nearest_or_next_if_busy": 0.7261
+        "recorded": 0.6963,
+        "dispatch_all_day": 0.6912,
+        "dispatch_by_hour_call_rate": 0.6854,
+        "dispatch_by_hour_calibrated": 0.6856,
+        "nearest_or_next_if_busy": 0.7228
       },
       {
         "rank": 2,
-        "recorded": 0.1782,
-        "dispatch_all_day": 0.2028,
-        "dispatch_by_hour_call_rate": 0.2037,
-        "dispatch_by_hour_calibrated": 0.2035,
-        "nearest_or_next_if_busy": 0.2739
+        "recorded": 0.1806,
+        "dispatch_all_day": 0.2036,
+        "dispatch_by_hour_call_rate": 0.2055,
+        "dispatch_by_hour_calibrated": 0.2052,
+        "nearest_or_next_if_busy": 0.2772
       },
       {
         "rank": 3,
-        "recorded": 0.0661,
-        "dispatch_all_day": 0.0665,
-        "dispatch_by_hour_call_rate": 0.0678,
-        "dispatch_by_hour_calibrated": 0.0679,
+        "recorded": 0.0633,
+        "dispatch_all_day": 0.0645,
+        "dispatch_by_hour_call_rate": 0.0653,
+        "dispatch_by_hour_calibrated": 0.0653,
         "nearest_or_next_if_busy": 0.0
       },
       {
         "rank": 4,
-        "recorded": 0.0273,
-        "dispatch_all_day": 0.0235,
-        "dispatch_by_hour_call_rate": 0.0246,
-        "dispatch_by_hour_calibrated": 0.0245,
+        "recorded": 0.0287,
+        "dispatch_all_day": 0.0241,
+        "dispatch_by_hour_call_rate": 0.0254,
+        "dispatch_by_hour_calibrated": 0.0255,
         "nearest_or_next_if_busy": 0.0
       },
       {
         "rank": 5,
-        "recorded": 0.0119,
-        "dispatch_all_day": 0.0086,
-        "dispatch_by_hour_call_rate": 0.0095,
-        "dispatch_by_hour_calibrated": 0.0094,
+        "recorded": 0.012,
+        "dispatch_all_day": 0.0092,
+        "dispatch_by_hour_call_rate": 0.0101,
+        "dispatch_by_hour_calibrated": 0.01,
         "nearest_or_next_if_busy": 0.0
       },
       {
         "rank": 6,
-        "recorded": 0.0071,
+        "recorded": 0.0072,
         "dispatch_all_day": 0.0043,
-        "dispatch_by_hour_call_rate": 0.0048,
+        "dispatch_by_hour_call_rate": 0.0047,
         "dispatch_by_hour_calibrated": 0.0048,
         "nearest_or_next_if_busy": 0.0
       },
       {
         "rank": 7,
-        "recorded": 0.0039,
+        "recorded": 0.004,
         "dispatch_all_day": 0.002,
-        "dispatch_by_hour_call_rate": 0.0023,
-        "dispatch_by_hour_calibrated": 0.0023,
+        "dispatch_by_hour_call_rate": 0.0024,
+        "dispatch_by_hour_calibrated": 0.0024,
         "nearest_or_next_if_busy": 0.0
       },
       {
         "rank": 8,
-        "recorded": 0.0026,
-        "dispatch_all_day": 0.0012,
-        "dispatch_by_hour_call_rate": 0.0014,
-        "dispatch_by_hour_calibrated": 0.0014,
+        "recorded": 0.0025,
+        "dispatch_all_day": 0.0011,
+        "dispatch_by_hour_call_rate": 0.0013,
+        "dispatch_by_hour_calibrated": 0.0013,
         "nearest_or_next_if_busy": 0.0
       },
       {
         "rank": ">8",
-        "recorded": 0.0058,
+        "recorded": 0.0052,
         "dispatch_all_day": 0.0,
         "dispatch_by_hour_call_rate": 0.0,
         "dispatch_by_hour_calibrated": 0.0,
@@ -76,147 +76,146 @@
       }
     ],
     "top1_accuracy_2025": {
-      "dispatch_all_day": 0.704575412517668,
-      "dispatch_by_hour_call_rate": 0.6992075214000985,
-      "dispatch_by_hour_calibrated": 0.6996363174361173,
-      "nearest": 0.6970556005526705
+      "dispatch_all_day": 0.7055671118027216,
+      "dispatch_by_hour_call_rate": 0.7011131047842863,
+      "dispatch_by_hour_calibrated": 0.701184559442336,
+      "nearest": 0.6963335821014021
     },
     "drive_per_cell_2025": {
       "dispatch_all_day": {
-        "cell_mae_s": 22.1,
-        "bias_s": -12.5,
-        "corr": 0.898
+        "cell_mae_s": 23.4,
+        "bias_s": -16.1,
+        "corr": 0.891
       },
       "dispatch_by_hour_call_rate": {
-        "cell_mae_s": 22.6,
-        "bias_s": -12.9,
-        "corr": 0.899
+        "cell_mae_s": 23.7,
+        "bias_s": -16.5,
+        "corr": 0.893
       },
       "dispatch_by_hour_calibrated": {
-        "cell_mae_s": 22.6,
-        "bias_s": -12.9,
-        "corr": 0.898
+        "cell_mae_s": 23.7,
+        "bias_s": -16.5,
+        "corr": 0.892
       },
       "nearest_or_next_if_busy": {
-        "cell_mae_s": 23.6,
-        "bias_s": -15.6,
-        "corr": 0.885
+        "cell_mae_s": 25.4,
+        "bias_s": -19.3,
+        "corr": 0.878
       },
       "nearest": {
-        "cell_mae_s": 45.8,
-        "bias_s": -44.0,
-        "corr": 0.889
+        "cell_mae_s": 47.8,
+        "bias_s": -46.6,
+        "corr": 0.883
       }
     },
-    "share_outside_top8": 0.005788746486254705,
+    "share_outside_top8": 0.005192371818282865,
     "by_time_of_day_2025": [
       {
         "slot": "00-04h",
-        "calls": 14061,
-        "recorded_nearest": 0.7763,
-        "dispatch_all_day": 0.6862,
-        "dispatch_by_hour_call_rate": 0.7702,
-        "dispatch_by_hour_calibrated": 0.7732,
-        "busy_blend_call_rate": 0.8116
+        "calls": 14063,
+        "recorded_nearest": 0.7781,
+        "dispatch_all_day": 0.6866,
+        "dispatch_by_hour_call_rate": 0.7698,
+        "dispatch_by_hour_calibrated": 0.7728,
+        "busy_blend_call_rate": 0.8086
       },
       {
         "slot": "04-08h",
         "calls": 10398,
-        "recorded_nearest": 0.7974,
-        "dispatch_all_day": 0.69,
-        "dispatch_by_hour_call_rate": 0.7928,
-        "dispatch_by_hour_calibrated": 0.7908,
-        "busy_blend_call_rate": 0.8559
+        "recorded_nearest": 0.7963,
+        "dispatch_all_day": 0.6913,
+        "dispatch_by_hour_call_rate": 0.7939,
+        "dispatch_by_hour_calibrated": 0.7918,
+        "busy_blend_call_rate": 0.8541
       },
       {
         "slot": "08-12h",
-        "calls": 20730,
-        "recorded_nearest": 0.6813,
-        "dispatch_all_day": 0.6922,
-        "dispatch_by_hour_call_rate": 0.6743,
-        "dispatch_by_hour_calibrated": 0.6738,
-        "busy_blend_call_rate": 0.712
+        "calls": 20734,
+        "recorded_nearest": 0.682,
+        "dispatch_all_day": 0.6912,
+        "dispatch_by_hour_call_rate": 0.6732,
+        "dispatch_by_hour_calibrated": 0.6731,
+        "busy_blend_call_rate": 0.7089
       },
       {
         "slot": "12-16h",
-        "calls": 25758,
-        "recorded_nearest": 0.6076,
-        "dispatch_all_day": 0.6927,
-        "dispatch_by_hour_call_rate": 0.5801,
-        "dispatch_by_hour_calibrated": 0.5807,
-        "busy_blend_call_rate": 0.6722
+        "calls": 25760,
+        "recorded_nearest": 0.6054,
+        "dispatch_all_day": 0.6935,
+        "dispatch_by_hour_call_rate": 0.5792,
+        "dispatch_by_hour_calibrated": 0.5801,
+        "busy_blend_call_rate": 0.6686
       },
       {
         "slot": "16-20h",
-        "calls": 29334,
-        "recorded_nearest": 0.6843,
-        "dispatch_all_day": 0.6928,
-        "dispatch_by_hour_call_rate": 0.68,
-        "dispatch_by_hour_calibrated": 0.6805,
-        "busy_blend_call_rate": 0.6481
+        "calls": 29338,
+        "recorded_nearest": 0.6848,
+        "dispatch_all_day": 0.6926,
+        "dispatch_by_hour_call_rate": 0.6794,
+        "dispatch_by_hour_calibrated": 0.6789,
+        "busy_blend_call_rate": 0.6444
       },
       {
         "slot": "20-24h",
-        "calls": 25653,
-        "recorded_nearest": 0.7301,
+        "calls": 25661,
+        "recorded_nearest": 0.7271,
         "dispatch_all_day": 0.6898,
-        "dispatch_by_hour_call_rate": 0.7193,
-        "dispatch_by_hour_calibrated": 0.7185,
-        "busy_blend_call_rate": 0.6907
+        "dispatch_by_hour_call_rate": 0.7184,
+        "dispatch_by_hour_calibrated": 0.7184,
+        "busy_blend_call_rate": 0.6874
       }
     ],
     "nearest_share_error_across_slots": {
-      "dispatch_all_day": 0.057,
+      "dispatch_all_day": 0.0565,
       "dispatch_by_hour_call_rate": 0.01,
-      "dispatch_by_hour_calibrated": 0.0099,
-      "busy_blend_call_rate": 0.0441
+      "dispatch_by_hour_calibrated": 0.0097,
+      "busy_blend_call_rate": 0.0431
     },
     "slot_load_factors": [
-      0.753,
-      0.681,
-      1.116,
-      1.514,
-      1.095,
-      0.941
+      0.744,
+      0.67,
+      1.096,
+      1.493,
+      1.078,
+      0.928
     ]
   },
   "closure_2014": {
     "closure_score": {
       "nearest": {
-        "corr_across_areas": 0.479,
-        "mae_across_areas_s": 16.2,
-        "all_10_areas_s": 74.1
+        "corr_across_areas": 0.416,
+        "mae_across_areas_s": 17.2,
+        "all_10_areas_s": 72.8
       },
       "nearest_or_next_if_busy": {
-        "corr_across_areas": 0.356,
-        "mae_across_areas_s": 15.6,
-        "all_10_areas_s": 64.6
+        "corr_across_areas": 0.307,
+        "mae_across_areas_s": 16.3,
+        "all_10_areas_s": 63.2
       },
       "dispatch_all_day": {
-        "corr_across_areas": 0.54,
-        "mae_across_areas_s": 14.2,
-        "all_10_areas_s": 67.8
+        "corr_across_areas": 0.592,
+        "mae_across_areas_s": 13.0,
+        "all_10_areas_s": 63.3
       },
       "dispatch_by_hour_call_rate": {
-        "corr_across_areas": 0.56,
-        "mae_across_areas_s": 13.2,
-        "all_10_areas_s": 65.7
+        "corr_across_areas": 0.602,
+        "mae_across_areas_s": 12.6,
+        "all_10_areas_s": 63.1
       },
       "dispatch_by_hour_calibrated": {
-        "corr_across_areas": 0.554,
-        "mae_across_areas_s": 13.9,
-        "all_10_areas_s": 67.7
+        "corr_across_areas": 0.642,
+        "mae_across_areas_s": 12.4,
+        "all_10_areas_s": 64.9
       },
       "dispatch_ensemble": {
-        "corr_across_areas": 0.552,
-        "mae_across_areas_s": 13.7,
-        "all_10_areas_s": 67.0
+        "corr_across_areas": 0.615,
+        "mae_across_areas_s": 12.4,
+        "all_10_areas_s": 63.8
       },
       "dispatch_blend": {
-        "corr_across_areas": 0.561,
-        "mae_across_areas_s": 12.2,
-        "all_10_areas_s": 64.6,
-        "note": "dispatch_by_hour_call_rate, shrunk toward nearest_or_next when it over-predicts"
+        "corr_across_areas": 0.564,
+        "mae_across_areas_s": 12.8,
+        "all_10_areas_s": 62.2
       }
     },
     "recorded_all_areas_drive_s": 61.76081521277149

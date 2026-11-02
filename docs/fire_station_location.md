@@ -357,8 +357,8 @@ turnout. Change in average first-engine time vs today, 95 % paired bootstrap int
   although it met the floor in planning: floors are enforced on 2024 demand with the
   planner's busy model, and 2025 calls can differ.
 - Station-count sweep (`recommended_placement.py --scenarios expand_1,expand_2,expand_5,replace_5
-  --keep-boroughs 1`), dispatch scoring, LightGBM / road / straight-line: add 1 −1.3 / −0.9
-  / −0.5, add 2 −1.4 / −1.0 / −0.7, add 5 −3.8 / −3.2 / −2.4, move up to 5 −2.3 / −2.4 / −1.5
+  --keep-boroughs 1`), dispatch scoring, LightGBM / road / straight-line: add 1 −1.2 / −0.8
+  / −0.3, add 2 −1.4 / −1.1 / −0.6, add 5 −3.7 / −3.0 / −2.0, move up to 5 −2.4 / −2.4 / −1.4
   (`data/figures/placement/station_sweep.png`; `scripts/plot_results_figures.py`).
 
 ## Robustness (`scripts/placement_robustness.py`)
@@ -453,19 +453,29 @@ its pumps, the chance every faster candidate is busy, stations within 60 s of th
 the fastest station's pumps). LightGBM classifier on first-engine records, normalised per
 call; expected attendance = probability-weighted average.
 
-| | Drive error per cell, 2025 | 2014: correlation across 10 areas | 2014: error per area |
-|---|---|---|---|
-| Nearest station | 72.2 s | 0.48 | 16.2 s |
-| Nearest, or next nearest when busy | 46.2 s | 0.36 | 15.6 s |
-| **Dispatch model, by time of day** | **45.0 s** | **0.57** | **13.2 s** |
+Features (any layout): rank, predicted attendance, seconds behind the fastest and the
+second fastest, each candidate's busy chance (Erlang), pumps and pump ratio, the chance
+every faster candidate is busy and the chance this one is free when they are, stations
+within 60 / 90 / 120 s of the fastest, a closed-form busy cascade, and (hourly models) the
+time slot. Probabilities are temperature-scaled and blended with the cascade.
 
-- Today (trained 2021–24, tested 2025): rank shares 70 / 20 / 6 / 2 % predicted vs
-  70 / 18 / 6 / 3 % recorded (the busy blend can only give ranks 1–2); top-1 accuracy 70.3 %
-  vs 69.5 % for always-nearest.
-- 2014 closures (trained 2009–2013 only): up from 0.48 (nearest) to 0.57, still short of the
-  0.88 with the real responder. Largest misses: Knightsbridge (+107 s predicted, +59 recorded)
-  and Silvertown (+90 vs +117); likely LFB's own repositioning after the closures and
-  only a few hundred calls per area.
+| | Drive error per cell, 2025 (cells with 20+ calls) | 2014: correlation across 10 areas | 2014: error per area |
+|---|---|---|---|
+| Nearest station | 47.8 s | 0.42 | 17.2 s |
+| Nearest, or next nearest when busy | 25.4 s | 0.31 | 16.3 s |
+| Dispatch model, all day | 23.4 s | 0.59 | 13.0 s |
+| **Dispatch model, by time of day (calibrated)** | **23.7 s** | **0.64** | **12.4 s** |
+
+- Today (trained 2021–24, tested 2025): rank shares 69 / 20 / 6.5 / 2.4 % predicted vs
+  70 / 18 / 6 / 3 % recorded (the busy blend can only give ranks 1–2); top-1 accuracy 70.6 %
+  vs 69.6 % for always-nearest.
+- 2014 closures (trained 2009–2013 only): up from 0.42 (nearest) to 0.59–0.64, still short
+  of the 0.88 with the real responder; likely LFB's own repositioning after the closures
+  and only a few hundred calls per area.
+- Against the first version (10 features, same travel times): equal on 2025 per-cell error
+  (23.4 s), better on the 2014 test (0.56 → 0.59 all day, 0.52 → 0.64 by hour) and on the
+  nearest-station share by time of day (1.8 → 1.0 points), slightly worse on the share of
+  second-fastest stations (20.4 % vs 18.1 % recorded).
 
 **Time of day.** The nearest station sent the first engine on 78–80 % of calls at night
 but only 61 % in the early afternoon (12–16 h), not at the evening call peak (16–20 h:

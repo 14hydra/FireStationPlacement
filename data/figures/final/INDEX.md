@@ -4,7 +4,7 @@ Ten figures that tell the whole project. Open **01 → 10** in order.
 
 | # | File | At a glance |
 |---|---|---|
-| 01 | `01_travel_time_accuracy.png` | Street-aware trees beat the classic formula — **58.9 s** vs Kolesar **68.7 s**. |
+| 01 | `01_travel_time_accuracy.png` | Street-aware trees beat the classic distance→time formula. |
 | 02 | `02_street_features.png` | Top street traits that slow engines (plain labels, top 8). |
 | 03 | `03_first_engine_map.png` | Predicted first-engine time across London (single map). |
 | 04 | `04_station_busyness.png` | Busiest stations — engines out most often. |

@@ -63,7 +63,10 @@ def fig_01():
     lgb = mt.get("lightgbm(final)") or mt.get("lightgbm(full)") or mt.get("lightgbm")
     lgb_mae = float(lgb["mae_s"] if isinstance(lgb, dict) else lgb)
     kol = float(mt["kolesar(road_km)"]["mae_s"])
-    ns = m.get("new_station_check", {}).get("lightgbm", {})
+    # Never-seen stations: the full 20-group test (scripts/new_station_check.py) when present.
+    ns_path = FIG / "validation/new_stations/summary.json"
+    ns = (json.loads(ns_path.read_text())["overall"]["unseen"] if ns_path.exists()
+          else m.get("new_station_check", {}).get("lightgbm", {}))
     ns_mae = float(ns["mae_s"]) if ns else None
 
     rows = [
@@ -77,20 +80,29 @@ def fig_01():
     if ns_mae is not None:
         rows.append(("Our model · stations never seen", ns_mae, BLUE))
     rows.append(("Our model (street-aware trees)", lgb_mae, BLUE))
+    n_all = len(rows)
+    # The trips placement scores: first engine, home station, not busy (scripts/travel_time_error_breakdown.py).
+    pl = json.loads((FIG / "validation/travel_time_error/summary.json").read_text())["compare"]["placement"]
+    rows += [("Classic formula (road distance)", pl["kolesar_mae_s"], ORANGE),
+             ("Our model · stations never seen", pl["never_seen_mae_s"], BLUE),
+             ("Our model (street-aware trees)", pl["model_mae_s"], BLUE)]
 
-    fig, (a, b) = plt.subplots(1, 2, figsize=(13.2, 5.0), gridspec_kw={"width_ratios": [1.7, 1]})
-    y = np.arange(len(rows))
+    fig, (a, b) = plt.subplots(1, 2, figsize=(13.2, 5.6), gridspec_kw={"width_ratios": [1.7, 1]})
+    y = np.arange(len(rows)) + (np.arange(len(rows)) >= n_all) * 1.3  # gap and heading between the two groups
     a.barh(y, [r[1] for r in rows], color=[r[2] for r in rows], height=0.72)
     a.set_yticks(y, [r[0] for r in rows], fontsize=11, color=INK)
-    for i, r in enumerate(rows):
-        a.text(r[1] + 1.2, i, f"{r[1]:.1f} s", va="center", color=INK, fontsize=11, fontweight="bold")
+    for yi, r in zip(y, rows):
+        a.text(r[1] + 1.2, yi, f"{r[1]:.1f} s", va="center", color=INK, fontsize=11, fontweight="bold")
+    a.text(0.5, y[n_all - 1] + 0.95, "All 2025 trips (every engine, busy or not)", fontsize=10.5, color=INK, va="center")
+    a.text(0.5, y[-1] + 0.95, "Trips placement scores: first engine, from its home station, not busy",
+           fontsize=10.5, color=INK, fontweight="bold", va="center")
+    a.set_ylim(-0.6, y[-1] + 1.4)
     a.set_xlabel("Average error on held-out 2025 trips (seconds · lower is better)")
     a.set_title("Travel time: how wrong is each method?")
     a.set_xlim(0, max(r[1] for r in rows) * 1.18)
     a.grid(axis="x", color=GRID)
-    delta = kol - lgb_mae
-    a.annotate(f"≈ {delta:.0f} s better\nthan the classic formula",
-               xy=(lgb_mae, len(rows) - 1), xytext=(lgb_mae + 18, len(rows) - 2.2),
+    a.annotate(f"≈ {pl['kolesar_mae_s'] - pl['model_mae_s']:.0f} s better than the\nclassic formula on the same trips",
+               xy=(pl["model_mae_s"] + 13, y[-1]), xytext=(pl["model_mae_s"] + 26, y[-1] - 1.2),
                fontsize=11, color=BLUE, fontweight="bold",
                arrowprops={"arrowstyle": "->", "color": BLUE, "lw": 1.4})
 
@@ -456,27 +468,28 @@ def fig_09():
 def fig_10():
     m = json.loads((ROOT / "data/processed/models/travel_time_lfb.metrics.json").read_text())
     mt = m["metrics_test"]
-    lgb = mt.get("lightgbm(final)") or mt.get("lightgbm(full)")
-    lgb_mae = float(lgb["mae_s"])
-    kol = float(mt["kolesar(road_km)"]["mae_s"])
+    pl = json.loads((FIG / "validation/travel_time_error/summary.json").read_text())["compare"]["placement"]
     disp = json.loads((FIG / "validation/dispatch/summary.json").read_text())
     dscore = disp.get("closure_2014", {}).get("closure_score", {})
-    best = max(
-        ((k, v) for k, v in dscore.items() if k.startswith("dispatch")),
-        key=lambda kv: kv[1].get("corr_across_areas", -1),
-        default=("dispatch", {"corr_across_areas": 0.57, "mae_across_areas_s": 13}),
-    )
+    # The all-day model is the one placement scoring uses (not the best-scoring variant).
+    best = ("dispatch_all_day", dscore.get("dispatch_all_day", {"corr_across_areas": float("nan"),
+                                                                "mae_across_areas_s": float("nan")}))
+    sc = pd.read_csv(FIG / "placement/layout_scoring/scores.csv")
+    rec = sc[(sc["layout"] == "lgbm_replace_10_boroughs1s") & (sc["response"] == "dispatch")]
+    gain = -rec["d_mean_s"]
+    gain10 = -rec["d_slowest10_s"]
     rows = [
         ["Travel-time accuracy",
-         f"Our model {lgb_mae:.1f} s error vs classic formula {kol:.1f} s (held-out 2025)"],
+         f"Our model {pl['model_mae_s']:.1f} s error vs classic formula {pl['kolesar_mae_s']:.1f} s (trips placement scores)"],
         ["What the model uses",
          "Street traits on the legal route — signals, junctions, road class, speed limits"],
         ["Busy engines",
          "Each station’s chance of being free comes from its pumps and call load"],
         ["Fair layouts",
-         "Move up to 10 stations with no borough worse than today"],
+         "Move up to 10 stations; every borough within 1 s of today"],
         ["Headline gain",
-         "About 2.5–5.5 s faster citywide · 3.6–4.9 s faster on the slowest 10% of calls"],
+         f"About {gain.min():.1f}–{gain.max():.1f} s faster citywide · "
+         f"{gain10.min():.1f}–{gain10.max():.1f} s faster on the slowest 10% of calls"],
         ["Real-world check",
          f"2014 closures: learned dispatch corr {best[1]['corr_across_areas']:.2f}, "
          f"area error {best[1]['mae_across_areas_s']:.0f} s"],

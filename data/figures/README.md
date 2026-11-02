@@ -35,6 +35,8 @@ data/figures/
 | `validation/closure_2014_ranking/` | Earlier ranking of the closed stations | `scripts/validate_london_2014_closures.py`, `rank_closed_stations_2014.py` |
 | `validation/dispatch/` | Dispatch model: which station sends the first engine | `scripts/fit_dispatch_model.py` |
 | `validation/new_stations/` | Travel time accuracy for stations the model never saw | `scripts/new_station_check.py` |
+| `validation/new_stations_combined/` | Never-seen stations test for the combined street-speeds model | `scripts/new_station_check_combined.py` |
+| `validation/travel_time_error/` | Error on placement's trips, without the worst 5 %, and per route | `scripts/travel_time_error_breakdown.py` |
 | `reports/` | Slide-ready figures for progress reports | `scripts/plot_weekly_report.py` |
 
 **ISEF / board — start here:** [`final/`](final/) — ten numbered figures + `00_roadmap.png` + [`INDEX.md`](final/INDEX.md).

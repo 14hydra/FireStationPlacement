@@ -1,0 +1,31 @@
+variant,slice,n,mae_s,medae_s,bias_s
+A production,all,200624,57.8,35.48,-17.68
+A production,dense_short (central),28838,49.4,31.01,-17.8
+A production,long_sparse (outer),24329,78.78,49.98,-15.43
+A production,rush hour,66340,58.46,35.92,-19.71
+A production,over 6 km,9260,103.3,67.17,-10.81
+B + interactions,all,200624,57.85,35.55,-17.73
+B + interactions,dense_short (central),28838,49.43,30.9,-17.71
+B + interactions,long_sparse (outer),24329,78.83,49.93,-15.69
+B + interactions,rush hour,66340,58.45,36.1,-19.67
+B + interactions,over 6 km,9260,103.55,66.59,-11.07
+C + sample weights,all,200624,57.82,35.47,-17.23
+C + sample weights,dense_short (central),28838,49.41,30.89,-18.06
+C + sample weights,long_sparse (outer),24329,78.7,49.86,-13.13
+C + sample weights,rush hour,66340,58.44,35.91,-19.42
+C + sample weights,over 6 km,9260,103.69,66.72,-8.37
+D + both (embedding model),all,200624,57.82,35.43,-17.16
+D + both (embedding model),dense_short (central),28838,49.42,30.88,-18.03
+D + both (embedding model),long_sparse (outer),24329,78.64,49.89,-12.83
+D + both (embedding model),rush hour,66340,58.44,35.91,-19.33
+D + both (embedding model),over 6 km,9260,103.37,66.61,-7.58
+E D + in-sample correction,all,200624,57.8,35.49,-16.47
+E D + in-sample correction,dense_short (central),28838,49.42,30.88,-18.03
+E D + in-sample correction,long_sparse (outer),24329,78.51,50.22,-7.1
+E D + in-sample correction,rush hour,66340,58.4,35.93,-18.63
+E D + in-sample correction,over 6 km,9260,103.3,66.21,-3.43
+F D + honest correction,all,200624,57.85,35.6,-15.57
+F D + honest correction,dense_short (central),28838,49.42,30.88,-18.03
+F D + honest correction,long_sparse (outer),24329,78.92,51.41,0.33
+F D + honest correction,rush hour,66340,58.42,36.08,-17.73
+F D + honest correction,over 6 km,9260,103.53,66.87,1.96

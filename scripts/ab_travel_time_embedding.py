@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 Fast A/B: baseline LightGBM features vs embedding-informed features + sample weights.
+Superseded by scripts/compare_travel_time_variants.py (production settings, like for like;
+its bias correction here is fitted on in-sample predictions, which understates bias).
 
 Trains 1-seed models with fixed trees (no early-stopping) on 2021–24 → 2025, and
 reports overall MAE plus error on the embedding hard slices:

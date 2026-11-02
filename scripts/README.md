@@ -30,6 +30,12 @@ Runnable entry points. Library code lives in `src/firestation/`.
 | `closure_2014_*.py`, `rank_closed_stations_2014.py`, `validate_london_2014_closures.py` | 2014 closure validation |
 | `fit_dispatch_model.py` | Which station sends first |
 | `new_station_check.py` | Hold-out new stations (`--summarize-only` to report saved folds) |
+| `new_station_check_combined.py` | Hold-out new stations for street speeds + LightGBM correction |
+| `compare_placement_training.py` | Training for the trips placement scores, compared with production |
+| `fetch_streetmanager_london.py` | Stream Street Manager roadworks archives, keep London works |
+| `build_traffic_features.py` | DfT traffic counts and roadworks along each trip's route |
+| `compare_traffic_features.py` | Do traffic and roadworks improve the travel time model? |
+| `travel_time_error_breakdown.py` | Travel time error on placement's trips, without the worst 5 %, and per route |
 | `plot_weekly_report.py` | Slide pack under `data/figures/reports/` |
 
 Typical order after a fresh download: build stations → graph → travel training → train model → capacity / busyness → planner / recommended → `embed_analysis_metrics_2d.py`.

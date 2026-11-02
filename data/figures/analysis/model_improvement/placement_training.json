@@ -1,0 +1,38 @@
+{
+  "doc": "Does training for the trips placement scores make the travel time model better on them?\n\nPlacement scores the first engine, from its home station, not busy. Same settings and seed\nas production, 2021-2024 to 2025, scored on all trips and on placement's trips:\n\n  A  production: every trip, equal weight\n  B  trains only on placement's trips\n  C  every trip, placement's trips weighted 3x\n  D  every trip except those where the engine was probably not at its station\n     (sent from another station, or turnout under 30 s)\n\nWrites data/figures/analysis/model_improvement/placement_training.json.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/compare_placement_training.py\n",
+  "settings": {
+    "learning_rate": 0.05,
+    "num_leaves": 255,
+    "min_child_samples": 50,
+    "colsample_bytree": 0.7,
+    "subsample": 0.85,
+    "reg_lambda": 3.0,
+    "n_estimators": 2110
+  },
+  "results": {
+    "A production": {
+      "train_trips": 701000,
+      "all_mae_s": 57.8,
+      "placement_mae_s": 45.64,
+      "placement_medae_s": 29.58
+    },
+    "B placement trips only": {
+      "train_trips": 319060,
+      "all_mae_s": 70.74,
+      "placement_mae_s": 45.76,
+      "placement_medae_s": 29.59
+    },
+    "C placement trips x3": {
+      "train_trips": 701000,
+      "all_mae_s": 58.13,
+      "placement_mae_s": 45.61,
+      "placement_medae_s": 29.51
+    },
+    "D without likely-away engines": {
+      "train_trips": 625006,
+      "all_mae_s": 58.13,
+      "placement_mae_s": 45.73,
+      "placement_medae_s": 29.42
+    }
+  }
+}

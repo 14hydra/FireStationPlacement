@@ -1,0 +1,103 @@
+{
+  "doc": "Fair comparison of the travel time model with and without the embedding-informed changes.\n\nEvery variant uses the production settings (TUNED_PARAMS, 2,110 trees, the same seed),\ntrains on 2021-2024 and is scored on 2025 trips, overall and on the hard cases the\nstation embedding pointed at:\n\n  A  production features (base, street, context, incident, dest), no sample weights\n  B  A + interaction features (rush x signals, rush x junctions, night x signals,\n     dense_short, long_sparse)\n  C  A + sample weights (long trips and dense short trips up-weighted, implausible\n     speeds down-weighted)\n  D  B + C (the embedding model)\n  E  D + long_sparse bias correction fitted on D's predictions for its own training trips\n     (in-sample, as first shipped)\n  F  D + long_sparse bias correction fitted honestly: a model trained on 2021-2023 with\n     D's settings predicts 2024, and its mean error on 2024 long_sparse trips is the\n     correction applied to D's 2025 predictions\n\nSlices: all trips; dense_short (>= 10 signals/km, <= 2.5 km); long_sparse (>= 4 km,\n<= 6 signals/km); rush hour; trips over 6 km.\n\nWrites data/figures/analysis/model_improvement/fair_comparison.csv and .json.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/compare_travel_time_variants.py\n",
+  "settings": {
+    "learning_rate": 0.05,
+    "num_leaves": 255,
+    "min_child_samples": 50,
+    "colsample_bytree": 0.7,
+    "subsample": 0.85,
+    "reg_lambda": 3.0,
+    "n_estimators": 2110
+  },
+  "seed": 42,
+  "n_test_2025": 200624,
+  "mae_by_variant_and_slice": {
+    "A production": {
+      "all": 57.8,
+      "dense_short (central)": 49.4,
+      "long_sparse (outer)": 78.78,
+      "over 6 km": 103.3,
+      "rush hour": 58.46
+    },
+    "B + interactions": {
+      "all": 57.85,
+      "dense_short (central)": 49.43,
+      "long_sparse (outer)": 78.83,
+      "over 6 km": 103.55,
+      "rush hour": 58.45
+    },
+    "C + sample weights": {
+      "all": 57.82,
+      "dense_short (central)": 49.41,
+      "long_sparse (outer)": 78.7,
+      "over 6 km": 103.69,
+      "rush hour": 58.44
+    },
+    "D + both (embedding model)": {
+      "all": 57.82,
+      "dense_short (central)": 49.42,
+      "long_sparse (outer)": 78.64,
+      "over 6 km": 103.37,
+      "rush hour": 58.44
+    },
+    "E D + in-sample correction": {
+      "all": 57.8,
+      "dense_short (central)": 49.42,
+      "long_sparse (outer)": 78.51,
+      "over 6 km": 103.3,
+      "rush hour": 58.4
+    },
+    "F D + honest correction": {
+      "all": 57.85,
+      "dense_short (central)": 49.42,
+      "long_sparse (outer)": 78.92,
+      "over 6 km": 103.53,
+      "rush hour": 58.42
+    }
+  },
+  "overall": {
+    "A production": {
+      "mae_s": 57.8,
+      "medae_s": 35.48,
+      "bias_s": -17.68
+    },
+    "B + interactions": {
+      "mae_s": 57.85,
+      "medae_s": 35.55,
+      "bias_s": -17.73
+    },
+    "C + sample weights": {
+      "mae_s": 57.82,
+      "medae_s": 35.47,
+      "bias_s": -17.23
+    },
+    "D + both (embedding model)": {
+      "mae_s": 57.82,
+      "medae_s": 35.43,
+      "bias_s": -17.16
+    },
+    "E D + in-sample correction": {
+      "mae_s": 57.8,
+      "medae_s": 35.49,
+      "bias_s": -16.47
+    },
+    "F D + honest correction": {
+      "mae_s": 57.85,
+      "medae_s": 35.6,
+      "bias_s": -15.57
+    }
+  },
+  "in_sample_bias": {
+    "dense_short": 0.0,
+    "long_sparse": -5.72893294710474,
+    "rush_other": 0.0,
+    "other": 0.0
+  },
+  "honest_bias": {
+    "dense_short": 0.0,
+    "long_sparse": -13.162118216468734,
+    "rush_other": 0.0,
+    "other": 0.0
+  },
+  "minutes": 51.1
+}

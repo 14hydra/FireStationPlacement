@@ -11,17 +11,20 @@ Source picture: `data/figures/analysis/station_embedding/06_isef_story.png`
 | PC3 = high MAE + long outer drives | Emphasise / calibrate long sparse routes |
 | 21 busy 1-engine vs 23 quiet 2-engine | Resize should blend utilisation, not only nearest-catchment load |
 
-## Changes shipped
+## Changes tried
 
 ### Travel-time (`src/firestation/travel_time_model.py`, `scripts/train_travel_time_lfb.py`)
 
-1. **Interaction features** (placement-safe): `rush_x_signals_per_km`, `rush_x_junctions_per_km`,
-   `night_x_signals_per_km`, `dense_short`, `long_sparse` — group `interaction` in `FINAL_GROUPS`.
-2. **Sample weights**: up-weight long trips and dense-short trips; soft-downweight impossible speeds.
-3. **Regime bias calibration**: post-hoc correction for `long_sparse` only (outer hard cases).
-   Wired into `predict()` when the saved bundle has `regime_bias`.
+Tested, and off by default because they did not improve the model (see Honest results):
 
-Fast A/B: `scripts/ab_travel_time_embedding.py` → `data/figures/analysis/model_improvement/`.
+1. **Interaction features** (placement-safe): `rush_x_signals_per_km`, `rush_x_junctions_per_km`,
+   `night_x_signals_per_km`, `dense_short`, `long_sparse` — group `interaction`
+   (`--interactions`).
+2. **Sample weights**: up-weight long trips and dense-short trips; soft-downweight impossible
+   speeds (`--sample-weights`).
+3. **Regime bias calibration**: post-hoc correction for `long_sparse` trips only
+   (`--regime-bias`; now fitted out of sample, see below). `predict()` applies it when a
+   saved bundle has `regime_bias`.
 
 ### Resize / capacity (`src/firestation/station_capacity.py`, `fire_station_location.py`)
 
@@ -32,20 +35,32 @@ Fast A/B: `scripts/ab_travel_time_embedding.py` → `data/figures/analysis/model
 
 ## Honest results
 
-**Production model** (`travel_time_lfb.joblib`, 1-seed · 900 trees · interactions + sample
-weights + long_sparse calibration), held-out 2025:
+**Like-for-like test** (`scripts/compare_travel_time_variants.py`,
+`data/figures/analysis/model_improvement/fair_comparison.{csv,json}`, 2026-10-23): every
+variant uses the production settings (2,110 trees, same seed), trains on 2021–2024 and is
+scored on all 200,624 trips from 2025. MAE in seconds:
 
-| Model | MAE |
-|---|---:|
-| Classic Kolesar (road) | 68.7 s |
-| Previous LightGBM (v2, no interactions) | 60.2 s |
-| **Current (embedding-informed)** | **58.9 s** |
+| Variant | All | Dense short (central) | Long sparse (outer) | Over 6 km | Rush hour |
+|---|---:|---:|---:|---:|---:|
+| A production | **57.80** | **49.40** | 78.78 | **103.30** | 58.46 |
+| B + interactions | 57.85 | 49.43 | 78.83 | 103.55 | 58.45 |
+| C + sample weights | 57.82 | 49.41 | 78.70 | 103.69 | 58.44 |
+| D + both | 57.82 | 49.42 | 78.64 | 103.37 | 58.44 |
+| E D + correction fitted on its own training trips | 57.80 | 49.42 | 78.51 | 103.30 | 58.40 |
+| F D + correction fitted out of sample (2024) | 57.85 | 49.42 | 78.92 | 103.53 | 58.42 |
 
-Earlier A/B (`data/figures/analysis/model_improvement/ab_travel_time.json`, 700 trees):
-overall MAE was flat; the gain concentrated on **outer long-drive** (−0.36 s). Stronger
-long-trip sample weights + full interaction train moved the citywide number too.
+Every variant is within 0.05 s of production overall and within 0.3 s on the hard slices,
+which is within the noise of a single seed. So the production model is unchanged
+(`travel_time_lfb.joblib`, 4 seeds, 57.6 s) and the three changes stay as options.
 
-Full 4-seed bag: `python scripts/train_travel_time_lfb.py --quick --seeds 4`.
+Why the earlier numbers looked better: the "58.9 s vs 60.2 s" comparison used a 1-seed,
+900-tree model against a different baseline, not the 4-seed, 2,110-tree production model
+(57.6 s). The bias correction was fitted on the model's predictions for its own training
+trips, where tree models are much closer to the truth than on new trips: it measured
+−5.7 s there against −13.2 s on unseen 2024 trips. And `calibrate_travel_time_regimes.py`
+(removed) scored trips without their street features (79.9 s MAE), measured a −49 s bias
+from that, and wrote it into the production model file; any copy of
+`travel_time_lfb.joblib` with a `regime_bias` entry should be retrained.
 
 **Dispatch** (figure 09): cover-density features + temperature calibration → area
 correlation **0.57** (nearest 0.48). Resize `util_weight` default **0.45** so busy

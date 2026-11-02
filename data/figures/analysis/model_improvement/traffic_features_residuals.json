@@ -1,0 +1,162 @@
+{
+  "closures on route": [
+    {
+      "closures": "0",
+      "n": 70018,
+      "median_late_s": 2.4,
+      "mean_late_s": 13.9,
+      "km": 1.9,
+      "drive": 203.0
+    },
+    {
+      "closures": "1",
+      "n": 12729,
+      "median_late_s": 4.1,
+      "mean_late_s": 15.9,
+      "km": 2.1,
+      "drive": 220.0
+    },
+    {
+      "closures": "2",
+      "n": 3334,
+      "median_late_s": 6.4,
+      "mean_late_s": 18.1,
+      "km": 2.1,
+      "drive": 231.0
+    },
+    {
+      "closures": "3",
+      "n": 1856,
+      "median_late_s": 9.1,
+      "mean_late_s": 19.3,
+      "km": 2.3,
+      "drive": 241.0
+    }
+  ],
+  "lane works on route": [
+    {
+      "lane_works": "0",
+      "n": 50235,
+      "median_late_s": 2.2,
+      "mean_late_s": 14.1,
+      "km": 1.7,
+      "drive": 194.0
+    },
+    {
+      "lane_works": "1",
+      "n": 21955,
+      "median_late_s": 3.3,
+      "mean_late_s": 14.4,
+      "km": 2.0,
+      "drive": 217.0
+    },
+    {
+      "lane_works": "2",
+      "n": 8863,
+      "median_late_s": 4.4,
+      "mean_late_s": 15.3,
+      "km": 2.2,
+      "drive": 229.0
+    },
+    {
+      "lane_works": "3",
+      "n": 3893,
+      "median_late_s": 4.7,
+      "mean_late_s": 15.9,
+      "km": 2.3,
+      "drive": 236.0
+    },
+    {
+      "lane_works": "4",
+      "n": 2991,
+      "median_late_s": 5.4,
+      "mean_late_s": 17.6,
+      "km": 2.4,
+      "drive": 243.0
+    }
+  ],
+  "daily flow, thousands": [
+    {
+      "flow": "(0, 12]",
+      "n": 8801,
+      "median_late_s": 2.5,
+      "mean_late_s": 14.1,
+      "km": 1.7,
+      "drive": 197.0
+    },
+    {
+      "flow": "(12, 16]",
+      "n": 20254,
+      "median_late_s": 3.4,
+      "mean_late_s": 15.1,
+      "km": 1.9,
+      "drive": 212.0
+    },
+    {
+      "flow": "(16, 20]",
+      "n": 15796,
+      "median_late_s": 3.6,
+      "mean_late_s": 13.8,
+      "km": 2.0,
+      "drive": 214.0
+    },
+    {
+      "flow": "(20, 30]",
+      "n": 21200,
+      "median_late_s": 3.6,
+      "mean_late_s": 14.6,
+      "km": 2.0,
+      "drive": 211.0
+    },
+    {
+      "flow": "(30, 300]",
+      "n": 11053,
+      "median_late_s": 1.2,
+      "mean_late_s": 14.0,
+      "km": 2.0,
+      "drive": 207.0
+    }
+  ],
+  "hourly flow, thousands": [
+    {
+      "hour_flow": "(0.0, 0.8]",
+      "n": 6603,
+      "median_late_s": 3.4,
+      "mean_late_s": 14.4,
+      "km": 1.8,
+      "drive": 206.0
+    },
+    {
+      "hour_flow": "(0.8, 1.1]",
+      "n": 12132,
+      "median_late_s": 3.6,
+      "mean_late_s": 16.5,
+      "km": 1.9,
+      "drive": 219.0
+    },
+    {
+      "hour_flow": "(1.1, 1.5]",
+      "n": 11621,
+      "median_late_s": 5.4,
+      "mean_late_s": 16.3,
+      "km": 2.0,
+      "drive": 222.0
+    },
+    {
+      "hour_flow": "(1.5, 2.5]",
+      "n": 7020,
+      "median_late_s": 5.0,
+      "mean_late_s": 17.0,
+      "km": 2.0,
+      "drive": 221.0
+    },
+    {
+      "hour_flow": "(2.5, 20.0]",
+      "n": 3466,
+      "median_late_s": 3.4,
+      "mean_late_s": 17.6,
+      "km": 2.0,
+      "drive": 216.0
+    }
+  ]
+}

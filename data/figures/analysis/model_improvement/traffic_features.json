@@ -1,0 +1,262 @@
+{
+  "doc": "Do traffic counts and roadworks along the route improve the travel time model?\n\nSame settings and seed as production, 2021-2024 to 2025, with features from\nscripts/build_traffic_features.py:\n\n  A   production\n  A2  production with another seed: how much the error moves by chance alone\n  T   A + traffic\n  R   A + roadworks\n  TR  A + traffic + roadworks\n\nScored on all trips, placement's trips (first engine, home station, not busy), trips over 6 km,\nrush hour and trips with a road closure or lane restriction on the route. Differences from A\nhave paired 95 % intervals, resampling days.\n\nWrites data/figures/analysis/model_improvement/traffic_features.json.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/compare_traffic_features.py\n",
+  "settings": {
+    "learning_rate": 0.05,
+    "num_leaves": 255,
+    "min_child_samples": 50,
+    "colsample_bytree": 0.7,
+    "subsample": 0.85,
+    "reg_lambda": 3.0,
+    "n_estimators": 2110
+  },
+  "n": {
+    "all": 200624,
+    "placement": 87937,
+    "over 6 km": 9260,
+    "rush hour": 66340,
+    "closure or lane works on route": 129565
+  },
+  "mae_s": {
+    "A production": {
+      "all": 57.8,
+      "placement": 45.64,
+      "over 6 km": 103.3,
+      "rush hour": 58.46,
+      "closure or lane works on route": 60.96
+    },
+    "A2 other seed": {
+      "all": 57.83,
+      "placement": 45.66,
+      "over 6 km": 103.27,
+      "rush hour": 58.49,
+      "closure or lane works on route": 60.97
+    },
+    "T traffic": {
+      "all": 57.81,
+      "placement": 45.68,
+      "over 6 km": 103.13,
+      "rush hour": 58.55,
+      "closure or lane works on route": 60.96
+    },
+    "R roadworks": {
+      "all": 57.83,
+      "placement": 45.64,
+      "over 6 km": 103.31,
+      "rush hour": 58.49,
+      "closure or lane works on route": 60.93
+    },
+    "TR both": {
+      "all": 57.81,
+      "placement": 45.65,
+      "over 6 km": 103.19,
+      "rush hour": 58.48,
+      "closure or lane works on route": 60.92
+    }
+  },
+  "change_from_A_s": {
+    "A2 other seed": {
+      "all": [
+        0.02,
+        -0.01,
+        0.06
+      ],
+      "placement": [
+        0.01,
+        -0.03,
+        0.06
+      ],
+      "over 6 km": [
+        -0.03,
+        -0.38,
+        0.32
+      ],
+      "rush hour": [
+        0.02,
+        -0.04,
+        0.1
+      ],
+      "closure or lane works on route": [
+        0.02,
+        -0.04,
+        0.07
+      ]
+    },
+    "T traffic": {
+      "all": [
+        0.01,
+        -0.03,
+        0.05
+      ],
+      "placement": [
+        0.03,
+        -0.01,
+        0.07
+      ],
+      "over 6 km": [
+        -0.16,
+        -0.51,
+        0.22
+      ],
+      "rush hour": [
+        0.09,
+        0.02,
+        0.16
+      ],
+      "closure or lane works on route": [
+        0.0,
+        -0.05,
+        0.05
+      ]
+    },
+    "R roadworks": {
+      "all": [
+        0.03,
+        -0.01,
+        0.07
+      ],
+      "placement": [
+        -0.01,
+        -0.06,
+        0.04
+      ],
+      "over 6 km": [
+        0.01,
+        -0.33,
+        0.39
+      ],
+      "rush hour": [
+        0.02,
+        -0.05,
+        0.09
+      ],
+      "closure or lane works on route": [
+        -0.02,
+        -0.07,
+        0.04
+      ]
+    },
+    "TR both": {
+      "all": [
+        0.0,
+        -0.04,
+        0.05
+      ],
+      "placement": [
+        0.01,
+        -0.04,
+        0.05
+      ],
+      "over 6 km": [
+        -0.1,
+        -0.5,
+        0.28
+      ],
+      "rush hour": [
+        0.02,
+        -0.05,
+        0.1
+      ],
+      "closure or lane works on route": [
+        -0.03,
+        -0.09,
+        0.03
+      ]
+    }
+  },
+  "importance_gain_share": {
+    "A production": {},
+    "A2 other seed": {},
+    "T traffic": {
+      "route_flow_k": 0.0112,
+      "route_flow_per_lane": 0.0119,
+      "route_hour_flow_k": 0.0207,
+      "route_counted_share": 0.0127
+    },
+    "R roadworks": {
+      "works_closure": 0.0023,
+      "works_lanes": 0.0045,
+      "works_any": 0.0075
+    },
+    "TR both": {
+      "route_flow_k": 0.0111,
+      "route_flow_per_lane": 0.0122,
+      "route_hour_flow_k": 0.02,
+      "route_counted_share": 0.0124,
+      "works_closure": 0.0021,
+      "works_lanes": 0.004,
+      "works_any": 0.0068
+    }
+  },
+  "features_summary": {
+    "route_flow_k": {
+      "count": 186723.0,
+      "mean": 22.787,
+      "std": 15.301,
+      "min": 0.243,
+      "25%": 14.663,
+      "50%": 18.67,
+      "75%": 24.448,
+      "max": 200.932
+    },
+    "route_flow_per_lane": {
+      "count": 186723.0,
+      "mean": 10.6,
+      "std": 7.22,
+      "min": 0.121,
+      "25%": 6.994,
+      "50%": 8.653,
+      "75%": 11.199,
+      "max": 116.365
+    },
+    "route_hour_flow_k": {
+      "count": 105679.0,
+      "mean": 1.428,
+      "std": 0.96,
+      "min": 0.013,
+      "25%": 0.921,
+      "50%": 1.168,
+      "75%": 1.534,
+      "max": 12.623
+    },
+    "route_counted_share": {
+      "count": 200485.0,
+      "mean": 0.478,
+      "std": 0.281,
+      "min": 0.0,
+      "25%": 0.251,
+      "50%": 0.501,
+      "75%": 0.708,
+      "max": 1.0
+    },
+    "works_closure": {
+      "count": 200624.0,
+      "mean": 0.479,
+      "std": 1.068,
+      "min": 0.0,
+      "25%": 0.0,
+      "50%": 0.0,
+      "75%": 1.0,
+      "max": 20.0
+    },
+    "works_lanes": {
+      "count": 200624.0,
+      "mean": 1.223,
+      "std": 1.64,
+      "min": 0.0,
+      "25%": 0.0,
+      "50%": 1.0,
+      "75%": 2.0,
+      "max": 22.0
+    },
+    "works_any": {
+      "count": 200624.0,
+      "mean": 2.971,
+      "std": 3.177,
+      "min": 0.0,
+      "25%": 1.0,
+      "50%": 2.0,
+      "75%": 4.0,
+      "max": 41.0
+    }
+  }
+}

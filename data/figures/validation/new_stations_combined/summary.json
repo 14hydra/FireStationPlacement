@@ -1,0 +1,110 @@
+{
+  "doc": "New-location test for the combined model (learned street speeds + LightGBM correction).\n\nSame 20 station groups as scripts/new_station_check.py. For each group the street speeds and\nthe correction are both fitted without that group's stations, and predict its 2025 trips. The\nLightGBM-alone predictions come from that script's saved folds, so the comparison is on the\nsame trips with the same settings (1 seed).\n\nWrites data/figures/validation/new_stations_combined/summary.json and by_distance.csv.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/new_station_check_combined.py [--rounds 3]\n",
+  "folds_done": 20,
+  "trips": 199194,
+  "params": {
+    "learning_rate": 0.05,
+    "num_leaves": 255,
+    "min_child_samples": 50,
+    "colsample_bytree": 0.7,
+    "subsample": 0.85,
+    "reg_lambda": 3.0,
+    "n_estimators": 2110
+  },
+  "all": {
+    "lightgbm_alone": {
+      "mae_s": 62.22,
+      "medae_s": 41.16,
+      "bias_s": -11.48
+    },
+    "combined": {
+      "mae_s": 62.05,
+      "medae_s": 40.93,
+      "bias_s": -11.72
+    },
+    "street_speeds_alone": {
+      "mae_s": 66.16,
+      "medae_s": 42.79,
+      "bias_s": -17.78
+    },
+    "kolesar": {
+      "mae_s": 68.69,
+      "medae_s": 45.82,
+      "bias_s": -16.13
+    }
+  },
+  "placement": {
+    "lightgbm_alone": {
+      "mae_s": 50.3,
+      "medae_s": 35.12,
+      "bias_s": -6.93
+    },
+    "combined": {
+      "mae_s": 50.16,
+      "medae_s": 34.94,
+      "bias_s": -7.15
+    },
+    "street_speeds_alone": {
+      "mae_s": 52.02,
+      "medae_s": 36.06,
+      "bias_s": -8.23
+    },
+    "kolesar": {
+      "mae_s": 53.91,
+      "medae_s": 38.85,
+      "bias_s": -2.67
+    }
+  },
+  "stations_where_combined_beats_lightgbm": "62 of 102",
+  "by_distance": [
+    {
+      "road_km": "<2",
+      "trips": 68423,
+      "mae_lightgbm_alone": 51.08,
+      "mae_combined": 50.91,
+      "mae_street_speeds_alone": 52.82,
+      "mae_kolesar": 53.9,
+      "bias_lightgbm_alone": -10.48,
+      "bias_combined": -11.05,
+      "bias_street_speeds_alone": -16.82,
+      "bias_kolesar": -15.36
+    },
+    {
+      "road_km": "2-4",
+      "trips": 91024,
+      "mae_lightgbm_alone": 61.04,
+      "mae_combined": 60.92,
+      "mae_street_speeds_alone": 64.99,
+      "mae_kolesar": 67.47,
+      "bias_lightgbm_alone": -12.48,
+      "bias_combined": -12.45,
+      "bias_street_speeds_alone": -18.13,
+      "bias_kolesar": -15.69
+    },
+    {
+      "road_km": "4-6",
+      "trips": 30604,
+      "mae_lightgbm_alone": 76.8,
+      "mae_combined": 76.42,
+      "mae_street_speeds_alone": 83.45,
+      "mae_kolesar": 88.3,
+      "bias_lightgbm_alone": -13.07,
+      "bias_combined": -13.56,
+      "bias_street_speeds_alone": -21.92,
+      "bias_kolesar": -23.59
+    },
+    {
+      "road_km": "6+",
+      "trips": 9143,
+      "mae_lightgbm_alone": 108.59,
+      "mae_combined": 108.64,
+      "mae_street_speeds_alone": 119.76,
+      "mae_kolesar": 125.85,
+      "bias_lightgbm_alone": -3.57,
+      "bias_combined": -3.33,
+      "bias_street_speeds_alone": -7.69,
+      "bias_kolesar": -1.3
+    }
+  ],
+  "minutes_this_run": 91.1
+}
