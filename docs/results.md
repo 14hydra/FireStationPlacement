@@ -1,7 +1,7 @@
 # Results and comparisons
 
 Every comparison the project makes, in one place, with where each number comes from and
-which figures show it. Update this file when a script is rerun. Last updated 2026-10-19.
+which figures show it. Update this file when a script is rerun. Last updated 2026-11-02.
 
 **How to read the numbers**
 
@@ -34,7 +34,7 @@ Source: `data/processed/models/travel_time_lfb.metrics.json` (`scripts/train_tra
 | **LightGBM (street features)** | **57.6** | **35.3** | −17.7 |
 | LightGBM, trips where the local engine was free | 50.0 | 30.7 | −17.2 |
 
-### 1.1b Error on the trips placement scores, and per route (production model, 2025)
+### 1.1b Error on first-engine trips from the home station, and per route (production model, 2025)
 
 Source: `data/figures/validation/travel_time_error/summary.json` (`scripts/travel_time_error_breakdown.py`). Placement scores the first engine, from its home station, with the local engine not busy, so 45.5 s is the error that applies to it.
 
@@ -45,11 +45,11 @@ Source: `data/figures/validation/travel_time_error/summary.json` (`scripts/trave
 | The same, exact address only | 32,155 | 50.3 | 31.2 | −17.0 | 38.3 |
 | Every other trip | 112,687 | 67.1 | 41.3 | −20.2 | 52.3 |
 
-On the same placement trips the classic formula (road distance) has 53.8 s and the never-seen-stations test 50.3 s. Figures 01 and 10 show these numbers.
+On the same first-engine trips the classic formula (road distance) has 53.8 s and the never-seen-stations test 50.3 s. Figures 01 and 10 show these numbers.
 
 The worst 5 % are chosen by their error, so that column describes the error's long tail and is not an accuracy claim. They carry 26–28 % of the error in each slice.
 
-Per route (one station to one spot of about 100 m; placement trips to exact addresses). The model predicts a typical (median) time, so the median comparison is the fair one; recorded means sit higher because of slow outliers.
+Per route (one station to one spot of about 100 m; first-engine trips to exact addresses). The model predicts a typical (median) time, so the median comparison is the fair one; recorded means sit higher because of slow outliers.
 
 | Routes with at least | Routes | Trips | Single-trip MAE (s) | Route median vs recorded median, MAE (s) | Bias (s) | Route mean vs recorded mean, MAE (s) | Bias (s) | Sampling noise in recorded mean (s) |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -184,7 +184,7 @@ Figures: `reports/weekly_2026-10-19/1_travel_time_accuracy.png`,
 
 **Stations never seen, combined model.** Sources: `data/figures/validation/new_stations_combined/summary.json` (`scripts/new_station_check_combined.py`). Street speeds and correction are both fitted without the held-out stations; same 20 groups and same 199,194 trips as section 1.2.
 
-| Model, station never seen | All trips, MAE (s) | Placement's trips, MAE (s) |
+| Model, station never seen | All trips, MAE (s) | First-engine trips, MAE (s) |
 |---|---:|---:|
 | Street speeds + LightGBM correction | 62.05 | 50.16 |
 | LightGBM alone | 62.22 | 50.30 |
@@ -193,25 +193,25 @@ Figures: `reports/weekly_2026-10-19/1_travel_time_accuracy.png`,
 
 The combined model is better at 62 of 102 stations. Over 6 km it matches LightGBM alone (108.64 s against 108.59 s), so the expected long-trip advantage does not appear on real trips, though this test cannot show behaviour beyond the distances in the data.
 
-**Training for placement's trips.** Source: `data/figures/analysis/model_improvement/placement_training.json` (`scripts/compare_placement_training.py`).
+**Training for first-engine trips.** Source: `data/figures/analysis/model_improvement/placement_training.json` (`scripts/compare_placement_training.py`).
 
-| Training | Trips | All trips, MAE (s) | Placement's trips, MAE (s) |
+| Training | Trips | All trips, MAE (s) | First-engine trips, MAE (s) |
 |---|---:|---:|---:|
 | Production: every trip | 701,000 | 57.80 | 45.64 |
-| Placement's trips only | 319,060 | 70.74 | 45.76 |
-| Placement's trips weighted 3× | 701,000 | 58.13 | 45.61 |
+| First-engine trips only | 319,060 | 70.74 | 45.76 |
+| First-engine trips weighted 3× | 701,000 | 58.13 | 45.61 |
 | Without engines probably away from their station | 625,006 | 58.13 | 45.73 |
 
 **Traffic counts and roadworks along the route.** Sources: `data/figures/analysis/model_improvement/traffic_features.json` and `traffic_features_residuals.json` (`scripts/build_traffic_features.py`, `compare_traffic_features.py`). Traffic is DfT road traffic counts: 2021–24 daily flow, hourly shape 07:00–18:59, main roads only. Roadworks are DfT Street Manager permits active on the day of the trip (1.49 million works on the carriageway). Change in MAE from production, with paired 95 % intervals resampling days:
 
-| Added | All trips (s) | Placement's trips (s) | Over 6 km (s) | Rush hour (s) |
+| Added | All trips (s) | First-engine trips (s) | Over 6 km (s) | Rush hour (s) |
 |---|---:|---:|---:|---:|
 | Nothing, different seed (chance alone) | +0.02 [−0.01, +0.06] | +0.01 [−0.03, +0.06] | −0.03 [−0.38, +0.32] | +0.02 [−0.04, +0.10] |
 | Traffic | +0.01 [−0.03, +0.05] | +0.03 [−0.01, +0.07] | −0.16 [−0.51, +0.22] | +0.09 [+0.02, +0.16] |
 | Roadworks | +0.03 [−0.01, +0.07] | −0.01 [−0.06, +0.04] | +0.01 [−0.33, +0.39] | +0.02 [−0.05, +0.09] |
 | Both | 0.00 [−0.04, +0.05] | +0.01 [−0.04, +0.05] | −0.10 [−0.50, +0.28] | +0.02 [−0.05, +0.10] |
 
-Neither improves the model beyond chance. Roadworks do have a real but small effect: on placement's trips, the production model's median shortfall rises from 2.4 s with no road closure on the route to 9.1 s with three or more, but 80 % of those trips have none (rank correlation with the error 0.02). Limits of this test: roadworks are by day and located at the nearest junction, routes are the model's shortest-distance routes and not the ones driven, and counts measure traffic volume on main roads, not congestion or speed. It therefore does not rule out traffic-aware travel times, such as Google's, which need a billing account and were not tried. Roadworks could not be used for scoring future sites in any case, because they are not known in advance.
+Neither improves the model beyond chance. Roadworks do have a real but small effect: on first-engine trips, the production model's median shortfall rises from 2.4 s with no road closure on the route to 9.1 s with three or more, but 80 % of those trips have none (rank correlation with the error 0.02). Limits of this test: roadworks are by day and located at the nearest junction, routes are the model's shortest-distance routes and not the ones driven, and counts measure traffic volume on main roads, not congestion or speed. It therefore does not rule out traffic-aware travel times, such as Google's, which need a billing account and were not tried. Roadworks could not be used for scoring future sites in any case, because they are not known in advance.
 
 ## 2. Which station responds (busy engines and dispatch)
 
@@ -287,13 +287,33 @@ Effect = change in first-engine attendance in the closed stations' former areas,
 | Nearest station | 0.42 | 17.2 |
 | Nearest, or next if busy | 0.31 | 16.3 |
 | **Dispatch model** (all day) | **0.59** | **13.0** |
-| **Dispatch model** (by hour, calibrated) | **0.64** | **12.4** |
+| Dispatch model (by hour, calibrated) | 0.64 | 12.4 |
+
+The all-day model is the one that scores layouts, so it is the headline result; with 10 areas, the two dispatch versions cannot be told apart (95 % range of 0.64: about 0.20 to 0.96).
 
 Reading: the travel time model gets the drive right when it knows who responded; the
 remaining error is dispatch (after the closures the nearest station sent the first engine
 on as few as 38 % of calls in some areas).
 
 Figures: `reports/weekly_2026-10-19/4_closure_2014.png`.
+
+### 3.3 Ranking the closed stations, compared like for like
+
+`scripts/closed_station_ranking_check.py`, `validation/closure_2014/ranking_like_for_like.*`. Predictions use
+the dispatch model, today's stations and 2025 calls, except the last row. Damage = recorded change per call in the
+area, as in 3.1. Rank correlation across 10 stations; range includes the error in the recorded effects.
+
+| Comparison | Rank correlation | 95 % range | Permutation p |
+|---|---|---|---|
+| London-wide saving vs damage per call (units do not match) | −0.15 | −0.87 to 0.71 | 0.68 |
+| London-wide saving vs damage × calls in the area | +0.22 | −0.58 to 0.87 | 0.54 |
+| Saving per call in the area vs damage per call | +0.33 | −0.53 to 0.87 | 0.35 |
+| 2014 test: predicted vs recorded effect per call (all-day dispatch) | +0.68 | −0.08 to 0.96 | 0.035 |
+
+The −0.42 first reported compared unlike units with the older nearest-or-next model (−0.33 when rerun with
+the 73 s new-site turnout). Silvertown shows the difference: the most damage per call (+126 s) but few calls.
+The ranking of which station to reopen today cannot be told apart from chance with 10 stations, so it is
+not validated. The last row is optimistic: the dispatch model was improved while watching this test.
 
 ---
 
@@ -404,37 +424,88 @@ Figures: `reports/weekly_2026-10-19/3_three_models.png`, `placement/station_swee
 
 ---
 
+### 6.1 Neutral test: hidden stations scored on recorded trips
+
+The table above is scored by the same models that choose the layouts. This test is not
+(`scripts/neutral_siting_test.py`, `data/figures/validation/neutral_siting/`). Twenty of today's
+102 stations are hidden; all models are refit without their trips (2021–24), so they look like
+new sites; 82 stay open; each model picks k of the 20 on 2024 calls with the project's solver and
+busy engines. Picks are scored with recorded 2025–26 drive times from those stations (half the
+trips choose the fastest open station, the other half give its time, then the reverse). 20 hidden
+groups (4 splits of 5); 98 % of calls could be scored; average with the 82 alone is about 362 s.
+
+Average seconds saved compared with the 82 stations alone:
+
+| Sites picked | LightGBM | Kolesar road | Kolesar straight | Random | Hindsight (rough limit) |
+|---|---|---|---|---|---|
+| 3 of 20 | 7.08 | 6.74 | 6.86 | 4.20 | 7.50 |
+| 5 of 20 | 10.79 | 10.20 | 10.59 | 6.96 | 11.22 |
+| 10 of 20 | 18.16 | 17.97 | 18.01 | 13.74 | 18.47 |
+
+LightGBM's extra saving, [95 % interval across groups], and groups won / tied / lost:
+
+| Sites picked | vs road | W/T/L | vs straight | W/T/L | Sites shared with road, straight |
+|---|---|---|---|---|---|
+| 3 of 20 | +0.34 [−0.00, 0.69] | 8/11/1 | +0.22 [−0.10, 0.57] | 7/9/4 | 2.55, 2.45 |
+| 5 of 20 | +0.59 [0.26, 0.95] | 10/10/0 | +0.20 [−0.26, 0.67] | 8/5/7 | 4.45, 3.85 |
+| 10 of 20 | +0.19 [−0.01, 0.39] | 9/8/3 | +0.15 [−0.18, 0.44] | 13/2/5 | 9.25, 8.60 |
+
+With the learned dispatch model deciding who responds (unrecorded pairs filled from a curve on the
+held-out trips), the extra saving is smaller: vs road +0.09, +0.33 [0.06, 0.58], −0.02; vs straight
++0.14, +0.09, −0.17 (only 5 of 20 vs road has an interval above zero).
+
+**Which of two stations arrives first** (2025–26 calls with engines from two home stations; each
+station predicted by a model that never saw it; split 1 only):
+
+| Pairs | Number | LightGBM right | Road right | Straight right |
+|---|---|---|---|---|
+| All | 118,398 | 80.0 % | 80.2 % | 78.8 % |
+| Road distances within 25 % | 35,745 | 60.9 % | 61.5 % | 58.3 % |
+
+LightGBM minus road: −0.2 points [−0.37, −0.06] on all pairs, −0.6 [−1.12, −0.20] on close pairs.
+LightGBM minus straight: +1.2 [1.04, 1.45] and +2.6 [2.01, 3.27].
+
+Reading: the hypothesis gets weak support. LightGBM's picks were never significantly worse and
+sometimes slightly better, but mostly the same sites, and the difference is under 1 s. Choosing with
+any model matters far more (3 to 4 s better than random). LightGBM predicts times better
+(section 1.2) but does not order two stations better than road distance, and placement depends on order.
+
+Limits: candidates are real stations rather than free grid sites, where models could differ more;
+only part of the network changes; groups share stations across splits, so intervals are a little narrow;
+six comparisons were made without correction; second engines are not a random sample of trips.
+
+---
+
 ## 7. Robustness: time of day, severity, borough, income
 
-Source: `data/figures/placement/robustness/` (`scripts/placement_robustness.py`), run with
-the first dispatch model (before the 2026-10-23 retrain, which moved section 6's numbers by
-at most 0.6 s on the average). 2025 calls; LightGBM rows use travel times for each period's hour and the hourly dispatch
+Source: `data/figures/placement/robustness/` (`scripts/placement_robustness.py`), rerun
+2026-11-01 with the current dispatch model. 2025 calls; LightGBM rows use travel times for each period's hour and the hourly dispatch
 model; Kolesar rows have no hour. 500 bootstrap resamples (100 for boroughs).
 
 ### 7.1 Time of day (LightGBM): change in average, [95 % interval]
 
 | Period | Calls | Today (s) | Add 3 | Move up to 10 | Full redesign |
 |---|---|---|---|---|---|
-| Night 00–07 | 21,939 | 288.1 | −1.8 [−2.0, −1.7] | −4.7 [−5.0, −4.4] | −12.2 [−12.7, −11.7] |
-| Morning rush 07–10 | 12,320 | 318.5 | −2.6 [−2.9, −2.4] | −4.6 [−5.1, −4.2] | −13.8 [−14.5, −13.1] |
-| Day 10–16 | 38,789 | 328.8 | −2.4 [−2.6, −2.3] | −5.6 [−5.8, −5.4] | −16.1 [−16.5, −15.7] |
-| Evening rush 16–20 | 30,027 | 326.5 | −2.0 [−2.1, −1.8] | −5.4 [−5.7, −5.1] | −15.1 [−15.6, −14.5] |
-| Evening 20–24 | 26,193 | 297.7 | −2.0 [−2.2, −1.9] | −5.0 [−5.3, −4.7] | −13.1 [−13.6, −12.6] |
-| All day | 129,268 | 314.1 | −2.2 | −5.2 | −14.3 |
+| Night 00–07 | 21,939 | 287.0 | −1.8 [−1.9, −1.6] | −4.7 [−5.0, −4.4] | −12.0 [−12.6, −11.5] |
+| Morning rush 07–10 | 12,320 | 318.2 | −2.2 [−2.4, −2.0] | −4.6 [−5.1, −4.1] | −13.7 [−14.4, −12.9] |
+| Day 10–16 | 38,789 | 330.4 | −2.0 [−2.1, −1.9] | −5.5 [−5.7, −5.3] | −15.8 [−16.2, −15.4] |
+| Evening rush 16–20 | 30,027 | 325.9 | −1.7 [−1.8, −1.6] | −5.3 [−5.6, −5.0] | −14.4 [−14.9, −13.9] |
+| Evening 20–24 | 26,193 | 296.4 | −1.5 [−1.6, −1.4] | −4.9 [−5.2, −4.6] | −12.7 [−13.2, −12.2] |
+| All day | 129,268 | 314.0 | −1.8 | −5.1 | −14.0 |
 
-Slowest 10 % by period: move up to 10 and the redesign improve in every period (−3.3 to
-−5.6 s and −12.6 to −16.1 s). Add 3 makes the slowest 10 % about 0.2–0.3 s worse at night
-and in both rush hours (the floor holds all day, not in every period).
+Slowest 10 % by period: move up to 10 and the redesign improve in every period (−3.2 to
+−5.9 s and −11.9 to −15.7 s). Add 3 makes the slowest 10 % 0.1–0.3 s worse at night and in
+both rush hours (the floor holds all day, not in every period).
 
 ### 7.2 Call severity: change in average (s)
 
 | Calls | Add 3 (LGBM / road / straight) | Move up to 10 | Full redesign |
 |---|---|---|---|
-| All (129,268) | −2.2 / −1.8 / −1.3 | −5.2 / −4.7 / −2.5 | −14.3 / −10.6 / −5.1 |
-| Fires and special services (68,263) | −1.6 / −1.4 / −1.0 | −4.7 / −4.3 / −2.2 | −13.9 / −10.0 / −4.4 |
-| Fires in homes (4,878) | −1.6 / −1.4 / −1.1 | −5.5 / −5.2 / −3.4 | −14.9 / −11.2 / −5.9 |
+| All (129,268) | −1.8 / −1.6 / −1.0 | −5.1 / −4.6 / −2.2 | −14.0 / −10.7 / −4.7 |
+| Fires and special services (68,263) | −1.3 / −1.2 / −0.8 | −4.6 / −4.3 / −2.0 | −13.5 / −10.2 / −4.2 |
+| Fires in homes (4,878) | −1.3 / −1.2 / −0.8 | −5.4 / −5.2 / −3.1 | −14.6 / −11.4 / −5.8 |
 
-Every layout is faster for every severity group under all three models.
+These three layouts are faster for every severity group under all three models.
 
 ### 7.3 Neighbourhood income: change in average (s)
 
@@ -443,26 +514,27 @@ nearest London MSOA (about 980 neighbourhoods, split into fifths).
 
 | Income fifth | Add 3 (LGBM / road / straight) | Move up to 10 | Full redesign |
 |---|---|---|---|
-| Q1 (poorest) | −1.5 / −1.4 / −1.2 | **−9.6 / −9.3 / −5.9** | **−19.2 / −16.4 / −9.7** |
-| Q2 | −1.7 / −1.5 / −1.4 | −4.1 / −3.8 / −2.9 | −15.6 / −11.9 / −7.8 |
-| Q3 | −1.3 / −1.3 / −1.0 | −3.1 / −2.3 / −0.9 | −14.3 / −8.9 / −4.6 |
-| Q4 | −2.0 / −1.4 / −0.5 | −2.8 / −2.1 / 0.0 | −9.8 / −6.2 / −0.1 |
-| Q5 (richest) | −4.7 / −3.8 / −2.4 | −5.6 / −5.4 / −1.8 | −11.2 / −7.9 / −1.2 |
+| Q1 (poorest) | −1.2 / −1.1 / −0.7 | **−9.6 / −9.3 / −5.7** | **−19.3 / −17.1 / −9.5** |
+| Q2 | −1.6 / −1.6 / −1.3 | −3.9 / −3.6 / −2.6 | −15.2 / −11.9 / −7.8 |
+| Q3 | −1.0 / −1.1 / −0.7 | −3.0 / −2.3 / −0.6 | −13.9 / −8.9 / −4.2 |
+| Q4 | −1.4 / −1.3 / −0.6 | −2.8 / −1.9 / +0.3 | −9.1 / −6.3 / −0.1 |
+| Q5 (richest) | −4.0 / −2.8 / −1.8 | −5.5 / −5.2 / −1.4 | −10.7 / −7.2 / +0.1 |
 
 Moving stations helps the poorest fifth most, under every model. Adding stations helps the
-richest fifth most (new sites go to central London, which is both busy and wealthy).
+richest fifth most (new sites go to central London, which is both busy and wealthy). Under
+the straight-line formula two fifths get no gain: Q4 in move up to 10 and Q5 in the redesign.
 
 ### 7.4 Boroughs
 
 With a 1 s borough tolerance, under LightGBM:
 
-- Add 3: 11 boroughs better, 11 slightly worse; worst Barnet +1.0 s.
-- Move up to 10: 28 better; worst City of London +2.6 s (few calls).
-- Full redesign: all 33 better.
+- Add 3: 12 boroughs better, 8 slightly worse; worst Barnet +0.9 s.
+- Move up to 10: 25 better, 7 worse; worst City of London +2.7 s (few calls).
+- Full redesign: 32 better, Sutton unchanged.
 
 Under the Kolesar formulas some boroughs get worse. In move up to 10: City of London up to
-+8.8 s, Richmond +5.1 s, Camden +3.1 s. In the redesign: Tower Hamlets up to +11.8 s and
-Lewisham +10.5 s (straight-line). The borough rule is enforced with the model that chose the
++10.3 s, Richmond +5.6 s, Tower Hamlets +3.7 s (straight-line). In the redesign: Tower Hamlets up to +11.0 s and
+Lewisham +10.1 s (straight-line). The borough rule is enforced with the model that chose the
 layout, so a borough's protection is only as good as that model's map of it.
 
 Figures: `placement/robustness/time_of_day.png`, `income.png`, `boroughs.png`.
@@ -489,7 +561,7 @@ Have (path under `data/figures/`) and still needed for the board / paper.
 | 12 | `placement/robustness/time_of_day.png` | Gain by time of day | have |
 | 13 | `placement/robustness/income.png` | Who gains, by income | have |
 | 14 | `placement/robustness/boroughs.png` | Change by borough, three models | have |
-| 15 | Method diagram | Data → travel time → dispatch/busy → solver → validation | **needed** |
+| 15 | `final/method_diagram.png` | Data → travel time → dispatch/busy → solver → validation | have |
 | 16 | `travel_time/street_speeds/speed_map.png`, `coefficients.png` | Learned fire engine speed per street; which features slow engines | have |
 
 ---

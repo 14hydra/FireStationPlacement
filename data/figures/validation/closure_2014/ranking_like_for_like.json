@@ -1,0 +1,52 @@
+{
+  "doc": "Does the closed-station ranking agree with the 2014 damage once the units match?\n\nclosure_2014_test.py step 5 compares two different things and gets a negative rank\ncorrelation: the predicted saving is averaged over ALL London calls (so a station with few\ncalls in its area scores low), while the recorded damage is per call INSIDE the station's\narea. This script compares like with like, with the current scoring model (dispatch, all\nday) as well as nearest-or-next-if-busy:\n\n  per call   predicted change in the station's former area vs recorded damage per call\n  total      predicted saving across London vs recorded damage x calls in the area,\n             the same measure as the saving (seconds per London call)\n\nAlso for the 2014 test itself (no 2025 network): predicted vs recorded effect in each area.\n\nEach correlation gets a permutation p-value (all orderings of 10 stations would be 3.6\nmillion, so 100,000 random ones) and a bootstrap 95 % range. The bootstrap redraws each\nrecorded effect from its own interval and resamples the 10 stations.\n\nLimits: 10 stations; predicted savings use 2025 calls and today's network, recorded damage\nis 2014; former areas are the 2013 ones.\n\nWrites data/figures/validation/closure_2014/ranking_like_for_like.csv and .json.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/closed_station_ranking_check.py\n",
+  "as_published_unlike_units (London-wide saving vs per-call damage)": {
+    "busy": {
+      "spearman": -0.33,
+      "p_permutation": 0.347,
+      "lo": -0.92,
+      "hi": 0.61
+    },
+    "dispatch": {
+      "spearman": -0.15,
+      "p_permutation": 0.682,
+      "lo": -0.87,
+      "hi": 0.71
+    }
+  },
+  "total_vs_total (London-wide saving vs damage x calls)": {
+    "busy": {
+      "spearman": 0.27,
+      "p_permutation": 0.448,
+      "lo": -0.61,
+      "hi": 0.86
+    },
+    "dispatch": {
+      "spearman": 0.22,
+      "p_permutation": 0.535,
+      "lo": -0.58,
+      "hi": 0.87
+    }
+  },
+  "per_call_vs_per_call (saving in the area, 2025 network, vs damage per call)": {
+    "busy": {
+      "spearman": 0.47,
+      "p_permutation": 0.178,
+      "lo": -0.45,
+      "hi": 0.92
+    },
+    "dispatch": {
+      "spearman": 0.33,
+      "p_permutation": 0.347,
+      "lo": -0.53,
+      "hi": 0.87
+    }
+  },
+  "2014_test_itself (predicted vs recorded per-call effect, dispatch all day)": {
+    "spearman": 0.68,
+    "p_permutation": 0.035,
+    "lo": -0.08,
+    "hi": 0.96
+  },
+  "calls_vs_london_saving": 0.21
+}

@@ -29,13 +29,16 @@ Runnable entry points. Library code lives in `src/firestation/`.
 | `embed_analysis_metrics_2d.py` | Join all station metrics → PCA / UMAP / t-SNE |
 | `closure_2014_*.py`, `rank_closed_stations_2014.py`, `validate_london_2014_closures.py` | 2014 closure validation |
 | `fit_dispatch_model.py` | Which station sends first |
+| `neutral_siting_test.py` | Neutral test: models pick among hidden real stations; recorded trips score the picks |
+| `closed_station_ranking_check.py` | Closed-station ranking vs 2014 damage, compared like for like |
 | `new_station_check.py` | Hold-out new stations (`--summarize-only` to report saved folds) |
 | `new_station_check_combined.py` | Hold-out new stations for street speeds + LightGBM correction |
-| `compare_placement_training.py` | Training for the trips placement scores, compared with production |
+| `build_method_diagram.py` | Method diagram: data, travel time, busy engines, solver, validation |
+| `compare_placement_training.py` | Training for first-engine trips from the home station, compared with production |
 | `fetch_streetmanager_london.py` | Stream Street Manager roadworks archives, keep London works |
 | `build_traffic_features.py` | DfT traffic counts and roadworks along each trip's route |
 | `compare_traffic_features.py` | Do traffic and roadworks improve the travel time model? |
-| `travel_time_error_breakdown.py` | Travel time error on placement's trips, without the worst 5 %, and per route |
+| `travel_time_error_breakdown.py` | Travel time error on first-engine trips, without the worst 5 %, and per route |
 | `plot_weekly_report.py` | Slide pack under `data/figures/reports/` |
 
 Typical order after a fresh download: build stations → graph → travel training → train model → capacity / busyness → planner / recommended → `embed_analysis_metrics_2d.py`.

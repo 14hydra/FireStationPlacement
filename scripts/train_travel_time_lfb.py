@@ -270,6 +270,7 @@ def main() -> int:
         "kolesar_baseline_distance": "road_km",
         "lightgbm_params": params,
         "regime_bias": regime_bias,
+        "regime_bias_out_of_sample": bool(regime_bias),
         "target": "drive_s = LFB TravelTimeSeconds (station departure -> arrival), 30-1200 s",
         "drive_clip_s": list(DRIVE_CLIP_S),
         "seeds": list(seeds),

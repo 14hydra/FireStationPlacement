@@ -60,10 +60,11 @@ trips, where tree models are much closer to the truth than on new trips: it meas
 −5.7 s there against −13.2 s on unseen 2024 trips. And `calibrate_travel_time_regimes.py`
 (removed) scored trips without their street features (79.9 s MAE), measured a −49 s bias
 from that, and wrote it into the production model file; any copy of
-`travel_time_lfb.joblib` with a `regime_bias` entry should be retrained.
+`travel_time_lfb.joblib` with a `regime_bias` entry should be retrained. `predict()` now refuses such a file with an error, and accepts a
+`regime_bias` only from the trainer's `--regime-bias` (fitted out of sample).
 
 **Dispatch** (figure 09): cover-density features + temperature calibration → area
-correlation **0.57** (nearest 0.48). Resize `util_weight` default **0.45** so busy
+correlation **0.59** all day, 0.64 by hour (nearest 0.42). Resize `util_weight` default **0.45** so busy
 1-pump houses rank higher as pump receivers.
 
 ## Figures for judges

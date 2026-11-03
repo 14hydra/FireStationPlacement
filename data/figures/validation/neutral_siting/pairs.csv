@@ -1,0 +1,3 @@
+pairs,n_pairs,n_calls,lgbm_right_pct,lgbm_lost_s,road_right_pct,road_lost_s,straight_right_pct,straight_lost_s,lgbm_minus_road_pct_lo,lgbm_minus_road_pct_hi,lgbm_saves_vs_road_s,lgbm_saves_vs_road_lo,lgbm_saves_vs_road_hi,lgbm_minus_straight_pct_lo,lgbm_minus_straight_pct_hi,lgbm_saves_vs_straight_s,lgbm_saves_vs_straight_lo,lgbm_saves_vs_straight_hi
+all pairs,118398,57967,80.02,18.16,80.24,18.15,78.77,19.77,-0.37,-0.06,-0.01,-0.22,0.2,1.04,1.45,1.61,1.34,1.85
+close pairs (road km within 25 %),35745,23570,60.9,32.85,61.54,32.8,58.29,36.22,-1.12,-0.2,-0.05,-0.67,0.59,2.01,3.27,3.37,2.57,4.2

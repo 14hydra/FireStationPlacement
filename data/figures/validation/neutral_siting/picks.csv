@@ -1,0 +1,241 @@
+group,layout,k,stations
+0,lgbm,3,Hendon|Homerton|Tottenham
+0,lgbm,5,East Ham|Hendon|Homerton|North Kensington|Tottenham
+0,lgbm,10,Bethnal Green|East Ham|Edmonton|Feltham|Hendon|Homerton|North Kensington|Stratford|Tottenham|West Norwood
+0,road,3,Hendon|Stratford|Tottenham
+0,road,5,East Ham|Hendon|Homerton|North Kensington|Tottenham
+0,road,10,Bethnal Green|East Ham|Edmonton|Feltham|Hendon|Homerton|North Kensington|Stratford|Tottenham|West Norwood
+0,straight,3,Hendon|Stratford|Tottenham
+0,straight,5,Hendon|Homerton|North Kensington|Stratford|Tottenham
+0,straight,10,Barking|Bethnal Green|Edmonton|Hendon|Homerton|North Kensington|Poplar|Stratford|Tottenham|West Norwood
+0,hindsight,3,Poplar|Stratford|Tottenham
+0,hindsight,5,Hendon|North Kensington|Poplar|Stratford|Tottenham
+0,hindsight,10,Barking|Edmonton|Feltham|Hendon|Homerton|North Kensington|Poplar|Stratford|Tottenham|West Norwood
+1,lgbm,3,Bexley|Hillingdon|Soho
+1,lgbm,5,Bexley|Bromley|Hillingdon|Paddington|Soho
+1,lgbm,10,Bexley|Bromley|Forest Hill|Hillingdon|Paddington|Shoreditch|Soho|Southall|Stanmore|Surbiton
+1,road,3,Bexley|Hillingdon|Soho
+1,road,5,Bexley|Bromley|Hillingdon|Soho|Southall
+1,road,10,Bexley|Bromley|Forest Hill|Hillingdon|Paddington|Shoreditch|Soho|Southall|Stanmore|Surbiton
+1,straight,3,Bexley|Hillingdon|Soho
+1,straight,5,Bexley|Hillingdon|Paddington|Soho|Southall
+1,straight,10,Bexley|Bromley|Forest Hill|Hillingdon|Paddington|Shoreditch|Soho|Southall|Stanmore|Surbiton
+1,hindsight,3,Hillingdon|Paddington|Soho
+1,hindsight,5,Bexley|Hillingdon|Lewisham|Paddington|Soho
+1,hindsight,10,Bexley|Bromley|Hillingdon|Hornsey|Lewisham|Paddington|Shoreditch|Soho|Southall|Stanmore
+2,lgbm,3,Brixton|Croydon|West Hampstead
+2,lgbm,5,Brixton|Croydon|Hammersmith|Lambeth|West Hampstead
+2,lgbm,10,Acton|Brixton|Croydon|Hammersmith|Heston|Holloway|Kensington|Lambeth|Northolt|West Hampstead
+2,road,3,Brixton|Croydon|West Hampstead
+2,road,5,Brixton|Croydon|Hammersmith|Lambeth|West Hampstead
+2,road,10,Acton|Brixton|Croydon|Hammersmith|Heston|Holloway|Lambeth|Northolt|Stoke Newington|West Hampstead
+2,straight,3,Brixton|Croydon|West Hampstead
+2,straight,5,Brixton|Croydon|Hammersmith|Lambeth|West Hampstead
+2,straight,10,Brixton|Croydon|Hammersmith|Heston|Holloway|Lambeth|Northolt|Stoke Newington|West Hampstead|Willesden
+2,hindsight,3,Brixton|Croydon|West Hampstead
+2,hindsight,5,Brixton|Croydon|Hammersmith|Lambeth|West Hampstead
+2,hindsight,10,Brixton|Croydon|Hammersmith|Heston|Holloway|Lambeth|Northolt|Stoke Newington|West Hampstead|Willesden
+3,lgbm,3,Enfield|Euston|Ilford
+3,lgbm,5,Enfield|Euston|Ilford|Plumstead|Wandsworth
+3,lgbm,10,Enfield|Euston|Fulham|Harrow|Ilford|Kentish Town|Plumstead|Wandsworth|Wembley|Woodside
+3,road,3,Enfield|Ilford|Plumstead
+3,road,5,Enfield|Euston|Fulham|Ilford|Plumstead
+3,road,10,Enfield|Euston|Fulham|Harrow|Ilford|Kentish Town|Plumstead|Wandsworth|Wembley|Woodside
+3,straight,3,Enfield|Euston|Ilford
+3,straight,5,Enfield|Euston|Harrow|Ilford|Plumstead
+3,straight,10,Beckenham|Enfield|Euston|Harrow|Ilford|Kentish Town|Plumstead|Wallington|Wandsworth|Woodside
+3,hindsight,3,Enfield|Euston|Ilford
+3,hindsight,5,Enfield|Euston|Harrow|Ilford|Wandsworth
+3,hindsight,10,Beckenham|Enfield|Euston|Fulham|Harrow|Ilford|Kentish Town|Plumstead|Wandsworth|Wembley
+4,lgbm,3,Barnet|Chelsea|Orpington
+4,lgbm,5,Barnet|Chelsea|Dagenham|Norbury|Orpington
+4,lgbm,10,Barnet|Chelsea|Dagenham|Ealing|Norbury|Orpington|Southgate|Twickenham|Walthamstow|Wimbledon
+4,road,3,Barnet|Chelsea|Orpington
+4,road,5,Barnet|Chelsea|Dagenham|Norbury|Orpington
+4,road,10,Barnet|Chelsea|Dagenham|Ealing|Norbury|Orpington|Southgate|Twickenham|Walthamstow|Wimbledon
+4,straight,3,Barnet|Dagenham|Orpington
+4,straight,5,Barnet|Chelsea|Dagenham|Norbury|Orpington
+4,straight,10,Barnet|Chelsea|Dagenham|Ealing|Norbury|Orpington|Sutton|Twickenham|Walthamstow|Wimbledon
+4,hindsight,3,Chelsea|Norbury|Southgate
+4,hindsight,5,Chelsea|Norbury|Orpington|Southgate|Sutton
+4,hindsight,10,Barnet|Chelsea|Dagenham|Ealing|Norbury|Orpington|Southgate|Sutton|Twickenham|Walthamstow
+5,lgbm,3,Euston|Plumstead|West Hampstead
+5,lgbm,5,Euston|Homerton|Plumstead|Walthamstow|West Hampstead
+5,lgbm,10,Dagenham|Enfield|Euston|Homerton|Old Kent Road|Orpington|Plumstead|Walthamstow|Wembley|West Hampstead
+5,road,3,Euston|Homerton|Plumstead
+5,road,5,Euston|Homerton|Orpington|Plumstead|Walthamstow
+5,road,10,Dagenham|Enfield|Euston|Homerton|Old Kent Road|Orpington|Plumstead|Walthamstow|Wembley|West Hampstead
+5,straight,3,Euston|Plumstead|Stoke Newington
+5,straight,5,Euston|Orpington|Plumstead|Stoke Newington|West Hampstead
+5,straight,10,Barnet|Dagenham|Enfield|Euston|Homerton|Orpington|Plumstead|Stoke Newington|Walthamstow|West Hampstead
+5,hindsight,3,Euston|Stoke Newington|West Hampstead
+5,hindsight,5,Enfield|Euston|Plumstead|Stoke Newington|West Hampstead
+5,hindsight,10,Enfield|Euston|Homerton|Old Kent Road|Orpington|Plumstead|Poplar|Stoke Newington|Walthamstow|West Hampstead
+6,lgbm,3,Harrow|Lambeth|Stanmore
+6,lgbm,5,Forest Hill|Harrow|Holloway|Lambeth|Stanmore
+6,lgbm,10,Brixton|Chelsea|Forest Hill|Harrow|Holloway|Lambeth|Northolt|Shoreditch|Stanmore|Sutton
+6,road,3,Harrow|Lambeth|Stanmore
+6,road,5,Forest Hill|Harrow|Holloway|Lambeth|Stanmore
+6,road,10,Bexley|Brixton|Chelsea|Forest Hill|Harrow|Holloway|Lambeth|Northolt|Shoreditch|Stanmore
+6,straight,3,Harrow|Lambeth|Stanmore
+6,straight,5,Brixton|Harrow|Holloway|Lambeth|Stanmore
+6,straight,10,Brixton|Chelsea|Forest Hill|Harrow|Holloway|Hornsey|Lambeth|Northolt|Stanmore|Sutton
+6,hindsight,3,Harrow|Lambeth|Stanmore
+6,hindsight,5,Brixton|Harrow|Hornsey|Lambeth|Stanmore
+6,hindsight,10,Brixton|Chelsea|Forest Hill|Harrow|Hornsey|Lambeth|Northolt|Shoreditch|Stanmore|Sutton
+7,lgbm,3,Bromley|Paddington|Woodside
+7,lgbm,5,Bromley|Hillingdon|Paddington|Wallington|Woodside
+7,lgbm,10,Bromley|Hammersmith|Heston|Hillingdon|Paddington|Plaistow|Wallington|Willesden|Wimbledon|Woodside
+7,road,3,Bromley|Paddington|Wallington
+7,road,5,Bromley|Hillingdon|Paddington|Wallington|Woodside
+7,road,10,Addington|Bromley|Hammersmith|Heston|Hillingdon|Paddington|Plaistow|Wallington|Wimbledon|Woodside
+7,straight,3,Bromley|Paddington|Wallington
+7,straight,5,Bromley|Hillingdon|Paddington|Wallington|Woodside
+7,straight,10,Addington|Bromley|Hammersmith|Heston|Hillingdon|Paddington|Wallington|Willesden|Wimbledon|Woodside
+7,hindsight,3,Hillingdon|Paddington|Woodside
+7,hindsight,5,Bromley|Hammersmith|Hillingdon|Paddington|Wallington
+7,hindsight,10,Addington|Bromley|Hammersmith|Heston|Hillingdon|Paddington|Wallington|Willesden|Wimbledon|Woodside
+8,lgbm,3,Croydon|Feltham|Southall
+8,lgbm,5,Croydon|Feltham|Norbury|Sidcup|Southall
+8,lgbm,10,Croydon|Ealing|Erith|Feltham|Kensington|Norbury|Sidcup|Southall|Twickenham|Wandsworth
+8,road,3,Croydon|Feltham|Southall
+8,road,5,Croydon|Feltham|Norbury|Sidcup|Southall
+8,road,10,Croydon|Ealing|Erith|Feltham|Leytonstone|Norbury|Sidcup|Southall|Twickenham|Wandsworth
+8,straight,3,Croydon|Sidcup|Southall
+8,straight,5,Croydon|Feltham|Norbury|Sidcup|Southall
+8,straight,10,Croydon|Ealing|Erith|Feltham|Finchley|Norbury|Sidcup|Southall|Twickenham|Wandsworth
+8,hindsight,3,Croydon|Feltham|Southall
+8,hindsight,5,Croydon|Eltham|Feltham|Norbury|Southall
+8,hindsight,10,Barking|Croydon|Ealing|Eltham|Erith|Feltham|Norbury|Southall|Twickenham|Wandsworth
+9,lgbm,3,Soho|Tottenham|West Norwood
+9,lgbm,5,Acton|Ilford|Soho|Tottenham|West Norwood
+9,lgbm,10,Acton|Beckenham|Edmonton|Hendon|Ilford|Kentish Town|North Kensington|Soho|Tottenham|West Norwood
+9,road,3,Ilford|Soho|Tottenham
+9,road,5,Acton|Ilford|Soho|Tottenham|West Norwood
+9,road,10,Acton|Beckenham|Edmonton|Hendon|Ilford|Kentish Town|North Kensington|Soho|Tottenham|West Norwood
+9,straight,3,Ilford|Soho|Tottenham
+9,straight,5,Ilford|North Kensington|Soho|Tottenham|West Norwood
+9,straight,10,Acton|Beckenham|Edmonton|Ilford|Kentish Town|North Kensington|Richmond|Soho|Tottenham|West Norwood
+9,hindsight,3,North Kensington|Soho|Tottenham
+9,hindsight,5,Acton|Ilford|North Kensington|Soho|Tottenham
+9,hindsight,10,Acton|Beckenham|Edmonton|Hendon|Ilford|Kentish Town|North Kensington|Soho|Tottenham|West Norwood
+10,lgbm,3,Brixton|Shoreditch|Southall
+10,lgbm,5,Brixton|Forest Hill|Hillingdon|Shoreditch|Southall
+10,lgbm,10,Brixton|Forest Hill|Hillingdon|Islington|Norbury|Northolt|Peckham|Shoreditch|Southall|Stoke Newington
+10,road,3,Brixton|Shoreditch|Southall
+10,road,5,Brixton|Forest Hill|Norbury|Shoreditch|Southall
+10,road,10,Addington|Brixton|Forest Hill|Hillingdon|Norbury|Northolt|Peckham|Shoreditch|Southall|Stoke Newington
+10,straight,3,Brixton|Southall|Stoke Newington
+10,straight,5,Brixton|Forest Hill|Hillingdon|Southall|Stoke Newington
+10,straight,10,Addington|Brixton|Forest Hill|Hillingdon|Norbury|Northolt|Shoreditch|Southall|Stoke Newington|Willesden
+10,hindsight,3,Brixton|Shoreditch|Southall
+10,hindsight,5,Brixton|Hillingdon|Norbury|Shoreditch|Southall
+10,hindsight,10,Brixton|Forest Hill|Hillingdon|Norbury|Northolt|Peckham|Shoreditch|Southall|Stoke Newington|Willesden
+11,lgbm,3,Paddington|Plumstead|Tottenham
+11,lgbm,5,Heston|Paddington|Plumstead|Tottenham|Wandsworth
+11,lgbm,10,Enfield|Heston|North Kensington|Paddington|Plumstead|Stratford|Tottenham|Wandsworth|Wembley|West Norwood
+11,road,3,Paddington|Plumstead|Tottenham
+11,road,5,Fulham|Heston|Paddington|Plumstead|Tottenham
+11,road,10,Enfield|Fulham|Heston|North Kensington|Paddington|Plumstead|Stanmore|Stratford|Tottenham|West Norwood
+11,straight,3,Paddington|Plumstead|Tottenham
+11,straight,5,Fulham|Paddington|Plumstead|Stratford|Tottenham
+11,straight,10,Enfield|Fulham|Heston|North Kensington|Paddington|Plumstead|Stanmore|Stratford|Tottenham|West Norwood
+11,hindsight,3,Paddington|Plumstead|Tottenham
+11,hindsight,5,North Kensington|Paddington|Plumstead|Tottenham|Wandsworth
+11,hindsight,10,Enfield|Fulham|Heston|North Kensington|Paddington|Plumstead|Stanmore|Stratford|Tottenham|Wandsworth
+12,lgbm,3,Chelsea|Surbiton|West Hampstead
+12,lgbm,5,Chelsea|East Greenwich|Hammersmith|Surbiton|West Hampstead
+12,lgbm,10,Bexley|Chelsea|East Greenwich|Hammersmith|Kensington|Surbiton|Wallington|West Hampstead|Wimbledon|Woodside
+12,road,3,Chelsea|East Greenwich|Surbiton
+12,road,5,Chelsea|East Greenwich|Surbiton|Wallington|West Hampstead
+12,road,10,Bexley|Chelsea|East Greenwich|Hammersmith|Lee Green|Surbiton|Wallington|West Hampstead|Wimbledon|Woodside
+12,straight,3,Hammersmith|Surbiton|West Hampstead
+12,straight,5,Hammersmith|Lee Green|Surbiton|Wallington|West Hampstead
+12,straight,10,Bexley|Chelsea|East Greenwich|Hammersmith|Lee Green|Surbiton|Wallington|West Hampstead|Wimbledon|Woodside
+12,hindsight,3,Chelsea|Hammersmith|West Hampstead
+12,hindsight,5,Chelsea|Eltham|Hammersmith|Surbiton|West Hampstead
+12,hindsight,10,Bexley|Chelsea|Eltham|Hammersmith|Lee Green|Surbiton|Wallington|West Hampstead|Wimbledon|Woodside
+13,lgbm,3,Dagenham|Ilford|Southgate
+13,lgbm,5,Dagenham|Holloway|Ilford|Lambeth|Southgate
+13,lgbm,10,Barnet|Dagenham|Edmonton|Feltham|Holloway|Ilford|Lambeth|Old Kent Road|Romford|Walthamstow
+13,road,3,Dagenham|Ilford|Southgate
+13,road,5,Dagenham|Holloway|Ilford|Lambeth|Southgate
+13,road,10,Dagenham|East Ham|Edmonton|Feltham|Holloway|Ilford|Lambeth|Romford|Southgate|Walthamstow
+13,straight,3,Dagenham|Edmonton|Ilford
+13,straight,5,Dagenham|Edmonton|Hornsey|Ilford|Lambeth
+13,straight,10,Barking|Barnet|Dagenham|Edmonton|Harold Hill|Holloway|Hornsey|Ilford|Lambeth|Walthamstow
+13,hindsight,3,Dagenham|Ilford|Southgate
+13,hindsight,5,Barking|Ilford|Lambeth|Romford|Southgate
+13,hindsight,10,Barking|Dagenham|Feltham|Hornsey|Ilford|Lambeth|Old Kent Road|Romford|Southgate|Walthamstow
+14,lgbm,3,Bromley|Euston|Soho
+14,lgbm,5,Bromley|Croydon|Euston|Kentish Town|Soho
+14,lgbm,10,Bromley|Croydon|Ealing|Euston|Harrow|Hendon|Homerton|Kentish Town|Orpington|Soho
+14,road,3,Bromley|Euston|Soho
+14,road,5,Bromley|Croydon|Euston|Orpington|Soho
+14,road,10,Bromley|Croydon|Ealing|Euston|Harrow|Hendon|Homerton|Kentish Town|Orpington|Soho
+14,straight,3,Bromley|Euston|Soho
+14,straight,5,Bromley|Croydon|Euston|Orpington|Soho
+14,straight,10,Bromley|Croydon|Ealing|Euston|Harrow|Homerton|Kentish Town|Orpington|Poplar|Soho
+14,hindsight,3,Bromley|Euston|Soho
+14,hindsight,5,Bromley|Croydon|Euston|Kentish Town|Soho
+14,hindsight,10,Bromley|Croydon|Ealing|Euston|Harrow|Hendon|Kentish Town|Orpington|Poplar|Soho
+15,lgbm,3,Kentish Town|Lambeth|Stanmore
+15,lgbm,5,Bromley|Kentish Town|Lambeth|Stanmore|West Hampstead
+15,lgbm,10,Acton|Bexley|Bromley|Hammersmith|Kentish Town|Lambeth|Northolt|Romford|Stanmore|West Hampstead
+15,road,3,Kentish Town|Lambeth|Stanmore
+15,road,5,Bromley|Kentish Town|Lambeth|Stanmore|West Hampstead
+15,road,10,Bexley|Bromley|Hammersmith|Kentish Town|Lambeth|Northolt|Plaistow|Romford|Stanmore|West Hampstead
+15,straight,3,Kentish Town|Lambeth|Stanmore
+15,straight,5,Bromley|Kentish Town|Lambeth|Stanmore|West Hampstead
+15,straight,10,Bexley|Bromley|Hammersmith|Harold Hill|Kentish Town|Lambeth|Northolt|Stanmore|Sutton|West Hampstead
+15,hindsight,3,Kentish Town|Lambeth|Stanmore
+15,hindsight,5,Hammersmith|Kentish Town|Lambeth|Stanmore|West Hampstead
+15,hindsight,10,Bromley|Hammersmith|Hornsey|Kentish Town|Lambeth|Northolt|Romford|Stanmore|Sutton|West Hampstead
+16,lgbm,3,Edmonton|Forest Hill|Soho
+16,lgbm,5,Edmonton|Forest Hill|Heston|Soho|Wembley
+16,lgbm,10,Dagenham|Edmonton|Enfield|Forest Hill|Harrow|Heston|Soho|Surbiton|Wembley|West Norwood
+16,road,3,Edmonton|Heston|Soho
+16,road,5,Dagenham|Enfield|Forest Hill|Heston|Soho
+16,road,10,Dagenham|Edmonton|Enfield|Forest Hill|Harrow|Heston|Soho|Surbiton|Wembley|West Norwood
+16,straight,3,Edmonton|Forest Hill|Soho
+16,straight,5,Dagenham|Enfield|Forest Hill|Harrow|Soho
+16,straight,10,Dagenham|Edmonton|Enfield|Forest Hill|Harrow|Heston|Soho|Surbiton|West Norwood|Willesden
+16,hindsight,3,Enfield|Lewisham|Soho
+16,hindsight,5,Enfield|Harrow|Lewisham|Soho|Twickenham
+16,hindsight,10,Dagenham|Enfield|Harrow|Heston|Lewisham|Soho|Southgate|Twickenham|West Norwood|Willesden
+17,lgbm,3,Ilford|Paddington|Southall
+17,lgbm,5,Hendon|Ilford|North Kensington|Paddington|Southall
+17,lgbm,10,Barnet|Hendon|Hillingdon|Holloway|Ilford|Norbury|North Kensington|Paddington|Southall|Wallington
+17,road,3,Ilford|Paddington|Southall
+17,road,5,Hendon|Ilford|Paddington|Southall|Wallington
+17,road,10,Barnet|Hendon|Hillingdon|Ilford|Norbury|North Kensington|Paddington|Shoreditch|Southall|Wallington
+17,straight,3,Ilford|Paddington|Southall
+17,straight,5,Finchley|Ilford|Norbury|Paddington|Southall
+17,straight,10,Barnet|Hendon|Hillingdon|Holloway|Ilford|Norbury|North Kensington|Paddington|Southall|Wallington
+17,hindsight,3,Hillingdon|North Kensington|Paddington
+17,hindsight,5,Hendon|Hillingdon|Ilford|North Kensington|Paddington
+17,hindsight,10,Barnet|Hendon|Hillingdon|Holloway|Ilford|Norbury|North Kensington|Paddington|Shoreditch|Southall
+18,lgbm,3,Euston|Homerton|Plumstead
+18,lgbm,5,Ealing|Euston|Homerton|Orpington|Plumstead
+18,lgbm,10,Bethnal Green|Brixton|Ealing|Euston|Feltham|Homerton|Orpington|Plumstead|Walthamstow|Woodside
+18,road,3,Euston|Orpington|Plumstead
+18,road,5,Ealing|Euston|Homerton|Orpington|Plumstead
+18,road,10,Bethnal Green|Brixton|Ealing|Erith|Euston|Feltham|Homerton|Orpington|Plumstead|Walthamstow
+18,straight,3,Brixton|Euston|Plumstead
+18,straight,5,Bethnal Green|Brixton|Euston|Orpington|Plumstead
+18,straight,10,Bethnal Green|Brixton|Ealing|Erith|Euston|Homerton|Orpington|Plumstead|Walthamstow|Woodside
+18,hindsight,3,Brixton|Euston|Plumstead
+18,hindsight,5,Brixton|Ealing|Euston|Homerton|Plumstead
+18,hindsight,10,Bethnal Green|Brixton|Ealing|Erith|Euston|Feltham|Homerton|Orpington|Plumstead|Walthamstow
+19,lgbm,3,Chelsea|Croydon|Tottenham
+19,lgbm,5,Chelsea|Croydon|Heathrow|Stoke Newington|Tottenham
+19,lgbm,10,Chelsea|Croydon|Heathrow|Islington|Kensington|Poplar|Stoke Newington|Stratford|Tottenham|Wandsworth
+19,road,3,Croydon|Heathrow|Tottenham
+19,road,5,Chelsea|Croydon|East Ham|Heathrow|Tottenham
+19,road,10,Addington|Chelsea|Croydon|East Greenwich|Heathrow|Poplar|Stoke Newington|Stratford|Tottenham|Wandsworth
+19,straight,3,Croydon|Heathrow|Tottenham
+19,straight,5,Croydon|Heathrow|Stoke Newington|Stratford|Tottenham
+19,straight,10,Addington|Chelsea|Croydon|Heathrow|Poplar|Ruislip|Stoke Newington|Stratford|Tottenham|Wandsworth
+19,hindsight,3,Chelsea|Croydon|Tottenham
+19,hindsight,5,Chelsea|Croydon|Hayes|Poplar|Tottenham
+19,hindsight,10,Addington|Chelsea|Croydon|Hayes|Peckham|Poplar|Stoke Newington|Stratford|Tottenham|Wandsworth

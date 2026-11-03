@@ -15,6 +15,8 @@ Ten figures that tell the whole project. Open **01 → 10** in order.
 | 09 | `09_closure_2014.png` | 2014 closures: nearest vs learned dispatch vs oracle. |
 | 10 | `10_results_summary.png` | Plain-English results on one page. |
 
+Also `method_diagram.png`: how the project works, from data to validation (`scripts/build_method_diagram.py`).
+
 Regenerate:
 
 ```bash

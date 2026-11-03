@@ -81,7 +81,7 @@ def fig_01():
         rows.append(("Our model · stations never seen", ns_mae, BLUE))
     rows.append(("Our model (street-aware trees)", lgb_mae, BLUE))
     n_all = len(rows)
-    # The trips placement scores: first engine, home station, not busy (scripts/travel_time_error_breakdown.py).
+    # First-engine trips from the home station, not busy: what placement scores (scripts/travel_time_error_breakdown.py).
     pl = json.loads((FIG / "validation/travel_time_error/summary.json").read_text())["compare"]["placement"]
     rows += [("Classic formula (road distance)", pl["kolesar_mae_s"], ORANGE),
              ("Our model · stations never seen", pl["never_seen_mae_s"], BLUE),
@@ -94,7 +94,7 @@ def fig_01():
     for yi, r in zip(y, rows):
         a.text(r[1] + 1.2, yi, f"{r[1]:.1f} s", va="center", color=INK, fontsize=11, fontweight="bold")
     a.text(0.5, y[n_all - 1] + 0.95, "All 2025 trips (every engine, busy or not)", fontsize=10.5, color=INK, va="center")
-    a.text(0.5, y[-1] + 0.95, "Trips placement scores: first engine, from its home station, not busy",
+    a.text(0.5, y[-1] + 0.95, "First-engine trips from the home station (station not busy)",
            fontsize=10.5, color=INK, fontweight="bold", va="center")
     a.set_ylim(-0.6, y[-1] + 1.4)
     a.set_xlabel("Average error on held-out 2025 trips (seconds · lower is better)")
@@ -417,19 +417,11 @@ def fig_08():
 def fig_09():
     diag = pd.read_csv(FIG / "validation/closure_2014/diagnostic.csv", index_col=0)
     disp = pd.read_csv(FIG / "validation/dispatch/closure_areas.csv", index_col=0)
-    summary = json.loads((FIG / "validation/dispatch/summary.json").read_text())
     rec = diag["drive_s"]
-    disp_cols = [c for c in ("dispatch_blend", "dispatch_by_hour_calibrated", "dispatch_ensemble",
-                             "dispatch_all_day", "dispatch_by_hour_call_rate") if c in disp.columns]
-    scores = summary.get("closure_2014", {}).get("closure_score", {})
-    # Prefer lowest area MAE among high-corr variants (shrink-blend often wins MAE).
-    def score_key(c):
-        s = scores.get(c, {})
-        return (s.get("corr_across_areas", -1), -s.get("mae_across_areas_s", 99))
-
-    best_name = max(disp_cols, key=score_key)
+    # The all-day model is the one placement scoring uses (not the best-scoring variant).
+    best_name = "dispatch_all_day"
     nearest = disp["nearest"] if "nearest" in disp.columns else diag["model_nearest_drive"]
-    label = "Learned dispatch" + (" (shrink blend)" if best_name == "dispatch_blend" else "")
+    label = "Learned dispatch"
     panels = [
         (nearest, "Assume nearest station", GREY),
         (disp[best_name], label, ORANGE),
@@ -446,7 +438,8 @@ def fig_09():
         for name in (label_on.get(i) or set()):
             if name in rec.index:
                 ax.annotate(name, (rec[name], pred[name]), fontsize=9, color=MUTED,
-                            xytext=(6, 4), textcoords="offset points")
+                            xytext=(-6, 8) if name == "Knightsbridge" else (6, 4), textcoords="offset points",
+                            ha="center" if name == "Knightsbridge" else "left")
         r = float(np.corrcoef(rec, pred)[0, 1])
         mae = float(err.mean())
         ax.set_title(f"{title}\ncorr {r:.2f}  ·  MAE {mae:.0f} s", fontsize=12)
@@ -480,7 +473,7 @@ def fig_10():
     gain10 = -rec["d_slowest10_s"]
     rows = [
         ["Travel-time accuracy",
-         f"Our model {pl['model_mae_s']:.1f} s error vs classic formula {pl['kolesar_mae_s']:.1f} s (trips placement scores)"],
+         f"Our model {pl['model_mae_s']:.1f} s error vs classic formula {pl['kolesar_mae_s']:.1f} s (first-engine trips from home station)"],
         ["What the model uses",
          "Street traits on the legal route — signals, junctions, road class, speed limits"],
         ["Busy engines",
@@ -532,6 +525,8 @@ Ten figures that tell the whole project. Open **01 → 10** in order.
 | 08 | `08_price_of_fairness.png` | Stricter borough rules → smaller citywide gain. |
 | 09 | `09_closure_2014.png` | 2014 closures: nearest vs learned dispatch vs oracle. |
 | 10 | `10_results_summary.png` | Plain-English results on one page. |
+
+Also `method_diagram.png`: how the project works, from data to validation (`scripts/build_method_diagram.py`).
 
 Regenerate:
 

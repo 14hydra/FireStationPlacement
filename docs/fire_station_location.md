@@ -369,16 +369,16 @@ predicted for each period's hour (`ml_scorer.lgbm_matrices_by_hour`) and the hou
 dispatch model; the Kolesar rows have no hour. Income: ONS FYE 2020 equivalised household
 income after housing costs of the nearest London MSOA (`data/raw/income/`), in fifths.
 
-- Time of day: move up to 10 (1 s boroughs) saves 4.6–5.6 s in every period (night, both
-  rush hours, daytime, evening), slowest 10 % 3.3–5.6 s; the redesign 12–16 s. Add 3 saves
-  about 2 s in every period but its slowest 10 % is 0.2–0.3 s worse at night and in rush
+- Time of day: move up to 10 (1 s boroughs) saves 4.6–5.5 s in every period (night, both
+  rush hours, daytime, evening), slowest 10 % 3.2–5.9 s; the redesign 12–16 s. Add 3 saves
+  1.5–2.2 s in every period but its slowest 10 % is 0.1–0.3 s worse at night and in rush
   hours (the floor is all-day).
 - Severity: every layout is faster for all calls, serious calls and fires in homes under
   all three models.
-- Income: moving stations helps the poorest fifth most (move 10: −9.6 s vs −2.8 to −5.6 s;
-  redesign −19.2 s); adding stations helps the richest fifth most (central London sites).
-- Boroughs: under LightGBM the 1 s rule holds except the City of London (+2.6 s, move 10);
-  under the Kolesar formulas some boroughs lose up to 9 s (move 10) and 12 s (redesign).
+- Income: moving stations helps the poorest fifth most (move 10: −9.6 s vs −2.8 to −5.5 s;
+  redesign −19.3 s); adding stations helps the richest fifth most (central London sites).
+- Boroughs: under LightGBM the 1 s rule holds except the City of London (+2.7 s, move 10);
+  under the Kolesar formulas some boroughs lose up to 10 s (move 10) and 11 s (redesign).
 
 Outputs: `data/figures/placement/robustness/` (`robustness.csv`, `summary.json`,
 `time_of_day.png`, `income.png`, `boroughs.png`). All results tables: `docs/results.md`.
@@ -420,9 +420,9 @@ The one real change in London's station layout we can test against: 10 stations 
   versions predict a smaller effect than recorded.
 - **Ranking the closed stations** (reopen each in today's network; 2025 calls, current
   LightGBM, busy engines): each would save 0.3–1.2 s citywide (Westminster most,
-  Silvertown least); the ranking does not match the 2014 damage (Spearman −0.42), which
-  is expected to be weak: London's demand and network have changed since 2014, and the
-  recorded per-area damage is noisy.
+  Silvertown least); the first comparison with 2014 damage gave Spearman −0.42 (unlike units; like for like +0.22 to +0.33, not significant: `docs/results.md` 3.3). A weak link is
+  expected: London's demand and network have changed since 2014, and the recorded
+  per-area damage is noisy.
 
 **Diagnostic: why area-level predictions miss** (`scripts/closure_2014_diagnostic.py`).
 First-engine trips (170,294 in 2013 and 2014 after the closures), each change as a
@@ -463,8 +463,8 @@ time slot. Probabilities are temperature-scaled and blended with the cascade.
 |---|---|---|---|
 | Nearest station | 47.8 s | 0.42 | 17.2 s |
 | Nearest, or next nearest when busy | 25.4 s | 0.31 | 16.3 s |
-| Dispatch model, all day | 23.4 s | 0.59 | 13.0 s |
-| **Dispatch model, by time of day (calibrated)** | **23.7 s** | **0.64** | **12.4 s** |
+| **Dispatch model, all day** | **23.4 s** | **0.59** | **13.0 s** |
+| Dispatch model, by time of day (calibrated) | 23.7 s | 0.64 | 12.4 s |
 
 - Today (trained 2021–24, tested 2025): rank shares 69 / 20 / 6.5 / 2.4 % predicted vs
   70 / 18 / 6 / 3 % recorded (the busy blend can only give ranks 1–2); top-1 accuracy 70.6 %

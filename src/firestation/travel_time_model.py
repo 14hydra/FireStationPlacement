@@ -367,6 +367,11 @@ def predict(bundle: dict, trips: pd.DataFrame) -> np.ndarray:
     """Predicted driving seconds for ``trips`` using a saved bundle from the trainer."""
     from .kolesar import KolesarModel
 
+    if bundle.get("regime_bias") and not bundle.get("regime_bias_out_of_sample"):
+        # Older files carry a correction fitted on the wrong trips (docs/model_improvements_from_embedding.md).
+        raise ValueError("This travel time model file has an invalid regime_bias correction. Retrain it with "
+                         "scripts/train_travel_time_lfb.py or replace it with a current copy.")
+
     groups = list(bundle.get("feature_groups") or _infer_feature_groups(bundle["features"]))
     # Drop dest if the bundle has no destination-history tables (legacy models).
     if "dest" in groups and "dest_history" not in bundle:

@@ -22,6 +22,12 @@ rank candidate station layouts differently from distance-only or Kolesar-only
 placement, and the street-aware layout will do better on held-out calls
 (mean first-engine attendance and share of calls within 10 min).
 
+**Result so far.** Weak support (`docs/results.md` section 6.1). In a neutral test with
+hidden real stations scored on recorded trips, LightGBM's sites gained only 0.2 to 0.6 s
+more than the Kolesar curves' and were mostly the same sites; only one of six comparisons
+had an interval above zero. Choosing with any of the three models beat random
+sites by 3 to 4 s. New sites on the free grid cannot be scored this way.
+
 **Not our claim:** that we have beaten LFB's real operational planning (see
 [Limits](#limits-and-honesty)).
 
