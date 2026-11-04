@@ -1,0 +1,9 @@
+method,moved_engines,d_mean_s
+engines,5,-0.8
+engines,10,-0.84
+engines,20,-0.84
+engines,40,-0.84
+engines_day,5,-0.94
+engines_day,10,-1.07
+engines_day,20,-1.07
+engines_day,40,-1.07

@@ -1,0 +1,165 @@
+{
+  "doc": "How much could moving engines' away time to quieter hours save?\n\nCalculation, not a simulation. Away share per hour comes from gap_windows.py (2024 settings). For each engine class and day type,\ntotal away hours per day stay fixed and only their timing changes. Cost per call = chance of a gap beyond the available-state rate x 148 s\n(first_engine_gap.py, 2024), or x 48 over-6-minute points. The saving is an upper limit: it assumes the duties can move freely,\nneighbours do not interfere, and the extra time does not change with the hour. 2023 uses the same away pattern on its own calls, as a check.\n\nWrites data/figures/validation/gap_shift/: shift.csv, summary.json.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/gap_shift.py\n",
+  "rows": [
+    {
+      "year": 2024,
+      "plan": "today",
+      "cost_s": 11.02,
+      "cost_over6_points": 3.57,
+      "saving_s": 0.0,
+      "saving_over6_points": 0.0
+    },
+    {
+      "year": 2024,
+      "plan": "flat 08:00-18:00",
+      "cost_s": 11.21,
+      "cost_over6_points": 3.63,
+      "saving_s": -0.19,
+      "saving_over6_points": -0.06
+    },
+    {
+      "year": 2024,
+      "plan": "flat 08:00-20:00",
+      "cost_s": 11.43,
+      "cost_over6_points": 3.7,
+      "saving_s": -0.41,
+      "saving_over6_points": -0.13
+    },
+    {
+      "year": 2024,
+      "plan": "flat 07:00-22:00",
+      "cost_s": 11.1,
+      "cost_over6_points": 3.6,
+      "saving_s": -0.08,
+      "saving_over6_points": -0.03
+    },
+    {
+      "year": 2024,
+      "plan": "quietest hours in 08:00-18:00",
+      "cost_s": 10.95,
+      "cost_over6_points": 3.55,
+      "saving_s": 0.07,
+      "saving_over6_points": 0.02
+    },
+    {
+      "year": 2024,
+      "plan": "quietest hours in 08:00-20:00",
+      "cost_s": 10.95,
+      "cost_over6_points": 3.55,
+      "saving_s": 0.07,
+      "saving_over6_points": 0.02
+    },
+    {
+      "year": 2024,
+      "plan": "quietest hours in 07:00-22:00",
+      "cost_s": 10.12,
+      "cost_over6_points": 3.28,
+      "saving_s": 0.9,
+      "saving_over6_points": 0.29
+    },
+    {
+      "year": 2024,
+      "plan": "any hour, quietest first (not realistic)",
+      "cost_s": 5.63,
+      "cost_over6_points": 1.82,
+      "saving_s": 5.39,
+      "saving_over6_points": 1.75
+    },
+    {
+      "year": 2024,
+      "plan": "25 % less away time",
+      "cost_s": 8.27,
+      "cost_over6_points": 2.68,
+      "saving_s": 2.75,
+      "saving_over6_points": 0.89
+    },
+    {
+      "year": 2024,
+      "plan": "50 % less away time",
+      "cost_s": 5.51,
+      "cost_over6_points": 1.79,
+      "saving_s": 5.51,
+      "saving_over6_points": 1.78
+    },
+    {
+      "year": 2023,
+      "plan": "today",
+      "cost_s": 11.08,
+      "cost_over6_points": 3.59,
+      "saving_s": 0.0,
+      "saving_over6_points": 0.0
+    },
+    {
+      "year": 2023,
+      "plan": "flat 08:00-18:00",
+      "cost_s": 11.3,
+      "cost_over6_points": 3.66,
+      "saving_s": -0.22,
+      "saving_over6_points": -0.07
+    },
+    {
+      "year": 2023,
+      "plan": "flat 08:00-20:00",
+      "cost_s": 11.53,
+      "cost_over6_points": 3.74,
+      "saving_s": -0.45,
+      "saving_over6_points": -0.15
+    },
+    {
+      "year": 2023,
+      "plan": "flat 07:00-22:00",
+      "cost_s": 11.18,
+      "cost_over6_points": 3.62,
+      "saving_s": -0.1,
+      "saving_over6_points": -0.03
+    },
+    {
+      "year": 2023,
+      "plan": "quietest hours in 08:00-18:00",
+      "cost_s": 11.01,
+      "cost_over6_points": 3.57,
+      "saving_s": 0.07,
+      "saving_over6_points": 0.02
+    },
+    {
+      "year": 2023,
+      "plan": "quietest hours in 08:00-20:00",
+      "cost_s": 10.99,
+      "cost_over6_points": 3.56,
+      "saving_s": 0.09,
+      "saving_over6_points": 0.03
+    },
+    {
+      "year": 2023,
+      "plan": "quietest hours in 07:00-22:00",
+      "cost_s": 10.17,
+      "cost_over6_points": 3.3,
+      "saving_s": 0.91,
+      "saving_over6_points": 0.29
+    },
+    {
+      "year": 2023,
+      "plan": "any hour, quietest first (not realistic)",
+      "cost_s": 5.58,
+      "cost_over6_points": 1.81,
+      "saving_s": 5.5,
+      "saving_over6_points": 1.78
+    },
+    {
+      "year": 2023,
+      "plan": "25 % less away time",
+      "cost_s": 8.31,
+      "cost_over6_points": 2.69,
+      "saving_s": 2.77,
+      "saving_over6_points": 0.9
+    },
+    {
+      "year": 2023,
+      "plan": "50 % less away time",
+      "cost_s": 5.54,
+      "cost_over6_points": 1.8,
+      "saving_s": 5.54,
+      "saving_over6_points": 1.79
+    }
+  ]
+}

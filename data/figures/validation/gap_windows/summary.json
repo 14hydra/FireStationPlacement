@@ -1,0 +1,841 @@
+{
+  "doc": "When does each station's local engine seem to be unavailable, and is that real?\n\nModel: each station is in one of two hidden states on a 15-minute grid, \"available\" or \"away\".\nCalls where the local engine arrived first and gap calls (first_engine_gap.py) are the only input.\nAway means a gap call is likely. The chance of going away and of coming back depends on the hour and on\nweekday/weekend. Fitted with the Baum-Welch method, separately for one-engine and two-engine stations.\nCalls within 20 minutes of an engine leaving its last incident are ignored, so return trips cannot create a window.\n\nWindows made from gap calls are bound to contain gap calls, so that is not evidence. Tests use what the model did not see:\n\n  1. Hidden calls: hide 20 % of calls and predict them, against a baseline of station x hour x weekday/weekend.\n     Scored only where the neighbouring calls are in a different 500 m square.\n  2. Same model on other years: settings fixed on 2024, then 2021-23. 2025-26 stay unused for the final test.\n  3. Trips to other areas: mobilisations of the station's engines to calls in other station areas, per free-engine hour,\n     comparing likely away (above 80 %) with likely available (below 20 %) in the same station x hour x weekday/weekend.\n     Close to 0 means the engine really was unavailable; close to 1 means only how it was chosen for local calls changed.\n     Placebo: the same comparison with windows moved 7 days.\n  4. Delay codes and depot: on those trips, how often \"On outside duty\", \"Other Station\", and how long attendance takes.\n  5. Does the model reproduce the runs in gap_cause/clustering.csv? Simulated from the fitted model.\n  6. Repeat cycle: correlation of a station's away time on days k apart, from the model and from raw gap calls, each year.\n     Then: does away time k days earlier predict gap calls today? 7 and 21 days act as comparison lags.\n  7. Built-in bias in test 3: calls just after a trip are ignored, which removes evidence around trips. So labels are\n     simulated independently of the trips and test 3 repeated. Any drop below 1 there comes from the method.\n     Also repeated with no return-trip allowance, which should bias the other way.\n\nLimits: this finds periods when the engine or how it was chosen changed. It cannot say why. A window needs calls to be seen,\nso short windows and quiet stations are missed. Estimates at night are weak because few windows occur.\n\nWrites data/figures/validation/gap_windows/: parameters.csv, hidden_calls.csv, other_area_trips.csv, codes_on_trips.csv,\nruns_check.csv, repeat_cycle.csv, repeat_predicts.csv, away_by_hour.csv, by_station.csv, windows_2024.csv, by_quarter_hour.csv,\ntrips_method_bias.csv, summary.json.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/gap_windows.py\n",
+  "settings": [
+    {
+      "pumps": 1,
+      "e_u": 0.89,
+      "e_a_median": 0.038,
+      "stations": 62
+    },
+    {
+      "pumps": 2,
+      "e_u": 0.587,
+      "e_a_median": 0.049,
+      "stations": 40
+    }
+  ],
+  "hidden_calls": [
+    {
+      "year": 2024,
+      "hidden_calls_scored": 18278,
+      "gap_share_pct": 15.2,
+      "auc_model": 0.72,
+      "auc_baseline": 0.659,
+      "logloss_model": 0.3804,
+      "logloss_baseline": 0.4087
+    },
+    {
+      "year": 2021,
+      "hidden_calls_scored": 15008,
+      "gap_share_pct": 13.5,
+      "auc_model": 0.706,
+      "auc_baseline": 0.649,
+      "logloss_model": 0.3588,
+      "logloss_baseline": 0.3814
+    },
+    {
+      "year": 2022,
+      "hidden_calls_scored": 17288,
+      "gap_share_pct": 16.3,
+      "auc_model": 0.719,
+      "auc_baseline": 0.652,
+      "logloss_model": 0.3958,
+      "logloss_baseline": 0.4275
+    },
+    {
+      "year": 2023,
+      "hidden_calls_scored": 17380,
+      "gap_share_pct": 15.4,
+      "auc_model": 0.726,
+      "auc_baseline": 0.653,
+      "logloss_model": 0.382,
+      "logloss_baseline": 0.4125
+    }
+  ],
+  "other_area_trips": [
+    {
+      "year": 2024,
+      "windows": "as fitted",
+      "stations": "all",
+      "away_free_hours": 9023,
+      "available_free_hours": 654936,
+      "trips_away": 323,
+      "trips_available": 38025,
+      "trips_per_100h_away_matched": 3.58,
+      "trips_per_100h_available_matched": 8.56,
+      "rate_ratio": 0.394,
+      "ratio_lo": 0.334,
+      "ratio_hi": 0.461
+    },
+    {
+      "year": 2024,
+      "windows": "as fitted",
+      "stations": "one engine",
+      "away_free_hours": 6553,
+      "available_free_hours": 375357,
+      "trips_away": 78,
+      "trips_available": 15767,
+      "trips_per_100h_away_matched": 1.19,
+      "trips_per_100h_available_matched": 5.97,
+      "rate_ratio": 0.166,
+      "ratio_lo": 0.131,
+      "ratio_hi": 0.208
+    },
+    {
+      "year": 2024,
+      "windows": "as fitted",
+      "stations": "two engines",
+      "away_free_hours": 2470,
+      "available_free_hours": 279578,
+      "trips_away": 245,
+      "trips_available": 22258,
+      "trips_per_100h_away_matched": 9.92,
+      "trips_per_100h_available_matched": 13.03,
+      "rate_ratio": 0.635,
+      "ratio_lo": 0.532,
+      "ratio_hi": 0.779
+    },
+    {
+      "year": 2024,
+      "windows": "windows moved 7 days (placebo)",
+      "stations": "all",
+      "away_free_hours": 7927,
+      "available_free_hours": 661544,
+      "trips_away": 811,
+      "trips_available": 38432,
+      "trips_per_100h_away_matched": 10.23,
+      "trips_per_100h_available_matched": 8.48,
+      "rate_ratio": 1.101,
+      "ratio_lo": 1.024,
+      "ratio_hi": 1.186
+    },
+    {
+      "year": 2024,
+      "windows": "windows moved 7 days (placebo)",
+      "stations": "one engine",
+      "away_free_hours": 5600,
+      "available_free_hours": 380800,
+      "trips_away": 416,
+      "trips_available": 15829,
+      "trips_per_100h_away_matched": 7.43,
+      "trips_per_100h_available_matched": 5.8,
+      "rate_ratio": 1.142,
+      "ratio_lo": 1.0,
+      "ratio_hi": 1.295
+    },
+    {
+      "year": 2024,
+      "windows": "windows moved 7 days (placebo)",
+      "stations": "two engines",
+      "away_free_hours": 2326,
+      "available_free_hours": 280744,
+      "trips_away": 395,
+      "trips_available": 22603,
+      "trips_per_100h_away_matched": 16.98,
+      "trips_per_100h_available_matched": 13.13,
+      "rate_ratio": 1.063,
+      "ratio_lo": 0.982,
+      "ratio_hi": 1.153
+    },
+    {
+      "year": 2021,
+      "windows": "as fitted",
+      "stations": "all",
+      "away_free_hours": 5687,
+      "available_free_hours": 667191,
+      "trips_away": 247,
+      "trips_available": 29961,
+      "trips_per_100h_away_matched": 4.34,
+      "trips_per_100h_available_matched": 6.69,
+      "rate_ratio": 0.655,
+      "ratio_lo": 0.529,
+      "ratio_hi": 0.797
+    },
+    {
+      "year": 2021,
+      "windows": "as fitted",
+      "stations": "one engine",
+      "away_free_hours": 4130,
+      "available_free_hours": 385665,
+      "trips_away": 59,
+      "trips_available": 12911,
+      "trips_per_100h_away_matched": 1.43,
+      "trips_per_100h_available_matched": 4.81,
+      "rate_ratio": 0.263,
+      "ratio_lo": 0.175,
+      "ratio_hi": 0.363
+    },
+    {
+      "year": 2021,
+      "windows": "as fitted",
+      "stations": "two engines",
+      "away_free_hours": 1557,
+      "available_free_hours": 281526,
+      "trips_away": 188,
+      "trips_available": 17050,
+      "trips_per_100h_away_matched": 12.07,
+      "trips_per_100h_available_matched": 9.65,
+      "rate_ratio": 1.128,
+      "ratio_lo": 0.926,
+      "ratio_hi": 1.399
+    },
+    {
+      "year": 2021,
+      "windows": "windows moved 7 days (placebo)",
+      "stations": "all",
+      "away_free_hours": 5077,
+      "available_free_hours": 672738,
+      "trips_away": 461,
+      "trips_available": 30543,
+      "trips_per_100h_away_matched": 9.08,
+      "trips_per_100h_available_matched": 6.82,
+      "rate_ratio": 1.267,
+      "ratio_lo": 1.14,
+      "ratio_hi": 1.407
+    },
+    {
+      "year": 2021,
+      "windows": "windows moved 7 days (placebo)",
+      "stations": "one engine",
+      "away_free_hours": 3564,
+      "available_free_hours": 390325,
+      "trips_away": 236,
+      "trips_available": 13041,
+      "trips_per_100h_away_matched": 6.62,
+      "trips_per_100h_available_matched": 4.75,
+      "rate_ratio": 1.234,
+      "ratio_lo": 1.066,
+      "ratio_hi": 1.426
+    },
+    {
+      "year": 2021,
+      "windows": "windows moved 7 days (placebo)",
+      "stations": "two engines",
+      "away_free_hours": 1512,
+      "available_free_hours": 282413,
+      "trips_away": 225,
+      "trips_available": 17502,
+      "trips_per_100h_away_matched": 14.88,
+      "trips_per_100h_available_matched": 10.01,
+      "rate_ratio": 1.301,
+      "ratio_lo": 1.121,
+      "ratio_hi": 1.546
+    },
+    {
+      "year": 2022,
+      "windows": "as fitted",
+      "stations": "all",
+      "away_free_hours": 8912,
+      "available_free_hours": 655339,
+      "trips_away": 429,
+      "trips_available": 34905,
+      "trips_per_100h_away_matched": 4.81,
+      "trips_per_100h_available_matched": 7.76,
+      "rate_ratio": 0.58,
+      "ratio_lo": 0.47,
+      "ratio_hi": 0.698
+    },
+    {
+      "year": 2022,
+      "windows": "as fitted",
+      "stations": "one engine",
+      "away_free_hours": 6088,
+      "available_free_hours": 376819,
+      "trips_away": 91,
+      "trips_available": 14709,
+      "trips_per_100h_away_matched": 1.49,
+      "trips_per_100h_available_matched": 5.59,
+      "rate_ratio": 0.235,
+      "ratio_lo": 0.191,
+      "ratio_hi": 0.282
+    },
+    {
+      "year": 2022,
+      "windows": "as fitted",
+      "stations": "two engines",
+      "away_free_hours": 2825,
+      "available_free_hours": 278520,
+      "trips_away": 338,
+      "trips_available": 20196,
+      "trips_per_100h_away_matched": 11.97,
+      "trips_per_100h_available_matched": 11.31,
+      "rate_ratio": 0.913,
+      "ratio_lo": 0.769,
+      "ratio_hi": 1.091
+    },
+    {
+      "year": 2022,
+      "windows": "windows moved 7 days (placebo)",
+      "stations": "all",
+      "away_free_hours": 7932,
+      "available_free_hours": 661738,
+      "trips_away": 810,
+      "trips_available": 35615,
+      "trips_per_100h_away_matched": 10.21,
+      "trips_per_100h_available_matched": 7.9,
+      "rate_ratio": 1.146,
+      "ratio_lo": 1.061,
+      "ratio_hi": 1.221
+    },
+    {
+      "year": 2022,
+      "windows": "windows moved 7 days (placebo)",
+      "stations": "one engine",
+      "away_free_hours": 5223,
+      "available_free_hours": 382178,
+      "trips_away": 349,
+      "trips_available": 14738,
+      "trips_per_100h_away_matched": 6.68,
+      "trips_per_100h_available_matched": 5.42,
+      "rate_ratio": 1.114,
+      "ratio_lo": 1.008,
+      "ratio_hi": 1.216
+    },
+    {
+      "year": 2022,
+      "windows": "windows moved 7 days (placebo)",
+      "stations": "two engines",
+      "away_free_hours": 2709,
+      "available_free_hours": 279560,
+      "trips_away": 461,
+      "trips_available": 20877,
+      "trips_per_100h_away_matched": 17.02,
+      "trips_per_100h_available_matched": 11.9,
+      "rate_ratio": 1.171,
+      "ratio_lo": 1.079,
+      "ratio_hi": 1.291
+    },
+    {
+      "year": 2023,
+      "windows": "as fitted",
+      "stations": "all",
+      "away_free_hours": 8823,
+      "available_free_hours": 655436,
+      "trips_away": 303,
+      "trips_available": 35743,
+      "trips_per_100h_away_matched": 3.43,
+      "trips_per_100h_available_matched": 8.15,
+      "rate_ratio": 0.39,
+      "ratio_lo": 0.326,
+      "ratio_hi": 0.456
+    },
+    {
+      "year": 2023,
+      "windows": "as fitted",
+      "stations": "one engine",
+      "away_free_hours": 6231,
+      "available_free_hours": 376433,
+      "trips_away": 80,
+      "trips_available": 14908,
+      "trips_per_100h_away_matched": 1.28,
+      "trips_per_100h_available_matched": 5.92,
+      "rate_ratio": 0.186,
+      "ratio_lo": 0.148,
+      "ratio_hi": 0.225
+    },
+    {
+      "year": 2023,
+      "windows": "as fitted",
+      "stations": "two engines",
+      "away_free_hours": 2592,
+      "available_free_hours": 279002,
+      "trips_away": 223,
+      "trips_available": 20835,
+      "trips_per_100h_away_matched": 8.6,
+      "trips_per_100h_available_matched": 11.76,
+      "rate_ratio": 0.601,
+      "ratio_lo": 0.53,
+      "ratio_hi": 0.712
+    },
+    {
+      "year": 2023,
+      "windows": "windows moved 7 days (placebo)",
+      "stations": "all",
+      "away_free_hours": 7818,
+      "available_free_hours": 661670,
+      "trips_away": 771,
+      "trips_available": 36011,
+      "trips_per_100h_away_matched": 9.86,
+      "trips_per_100h_available_matched": 8.07,
+      "rate_ratio": 1.107,
+      "ratio_lo": 0.989,
+      "ratio_hi": 1.216
+    },
+    {
+      "year": 2023,
+      "windows": "windows moved 7 days (placebo)",
+      "stations": "one engine",
+      "away_free_hours": 5338,
+      "available_free_hours": 381533,
+      "trips_away": 376,
+      "trips_available": 14896,
+      "trips_per_100h_away_matched": 7.04,
+      "trips_per_100h_available_matched": 5.7,
+      "rate_ratio": 1.122,
+      "ratio_lo": 1.022,
+      "ratio_hi": 1.241
+    },
+    {
+      "year": 2023,
+      "windows": "windows moved 7 days (placebo)",
+      "stations": "two engines",
+      "away_free_hours": 2480,
+      "available_free_hours": 280137,
+      "trips_away": 395,
+      "trips_available": 21115,
+      "trips_per_100h_away_matched": 15.93,
+      "trips_per_100h_available_matched": 11.88,
+      "rate_ratio": 1.095,
+      "ratio_lo": 0.928,
+      "ratio_hi": 1.295
+    }
+  ],
+  "codes_on_trips": [
+    {
+      "year": 2024,
+      "measure": "on outside duty, %",
+      "trips_away": 311,
+      "trips_available_matched": 2989,
+      "when_away": 0.64,
+      "when_available": 0.74
+    },
+    {
+      "year": 2024,
+      "measure": "from another station, %",
+      "trips_away": 311,
+      "trips_available_matched": 2989,
+      "when_away": 13.18,
+      "when_available": 12.55
+    },
+    {
+      "year": 2024,
+      "measure": "attendance, s",
+      "trips_away": 311,
+      "trips_available_matched": 2989,
+      "when_away": 478.12,
+      "when_available": 451.98
+    },
+    {
+      "year": 2021,
+      "measure": "on outside duty, %",
+      "trips_away": 241,
+      "trips_available_matched": 1905,
+      "when_away": 0.83,
+      "when_available": 1.2
+    },
+    {
+      "year": 2021,
+      "measure": "from another station, %",
+      "trips_away": 241,
+      "trips_available_matched": 1905,
+      "when_away": 16.6,
+      "when_available": 10.29
+    },
+    {
+      "year": 2021,
+      "measure": "attendance, s",
+      "trips_away": 241,
+      "trips_available_matched": 1905,
+      "when_away": 452.87,
+      "when_available": 437.06
+    },
+    {
+      "year": 2022,
+      "measure": "on outside duty, %",
+      "trips_away": 414,
+      "trips_available_matched": 3116,
+      "when_away": 1.21,
+      "when_available": 0.27
+    },
+    {
+      "year": 2022,
+      "measure": "from another station, %",
+      "trips_away": 414,
+      "trips_available_matched": 3116,
+      "when_away": 21.74,
+      "when_available": 11.38
+    },
+    {
+      "year": 2022,
+      "measure": "attendance, s",
+      "trips_away": 414,
+      "trips_available_matched": 3116,
+      "when_away": 471.64,
+      "when_available": 453.89
+    },
+    {
+      "year": 2023,
+      "measure": "on outside duty, %",
+      "trips_away": 294,
+      "trips_available_matched": 2603,
+      "when_away": 0.68,
+      "when_available": 0.26
+    },
+    {
+      "year": 2023,
+      "measure": "from another station, %",
+      "trips_away": 294,
+      "trips_available_matched": 2603,
+      "when_away": 15.65,
+      "when_available": 12.18
+    },
+    {
+      "year": 2023,
+      "measure": "attendance, s",
+      "trips_away": 294,
+      "trips_available_matched": 2603,
+      "when_away": 476.59,
+      "when_available": 453.6
+    }
+  ],
+  "trips_method_bias": [
+    {
+      "year": 2021,
+      "check": "no return-trip allowance",
+      "stations": "all",
+      "mean": 0.745,
+      "min": 0.745,
+      "max": 0.745
+    },
+    {
+      "year": 2021,
+      "check": "no return-trip allowance",
+      "stations": "one engine",
+      "mean": 0.423,
+      "min": 0.423,
+      "max": 0.423
+    },
+    {
+      "year": 2021,
+      "check": "no return-trip allowance",
+      "stations": "two engines",
+      "mean": 1.155,
+      "min": 1.155,
+      "max": 1.155
+    },
+    {
+      "year": 2021,
+      "check": "simulated, no link to trips",
+      "stations": "all",
+      "mean": 0.713,
+      "min": 0.652,
+      "max": 0.801
+    },
+    {
+      "year": 2021,
+      "check": "simulated, no link to trips",
+      "stations": "one engine",
+      "mean": 0.559,
+      "min": 0.5,
+      "max": 0.615
+    },
+    {
+      "year": 2021,
+      "check": "simulated, no link to trips",
+      "stations": "two engines",
+      "mean": 0.86,
+      "min": 0.782,
+      "max": 1.019
+    },
+    {
+      "year": 2022,
+      "check": "no return-trip allowance",
+      "stations": "all",
+      "mean": 0.647,
+      "min": 0.647,
+      "max": 0.647
+    },
+    {
+      "year": 2022,
+      "check": "no return-trip allowance",
+      "stations": "one engine",
+      "mean": 0.334,
+      "min": 0.334,
+      "max": 0.334
+    },
+    {
+      "year": 2022,
+      "check": "no return-trip allowance",
+      "stations": "two engines",
+      "mean": 0.969,
+      "min": 0.969,
+      "max": 0.969
+    },
+    {
+      "year": 2022,
+      "check": "simulated, no link to trips",
+      "stations": "all",
+      "mean": 0.71,
+      "min": 0.636,
+      "max": 0.754
+    },
+    {
+      "year": 2022,
+      "check": "simulated, no link to trips",
+      "stations": "one engine",
+      "mean": 0.546,
+      "min": 0.51,
+      "max": 0.578
+    },
+    {
+      "year": 2022,
+      "check": "simulated, no link to trips",
+      "stations": "two engines",
+      "mean": 0.856,
+      "min": 0.728,
+      "max": 0.947
+    },
+    {
+      "year": 2023,
+      "check": "no return-trip allowance",
+      "stations": "all",
+      "mean": 0.491,
+      "min": 0.491,
+      "max": 0.491
+    },
+    {
+      "year": 2023,
+      "check": "no return-trip allowance",
+      "stations": "one engine",
+      "mean": 0.298,
+      "min": 0.298,
+      "max": 0.298
+    },
+    {
+      "year": 2023,
+      "check": "no return-trip allowance",
+      "stations": "two engines",
+      "mean": 0.698,
+      "min": 0.698,
+      "max": 0.698
+    },
+    {
+      "year": 2023,
+      "check": "simulated, no link to trips",
+      "stations": "all",
+      "mean": 0.657,
+      "min": 0.582,
+      "max": 0.713
+    },
+    {
+      "year": 2023,
+      "check": "simulated, no link to trips",
+      "stations": "one engine",
+      "mean": 0.522,
+      "min": 0.468,
+      "max": 0.598
+    },
+    {
+      "year": 2023,
+      "check": "simulated, no link to trips",
+      "stations": "two engines",
+      "mean": 0.774,
+      "min": 0.657,
+      "max": 0.909
+    },
+    {
+      "year": 2024,
+      "check": "no return-trip allowance",
+      "stations": "all",
+      "mean": 0.47,
+      "min": 0.47,
+      "max": 0.47
+    },
+    {
+      "year": 2024,
+      "check": "no return-trip allowance",
+      "stations": "one engine",
+      "mean": 0.297,
+      "min": 0.297,
+      "max": 0.297
+    },
+    {
+      "year": 2024,
+      "check": "no return-trip allowance",
+      "stations": "two engines",
+      "mean": 0.665,
+      "min": 0.665,
+      "max": 0.665
+    },
+    {
+      "year": 2024,
+      "check": "simulated, no link to trips",
+      "stations": "all",
+      "mean": 0.698,
+      "min": 0.645,
+      "max": 0.766
+    },
+    {
+      "year": 2024,
+      "check": "simulated, no link to trips",
+      "stations": "one engine",
+      "mean": 0.531,
+      "min": 0.454,
+      "max": 0.618
+    },
+    {
+      "year": 2024,
+      "check": "simulated, no link to trips",
+      "stations": "two engines",
+      "mean": 0.847,
+      "min": 0.774,
+      "max": 0.933
+    }
+  ],
+  "repeat_predicts": [
+    {
+      "year": 2024,
+      "days_earlier": 7,
+      "calls_flagged": 4373,
+      "gap_pct_flagged": 27.4,
+      "gap_pct_not_flagged": 26.0,
+      "difference_same_station_hour": -0.83
+    },
+    {
+      "year": 2024,
+      "days_earlier": 14,
+      "calls_flagged": 4284,
+      "gap_pct_flagged": 32.6,
+      "gap_pct_not_flagged": 25.1,
+      "difference_same_station_hour": 4.97
+    },
+    {
+      "year": 2024,
+      "days_earlier": 21,
+      "calls_flagged": 4089,
+      "gap_pct_flagged": 27.3,
+      "gap_pct_not_flagged": 26.0,
+      "difference_same_station_hour": -1.09
+    },
+    {
+      "year": 2024,
+      "days_earlier": 28,
+      "calls_flagged": 4056,
+      "gap_pct_flagged": 32.1,
+      "gap_pct_not_flagged": 25.1,
+      "difference_same_station_hour": 4.51
+    },
+    {
+      "year": 2021,
+      "days_earlier": 7,
+      "calls_flagged": 2779,
+      "gap_pct_flagged": 22.1,
+      "gap_pct_not_flagged": 23.1,
+      "difference_same_station_hour": -2.49
+    },
+    {
+      "year": 2021,
+      "days_earlier": 14,
+      "calls_flagged": 2670,
+      "gap_pct_flagged": 30.0,
+      "gap_pct_not_flagged": 22.4,
+      "difference_same_station_hour": 5.03
+    },
+    {
+      "year": 2021,
+      "days_earlier": 21,
+      "calls_flagged": 2618,
+      "gap_pct_flagged": 26.0,
+      "gap_pct_not_flagged": 23.0,
+      "difference_same_station_hour": 1.24
+    },
+    {
+      "year": 2021,
+      "days_earlier": 28,
+      "calls_flagged": 2553,
+      "gap_pct_flagged": 28.7,
+      "gap_pct_not_flagged": 22.8,
+      "difference_same_station_hour": 3.6
+    },
+    {
+      "year": 2022,
+      "days_earlier": 7,
+      "calls_flagged": 4190,
+      "gap_pct_flagged": 27.3,
+      "gap_pct_not_flagged": 26.3,
+      "difference_same_station_hour": -0.85
+    },
+    {
+      "year": 2022,
+      "days_earlier": 14,
+      "calls_flagged": 4090,
+      "gap_pct_flagged": 32.8,
+      "gap_pct_not_flagged": 25.6,
+      "difference_same_station_hour": 5.3
+    },
+    {
+      "year": 2022,
+      "days_earlier": 21,
+      "calls_flagged": 3893,
+      "gap_pct_flagged": 25.7,
+      "gap_pct_not_flagged": 26.9,
+      "difference_same_station_hour": -2.66
+    },
+    {
+      "year": 2022,
+      "days_earlier": 28,
+      "calls_flagged": 3833,
+      "gap_pct_flagged": 31.5,
+      "gap_pct_not_flagged": 26.0,
+      "difference_same_station_hour": 3.63
+    },
+    {
+      "year": 2023,
+      "days_earlier": 7,
+      "calls_flagged": 4022,
+      "gap_pct_flagged": 26.9,
+      "gap_pct_not_flagged": 26.3,
+      "difference_same_station_hour": -1.67
+    },
+    {
+      "year": 2023,
+      "days_earlier": 14,
+      "calls_flagged": 3948,
+      "gap_pct_flagged": 35.2,
+      "gap_pct_not_flagged": 25.1,
+      "difference_same_station_hour": 7.27
+    },
+    {
+      "year": 2023,
+      "days_earlier": 21,
+      "calls_flagged": 3897,
+      "gap_pct_flagged": 25.9,
+      "gap_pct_not_flagged": 26.6,
+      "difference_same_station_hour": -2.9
+    },
+    {
+      "year": 2023,
+      "days_earlier": 28,
+      "calls_flagged": 3790,
+      "gap_pct_flagged": 33.0,
+      "gap_pct_not_flagged": 25.4,
+      "difference_same_station_hour": 4.82
+    }
+  ],
+  "station_rank_corr": {
+    "away_10_16_pct": {
+      "away_10_16_pct": 1.0,
+      "away_10_16_2021": 0.72,
+      "away_10_16_2022": 0.58,
+      "away_10_16_2023": 0.72
+    },
+    "away_10_16_2021": {
+      "away_10_16_pct": 0.72,
+      "away_10_16_2021": 1.0,
+      "away_10_16_2022": 0.65,
+      "away_10_16_2023": 0.76
+    },
+    "away_10_16_2022": {
+      "away_10_16_pct": 0.58,
+      "away_10_16_2021": 0.65,
+      "away_10_16_2022": 1.0,
+      "away_10_16_2023": 0.62
+    },
+    "away_10_16_2023": {
+      "away_10_16_pct": 0.72,
+      "away_10_16_2021": 0.76,
+      "away_10_16_2022": 0.62,
+      "away_10_16_2023": 1.0
+    }
+  }
+}

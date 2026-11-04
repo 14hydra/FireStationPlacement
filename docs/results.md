@@ -1,7 +1,7 @@
 # Results and comparisons
 
 Every comparison the project makes, in one place, with where each number comes from and
-which figures show it. Update this file when a script is rerun. Last updated 2026-11-02.
+which figures show it. Update this file when a script is rerun. Last updated 2026-11-04.
 
 **How to read the numbers**
 
@@ -258,6 +258,208 @@ Figures: `validation/dispatch/rank_shares.png`, `reports/weekly_2026-10-19/5_dis
 
 ---
 
+## 2b. Why the first engine does not come from the local station (recorded, no model)
+
+Source: `data/figures/validation/first_engine_gap/` (`scripts/first_engine_gap.py`; first look in
+`scripts/busy_engine_check.py`). Engine busy periods are replayed from the mobilisation records. Extra time compares
+each group with calls where the local engine arrived first, in the same 500 m square and period of the day; 95 % ranges
+resample squares. "Limit" = share of calls x extra time: the most a perfect fix could recover, not an expected saving.
+
+2024 (127,153 calls, average 322.7 s, 31.6 % over 6 min; local engine first on 71.9 %):
+
+| Group | Share | Average | Over 6 min | Extra time | Limit |
+|---|---|---|---|---|---|
+| All local engines out | 5.8 % | 429 s | 66 % | +149 s [145, 154] | 8.6 s |
+| Other first, local engine also sent | 4.7 % | 325 s | 33 % | +24 to +55 s | 1.2 s |
+| Other first and closer by road | 4.5 % | 366 s | 46 % | +46 s [42, 51] | 2.1 s |
+| **Other first, local engine looks free, not sent, local closer** | **13.2 %** | **438 s** | **69 %** | **+148 s [144, 153]** | **19.5 s** |
+
+The last group ("real gap") across years:
+
+| Year | Share of calls | Extra time | Limit | Limit, points of calls over 6 min |
+|---|---|---|---|---|
+| 2021 | 11.7 % | +142 s | 16.6 s | 5.4 |
+| 2022 | 13.9 % | +154 s | 21.4 s | 6.8 |
+| 2023 | 13.3 % | +146 s | 19.5 s | 6.3 |
+| 2024 | 13.2 % | +148 s | 19.5 s | 6.3 |
+| 2025 | 14.1 % | +153 s | 21.6 s | 6.9 |
+| 2026 (part) | 14.1 % | +160 s | 22.5 s | 7.0 |
+
+Share of calls in this group by period, 2024: night 5.3 %, morning 7.5 %, midday 22.2 %, evening 12.8 %, late 9.0 %.
+On 2024 and 2025 the limit stays 18.0 to 21.8 s with 10 or 20 minutes allowed for the return trip, a different definition of a
+regular engine, 250 m or 1 km squares, or comparison by hour (`sensitivity.csv`).
+
+Reading: the gap is stable and larger than the modelled Move 10 saving. The cause is not established. Engines may be away on
+duties the records do not show, which the midday peak suggests but does not prove. 2025-26 times are to the minute; distances
+are by road, not time; 2021 was affected by Covid.
+
+### 2b.1 Looking for the cause
+
+Source: `data/figures/validation/gap_cause/` (`scripts/gap_cause_checks.py`).
+
+**Runs of gap calls.** Calls in one station area in time order, previous call in a different 500 m square; chance the next
+call is a gap after a gap vs after a local-first call. Null: 500 shuffles within station x hour x weekday/weekend (p values below
+0.002 cannot be shown with 500 shuffles).
+
+| Time since previous call (2024) | After a gap | After local first | Difference | Shuffled 95 % range |
+|---|---|---|---|---|
+| 0-15 min | 61.3 % | 37.7 % | 23.5 | 1.5 to 9.1 |
+| 15-30 min | 43.1 % | 14.5 % | 28.6 | 2.4 to 9.1 |
+| 30-60 min | 46.0 % | 11.8 % | 34.3 | 3.0 to 8.0 |
+| 1-2 h | 38.0 % | 11.8 % | 26.2 | 2.9 to 6.7 |
+| 2-4 h | 27.2 % | 12.0 % | 15.2 | 2.0 to 4.9 |
+| 4-8 h | 16.5 % | 11.6 % | 4.9 | −0.5 to 2.2 |
+| 8-24 h | 14.5 % | 14.8 % | −0.3 | −1.7 to 0.6 |
+
+Same pattern in every year 2021-26 (`clustering.csv`). Windows under 30 minutes may include engines returning from a call.
+
+**Time of day (2024).** Gap share jumps from 10.5 % at 09:00 to 31.9 % at 11:00 on weekdays, and 9.6 % to 30.0 % at weekends, then
+falls through the afternoon; about 6 % overnight.
+
+**Delay code.** "On outside duty when mobilised" is 0.24 % of mobilisations in 2024. Across hours of the week its rate tracks the
+gap (correlation 0.78 to 0.85 per year, peaking at 12:00 to 14:00, about 1 %). Across stations it does not (−0.06 to −0.27; about 0
+within station and period). First engines with this code average 498 s, against 323 s for others (2024).
+
+**Engines at the station (2024, gap share).** Midday: one engine 30.9 %, two 21.4 %. Night: 6.2 %, 6.0 %.
+
+Reading: boundaries and data errors do not fit, because runs fade within hours and appear across different squares. The local
+engine, or how it is dispatched, changes for several hours (lengths in 2b.2), mostly around midday, in a clock-driven pattern. That fits engines away on
+routine duties but does not prove it, and it does not exclude temporary dispatch changes, repairs or crewing.
+
+### 2b.2 Estimating the windows
+
+Source: `data/figures/validation/gap_windows/` (`scripts/gap_windows.py`). Two hidden states per station on a 15-minute grid, fitted
+only on gap and local-first calls in 2024, ignoring calls within 20 minutes of an engine's last incident. Settings then fixed for 2021-23.
+2025-26 were not used.
+
+**Hidden calls.** 20 % of calls hidden and predicted, neighbouring calls in a different square. Baseline: station x hour x weekday/weekend.
+
+| Year | Model AUC | Baseline AUC | Model log loss | Baseline log loss |
+|---|---|---|---|---|
+| 2024 (fitted) | 0.720 | 0.659 | 0.380 | 0.409 |
+| 2021 | 0.706 | 0.649 | 0.359 | 0.381 |
+| 2022 | 0.719 | 0.652 | 0.396 | 0.428 |
+| 2023 | 0.726 | 0.653 | 0.382 | 0.413 |
+
+2024: where the model predicts above 80 %, 81.5 % were gap calls and the baseline predicted 29.8 %, but that is 92 of 18,278 calls.
+Only 4.8 % of hidden calls were predicted above 40 %, so most individual moments stay uncertain.
+
+**Trips to other station areas, one-engine stations.** Rate ratio, likely away vs likely available, same station x hour x weekday/weekend. The
+simulated baseline is what the method gives when labels have no link to the trips (10 simulations): well below 1, because calls just after a
+trip are ignored. Compare with it, not with 1.
+
+| Year | Ratio (95 % range) | Simulated baseline | Drop against baseline | No return-trip allowance | Windows moved 7 days |
+|---|---|---|---|---|---|
+| 2024 (fitted) | 0.166 (0.131-0.208) | 0.531 | 69 % | 0.297 | 1.14 |
+| 2021 | 0.263 (0.175-0.363) | 0.559 | 53 % | 0.423 | 1.23 |
+| 2022 | 0.235 (0.191-0.282) | 0.546 | 57 % | 0.334 | 1.11 |
+| 2023 | 0.186 (0.148-0.225) | 0.522 | 64 % | 0.298 | 1.12 |
+
+Two-engine stations are mixed (2024 0.635 vs baseline 0.847; 2022 0.913 vs 0.856; 2021 1.128 vs 0.860), as expected if a second engine can
+still respond. Moved windows sit somewhat above 1, unexplained. Delay codes and depot on trips during windows do not separate clearly: few trips, and the
+direction changes by year (`codes_on_trips.csv`).
+
+**Length and timing, 2024, 2,331 of 8,453 windows with two or more gap calls.** First to last gap call: median 2.0 h (middle half 0.75-3.75 h), a lower
+limit. Model window: median 5.75 h (4.5-7.25 h), which leans on the model's settings. 72 % start 09:00-10:59; ends spread over 13:00-18:00.
+The model gives about 28 % of 10:00-16:00 as away, but station differences are compressed by the shared settings (23-33 %), so these
+are not a station ranking.
+
+**Repeat cycle.** Seen in 2024, then checked on 2021-23. Midday gap share by whether the same station looked away for 3+ midday hours k days earlier
+(same station and hour, percentage points):
+
+| Days earlier | 2021 | 2022 | 2023 | 2024 |
+|---|---|---|---|---|
+| 7 | −2.49 | −0.85 | −1.67 | −0.83 |
+| **14** | **+5.03** | **+5.30** | **+7.27** | **+4.97** |
+| 21 | +1.24 | −2.66 | −2.90 | −1.09 |
+| **28** | **+3.60** | **+3.63** | **+4.82** | **+4.51** |
+
+Raw gap calls without the model, correlation for the same station k days apart: 14 days 0.018 to 0.048, 28 days 0.015 to 0.040, 7 days −0.014 to −0.025, 8 days
+−0.012 to −0.019. Smaller peaks at 5, 9, 23 and 37 days. Correlations are small because a day holds few calls.
+
+Reading: during windows, one-engine stations' engines also make far fewer trips elsewhere, which counts against causes that only affect local calls. Trips do not stop,
+and the test cannot separate duties, crewing, repairs or a dispatch change that covers all calls. A cycle at 14 and 28 days but not 7 or 8 suggests a
+rota, but which one is unknown.
+
+### 2b.3 Fresh test of the 14-day cycle on 2025
+
+Prediction written on 2026-11-04, before any 2025 result was calculated: with the 2024 model settings unchanged and the same measure as the table above,
+2025 will show **at least +3.0 points at 14 days, and 0 or below at 7 days**. Both must hold. One run only. 2026 stays unused.
+
+**Result: the prediction as written failed.** The 14-day part held; the 7-day part did not. Run once (a first attempt crashed on a date edge before calculating anything; one call stamped in 2026 was dropped).
+Source: `data/figures/validation/gap_windows/cycle_2025.csv` (`scripts/gap_cycle_2025.py`).
+
+| Days earlier | Gap share if flagged | If not flagged | Same station and hour, points | 95 % range (stations resampled) | Predicted |
+|---|---|---|---|---|---|
+| 7 | 29.5 % | 27.1 % | +0.99 | −0.61 to +2.63 | 0 or below: **not met** |
+| 14 | 33.8 % | 26.4 % | +5.29 | +3.46 to +7.08 | +3.0 or above: **met** |
+| 21 | 26.6 % | 27.8 % | −2.63 | −4.16 to −1.20 | not predicted |
+| 28 | 31.0 % | 27.1 % | +1.93 | +0.29 to +3.54 | not predicted |
+
+Raw gap calls, correlation: 14 days 0.041 (0.030 to 0.052), 7 days 0.005 (−0.008 to 0.015), 21 days −0.017, 28 days 0.013 (−0.001 to 0.028).
+
+Reading, after seeing the result so not a confirmed test: the 14-day signal is the same size as in 2021-24 and clearly larger than at 7 days, but the 7-day value was not below zero as predicted,
+and the 28-day signal is weaker than in earlier years. A 14-day pattern is supported; the exact prediction is not. Any stricter claim needs a new prediction, tested on 2026.
+
+### 2b.4 Neighbouring stations
+
+Source: `data/figures/validation/gap_overlap/` (`scripts/gap_overlap.py`). 2021-24, 2024 model settings. 2025-26 not used.
+
+**Pairs of calls, no model, 10:00-16:00.** A call, then within 60 minutes a call in a neighbouring station's area (3 nearest stations), leaving out pairs where the neighbour's engine reached the
+first call. Is the second a gap call? Comparison: station pairs at least 10 km apart. Null: 200 shuffles within station x hour x weekday/weekend.
+
+| Year | Neighbours: after gap / after local | Difference | Shuffled 95 % range | 10 km+ apart: difference | Shuffled 95 % range |
+|---|---|---|---|---|---|
+| 2024 | 34.4 % / 26.9 % | 7.5 | −0.7 to 2.7 | 0.5 | −1.6 to 2.0 |
+| 2021 | 36.0 % / 23.8 % | 12.2 | −1.0 to 3.1 | 1.5 | −1.2 to 2.5 |
+| 2022 | 36.6 % / 26.6 % | 10.0 | −1.3 to 2.4 | 2.8 | −1.2 to 2.4 |
+| 2023 | 35.3 % / 27.5 % | 7.9 | −1.0 to 2.8 | 1.6 | −1.2 to 2.4 |
+
+Neighbours' gap calls come together more than chance, so there is no sign that neighbours currently avoid being away together. It does not show why: joint activity, shared
+dispatch effects or knock-on effects that were not removed would all fit.
+
+**Overlap in the model, 10:00-16:00, 2024.** Both away 8.05 % of the time; the same pairs 7 or 21 days apart 8.00 %. The model is unsure at most moments, which understates any link, so this does
+not contradict the pairs test. While a station is likely away, at least one of its 3 nearest is too 63.6 % of the time, and all three 2.7 %. Other years are similar.
+
+**Passing over the next-nearest station by road (2024).** Extra seconds against gap calls where that station reached the call first, same 500 m square and period. Limit = share of all calls x extra seconds.
+
+| On a gap call, the next-nearest station... | Share of gap calls | Share of all calls | Mean attendance | Extra (95 % range) | Limit | Limit, over-6-min points |
+|---|---|---|---|---|---|---|
+| reached it first | 63.0 % | 7.70 % | 410 s | baseline | - | - |
+| had every engine out | 9.8 % | 1.20 % | 509 s | +106 s (95-118) | 1.27 s | 0.33 |
+| looked free, passed over | 27.1 % | 3.31 % | 487 s | +74 s (66-81) | **2.45 s** | **0.61** |
+
+Passed over, limit in other years: 2021 2.17 s, 2022 3.72 s, 2023 2.66 s (0.58 to 0.91 points). With a 500 m tie margin instead of 200 m, 1.82 to 3.40 s.
+
+**Check.** Using only its own area's calls, the model says the next-nearest station was likely away 30.1 % of the time when passed over and 22.1 % when it reached the call first (2024); differences 6.6 to 9.4 points across
+years, against about 0 on simulated labels. So being passed over is linked to that station looking away, but most passed-over stations do not look away, and road distance is an imperfect guide to who is quickest.
+
+Reading: keeping the next-nearest station available has an upper limit of about 2 to 4 s across all calls, or 0.5 to 0.9 points. That is below the planned target (10 s or 3 points), so staggering between neighbours
+cannot reach it alone. The remainder of the gap's 19.5 s limit comes from the local engine's own absence. Moving that away time to quieter hours is tested in 2b.5.
+
+### 2b.5 Moving away time to quieter hours
+
+Source: `scripts/gap_shift.py`, `data/figures/validation/gap_shift/`. A calculation, not a simulation. Total away hours per day stay fixed for each engine class and day type, and only their timing changes. Each call costs
+the chance of a gap above the available-state rate x 148 s, or x 48 over-6-minute points. The savings are upper limits: duties are assumed free to move, with no effect from neighbours.
+
+| Plan | Cost, 2024 | Saving, 2024 | Saving, over-6-min points | Saving, 2023 |
+|---|---|---|---|---|
+| Today | 11.02 s | - | - | - |
+| Spread evenly, 08:00-18:00 | 11.21 s | -0.19 s | -0.06 | -0.22 s |
+| Spread evenly, 08:00-20:00 | 11.43 s | -0.41 s | -0.13 | -0.45 s |
+| Spread evenly, 07:00-22:00 | 11.10 s | -0.08 s | -0.03 | -0.10 s |
+| Quietest hours in 08:00-18:00 | 10.95 s | 0.07 s | 0.02 | 0.07 s |
+| Quietest hours in 08:00-20:00 | 10.95 s | 0.07 s | 0.02 | 0.09 s |
+| Quietest hours in 07:00-22:00 | 10.12 s | 0.90 s | 0.29 | 0.91 s |
+| Quietest hours of the whole day (not realistic) | 5.63 s | 5.39 s | 1.75 | 5.50 s |
+| 25 % less away time | 8.27 s | 2.75 s | 0.89 | 2.77 s |
+| 50 % less away time | 5.51 s | 5.51 s | 1.78 | 5.54 s |
+
+Reading: within realistic hours, moving away time saves about 0 to 1 s, because daytime demand is too flat for the timing to matter. Only doing less away time, or moving it into the night, saves more. This does not reach the
+planned target (10 s or 3 points).
+
+---
+
 ## 3. The 2014 closures (main real-world test)
 
 Source: `data/figures/validation/closure_2014/` (`closure_2014_test.py`, `closure_2014_diagnostic.py`)
@@ -389,6 +591,120 @@ supplied one, so it is not proven optimal.
 
 Figures: per scenario `01_metrics_comparison.png`, `03_response_surface_map.png`,
 `04_relocations.png`, `fire_station_plan_map.html`.
+
+### 5.1 Screening other placement methods
+
+Source: `scripts/placement_methods.py`, `data/figures/placement/methods/`. Chosen on 2024 calls, scored with the models on 2025 calls. 2026 is not used. Search: repeated best swap, with a limit on stations moved, no borough
+or slowest-10 % floors, no street refinement. It is weaker than the exact planner, so compare these rows with each other, not with the table above.
+
+Change from today in average attendance (s), busy-engine model:
+
+| Stations moved (limit) | Average | Over 6 min objective | Average, away time kept apart | Average, many more sites |
+|---|---|---|---|---|
+| 5 | -2.80 | -3.03 | -2.77 | -3.45 |
+| 10 | -4.86 | -4.52 | -4.63 | -5.25 |
+| 15 | -6.12 | -5.88 | -5.99 | -6.88 |
+| 20 | -7.12 | -6.61 | -6.96 | -7.55 |
+| 30 | -8.51 | -8.16 | -8.44 | -9.76 |
+| 40 | -9.50 | -9.07 (36 moved) | -8.77 | -11.07 |
+| No limit (search stops) | -9.61 (41 moved) | -9.07 (36 moved) | -9.74 (56 moved) | -12.94 (53 moved) |
+
+Candidate sites: 370 for the first three columns, 989 for the last.
+
+The widest pool, under the other scores. The 95 % ranges are narrow (at most 0.3 s and 0.08 points either way) because they only cover which calls occur, not model error:
+
+| Moved | Busy engines | Road | Kolesar | Learned dispatch | Slowest 10 % | Over 6 min, points | Over-6 calls avoided per year | Calls 30+ s faster | Calls 30+ s slower |
+|---|---|---|---|---|---|---|---|---|---|
+| 10 | -5.25 | -4.52 | -3.17 | -5.03 | +7.59 | -1.49 | 1,924 | 10.3 % | 3.3 % |
+| 20 | -7.55 | -6.91 | -5.39 | -6.87 | +9.43 | -1.98 | 2,555 | 17.3 % | 7.8 % |
+| 30 | -9.76 | -9.18 | -7.38 | -8.66 | +8.93 | -2.51 | 3,243 | 21.0 % | 9.3 % |
+| 40 | -11.07 | -11.07 | -8.81 | -9.72 | +8.00 | -2.86 | 3,695 | 23.9 % | 11.6 % |
+| 53 | -12.94 | -13.98 | -11.15 | -11.56 | +8.50 | -3.28 | 4,246 | 28.3 % | 13.8 % |
+
+Moving second engines only, with every building kept (calculated from 2024 calls, not scored on 2025): 10 engines -0.84 s, and no further gain at 40. With a different arrangement in each period of the day: 10 engines -1.07 s, and
+no further gain at 40.
+
+Over-6-minute curve (logistic, attendance to chance, per cell): 33.0 % modelled against 31.9 % recorded in 2024. Calls avoided are modelled, not observed.
+
+Reading:
+
+- The number of stations moved matters far more than the method. No method moves Move 10 beyond about 5 s in this search.
+- Optimising over 6 minutes directly adds almost nothing: -1.35 points at 10 moved against -1.29 for the average. Keeping away time apart also changes little.
+- More candidate sites help most: 0.4 s at 10 moved, 1.3 s at 30, 3.3 s with no limit. The exact planner already refines sites within 1 km, and reaches -6.0 s at 10 moved, so the gain may not simply add to the planner's.
+- Moving engines without moving buildings saves about 1 s at most.
+- The search stops at 41 moved and -9.6 s on the standard sites, while the exact redesign reaches -18.0 s with 66 moved, or -15.6 s with 46 moved and the 1 s borough floor. So the search is well short of what is possible.
+- Without a floor, the slowest 10 % get worse in every screened layout (+4 to +24 s). The exact planner's slowest-10 % floor would reduce the gains here. New sites are grid cells and are not checked for whether a station could be built.
+
+---
+
+### 5.2 Checks that inform placement
+
+Source: `scripts/placement_analysis.py`, `data/figures/placement/analysis/`. Layouts use the screening search of 5.1, not the exact planner, and have no borough or slowest-10 % floors, so compare rows with each other.
+
+**Does the model reproduce recorded calls? (2025)** Recorded 329 s; learned dispatch model 315 s. Removing gap calls gives 311 s; removing gap and empty-station calls gives 302 s. The size of the overall miss is about the size of the gap, but this does not prove the gap causes it.
+
+| Period | Gap share | Recorded (s) | Recorded without gap calls (s) | All-day model (s) |
+|---|---|---|---|---|
+| Night 00-07 | 5.6 % | 329 | 323 | 313 |
+| Morning 07-10 | 7.7 % | 315 | 306 | 314 |
+| Midday 10-16 | 21.9 % | 341 | 309 | 315 |
+| Evening 16-20 | 13.0 % | 339 | 318 | 316 |
+| Late 20-24 | 8.5 % | 306 | 295 | 315 |
+
+The model does not vary by hour here, so part of the period difference is traffic. It matches how often the nearest station responds (69.2 % vs 69.4 % recorded; by station ground, r = 0.92), so it gets the rate of diversion right but not the delay. It gives the recorded station an average chance of 57 %.
+
+The error is uneven and persistent: average recorded minus model is +7 s within 5 km of central London, rising to +28 s beyond 20 km; across squares with 30+ calls it correlates 0.63 between 2024 and 2025. By station ground it ranges from -6.5 s (Chelsea) to +52 s (Woodford), and does not follow gap share (r = -0.04). Areas whose nearest station changes under the screened Move 10 have a smaller error (+4.6 s vs +19.0 s elsewhere). Outer-area closures are the least reliable.
+
+**Does the gap follow the station, area, workload or engines?** 102 stations, 2021-25, 10:00-16:00. Share of variation in station-year gap share explained (weighted):
+
+| Explained by (each with year) | R² |
+|---|---|
+| Year only | 0.04 |
+| Workload | 0.20 |
+| Area (distance from centre, local road distance, calls) | 0.31 |
+| Number of engines | 0.42 |
+| Engines + workload + area | 0.53 |
+| Station identity | 0.81 |
+
+Predicting a held-out year from the other years: station identity r = 0.81, engines + workload + area r = 0.67. In 180 1 km squares served by two stations, a station's gap share elsewhere predicts its share in the shared square: slope 0.88 [0.56, 1.15], where 1 means the station and 0 means the place. Neighbouring stations are only weakly alike once other factors are removed (r = 0.08). Within a station, years with more workload have a lower gap share: -1.4 points for 10 % more [-2.2, -0.7]. This could run backwards, since an engine that is away makes fewer trips. One-engine stations: 30.4 %; two-engine: 21.7 %. No station changed engine count, so the engine effect is not causal. No crew data exist, so a station-level trait is not proven to be crew or duties.
+
+Reading: moving a station would probably not remove the gap, and lowering workload has no support as a fix. Whether the pattern would travel with a moved station cannot be tested here.
+
+**Which savings hold up?** Choosing on each year 2021-24 and scoring on 2025 (s):
+
+| Chosen on | Move 10 | Move 20 | Move 40 |
+|---|---|---|---|
+| 2021 | -5.19 | -7.83 | -9.93 |
+| 2022 | -5.05 | -8.16 | -11.32 |
+| 2023 | -5.50 | -7.99 | -11.13 |
+| 2024 | -5.39 | -7.94 | -11.05 |
+
+Wide site pool. Standard pool: -4.0 to -4.8, -6.6 to -7.1, -9.6 to -9.9. Sites chosen in two different years share on average 6.2 of 10 opened and 8.3 of 10 closed (wide pool). Reverting one move at a time, every move in Move 10 and Move 20 helps in every year 2021-25; contributions correlate 0.88-0.95 between 2024 and 2025. At 40 moves, 2 of 40 failed the 2021-23 check; dropping them changes 2025 by 0.08 s. Savings are spread out: in wide-pool Move 10 the best move gives 1.15 of 5.39 s, the best 5 give 3.11 s (58 %). Only demand changes between years; travel times are fixed, so this is not a test of the travel model.
+
+**Where could stations go?** Local OpenStreetMap extract, 2025 score, searching only among allowed sites (wide pool; change in average, LightGBM):
+
+| Rule for new sites | Sites | Move 10 | Move 20 | Move 40 | No limit |
+|---|---|---|---|---|---|
+| All | 887 | -5.48 | -7.78 | -10.95 | -13.33 (58 moved) |
+| A: not parks, water, schools, hospitals etc.; road within 100 m; main road within 300 m | 624 | -5.12 | -7.61 | -11.01 | -11.75 (48) |
+| B: A + commercial, industrial, retail or brownfield plot within 300 m | 481 | -5.08 | -7.17 | -10.59 | -11.60 (55) |
+| C: B + site itself not on residential land | 180 | -4.49 | -6.73 | -8.39 (34) | -8.39 (34) |
+
+Grouped together, 201 of 887 new wide-pool sites sit on excluded land. All 10 official Move 10 sites, and the Add 3 and redesign sites, pass the excluded-land and road checks; 8 of 10 Move 10 sites have a plot within 300 m. This checks land type only, not whether any plot is for sale, large enough or allowed by planning rules. Rule labels come from OSM and can be missing or out of date.
+
+**Do engines and buildings need to move together?** One formula, moves chosen on 2024, scored on 2025 (standard pool). All layouts keep 142 engines.
+
+| Option | Change in average (s) |
+|---|---|
+| Move engines only: 1 / 3 / 5 moves | -0.32 / -0.49 / -0.60 |
+| Move engines only: no gain after 6 moves | -0.66 |
+| Move 10, engines go with the building | -4.82 |
+| Move 10, new sites get one engine, the spare goes to the nearest kept station | -4.76 |
+| Move 10 + 9 further engine moves | -5.73 |
+| Move 20, engines go with the building | -7.05 |
+| Move 20 + 10 further engine moves | -8.44 |
+
+Engines alone are not a substitute for moving stations, and they need not follow the building. As an addition, 9 or 10 engine moves add 0.9 to 1.4 s with no construction. The busy-engine formula does not model away time.
 
 ---
 

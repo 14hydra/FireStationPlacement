@@ -1,0 +1,5 @@
+year,days_earlier,calls_flagged,gap_pct_flagged,gap_pct_not_flagged,difference_same_station_hour,lo,hi
+2025,7,4647,29.5,27.1,0.99,-0.61,2.63
+2025,14,4806,33.8,26.4,5.29,3.46,7.08
+2025,21,4461,26.6,27.8,-2.63,-4.16,-1.2
+2025,28,4462,31.0,27.1,1.93,0.29,3.54

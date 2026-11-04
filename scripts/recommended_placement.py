@@ -87,6 +87,10 @@ def main() -> int:
                     help="Comma list of per-borough tolerances in seconds (e.g. 0,1,5); empty = citywide floors only")
     ap.add_argument("--busy-rounds", type=int, default=4, help="Max busy-rate update rounds")
     ap.add_argument("--solver-time", type=float, default=600, help="Time limit per solve (s)")
+    ap.add_argument("--out-dir", type=Path, default=OUT, help="Where to write, so other site lists keep their own results")
+    ap.add_argument("--demand-candidates", type=int, default=80, help="Busiest demand cells added as sites")
+    ap.add_argument("--spread-km", type=float, default=3.0, help="Also add the busiest cell in every N km block as a site")
+    ap.add_argument("--no-references", action="store_true", help="Skip the reference solves (no efficiency or equity score)")
     args = ap.parse_args()
     tols = [float(t) for t in args.keep_boroughs.split(",") if t != ""] or [None]
     spec = get_city("london")
@@ -94,15 +98,15 @@ def main() -> int:
     incidents = load_incidents(spec, max_rows=None, years=[2024, 2025])
     demand = incidents[incidents["cal_year"] == 2024]
     top = {}
-    lim = dict(busy_rounds=args.busy_rounds, solver_time_s=args.solver_time)
+    lim = dict(busy_rounds=args.busy_rounds, solver_time_s=args.solver_time, demand_candidates=args.demand_candidates, spread_km=args.spread_km)
     for sc0 in args.scenarios.split(","):
         print(f"\n== {sc0}: reference solves for the scores (alpha 1 and 0, no floors)…", flush=True)
-        best_e = run(houses, incidents, sc0, alpha=1.0, **lim)
-        best_q = run(houses, incidents, sc0, alpha=0.0, **lim)
+        best_e = None if args.no_references else run(houses, incidents, sc0, alpha=1.0, **lim)
+        best_q = None if args.no_references else run(houses, incidents, sc0, alpha=0.0, **lim)
         for tol in tols:
             sc = sc0 if tol is None else f"{sc0}_boroughs{tol:g}s"
             t0 = time.time()
-            out = OUT / sc
+            out = args.out_dir / sc
             out.mkdir(parents=True, exist_ok=True)
             print(f"\n== {sc}: recommended (alpha 1, busy engines, floors"
                   f"{'' if tol is None else f', every borough within {tol:g} s'}, street refinement)…", flush=True)
@@ -114,9 +118,9 @@ def main() -> int:
             cur, plan = cells["response_s_current"].to_numpy(float), cells["response_s"].to_numpy(float)
             W = w.sum()
             E_today, E = float((w * cur).sum() / W), float((w * plan).sum() / W)
-            E_best = best_e.summary["plan"]["expected_response_s"]
+            E_best = best_e.summary["plan"]["expected_response_s"] if best_e else None
             Q_today, Q = area_mean(cur, w), area_mean(plan, w)
-            Q_best = best_q.summary["plan"]["area_mean_response_s"]
+            Q_best = best_q.summary["plan"]["area_mean_response_s"] if best_q else None
             cur_m, plan_m = s["baselines"]["current_fire_stations"], s["plan"]
 
             cells = cells.assign(borough=cell_boroughs(cells, demand))
@@ -136,8 +140,8 @@ def main() -> int:
                 "average_s": {"today": round(E_today, 1), "plan": round(E, 1), "best_possible": E_best},
                 "slowest10_s": {"today": cur_m["cvar90_response_s"], "plan": plan_m["cvar90_response_s"]},
                 "area_average_s": {"today": round(Q_today, 1), "plan": round(Q, 1), "best_possible": Q_best},
-                "efficiency_score": round(100 * (E_today - E) / (E_today - E_best), 1) if E_today != E_best else None,
-                "equity_score": round(100 * (Q_today - Q) / (Q_today - Q_best), 1) if Q_today != Q_best else None,
+                "efficiency_score": round(100 * (E_today - E) / (E_today - E_best), 1) if E_best is not None and E_today != E_best else None,
+                "equity_score": round(100 * (Q_today - Q) / (Q_today - Q_best), 1) if Q_best is not None and Q_today != Q_best else None,
                 "within_6min": {"today": cur_m["lfb_first_engine"]["share_within_6min"],
                                 "plan": plan_m["lfb_first_engine"]["share_within_6min"]},
                 "eval_2025_mean_s": {"today": round(s["eval"]["current"]["mean_s"], 1),
@@ -168,11 +172,11 @@ def main() -> int:
                                               "equity_score", "within_6min", "eval_2025_mean_s",
                                               "boroughs_worse_by_1s_or_more", "opened", "closed")}
             print(json.dumps(top[sc], indent=1, default=str), flush=True)
-    OUT.mkdir(parents=True, exist_ok=True)
+    args.out_dir.mkdir(parents=True, exist_ok=True)
     name = "summary" + ("" if tols == [None] else "_boroughs") + (
         "" if args.scenarios == ",".join(SCENARIOS) else "_" + args.scenarios.replace(",", "-"))
-    (OUT / f"{name}.json").write_text(json.dumps(top, indent=2, default=str) + "\n")
-    print("Wrote", OUT)
+    (args.out_dir / f"{name}.json").write_text(json.dumps(top, indent=2, default=str) + "\n")
+    print("Wrote", args.out_dir)
     return 0
 
 

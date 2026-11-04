@@ -1,0 +1,120 @@
+{
+  "prediction": "One-off fresh test of the 14-day cycle found in gap_windows.py, on 2025.\n\nPrediction, fixed before this was run (docs/results.md, 2b.3): with the 2024 model settings unchanged, 2025 shows at least\n+3.0 points at 14 days and 0 or below at 7 days, on repeat_predicts(). Both must hold. 2026 is not used.\nRanges come from resampling stations and are extra to the prediction.\n\nWrites data/figures/validation/gap_windows/cycle_2025.csv and cycle_2025.json.\n\nRun once:  PYTHONPATH=src .venv/bin/python scripts/gap_cycle_2025.py\n",
+  "holds": false,
+  "rows": [
+    {
+      "year": 2025,
+      "days_earlier": 7,
+      "calls_flagged": 4647,
+      "gap_pct_flagged": 29.5,
+      "gap_pct_not_flagged": 27.1,
+      "difference_same_station_hour": 0.99,
+      "lo": -0.61,
+      "hi": 2.63
+    },
+    {
+      "year": 2025,
+      "days_earlier": 14,
+      "calls_flagged": 4806,
+      "gap_pct_flagged": 33.8,
+      "gap_pct_not_flagged": 26.4,
+      "difference_same_station_hour": 5.29,
+      "lo": 3.46,
+      "hi": 7.08
+    },
+    {
+      "year": 2025,
+      "days_earlier": 21,
+      "calls_flagged": 4461,
+      "gap_pct_flagged": 26.6,
+      "gap_pct_not_flagged": 27.8,
+      "difference_same_station_hour": -2.63,
+      "lo": -4.16,
+      "hi": -1.2
+    },
+    {
+      "year": 2025,
+      "days_earlier": 28,
+      "calls_flagged": 4462,
+      "gap_pct_flagged": 31.0,
+      "gap_pct_not_flagged": 27.1,
+      "difference_same_station_hour": 1.93,
+      "lo": 0.29,
+      "hi": 3.54
+    }
+  ],
+  "raw_correlation": [
+    {
+      "year": 2025,
+      "source": "raw gap calls",
+      "days_apart": 5,
+      "correlation": 0.015,
+      "lo": 0.003,
+      "hi": 0.026
+    },
+    {
+      "year": 2025,
+      "source": "raw gap calls",
+      "days_apart": 7,
+      "correlation": 0.005,
+      "lo": -0.008,
+      "hi": 0.015
+    },
+    {
+      "year": 2025,
+      "source": "raw gap calls",
+      "days_apart": 8,
+      "correlation": 0.002,
+      "lo": -0.01,
+      "hi": 0.016
+    },
+    {
+      "year": 2025,
+      "source": "raw gap calls",
+      "days_apart": 9,
+      "correlation": 0.022,
+      "lo": 0.01,
+      "hi": 0.037
+    },
+    {
+      "year": 2025,
+      "source": "raw gap calls",
+      "days_apart": 14,
+      "correlation": 0.041,
+      "lo": 0.03,
+      "hi": 0.052
+    },
+    {
+      "year": 2025,
+      "source": "raw gap calls",
+      "days_apart": 21,
+      "correlation": -0.017,
+      "lo": -0.027,
+      "hi": -0.006
+    },
+    {
+      "year": 2025,
+      "source": "raw gap calls",
+      "days_apart": 23,
+      "correlation": 0.017,
+      "lo": 0.006,
+      "hi": 0.027
+    },
+    {
+      "year": 2025,
+      "source": "raw gap calls",
+      "days_apart": 28,
+      "correlation": 0.013,
+      "lo": -0.001,
+      "hi": 0.028
+    },
+    {
+      "year": 2025,
+      "source": "raw gap calls",
+      "days_apart": 37,
+      "correlation": 0.003,
+      "lo": -0.011,
+      "hi": 0.016
+    }
+  ]
+}

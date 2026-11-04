@@ -31,6 +31,15 @@ Runnable entry points. Library code lives in `src/firestation/`.
 | `fit_dispatch_model.py` | Which station sends first |
 | `neutral_siting_test.py` | Neutral test: models pick among hidden real stations; recorded trips score the picks |
 | `closed_station_ranking_check.py` | Closed-station ranking vs 2014 damage, compared like for like |
+| `busy_engine_check.py` | Replays recorded engine busy periods: cost of an empty local station, limit of perfect cover |
+| `first_engine_gap.py` | Splits calls by why another station arrived first, 2021-26, with checks on the definitions |
+| `gap_cause_checks.py` | Delay codes and clustering test for the cause of the first-engine gap |
+| `gap_windows.py` | Estimates when each station's engine seems unavailable, and tests that on hidden calls, trips to other areas and repeat cycles |
+| `gap_cycle_2025.py` | One-off fresh test of the 14-day cycle on 2025, against a prediction fixed beforehand. Refuses to run twice |
+| `gap_overlap.py` | Whether neighbouring stations are away together, and the cost when the next-nearest station is passed over |
+| `gap_shift.py` | How much moving away time to quieter hours, or reducing it, could save |
+| `placement_methods.py` | Screens placement methods on one scoring: moves against saving, over-6-minute objective, away time, wider sites, moving engines only |
+| `placement_analysis.py` | Five placement checks: model vs recorded calls, what the gap follows, savings across years, land and road limits on sites, engines vs buildings |
 | `new_station_check.py` | Hold-out new stations (`--summarize-only` to report saved folds) |
 | `new_station_check_combined.py` | Hold-out new stations for street speeds + LightGBM correction |
 | `build_method_diagram.py` | Method diagram: data, travel time, busy engines, solver, validation |

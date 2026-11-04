@@ -1,0 +1,990 @@
+site_name,lat,lon,is_existing,excluded,detail,residential,plot_300m,road_100m,main_road_300m,rule_a,rule_b,rule_c
+Acton,51.507054,-0.2769203061884447,True,False,,False,True,True,True,True,True,True
+Addington,51.3519192,-0.0236213420691161,True,False,,False,False,True,True,True,False,False
+Barking,51.53000055,0.0888736549390424,True,False,,True,True,True,True,True,True,False
+Barnet,51.647254649999994,-0.1859670751536085,True,False,,False,True,True,True,True,True,True
+Battersea,51.4672269,-0.1694003932299012,True,False,,False,True,True,True,True,True,True
+Beckenham,51.408058049999994,-0.0342898308077814,True,False,,True,True,True,True,True,True,False
+Bethnal Green,51.52787645,-0.0532636626069591,True,False,,False,True,True,True,True,True,True
+Bexley,51.46116425,0.1536625307820576,True,False,,True,True,True,True,True,True,False
+Biggin Hill,51.313615,0.0341143511908675,True,False,,True,True,True,True,True,True,False
+Brixton,51.463738,-0.1094055,True,False,,False,True,True,True,True,True,True
+Bromley,51.407038,0.0171208318825317,True,False,,True,True,True,True,True,True,False
+Chelsea,51.4872478,-0.1703650504527192,True,False,,False,True,True,True,True,True,True
+Chingford,51.6296127,-0.0047711,True,False,,False,False,True,True,True,False,False
+Chiswick,51.49060455,-0.2690538141204884,True,False,,False,True,True,True,True,True,True
+Clapham,51.46492985,-0.1408792937483196,True,False,,True,True,True,True,True,True,False
+Croydon,51.369216050000006,-0.1055356617454408,True,False,,False,True,True,True,True,True,True
+Dagenham,51.55946845,0.1570281714646305,True,False,,False,True,True,True,True,True,True
+Deptford,51.4848576,-0.0338287628551537,True,False,,True,True,True,True,True,True,False
+Dockhead,51.5008984,-0.0707950071742421,True,False,,False,True,True,True,True,True,True
+Dowgate,51.510035,-0.0901008,True,False,,False,True,True,True,True,True,True
+Ealing,51.51208625,-0.3139067419956537,True,False,,False,True,True,True,True,True,True
+East Greenwich,51.48697755,0.0222960967435707,True,False,,False,True,True,True,True,True,True
+East Ham,51.5233978,0.0568595461331539,True,False,,False,True,True,True,True,True,True
+Edmonton,51.62723145,-0.0690767018132989,True,False,,True,False,True,True,True,False,False
+Eltham,51.4506963,0.0594040645005442,True,False,,False,True,True,True,True,True,True
+Enfield,51.6602193,-0.05189325,True,False,,True,False,True,True,True,False,False
+Erith,51.485523400000005,0.156541794689897,True,False,,False,False,True,True,True,False,False
+Euston,51.52775695,-0.1306108099453524,True,False,,False,True,True,True,True,True,True
+Feltham,51.4606344,-0.4138852634195626,True,False,,False,True,True,True,True,True,True
+Finchley,51.5979575,-0.1792936720326938,True,False,,False,True,True,True,True,True,True
+Forest Hill,51.4428876,-0.0450111,True,False,,True,True,True,True,True,True,False
+Fulham,51.47791755,-0.2009176151088025,True,False,,True,True,True,True,True,True,False
+Greenwich,51.47385895,-0.013655847633136,True,False,,False,True,True,True,True,True,True
+Hainault,51.60617575,0.1043983327517823,True,False,,True,True,True,True,True,True,False
+Hammersmith,51.4960867,-0.224293537625646,True,False,,False,True,True,True,True,True,True
+Harold Hill,51.5983747,0.2235413607554786,True,False,,False,True,True,True,True,True,True
+Harrow,51.59096095,-0.3663798847978869,True,False,,False,True,True,True,True,True,True
+Hayes,51.49438,-0.4316736479820627,True,False,,False,True,True,True,True,True,True
+Heathrow,51.48022665,-0.4590324166476678,True,False,,False,True,True,True,True,True,True
+Hendon,51.5888473,-0.2286435,True,False,,False,True,True,True,True,True,True
+Heston,51.47502,-0.3431990961907811,True,False,,False,True,True,True,True,True,True
+Hillingdon,51.5319982,-0.4520808892082451,True,False,,True,True,True,True,True,True,False
+Holloway,51.5615714,-0.1159426867900488,True,False,,False,True,True,True,True,True,True
+Homerton,51.54865169999999,-0.0439337508623871,True,False,,False,True,True,True,True,True,True
+Hornchurch,51.56451135,0.2205802941206759,True,False,,False,True,True,True,True,True,True
+Hornsey,51.58652805,-0.1272021246958989,True,False,,False,False,True,True,True,False,False
+Ilford,51.562220100000005,0.0900462500705925,True,False,,False,True,True,True,True,True,True
+Islington,51.5402671,-0.1023069299975422,True,False,,False,True,True,True,True,True,True
+Kensington,51.50295535,-0.1901176722364718,True,False,,False,True,True,True,True,True,True
+Kentish Town,51.55283145,-0.1417072245645472,True,False,,False,True,True,True,True,True,True
+Kingston,51.429441,-0.3065912404057513,True,False,,False,True,True,True,True,True,True
+Lambeth,51.49281255,-0.1212760753291227,True,False,,False,True,True,True,True,True,True
+Lee Green,51.45664085,0.012513473521701,True,False,,True,True,True,True,True,True,False
+Lewisham,51.4570297,-0.0131157201655826,True,False,,True,True,True,True,True,True,False
+Leyton,51.56309865,-0.0167733359643747,True,False,,False,True,True,True,True,True,True
+Leytonstone,51.56061125,0.008677359734444,True,False,,False,True,True,True,True,True,True
+Mill Hill,51.61499645,-0.2432100393349606,True,False,,False,True,True,True,True,True,True
+Millwall,51.50081445,-0.0255593731203916,True,False,,True,True,True,True,True,True,False
+Mitcham,51.3972598,-0.1728234450853488,True,False,,True,True,True,True,True,True,False
+New Cross,51.4735264,-0.0493004024826299,True,False,,False,True,True,True,True,True,True
+New Malden,51.39901785,-0.245331458018544,True,False,,False,True,True,True,True,True,True
+Norbury,51.4067832,-0.1215921420954122,True,False,,False,True,True,True,True,True,True
+North Kensington,51.52183735,-0.212041205723519,True,False,,False,True,True,True,True,True,True
+Northolt,51.5546449,-0.3595665275568182,True,False,,False,False,True,True,True,False,False
+Old Kent Road,51.48713365,-0.0734971739043401,True,False,,False,True,True,True,True,True,True
+Orpington,51.37233395,0.1107023454309018,True,False,,True,False,True,True,True,False,False
+Paddington,51.520072299999995,-0.1833189410368907,True,False,,False,True,True,True,True,True,True
+Park Royal,51.5357937,-0.264824544196401,True,False,,False,True,True,False,False,False,False
+Peckham,51.4738848,-0.07797625,True,False,,True,True,True,True,True,True,False
+Plaistow,51.5209984,0.0324907696420734,True,False,,False,False,True,True,True,False,False
+Plumstead,51.487451,0.0915120200894747,True,False,,True,False,True,True,True,False,False
+Poplar,51.510921,-0.0146520704560918,True,False,,False,True,True,True,True,True,True
+Purley,51.33182495,-0.125150449999989,True,False,,True,True,True,True,True,True,False
+Richmond,51.4674072,-0.2848567753177973,True,False,,False,True,True,True,True,True,True
+Romford,51.59367685,0.1811242124324326,True,False,,True,False,True,True,True,False,False
+Ruislip,51.5883815,-0.4367001982307689,True,False,,False,True,True,True,True,True,True
+Shadwell,51.5108626,-0.0557891963357072,True,False,,True,True,True,True,True,True,False
+Shoreditch,51.5266217,-0.0854857815774265,True,False,,False,True,True,True,True,True,True
+Sidcup,51.4268951,0.0945067633431096,True,False,,True,False,True,True,True,False,False
+Soho,51.51246085,-0.1300890958229078,True,False,,False,True,True,True,True,True,True
+Southall,51.511274099999994,-0.3744259889421966,True,False,,False,True,True,True,True,True,True
+Southgate,51.6305411,-0.1273731499984277,True,False,,False,True,True,True,True,True,True
+Stanmore,51.60366915,-0.2976070250672114,True,False,,False,True,True,True,True,True,True
+Stoke Newington,51.56257215,-0.0768660185166992,True,False,,False,True,True,True,True,True,True
+Stratford,51.54375,0.011128787625757,True,False,,False,True,True,True,True,True,True
+Surbiton,51.3922391,-0.2980315164452493,True,False,,True,False,True,True,True,False,False
+Sutton,51.3688755,-0.2109095530614245,True,False,,True,True,True,True,True,True,False
+Tooting,51.4378035,-0.1627606180986193,True,False,,False,True,True,True,True,True,True
+Tottenham,51.59230965,-0.0718471337316405,True,False,,False,True,True,True,True,True,True
+Twickenham,51.43516065,-0.3475775313157903,True,False,,False,True,True,True,True,True,True
+Wallington,51.3622744,-0.1482993,True,False,,True,True,True,True,True,True,False
+Walthamstow,51.58972495,-0.0288444693923726,True,False,,False,True,True,True,True,True,True
+Wandsworth,51.45640225,-0.2014031947589517,True,False,,False,True,True,True,True,True,True
+Wembley,51.55169655,-0.3040197283283985,True,False,,False,True,True,True,True,True,True
+Wennington,51.50593515,0.2203615409801693,True,False,,False,True,True,True,True,True,True
+West Hampstead,51.55170105,-0.192796697170743,True,False,,False,True,True,True,True,True,True
+West Norwood,51.42590975,-0.1054584646052626,True,False,,True,True,True,True,True,True,False
+Whitechapel,51.5153048,-0.0691888717611473,True,False,,False,True,True,True,True,True,True
+Willesden,51.5443512,-0.2367436977388931,True,False,,False,False,True,True,True,False,False
+Wimbledon,51.41557195,-0.1975643455628843,True,False,,False,True,True,True,True,True,True
+Woodford,51.60954165,0.0239671628839159,True,False,,False,True,True,True,True,True,True
+Woodside,51.3857831,-0.0621930777407106,True,False,,True,True,True,True,True,True,False
+Demand cell 0,51.51038722541255,-0.1367713001752659,False,False,,False,True,True,True,True,True,True
+Demand cell 1,51.517471655581545,-0.13706457255736124,False,False,,True,True,True,True,True,True,False
+Demand cell 2,51.51081099902348,-0.12417190283372308,False,False,,False,False,True,True,True,False,False
+Demand cell 3,51.493407595307715,-0.13550883399416652,False,True,recreation_ground,False,True,True,True,False,False,False
+Demand cell 4,51.51752281400114,-0.14879986704018586,False,False,,False,True,True,True,True,True,True
+Demand cell 5,51.52565547420551,-0.17495016801676191,False,False,,False,True,True,True,True,True,True
+Demand cell 6,51.52576351864035,-0.20107978743438978,False,False,,False,True,True,True,True,True,True
+Demand cell 7,51.525459678305026,-0.1366910969946502,False,False,,False,True,True,True,True,True,True
+Demand cell 8,51.52633314266735,-0.09722650483787128,False,False,,False,True,True,True,True,True,True
+Demand cell 9,51.516937037498266,-0.12336285801603981,False,False,,False,True,True,True,True,True,True
+Demand cell 10,51.510614823042495,-0.148047500420987,False,False,,False,True,True,True,True,True,True
+Demand cell 11,51.52622627763904,-0.08557446630688889,False,False,,False,True,True,True,True,True,True
+Demand cell 12,51.525873604618845,-0.12347250757855953,False,False,,False,True,True,True,True,True,True
+Demand cell 13,51.518727386391795,-0.10972124526773201,False,False,,False,True,True,True,True,True,True
+Demand cell 14,51.51784936084336,-0.20142007394513242,False,False,,False,True,True,True,True,True,True
+Demand cell 15,51.517658673022005,-0.21359752107727084,False,False,,True,True,True,True,True,True,False
+Demand cell 16,51.49333089788615,-0.18999435199867326,False,False,,True,True,True,True,True,True,False
+Demand cell 17,51.49311967223273,-0.14888499137467226,False,False,,False,True,True,True,True,True,True
+Demand cell 18,51.518412459351346,-0.16290135889584703,False,True,sports_centre,False,True,True,True,False,False,False
+Demand cell 19,51.51706989947951,-0.05823572543696501,False,True,university,False,True,True,True,False,False,False
+Demand cell 20,51.51722880086483,-0.07099729758512921,False,False,,False,True,True,True,True,True,True
+Demand cell 21,51.461347324004144,-0.11205535102601452,False,False,,True,True,True,True,True,True,False
+Demand cell 22,51.525640925178614,-0.11098183706694556,False,False,,True,True,True,True,True,True,False
+Demand cell 23,51.371475728580265,-0.09877856923593453,False,False,,False,True,True,True,True,True,True
+Demand cell 24,51.534534344456304,-0.08364040787669784,False,True,sports_centre,False,True,True,True,False,False,False
+Demand cell 25,51.5013268684001,-0.22705473054149727,False,False,,True,True,True,True,True,True,False
+Demand cell 26,51.52504736567042,-0.18911097519523198,False,False,,False,False,True,True,True,False,False
+Demand cell 27,51.53460713512237,-0.13714428207849252,False,False,,False,True,True,True,True,True,True
+Demand cell 28,51.525288410734845,-0.16596614726455206,False,False,,True,False,True,True,True,False,False
+Demand cell 29,51.49338598839016,-0.20022614391289842,False,False,,True,True,True,True,True,True,False
+Demand cell 30,51.48575632250097,-0.20185248334517222,False,False,,False,True,True,True,True,True,True
+Demand cell 31,51.509854059991575,-0.19987775229229515,False,False,,True,True,True,True,True,True,False
+Demand cell 32,51.517486819964034,-0.08512920310863023,False,False,,False,True,True,True,True,True,True
+Demand cell 33,51.55004522000736,-0.0580403601163126,False,False,,True,True,True,True,True,True,False
+Demand cell 34,51.51081068658608,-0.08515959454460097,False,False,,False,True,True,True,True,True,True
+Demand cell 35,51.510258080404675,-0.21435166380367907,False,False,,True,True,True,True,True,True,False
+Demand cell 36,51.49263166522957,-0.11171050559332164,False,False,,True,False,True,True,True,False,False
+Demand cell 37,51.485044960164586,-0.17639059497471185,False,False,,False,True,True,True,True,True,True
+Demand cell 38,51.51770965499699,-0.18867609583335232,False,False,,False,True,True,True,True,True,True
+Demand cell 39,51.47609683528034,-0.08302190300103454,False,False,,True,True,True,True,True,True,False
+Demand cell 40,51.51789943176554,-0.1745394977227953,False,True,hospital,False,True,True,True,False,False,False
+Demand cell 41,51.501447635281735,-0.11030273829703777,False,True,park,False,True,True,True,False,False,False
+Demand cell 42,51.501560560990015,-0.019402112090084665,False,False,,False,True,False,True,False,False,False
+Demand cell 43,51.49299328802661,-0.16299340877066124,False,False,,True,True,True,True,True,True,False
+Demand cell 44,51.493173338875025,-0.09848982543836655,False,False,,False,True,True,True,True,True,True
+Demand cell 45,51.5187477864913,-0.09760372773668619,False,False,,False,True,True,True,True,True,True
+Demand cell 46,51.526561476476985,-0.07212939463857759,False,False,,True,True,True,True,True,True,False
+Demand cell 47,51.534688689781056,-0.18968726098076977,False,False,,True,True,True,True,True,True,False
+Demand cell 48,51.542370221948204,-0.19938278689458136,False,False,,True,True,True,True,True,True,False
+Demand cell 49,51.50216923087674,-0.0967928288262456,False,True,park,False,True,True,True,False,False,False
+Demand cell 50,51.47680146102539,-0.09624964320434315,False,True,playground,True,True,True,True,False,False,False
+Demand cell 51,51.37928962882812,-0.09717767614289897,False,False,,True,True,True,True,True,True,False
+Demand cell 52,51.551142669971696,-0.16343620505513595,False,True,sports_centre,False,True,True,True,False,False,False
+Demand cell 53,51.52583333017588,-0.05827685820688329,False,False,,False,True,True,True,True,True,True
+Demand cell 54,51.469412892405145,-0.12321724862019622,False,False,,True,True,True,True,True,True,False
+Demand cell 55,51.533302851966745,-0.20131801548674805,False,False,,True,True,True,True,True,True,False
+Demand cell 56,51.52742544890999,-0.04621627001036736,False,False,,True,True,True,True,True,True,False
+Demand cell 57,51.493030433769974,-0.22794906276863178,False,False,,False,True,True,True,True,True,True
+Demand cell 58,51.54224124744066,-0.13766851745282552,False,False,,True,True,True,True,True,True,False
+Demand cell 59,51.533576066492024,-0.07100695019745663,False,False,,True,True,True,True,True,True,False
+Demand cell 60,51.493021928593286,-0.2143426049591726,False,False,,True,True,True,True,True,True,False
+Demand cell 61,51.54239215023421,0.006270699811172945,False,False,,False,True,True,True,True,True,True
+Demand cell 62,51.47739744088841,-0.1882931499670927,False,True,garden,False,True,True,True,False,False,False
+Demand cell 63,51.5420865821055,-0.14775726626486707,False,False,,False,True,True,True,True,True,True
+Demand cell 64,51.5659132273493,-0.13644450385367127,False,False,,True,True,True,True,True,True,False
+Demand cell 65,51.51757520092191,-0.019238866314298473,False,True,water,False,True,True,True,False,False,False
+Demand cell 66,51.48571678153565,-0.033653282288735514,False,False,,True,True,True,True,True,True,False
+Demand cell 67,51.49347275072606,-0.08459595126026956,False,False,,False,True,True,True,True,True,True
+Demand cell 68,51.566560398313456,-0.05803791354995986,False,False,,True,True,True,True,True,True,False
+Demand cell 69,51.5502088971795,-0.07185119599571269,False,False,,True,True,True,True,True,True,False
+Demand cell 70,51.476870145610505,-0.02012870471013615,False,True,water,False,True,True,True,False,False,False
+Demand cell 71,51.487348641628394,-0.13836199716261677,False,False,,True,True,True,True,True,True,False
+Demand cell 72,51.52643480951722,-0.019495767131243437,False,False,,False,True,True,True,True,True,True
+Demand cell 73,51.46832864535853,-0.173515556945579,False,False,,True,True,True,True,True,True,False
+Demand cell 74,51.55869336797664,0.07056864000586578,False,False,,False,True,True,True,True,True,True
+Demand cell 75,51.55824963238096,-0.12261620823309236,False,False,,False,True,True,True,True,True,True
+Demand cell 76,51.51109452588312,-0.07167853568374723,False,False,,False,True,True,True,True,True,True
+Demand cell 77,51.56638919782071,-0.12290927933480685,False,False,,False,True,True,True,True,True,True
+Demand cell 78,51.534347631123794,-0.09762106578424772,False,False,,True,True,True,False,False,False,False
+Demand cell 79,51.48548830406548,-0.09678623586585672,False,False,,True,True,True,True,True,True,False
+Demand cell 80,51.49316410176489,-0.06003069927290435,False,False,,True,True,True,True,True,True,False
+Demand cell 81,51.49295605165652,-0.17542618130182738,False,False,,True,True,True,True,True,True,False
+Demand cell 82,51.50172956742852,-0.21511475587471582,False,False,,True,True,True,True,True,True,False
+Demand cell 83,51.5016498705048,-0.08480511495832822,False,False,,True,True,True,True,True,True,False
+Demand cell 84,51.47700461747122,-0.0714434746448045,False,False,,True,True,True,True,True,True,False
+Demand cell 85,51.55938367250367,0.007295922931113259,False,False,,False,True,True,True,True,True,True
+Demand cell 86,51.46124715552561,-0.12321302193670366,False,False,,True,True,True,True,True,True,False
+Demand cell 87,51.54980710871414,-0.12405016060951714,False,False,,True,True,True,True,True,True,False
+Demand cell 88,51.411422056434915,-0.3042548286670999,False,False,,False,True,True,True,True,True,True
+Demand cell 89,51.47751298405293,-0.032622734041061925,False,False,,False,True,True,True,True,True,True
+Demand cell 90,51.477217138982915,-0.10856182000036746,False,False,,True,True,True,True,True,True,False
+Demand cell 91,51.54334341944455,-0.17550206206926972,False,False,,False,True,True,True,True,True,True
+Demand cell 92,51.468724514661446,-0.11077023485302318,False,False,,True,True,True,True,True,True,False
+Demand cell 93,51.559234960300216,-0.11212450875843405,False,True,sports_centre,False,True,True,True,False,False,False
+Demand cell 94,51.5667964267751,-0.09624599119310148,False,False,,True,False,True,True,True,False,False
+Demand cell 95,51.582395578532136,-0.33226622012572826,False,False,,False,True,True,True,True,True,True
+Demand cell 96,51.476857502672274,-0.058540972418208256,False,False,,True,True,True,True,True,True,False
+Demand cell 97,51.550085627435365,-0.18756580292924743,False,True,grass,False,True,True,True,False,False,False
+Demand cell 98,51.54192694725994,-0.09720433899147313,False,False,,True,True,True,True,True,True,False
+Demand cell 99,51.558308663141204,-0.05794648863619875,False,False,,True,True,True,True,True,True,False
+Demand cell 100,51.46957928457407,-0.05965154943765595,False,False,,True,True,True,True,True,True,False
+Demand cell 101,51.52568750698967,-0.2133042141677492,False,False,,True,True,True,True,True,True,False
+Demand cell 102,51.55090137189474,-0.13605384074400192,False,False,,True,False,True,True,True,False,False
+Demand cell 103,51.46906024214994,-0.01775364154824202,False,True,wood,False,True,True,True,False,False,False
+Demand cell 104,51.583869610809664,-0.07170660942544739,False,True,park,False,True,True,True,False,False,False
+Demand cell 105,51.54271249259569,-0.05714826648678407,False,False,,False,True,True,True,True,True,True
+Demand cell 106,51.518231353544316,-0.04536301644367944,False,True,park,False,False,True,True,False,False,False
+Demand cell 107,51.486836377902094,-0.08525491606562173,False,False,,True,True,True,True,True,True,False
+Demand cell 108,51.55021395966564,-0.11140242635812908,False,False,,False,True,True,True,True,True,True
+Demand cell 109,51.54368168511202,-0.04634162174591221,False,False,,False,True,True,True,True,True,True
+Demand cell 110,51.511515020832796,-0.1886663289782398,False,False,,True,True,True,True,True,True,False
+Demand cell 111,51.5335942074768,-0.11022762291637643,False,False,,False,True,True,True,True,True,True
+Demand cell 112,51.55832063526677,-0.07196761138565444,False,False,,True,True,True,True,True,True,False
+Demand cell 113,51.550282218186545,-0.0834579663263693,False,False,,True,True,True,True,True,True,False
+Demand cell 114,51.543626271524964,-0.11147764006166874,False,False,,False,True,True,True,True,True,True
+Demand cell 115,51.5501118291213,-0.04523524318481915,False,True,hospital,False,True,True,True,False,False,False
+Demand cell 116,51.54191022383,-0.07161106237885996,False,False,,False,True,True,True,True,True,True
+Demand cell 117,51.47832335010741,-0.12276397296281584,False,False,,True,False,True,True,True,False,False
+Demand cell 118,51.49936091411273,-0.1632748879062513,False,False,,False,True,True,True,True,True,True
+Demand cell 119,51.46891723923444,-0.09806213786716808,False,False,,True,True,True,True,True,True,False
+Demand cell 120,51.50819100800113,-0.2404653233506858,False,False,,True,False,True,True,True,False,False
+Demand cell 121,51.4939946720297,-0.07211000884362845,False,False,,True,True,True,True,True,True,False
+Demand cell 122,51.59920694058018,-0.07154528347922298,False,False,,True,True,True,True,True,True,False
+Demand cell 123,51.445564416161204,-0.019462528342855383,False,False,,False,True,True,True,True,True,True
+Demand cell 124,51.5087324409261,-0.2669241782121041,False,False,,False,True,True,True,True,True,True
+Demand cell 125,51.533679178488605,-0.05894923369934136,False,False,,False,True,True,True,True,True,True
+Demand cell 126,51.50255540496475,-0.2398768927777967,False,False,,True,True,True,True,True,True,False
+Demand cell 127,51.47798898666082,-0.2003633763057506,False,False,,True,True,True,True,True,True,False
+Demand cell 128,51.591852413343595,-0.07072609779651831,False,False,,False,True,True,True,True,True,True
+Demand cell 129,51.51051272576946,-0.09597270524110404,False,False,,False,True,True,True,True,True,True
+Demand cell 130,51.48589967869246,-0.18856129774755997,False,False,,True,False,True,True,True,False,False
+Demand cell 131,51.462256595016704,-0.17491429132491154,False,False,,False,True,True,True,True,True,True
+Demand cell 132,51.57442249094123,-0.07275066847360503,False,False,,False,True,True,True,True,True,True
+Demand cell 133,51.575312488109184,-0.0834828465515908,False,False,,True,True,True,True,True,True,False
+Demand cell 134,51.48597644036699,-0.10985629308721116,False,False,,False,True,True,True,True,True,True
+Demand cell 135,51.51014715862405,-0.22810797101089397,False,True,park,False,True,True,True,False,False,False
+Demand cell 136,51.54197362721199,-0.18904324600017694,False,False,,True,True,True,True,True,True,False
+Demand cell 137,51.56628561550078,-0.11036416295551028,False,False,,True,True,True,True,True,True,False
+Demand cell 138,51.60766000149922,-0.06967968370582238,False,False,,False,True,True,True,True,True,True
+Demand cell 139,51.485027004566504,-0.21455922908702832,False,False,,True,True,True,True,True,True,False
+Demand cell 140,51.41179759947191,-0.12374360361393315,False,True,railway,False,True,True,True,False,False,False
+Demand cell 141,51.51017046570031,-0.05817570957984756,False,True,park,False,True,True,True,False,False,False
+Demand cell 142,51.51049643471375,-0.019530429175718598,False,False,,True,True,True,True,True,True,False
+Demand cell 143,51.62394630603073,-0.059147876822884596,False,False,,False,True,True,True,True,True,True
+Demand cell 144,51.53354118341076,-0.030741662712819726,False,False,,True,True,True,True,True,True,False
+Demand cell 145,51.58250006604703,-0.031011940307380935,False,False,,False,True,True,True,True,True,True
+Demand cell 146,51.48584842116253,-0.07046329184967987,False,False,,True,True,True,True,True,True,False
+Demand cell 147,51.517323186827035,-0.03139402828013977,False,False,,False,False,True,True,True,False,False
+Demand cell 148,51.50097750039791,-0.07320190782696492,False,False,,False,True,True,True,True,True,True
+Demand cell 149,51.55038921834546,0.006490265020883653,False,False,,True,True,True,True,True,True,False
+Demand cell 150,51.493314554178866,-0.12413511319660221,False,True,water,False,True,True,True,False,False,False
+Demand cell 151,51.46929728989456,-0.48883153418260866,False,True,aerodrome,False,True,True,True,False,False,False
+Demand cell 152,51.541896458279915,-0.25302032615594644,False,False,,True,True,True,True,True,True,False
+Demand cell 153,51.445681408240716,-0.12346464311508755,False,False,,False,True,True,True,True,True,True
+Demand cell 154,51.492403269392156,-0.046286174543144036,False,False,,False,True,True,True,True,True,True
+Demand cell 155,51.51090801765452,-0.31918550982407984,False,False,,False,True,True,True,True,True,True
+Demand cell 156,51.46945739231395,-0.13611811896877285,False,False,,True,True,True,True,True,True,False
+Demand cell 157,51.58345979982656,-0.018796507949198942,False,False,,False,True,True,True,True,True,True
+Demand cell 158,51.500857577870924,-0.1887327263927517,False,False,,True,True,True,True,True,True,False
+Demand cell 159,51.46148871663483,-0.13641401170825296,False,False,,False,True,True,True,True,True,True
+Demand cell 160,51.54221905857579,-0.12287173549669475,False,False,,False,True,True,True,True,True,True
+Demand cell 161,51.454137016505484,-0.19025497599684327,False,False,,False,True,True,True,True,True,True
+Demand cell 162,51.363473146143235,-0.19066372434885384,False,True,park,False,True,True,True,False,False,False
+Demand cell 163,51.42782009787472,-0.13443764356996948,False,False,,True,True,True,True,True,True,False
+Demand cell 164,51.51100203094211,-0.030404867920214424,False,True,park,False,True,True,True,False,False,False
+Demand cell 165,51.511298253230606,-0.046309180364389996,False,True,recreation_ground,True,True,True,True,False,False,False
+Demand cell 166,51.484977120610324,-0.12272698609280319,False,False,,False,True,True,True,True,True,True
+Demand cell 167,51.541948569774384,-0.08516612955023363,False,False,,True,True,True,True,True,True,False
+Demand cell 168,51.53461600586205,0.08177898713420947,False,False,,True,True,True,True,True,True,False
+Demand cell 169,51.39722143118156,-0.09779733495031763,False,False,,True,True,True,True,True,True,False
+Demand cell 170,51.40437955836627,0.017103677870822846,False,False,,False,True,True,True,True,True,True
+Demand cell 171,51.37983165523535,-0.08467116454468632,False,False,,True,True,True,True,True,True,False
+Demand cell 172,51.420123654069116,-0.08410200321381658,False,False,,True,True,True,True,True,True,False
+Demand cell 173,51.53394764155603,0.05693566440145823,False,False,,True,True,True,True,True,True,False
+Demand cell 174,51.371737438741846,-0.10821022326634784,False,False,,True,False,True,True,True,False,False
+Demand cell 175,51.387795632531386,-0.11030249835126296,False,False,,True,True,True,True,True,True,False
+Demand cell 176,51.5088749168259,-0.27623741565644383,False,False,,True,True,True,True,True,True,False
+Demand cell 177,51.469814653322565,-0.18810695283154927,False,False,,True,True,True,True,True,True,False
+Demand cell 178,51.54311839213694,-0.16234049091303512,False,False,,False,True,True,True,True,True,True
+Demand cell 179,51.45320402216598,-0.0056857403720536916,False,False,,True,False,True,True,True,False,False
+Demand cell 180,51.48527762566013,0.07163347417494131,False,False,,True,False,True,True,True,False,False
+Demand cell 181,51.4604229004367,-0.007539296405083119,False,False,,True,True,True,True,True,True,False
+Demand cell 182,51.35440433422389,-0.02018599899428513,False,False,,False,True,True,True,True,True,True
+Demand cell 183,51.5749274210313,-0.12336348703394395,False,False,,True,True,True,True,True,True,False
+Demand cell 184,51.50982565770819,-0.3299925057069616,False,False,,True,True,True,True,True,True,False
+Demand cell 185,51.41989812868636,-0.2123241547046273,False,False,,True,True,True,True,True,True,False
+Demand cell 186,51.48653137508285,0.08511548821963871,False,False,,True,False,True,True,True,False,False
+Demand cell 187,51.469440132427316,-0.07022059522911135,False,False,,False,True,True,False,False,False,False
+Demand cell 188,51.51756865886364,-0.40910975890062173,False,False,,True,True,True,True,True,True,False
+Demand cell 189,51.59069139239221,-0.0069942694906609745,False,True,hospital,False,True,True,True,False,False,False
+Demand cell 190,51.491632865297554,0.05996695358624776,False,False,,True,True,True,True,True,True,False
+Demand cell 191,51.427952220094625,-0.16477069204507303,False,False,,True,True,True,True,True,True,False
+Demand cell 192,51.4365662660683,-0.12504600532100496,False,False,,True,True,True,True,True,True,False
+Demand cell 193,51.517333565718104,0.009145108460355404,False,False,,False,True,True,True,True,True,True
+Demand cell 194,51.50975162675924,-0.006869288532206953,False,False,,False,True,True,True,True,True,True
+Demand cell 195,51.56744398741872,-0.07210661636972032,False,False,,True,True,True,True,True,True,False
+Demand cell 196,51.550271685477185,-0.14961004062768063,False,False,,True,True,True,True,True,True,False
+Demand cell 197,51.56773223733424,0.007369647360190615,False,False,,False,True,True,True,True,True,True
+Demand cell 198,51.5589651211074,-0.2801555194064582,False,True,park,False,True,True,True,False,False,False
+Demand cell 199,51.476845044475446,-0.046704859834461813,False,False,,True,True,True,True,True,True,False
+Demand cell 200,51.5417901597056,-0.02310833275977611,False,False,,False,True,True,True,True,True,True
+Demand cell 201,51.50078246448283,-0.13535864797919983,False,False,,False,True,True,True,True,True,True
+Demand cell 202,51.469584872234016,-0.3585768624101135,False,False,,False,True,True,True,True,True,True
+Demand cell 203,51.55875013537849,-0.0462261089665312,False,True,park,False,True,True,True,False,False,False
+Demand cell 204,51.59866442699802,-0.11012486779704812,False,False,,True,True,True,True,True,True,False
+Demand cell 205,51.46056372018967,-0.21402088159301358,False,True,railway,False,True,True,True,False,False,False
+Demand cell 206,51.462148573254176,-0.017681500952335023,False,False,,True,True,True,True,True,True,False
+Demand cell 207,51.51767154976291,-0.2272784666876058,False,False,,False,True,True,True,True,True,True
+Demand cell 208,51.52573655924201,-0.03169653524767223,False,False,,False,True,True,True,True,True,True
+Demand cell 209,51.453280853062175,-0.01720419903834646,False,True,hospital,False,True,True,True,False,False,False
+Demand cell 210,51.477148609586436,-0.212254346119728,False,False,,True,False,True,True,True,False,False
+Demand cell 211,51.525274482815135,0.03301032677193994,False,False,,False,True,True,True,True,True,True
+Demand cell 212,51.48627486598693,0.09643498205284298,False,False,,True,False,True,True,True,False,False
+Demand cell 213,51.44511423005503,-0.14946869665886936,False,False,,True,True,True,True,True,True,False
+Demand cell 214,51.54977118307249,-0.22671662119718014,False,False,,True,True,True,True,True,True,False
+Demand cell 215,51.550955606803434,-0.09649110183044617,False,False,,True,True,True,True,True,True,False
+Demand cell 216,51.36441063060267,-0.19832084138946982,False,False,,True,True,True,True,True,True,False
+Demand cell 217,51.5584709252039,-0.097257405704724,False,False,,False,True,True,True,True,True,True
+Demand cell 218,51.5114406238122,-0.3044498704978197,False,False,,False,True,True,True,True,True,True
+Demand cell 219,51.53377873246593,0.04526492911107524,False,True,grass,True,True,True,True,False,False,False
+Demand cell 220,51.54973852237349,0.020614257059025906,False,False,,True,True,True,True,True,True,False
+Demand cell 221,51.472018880915066,-0.4571734684787671,False,True,aerodrome,False,False,True,True,False,False,False
+Demand cell 222,51.510452714685194,-0.10939947074324075,False,True,water,False,True,True,True,False,False,False
+Demand cell 223,51.533097245023484,-0.1219138107506971,False,False,,False,True,True,True,True,True,True
+Demand cell 224,51.532397560535564,-0.211051264146695,False,False,,False,True,True,True,True,True,True
+Demand cell 225,51.38090030111512,-0.10800624780030739,False,False,,True,True,True,True,True,True,False
+Demand cell 226,51.583806035831735,-0.007057915487877931,False,False,,True,True,True,True,True,True,False
+Demand cell 227,51.395735939360776,-0.11171508831769293,False,False,,True,True,True,True,True,True,False
+Demand cell 228,51.53357276565334,-0.17443412849810894,False,True,hospital,False,True,True,True,False,False,False
+Demand cell 229,51.55872218758354,-0.08416825125400508,False,True,pitch,False,True,True,True,False,False,False
+Demand cell 230,51.55855814486851,-0.13661106403004847,False,False,,True,True,True,True,True,True,False
+Demand cell 231,51.49362830094651,0.0850225406013543,False,True,park,True,True,True,True,False,False,False
+Demand cell 232,51.5344824642408,0.07333469115437906,False,False,,False,True,True,True,True,True,True
+Demand cell 233,51.51788553207238,-0.35739334295438924,False,False,,True,True,True,True,True,True,False
+Demand cell 234,51.57578716301378,0.17737429842975772,False,False,,False,True,True,True,True,True,True
+Demand cell 235,51.57573713952021,0.1857420388071602,False,False,,False,True,True,True,True,True,True
+Demand cell 236,51.52565849281728,0.02088509752348093,False,True,grass,True,True,True,True,False,False,False
+Demand cell 237,51.59103229148753,-0.03358576509810129,False,False,,True,True,True,True,True,True,False
+Demand cell 238,51.403822605070125,-0.09844401535745884,False,True,school,False,True,True,True,False,False,False
+Demand cell 239,51.524756483280726,-0.14765348451123433,False,True,garden,False,True,True,True,False,False,False
+Demand cell 240,51.46944328297061,-0.3807816644107246,False,False,,False,True,True,True,True,True,True
+Demand cell 241,51.50268968294956,-0.27814492067261043,False,False,,True,True,True,True,True,True,False
+Demand cell 242,51.46106194051051,-0.3037900234049634,False,False,,False,True,True,True,True,True,True
+Demand cell 243,51.534176806667624,0.0331168301983998,False,False,,True,True,True,True,True,True,False
+Demand cell 244,51.493962628721626,0.12357924271870953,False,True,school,False,True,True,True,False,False,False
+Demand cell 245,51.46802915680727,-0.36859560971251754,False,False,,False,True,True,True,True,True,True
+Demand cell 246,51.59055674965244,-0.08202685846820028,False,False,,True,False,True,True,True,False,False
+Demand cell 247,51.58321469821063,-0.08263588286602419,False,False,,True,True,True,True,True,True,False
+Demand cell 248,51.599245232032466,-0.0832838809453241,False,True,park,True,True,True,True,False,False,False
+Demand cell 249,51.396391389459204,-0.07153665364808633,False,False,,True,True,True,True,True,True,False
+Demand cell 250,51.403176850924524,-0.06955322551976381,False,False,,True,False,True,True,True,False,False
+Demand cell 251,51.58307593090795,-0.12279150417191437,False,False,,True,True,True,True,True,True,False
+Demand cell 252,51.543271373861074,0.02008987515837594,False,False,,True,True,True,True,True,True,False
+Demand cell 253,51.46891873529608,-0.1610749595462673,False,True,railway,False,True,True,True,False,False,False
+Demand cell 254,51.44445466190509,-0.005596540427831774,False,False,,True,False,True,True,True,False,False
+Demand cell 255,51.55788388841115,-0.21492454005288292,False,False,,False,True,True,True,True,True,True
+Demand cell 256,51.4363658062309,-0.04761236665201013,False,False,,True,False,True,True,True,False,False
+Demand cell 257,51.55249600839313,-0.29449388471929,False,False,,False,True,True,True,True,True,True
+Demand cell 258,51.53420733030235,-0.006778744404496362,False,False,,False,True,True,True,True,True,True
+Demand cell 259,51.61496908997496,-0.07121283240050316,False,False,,False,True,True,True,True,True,True
+Demand cell 260,51.36450692484637,-0.09860833425424412,False,False,,False,True,True,True,True,True,True
+Demand cell 261,51.452840186583906,-0.12356841617812203,False,False,,False,True,False,True,False,False,False
+Demand cell 262,51.48639078281986,-0.1642373826820466,False,False,,True,True,True,True,True,True,False
+Demand cell 263,51.428544592495356,-0.09795331075011685,False,True,school,True,True,True,True,False,False,False
+Demand cell 264,51.51026600831837,0.020671058868301298,False,False,,True,True,True,True,True,True,False
+Demand cell 265,51.592147075915555,-0.10999109423273576,False,False,,True,True,True,True,True,True,False
+Demand cell 266,51.443747627585914,-0.044386630140441634,False,False,,True,True,True,True,True,True,False
+Demand cell 267,51.45212320135854,-0.15028838881886905,False,False,,True,True,True,True,True,True,False
+Demand cell 268,51.55117158938334,0.05868002529232263,False,False,,True,True,True,True,True,True,False
+Demand cell 269,51.372833443735175,-0.0853786445083412,False,False,,True,True,True,True,True,True,False
+Demand cell 270,51.5167294940079,-0.3044344402416728,False,False,,True,True,True,True,True,True,False
+Demand cell 271,51.39568488217722,-0.0843602827660508,False,False,,True,False,True,True,True,False,False
+Demand cell 272,51.47692969959603,-0.13587944922137615,False,False,,False,True,True,False,False,False,False
+Demand cell 273,51.55176637879711,-0.21383481691114847,False,False,,True,True,True,True,True,True,False
+Demand cell 274,51.45230402683145,-0.13613637106572452,False,False,,True,True,True,False,False,False,False
+Demand cell 275,51.54988145687624,-0.17549801225097397,False,False,,True,True,True,True,True,True,False
+Demand cell 276,51.54961886257283,-0.20092739943779545,False,False,,True,True,True,True,True,True,False
+Demand cell 277,51.38685562742549,-0.1890836671883029,False,False,,True,True,True,True,True,True,False
+Demand cell 278,51.54312549499532,-0.26269447993357153,False,False,,True,True,True,True,True,True,False
+Demand cell 279,51.49445377604812,-0.019226947466612437,False,False,,False,True,True,False,False,False,False
+Demand cell 280,51.443865374812944,-0.11086647971101792,False,False,,True,False,True,True,True,False,False
+Demand cell 281,51.42848023873654,-0.04610103275024847,False,False,,True,True,True,True,True,True,False
+Demand cell 282,51.53366061289401,0.020253661319996213,False,False,,True,True,True,True,True,True,False
+Demand cell 283,51.53351684408637,-0.046130997411775926,False,True,water,False,True,False,True,False,False,False
+Demand cell 284,51.49452809460707,-0.23930382885270315,False,True,park,False,True,True,True,False,False,False
+Demand cell 285,51.55963237824554,0.15031191417389975,False,False,,False,True,True,True,True,True,True
+Demand cell 286,51.39468815560286,-0.30369446895824076,False,False,,True,True,True,True,True,True,False
+Demand cell 287,51.59977568391929,-0.060107663602082764,False,False,,True,False,True,True,True,False,False
+Demand cell 288,51.42844794596993,-0.019367620388784607,False,False,,True,False,True,True,True,False,False
+Demand cell 289,51.549940793751794,-0.23924203754509785,False,True,park,False,True,True,True,False,False,False
+Demand cell 290,51.48518868219372,-0.05800522425155642,False,False,,True,True,True,True,True,True,False
+Demand cell 291,51.54989454619133,-0.25257103361051353,False,False,,True,True,True,True,True,True,False
+Demand cell 292,51.41213749341004,-0.0575955209851744,False,False,,True,True,True,True,True,True,False
+Demand cell 293,51.58349925467036,-0.09697223209989904,False,True,garden,True,True,True,True,False,False,False
+Demand cell 294,51.36336763610991,-0.14938668528254853,False,False,,True,True,True,True,True,True,False
+Demand cell 295,51.42888584918065,-0.05817094644135176,False,False,,True,True,True,True,True,True,False
+Demand cell 296,51.59884766083338,-0.09814539667800237,False,False,,False,True,True,True,True,True,True
+Demand cell 297,51.48640747111736,-0.14784079862169244,False,False,,False,True,True,True,True,True,True
+Demand cell 298,51.461412289622295,-0.16450438878541893,False,False,,True,True,True,True,True,True,False
+Demand cell 299,51.485953167186075,0.006718833650499726,False,False,,True,False,True,True,True,False,False
+Demand cell 948,51.34720064229829,-0.1993594197531345,False,False,,True,False,True,True,True,False,False
+Demand cell 802,51.356079148742516,-0.1989692781845315,False,False,,True,False,True,True,True,False,False
+Demand cell 962,51.38812620807187,-0.19873280512605088,False,False,,True,True,True,True,True,True,False
+Demand cell 1388,51.39544150843534,-0.1999891410081002,False,False,,True,True,True,True,True,True,False
+Demand cell 905,51.403151212392245,-0.19975722613414043,False,False,,True,True,True,True,True,True,False
+Demand cell 463,51.41977738739915,-0.2023484253101558,False,False,,False,True,True,True,True,True,True
+Demand cell 959,51.43676104773071,-0.19892015857312156,False,False,,False,True,True,True,True,True,True
+Demand cell 527,51.453457971143976,-0.19990172872171608,False,False,,True,True,True,True,True,True,False
+Demand cell 457,51.45946843811874,-0.19886498364891564,False,False,,True,True,True,True,True,True,False
+Demand cell 685,51.5595156265372,-0.20216309574075086,False,False,,True,False,True,True,True,False,False
+Demand cell 417,51.5743423022676,-0.20010623996345048,False,False,,True,True,True,True,True,True,False
+Demand cell 629,51.582700456838424,-0.2009736672394904,False,False,,True,True,True,True,True,True,False
+Demand cell 363,51.5990487254322,-0.19871490890468863,False,False,,False,True,True,True,True,True,True
+Demand cell 1267,51.605951666311014,-0.20280254899990363,False,True,golf_course,False,True,False,True,False,False,False
+Demand cell 1705,51.62713726159913,-0.19697529549770368,False,False,,True,False,False,False,False,False,False
+Demand cell 974,51.64370618683481,-0.19859733685218958,False,False,,False,True,True,True,True,True,True
+Demand cell 438,51.64886011156041,-0.20193503837548712,False,False,,True,False,True,True,True,False,False
+Demand cell 1568,51.66467249493175,-0.19763197190566076,False,True,forest,False,False,False,True,False,False,False
+Demand cell 1834,51.33191650285,-0.21417902215,False,True,golf_course,False,True,True,True,False,False,False
+Demand cell 1596,51.347671306337524,-0.2133868359901205,False,False,,True,False,True,True,True,False,False
+Demand cell 1105,51.356720231704614,-0.21542803800722865,False,False,,True,True,True,True,True,True,False
+Demand cell 816,51.37107300128227,-0.22688069234515687,False,False,,True,True,True,True,True,True,False
+Demand cell 1183,51.37978303600521,-0.2165746201023874,False,False,,False,True,True,True,True,True,True
+Demand cell 1259,51.397235389558844,-0.21572796096109997,False,False,,True,False,True,True,True,False,False
+Demand cell 618,51.410888947473545,-0.22807074190887483,False,False,,False,True,True,True,True,True,True
+Demand cell 1233,51.43769702790766,-0.21641520627762711,False,True,sports_centre,False,False,True,True,False,False,False
+Demand cell 394,51.444906718992016,-0.21396632312752706,False,False,,True,False,True,True,True,False,False
+Demand cell 301,51.57534370900151,-0.2141610420322418,False,False,,True,True,True,True,True,True,False
+Demand cell 449,51.58378125457977,-0.21415332689503142,False,False,,True,False,True,True,True,False,False
+Demand cell 1229,51.597970659522495,-0.2250319475089097,False,False,,True,True,True,True,True,True,False
+Demand cell 982,51.60852312404597,-0.21181565278368883,False,True,railway,False,True,True,True,False,False,False
+Demand cell 1737,51.63125455132996,-0.2268396360823053,False,False,,True,False,True,True,True,False,False
+Demand cell 1738,51.640832051950866,-0.21275806462527863,False,True,park,False,False,False,True,False,False,False
+Demand cell 825,51.648454002586334,-0.21388147989893433,False,True,cemetery,False,True,True,False,False,False,False
+Demand cell 1874,51.6624243255,-0.2080489306,False,True,meadow,False,False,True,True,False,False,False
+Demand cell 1559,51.371836961399445,-0.23970226256184907,False,False,,True,False,True,False,False,False,False
+Demand cell 746,51.37885693153833,-0.24083628667588955,False,False,,True,True,True,True,True,True,False
+Demand cell 1287,51.3973103460324,-0.24087999128431214,False,False,,True,True,True,True,True,True,False
+Demand cell 572,51.40285929760918,-0.24019917731879317,False,False,,False,True,True,True,True,True,True
+Demand cell 1520,51.41865414345832,-0.23971585900010298,False,True,pitch,True,False,True,True,False,False,False
+Demand cell 1508,51.438067148942615,-0.24487006058170868,False,True,park,True,True,True,True,False,False,False
+Demand cell 422,51.44689378324048,-0.2406962359279516,False,True,park,True,True,True,True,False,False,False
+Demand cell 608,51.46133602869075,-0.23962447476687562,False,False,,True,False,True,True,True,False,False
+Demand cell 1396,51.477393005259586,-0.24221953212390251,False,False,,False,True,True,True,True,True,True
+Demand cell 627,51.51641447100472,-0.2394303817272542,False,False,,False,True,True,True,True,True,True
+Demand cell 380,51.535433732996545,-0.2422129404775953,False,False,,True,True,True,True,True,True,False
+Demand cell 734,51.558741019292164,-0.2416951590017757,False,True,park,False,False,False,True,False,False,False
+Demand cell 350,51.56665298663733,-0.24058808852282282,False,False,,True,True,True,True,True,True,False
+Demand cell 762,51.59188467195489,-0.24011276732075004,False,False,,True,True,True,True,True,True,False
+Demand cell 310,51.59927470605443,-0.2422304413601775,False,False,,False,True,True,True,True,True,True
+Demand cell 968,51.607174935796834,-0.24183251796807112,False,False,,False,True,True,True,True,True,True
+Demand cell 1409,51.62323269810048,-0.24087974051053132,False,False,,True,False,True,True,True,False,False
+Demand cell 1796,51.64125053298207,-0.24590044020235052,False,False,,True,True,True,True,True,True,False
+Demand cell 1913,51.6449273221,-0.2341726124,False,True,grassland,False,True,True,True,False,False,False
+Demand cell 1184,51.38750660273573,-0.26556945967787976,False,False,,True,False,True,True,True,False,False
+Demand cell 621,51.3982416189186,-0.26277173300774054,False,False,,True,False,True,True,True,False,False
+Demand cell 882,51.4027703564034,-0.25571214728948893,False,False,,False,True,True,True,True,True,True
+Demand cell 1427,51.4291856170437,-0.266668367264396,False,True,university,False,False,True,True,False,False,False
+Demand cell 1406,51.43634195821702,-0.2536471421888536,False,True,park,False,True,True,True,False,False,False
+Demand cell 1039,51.45325155379168,-0.25152581279344144,False,False,,False,False,True,True,True,False,False
+Demand cell 596,51.468112372256165,-0.2662653492458442,False,False,,False,True,True,True,True,True,True
+Demand cell 976,51.47674778054103,-0.2519967039428377,False,True,park,False,False,True,True,False,False,False
+Demand cell 424,51.493439332113944,-0.26627065792475707,False,False,,False,True,True,True,True,True,True
+Demand cell 311,51.5177539373511,-0.2660441101405268,False,False,,True,True,True,True,True,True,False
+Demand cell 398,51.53582687948279,-0.25250941386032755,False,False,,True,True,True,True,True,True,False
+Demand cell 331,51.55920588961361,-0.25148537510321184,False,False,,False,True,True,True,True,True,True
+Demand cell 649,51.565829497347764,-0.2667631524855259,False,False,,False,False,True,True,True,False,False
+Demand cell 414,51.5920499564286,-0.25517142291247225,False,False,,False,True,True,True,True,True,True
+Demand cell 328,51.5981218632206,-0.252191370757561,False,False,,True,True,True,True,True,True,False
+Demand cell 344,51.605729133168836,-0.25606092753349907,False,False,,True,False,True,True,True,False,False
+Demand cell 1031,51.630167937219625,-0.2674795544037539,False,False,,True,False,True,False,False,False,False
+Demand cell 1551,51.642228383795825,-0.25537494201500455,False,True,forest,False,True,True,True,False,False,False
+Demand cell 1911,51.6520191,-0.2482739,False,True,recreation_ground,False,False,False,True,False,False,False
+Demand cell 1822,51.358825648549995,-0.2956586784,False,False,,True,False,True,True,True,False,False
+Demand cell 1034,51.36375981459061,-0.29333413657585633,False,True,recreation_ground,True,False,True,True,False,False,False
+Demand cell 516,51.38853757251982,-0.29388042294252786,False,False,,True,True,True,True,True,True,False
+Demand cell 834,51.3949482918185,-0.29486953845310077,False,False,,True,False,True,True,True,False,False
+Demand cell 343,51.41136411977213,-0.2912109442955245,False,False,,True,True,True,True,True,True,False
+Demand cell 1203,51.42036610335116,-0.2792135878109282,False,False,,True,False,True,True,True,False,False
+Demand cell 1795,51.439578663,-0.29734875510000003,False,True,park,False,False,True,False,False,False,False
+Demand cell 885,51.454375982320045,-0.2941511066245808,False,False,,True,True,True,True,True,True,False
+Demand cell 381,51.46182462489178,-0.2916216975977931,False,False,,True,False,True,True,True,False,False
+Demand cell 1018,51.4778133583553,-0.2800341277827823,False,False,,False,True,True,True,True,True,True
+Demand cell 348,51.491325795914825,-0.28026632629527115,False,False,,True,True,True,True,True,True,False
+Demand cell 833,51.517747377919754,-0.29269539109131715,False,False,,True,True,True,True,True,True,False
+Demand cell 655,51.52699151761537,-0.2926169891797786,False,False,,True,True,True,True,True,True,False
+Demand cell 337,51.564925604188176,-0.27940593302360417,False,True,school,False,True,True,True,False,False,False
+Demand cell 559,51.59262917810907,-0.292524310409247,False,False,,True,True,True,True,True,True,False
+Demand cell 1168,51.59910045771465,-0.2800622946751975,False,True,school,False,False,True,True,False,False,False
+Demand cell 564,51.61427722633124,-0.2783809572590298,False,False,,True,True,True,True,True,True,False
+Demand cell 1209,51.62263445926723,-0.2777900871973246,False,False,,True,True,True,True,True,True,False
+Demand cell 1453,51.355881718730686,-0.30665513359092755,False,False,,False,True,True,True,True,True,True
+Demand cell 1120,51.36383260929917,-0.3049391409273167,False,False,,True,False,True,True,True,False,False
+Demand cell 1003,51.38911645034767,-0.3054109481735276,False,False,,True,True,True,True,True,True,False
+Demand cell 992,51.41965325689949,-0.304690841857766,False,True,park,False,False,True,True,False,False,False
+Demand cell 1600,51.43702512689406,-0.3066287791338398,False,False,,True,False,True,True,True,False,False
+Demand cell 1194,51.45481342986074,-0.30532885303557833,False,False,,True,True,True,True,True,True,False
+Demand cell 1660,51.48066468560703,-0.30932252172371955,False,True,garden,False,True,True,True,False,False,False
+Demand cell 341,51.48525734767773,-0.30591489614643386,False,True,school,False,True,True,True,False,False,False
+Demand cell 1025,51.535036241984905,-0.30560988000534917,False,True,recreation_ground,False,True,True,True,False,False,False
+Demand cell 630,51.550877133970076,-0.3038162627114334,False,False,,True,True,True,True,True,True,False
+Demand cell 871,51.5586461055387,-0.305009989641398,False,False,,True,False,True,True,True,False,False
+Demand cell 1076,51.566000529545754,-0.3056295610516463,False,True,railway,False,True,True,True,False,False,False
+Demand cell 1160,51.59162356124185,-0.30482033229222116,False,False,,True,False,True,True,True,False,False
+Demand cell 1166,51.59947479784089,-0.3069163440687019,False,False,,True,False,True,True,True,False,False
+Demand cell 848,51.61644264242733,-0.30617863794632655,False,False,,True,True,True,True,True,True,False
+Demand cell 1278,51.62086593931691,-0.30758795495096214,False,False,,False,True,True,True,True,True,True
+Demand cell 1885,51.6368757018,-0.3090449184,False,False,,False,True,False,True,False,False,False
+Demand cell 1859,51.3272945593,-0.3274109071,False,False,,True,False,True,True,True,False,False
+Demand cell 1553,51.34486763513,-0.31764142881,False,True,scrub,False,True,False,True,False,False,False
+Demand cell 1743,51.35758898214912,-0.3143347288471941,False,False,,True,True,True,True,True,True,False
+Demand cell 1455,51.36440327366207,-0.3161817562158878,False,True,school,False,False,True,True,False,False,False
+Demand cell 1497,51.390072236347706,-0.31369606984191695,False,False,,True,True,True,True,True,True,False
+Demand cell 1653,51.39439657133278,-0.3136341883637816,False,False,,True,True,True,True,True,True,False
+Demand cell 1091,51.41419434094294,-0.31409848224485104,False,True,garden,True,True,True,True,False,False,False
+Demand cell 903,51.42767086348022,-0.3313786534403847,False,False,,True,True,True,True,True,True,False
+Demand cell 1239,51.436226058906264,-0.3160116879862734,False,False,,True,False,True,True,True,False,False
+Demand cell 497,51.446348573348565,-0.33135734116187165,False,False,,False,True,True,True,True,True,True
+Demand cell 616,51.4587211234111,-0.3334512257140999,False,False,,True,True,True,True,True,True,False
+Demand cell 712,51.47614012321857,-0.3309749692535634,False,False,,True,True,True,True,True,True,False
+Demand cell 799,51.48477105334503,-0.3173370001269943,False,True,wood,False,True,True,True,False,False,False
+Demand cell 448,51.51864019469371,-0.3314803066200449,False,False,,True,False,True,False,False,False,False
+Demand cell 696,51.52665146778014,-0.3321522656234988,False,True,recreation_ground,False,False,True,True,False,False,False
+Demand cell 1016,51.55203419946083,-0.31690807017686906,False,False,,True,True,True,True,True,True,False
+Demand cell 831,51.55808631616195,-0.3197997143934918,False,False,,True,True,True,True,True,True,False
+Demand cell 1124,51.576954255273186,-0.3333391456482442,False,False,,True,True,True,True,True,True,False
+Demand cell 586,51.59905048643768,-0.33241165665576033,False,False,,True,False,True,True,True,False,False
+Demand cell 850,51.60597486839503,-0.3303133365185928,False,False,,True,True,True,True,True,True,False
+Demand cell 1471,51.62321938311521,-0.31943821678127293,False,False,,True,False,True,True,True,False,False
+Demand cell 1827,51.639014555900005,-0.31428623395,False,False,,False,True,True,True,True,True,True
+Demand cell 1325,51.405144861262066,-0.3434001095218633,False,False,,True,True,True,True,True,True,False
+Demand cell 601,51.428689124642226,-0.3420307799014079,False,False,,True,True,True,True,True,True,False
+Demand cell 924,51.43622962748745,-0.3474349950102639,False,True,golf_course,False,True,True,True,False,False,False
+Demand cell 500,51.44446029348482,-0.34414521329218273,False,False,,False,True,True,True,True,True,True
+Demand cell 468,51.475971119518114,-0.34388396026342094,False,False,,True,True,True,True,True,True,False
+Demand cell 1582,51.483911158522105,-0.34521153157071505,False,False,,True,True,True,True,True,True,False
+Demand cell 571,51.50883908372075,-0.34256756775298186,False,False,,True,True,True,True,True,True,False
+Demand cell 731,51.53418250632025,-0.3593492026813731,False,False,,True,False,True,False,False,False,False
+Demand cell 573,51.55254336690883,-0.3452659221339401,False,False,,False,False,True,True,True,False,False
+Demand cell 730,51.559758057817106,-0.3581133180753015,False,False,,True,True,True,True,True,True,False
+Demand cell 600,51.56795664397649,-0.34694359679876435,False,True,recreation_ground,False,True,True,True,False,False,False
+Demand cell 452,51.581724006676595,-0.34247384584939,False,False,,True,True,True,True,True,True,False
+Demand cell 439,51.59972896666899,-0.3419375236574759,False,False,,True,True,True,True,True,True,False
+Demand cell 855,51.60656226422017,-0.34468180153965783,False,False,,True,True,True,True,True,True,False
+Demand cell 1469,51.622849282671005,-0.34412651789628695,False,True,wood,False,False,True,True,False,False,False
+Demand cell 1140,51.413686091713224,-0.3699681483989619,False,True,grass,False,True,True,True,False,False,False
+Demand cell 622,51.42707679621337,-0.3845686375033376,False,False,,True,False,True,True,True,False,False
+Demand cell 769,51.43746036953522,-0.3833214896371072,False,False,,False,True,True,True,True,True,True
+Demand cell 893,51.4533945475564,-0.37157256308724285,False,False,,True,True,True,True,True,True,False
+Demand cell 786,51.478075552764984,-0.36944767289631597,False,True,school,False,True,True,True,False,False,False
+Demand cell 756,51.494870799282644,-0.38199977469405144,False,False,,True,True,True,True,True,True,False
+Demand cell 436,51.510425562781926,-0.382618092796291,False,False,,True,True,True,True,True,True,False
+Demand cell 625,51.5166801743165,-0.38280375557511215,False,False,,True,False,True,False,False,False,False
+Demand cell 401,51.53361839229256,-0.38385272832278416,False,True,recreation_ground,False,True,True,True,False,False,False
+Demand cell 709,51.541557129267396,-0.38230028408939515,False,False,,True,False,True,True,True,False,False
+Demand cell 582,51.55849662297146,-0.370296005012734,False,False,,False,False,True,False,False,False,False
+Demand cell 550,51.5745787916698,-0.3689015580682549,False,True,sports_centre,False,True,True,True,False,False,False
+Demand cell 926,51.591123272136244,-0.3818194621919459,False,False,,True,True,True,True,True,True,False
+Demand cell 1213,51.59836245606478,-0.38453696366277956,False,False,,True,True,True,True,True,True,False
+Demand cell 1084,51.60888842593192,-0.37041165782428864,False,False,,False,True,True,True,True,True,True
+Demand cell 1292,51.42964630639572,-0.39482832555621167,False,False,,True,False,True,True,True,False,False
+Demand cell 1204,51.4352275729154,-0.39560165426029187,False,True,park,False,True,True,True,False,False,False
+Demand cell 1366,51.44526238900984,-0.39568565063225153,False,True,park,False,True,True,True,False,False,False
+Demand cell 1122,51.469926952529164,-0.3968600955170856,False,True,playground,True,True,True,False,False,False,False
+Demand cell 1088,51.475488433702715,-0.396110606604997,False,False,,False,True,True,True,True,True,True
+Demand cell 1094,51.48442832006048,-0.39426344125760043,False,False,,False,True,True,True,True,True,True
+Demand cell 743,51.50077575826522,-0.3960554614905681,False,False,,True,True,True,False,False,False,False
+Demand cell 829,51.516726784328306,-0.39561766427085115,False,False,,True,True,True,True,True,True,False
+Demand cell 372,51.52702902467515,-0.3952364402253093,False,False,,False,True,True,True,True,True,True
+Demand cell 1223,51.53980194497701,-0.3955243667020797,False,False,,True,False,True,True,True,False,False
+Demand cell 610,51.55792288990556,-0.3973064103609666,False,False,,False,True,True,True,True,True,True
+Demand cell 859,51.56870683626805,-0.3992546069729593,False,True,recreation_ground,False,True,True,False,False,False,False
+Demand cell 1235,51.58279510065251,-0.3966759308214815,False,False,,True,False,True,True,True,False,False
+Demand cell 874,51.59959179926804,-0.39671574848941005,False,True,grass,True,False,True,True,False,False,False
+Demand cell 1674,51.60657743249044,-0.39694926112476075,False,True,golf_course,False,False,True,True,False,False,False
+Demand cell 1769,51.3344489783398,-0.009153784903964268,False,False,,True,False,True,False,False,False,False
+Demand cell 628,51.33905467328334,-0.005798010380714255,False,False,,True,True,True,True,True,True,False
+Demand cell 1439,51.35321537053247,-0.009872535715431447,False,False,,True,False,True,True,True,False,False
+Demand cell 1589,51.37063665388972,-0.0052140632934893445,False,False,,True,True,True,True,True,True,False
+Demand cell 1491,51.37896497901129,-0.0059611160891529695,False,False,,True,False,True,False,False,False,False
+Demand cell 1572,51.39733659804444,-0.008101175097763933,False,False,,True,False,True,True,True,False,False
+Demand cell 1066,51.404332550500236,-0.006019465003013506,False,False,,False,False,True,True,True,False,False
+Demand cell 419,51.427200911890246,-0.007907158419695373,False,False,,True,True,True,True,True,True,False
+Demand cell 843,51.436861117080575,-0.005995444706703127,False,False,,True,False,True,True,True,False,False
+Demand cell 526,51.478121494448416,-0.009947312172918395,False,False,,True,True,True,True,True,True,False
+Demand cell 481,51.48435120015533,-0.006954616849108942,False,True,water,False,True,False,True,False,False,False
+Demand cell 445,51.5170081744258,-0.007522644887558844,False,False,,False,True,True,True,True,True,True
+Demand cell 392,51.550220500378124,-0.004924179351013402,False,False,,False,True,True,True,True,True,True
+Demand cell 335,51.558804884276185,-0.008197063682749797,False,False,,True,True,True,True,True,True,False
+Demand cell 308,51.57536016167705,-0.007860160543354358,False,False,,True,True,True,True,True,True,False
+Demand cell 1087,51.59939192791096,-0.006511143519635625,False,False,,True,False,True,True,True,False,False
+Demand cell 692,51.60791452267163,-0.004206567291119007,False,False,,True,True,True,True,True,True,False
+Demand cell 780,51.62297623424223,-0.008932699114115556,False,False,,True,False,True,False,False,False,False
+Demand cell 1378,51.63972561002333,-0.009251142484830556,False,False,,True,False,True,True,True,False,False
+Demand cell 1718,51.64582995355,-0.0099490441,False,False,,True,False,True,True,True,False,False
+Demand cell 1711,51.66534594396058,-0.012596261335580325,False,False,,True,True,True,False,False,False,False
+Demand cell 1748,51.43129637783824,-0.4229399721579803,False,True,farmland,False,True,True,True,False,False,False
+Demand cell 945,51.43710068759432,-0.421438151042181,False,True,cemetery,False,True,True,True,False,False,False
+Demand cell 309,51.445465929010865,-0.40958192904554774,False,True,school,False,True,True,True,False,False,False
+Demand cell 1062,51.47048181557121,-0.4241521225541054,False,False,,False,True,False,True,False,False,False
+Demand cell 1012,51.47792634540468,-0.40789844660480973,False,False,,True,True,True,True,True,True,False
+Demand cell 1048,51.48616705831764,-0.4047092877618136,False,False,,True,True,True,True,True,True,False
+Demand cell 300,51.5032377584929,-0.42167296163595513,False,False,,True,True,True,True,True,True,False
+Demand cell 919,51.525291452269066,-0.42154264575172656,False,False,,True,True,True,True,True,True,False
+Demand cell 1623,51.55069247652104,-0.40524579142460243,False,True,grass,False,False,True,True,False,False,False
+Demand cell 1460,51.560124044488894,-0.40899999718850755,False,False,,False,True,True,True,True,True,True
+Demand cell 853,51.57470401377423,-0.4230306461078472,False,False,,True,True,True,True,True,True,False
+Demand cell 910,51.591310631379585,-0.40994449677669653,False,False,,True,False,True,True,True,False,False
+Demand cell 889,51.600856638939725,-0.4095145169583672,False,False,,False,True,True,True,True,True,True
+Demand cell 1102,51.607753351721605,-0.42161983751059906,False,True,railway,False,False,True,True,False,False,False
+Demand cell 1619,51.43740589685681,-0.43739449697000915,False,False,,False,True,False,True,False,False,False
+Demand cell 632,51.45320924242561,-0.43446580752162056,False,False,,True,True,True,True,True,True,False
+Demand cell 1608,51.46006806178858,-0.43531292061911664,False,True,nature_reserve,False,True,True,True,False,False,False
+Demand cell 1404,51.47976664283687,-0.43376176274362516,False,False,,False,True,True,True,True,True,True
+Demand cell 880,51.483683589367224,-0.4357607210957145,False,False,,True,True,True,True,True,True,False
+Demand cell 705,51.50196671313869,-0.4335681159273891,False,False,,True,True,True,True,True,True,False
+Demand cell 774,51.518077780441,-0.436463369312132,False,False,,True,False,True,True,True,False,False
+Demand cell 678,51.524831120003,-0.4351374768971213,False,False,,False,True,True,True,True,True,True
+Demand cell 1399,51.543057983905854,-0.43869645707466454,False,False,,True,True,True,False,False,False,False
+Demand cell 1537,51.560994350743634,-0.43726654351518585,False,False,,True,False,True,False,False,False,False
+Demand cell 947,51.56848920640236,-0.4378690185905099,False,False,,True,True,True,True,True,True,False
+Demand cell 1141,51.58312947786973,-0.435799009991212,False,False,,True,False,True,True,True,False,False
+Demand cell 1671,51.60280087549139,-0.4367408700472305,False,False,,True,False,True,False,False,False,False
+Demand cell 1447,51.61522436553787,-0.4376108778586915,False,False,,True,False,True,True,True,False,False
+Demand cell 1899,51.4359881974,-0.446299733,False,False,,False,True,True,False,False,False,False
+Demand cell 1361,51.447312913367654,-0.4454342690429987,False,False,,False,True,True,True,True,True,True
+Demand cell 684,51.47866057440303,-0.45081305669358734,False,True,aerodrome,False,True,True,True,False,False,False
+Demand cell 1142,51.49517467539549,-0.460955222579547,False,True,grassland,False,True,False,True,False,False,False
+Demand cell 664,51.50187520343452,-0.4627609519061993,False,False,,True,True,True,True,True,True,False
+Demand cell 916,51.51903227795098,-0.4633059409542599,False,False,,True,True,True,True,True,True,False
+Demand cell 549,51.52606506249686,-0.4477902414069373,False,False,,True,False,True,True,True,False,False
+Demand cell 1001,51.55099205742354,-0.4485397945454042,False,False,,False,True,True,True,True,True,True
+Demand cell 1540,51.56059839169334,-0.4494278567485395,False,False,,False,False,True,True,True,False,False
+Demand cell 1417,51.56526811267472,-0.4466719577340745,False,False,,False,True,True,True,True,True,True
+Demand cell 1549,51.5804464240141,-0.4434001450529618,False,False,,True,True,True,True,True,True,False
+Demand cell 1876,51.5998343262,-0.4515674077,False,True,sports_centre,False,False,False,False,False,False,False
+Demand cell 1414,51.615589254264435,-0.44549632571510617,False,True,hospital,False,False,False,True,False,False,False
+Demand cell 1154,51.47677307381946,-0.48984717332324307,False,True,aerodrome,False,True,False,True,False,False,False
+Demand cell 1362,51.48434848613936,-0.4746764790278857,False,True,farmland,False,True,True,True,False,False,False
+Demand cell 514,51.51033801287245,-0.4728145582316645,False,True,railway,False,True,True,True,False,False,False
+Demand cell 656,51.51670786236939,-0.47442589087608655,False,True,grassland,False,True,True,True,False,False,False
+Demand cell 878,51.53342993843648,-0.48478899131969916,False,False,,True,True,True,True,True,True,False
+Demand cell 374,51.54388057609666,-0.4762664428303786,False,False,,False,True,True,True,True,True,True
+Demand cell 1484,51.55792924607348,-0.4711433945732507,False,False,,True,True,True,True,True,True,False
+Demand cell 1883,51.56334763836156,-0.4700160663979104,False,False,,True,False,True,True,True,False,False
+Demand cell 1687,51.590849993488334,-0.48422226769000243,False,False,,True,True,True,True,True,True,False
+Demand cell 1395,51.59988076682809,-0.48389018377479226,False,False,,True,False,True,True,True,False,False
+Demand cell 749,51.60674102882186,-0.4838194163976739,False,True,hospital,False,False,False,True,False,False,False
+Demand cell 1799,51.46903185775,-0.5023328009,False,True,nature_reserve,False,True,False,True,False,False,False
+Demand cell 1446,51.476596762483176,-0.4990546646486835,False,True,meadow,False,True,False,True,False,False,False
+Demand cell 1816,51.4889208205,-0.49601564225,False,False,,False,True,False,False,False,False,False
+Demand cell 1759,51.60764672059026,-0.49701457645318325,False,False,,True,True,True,False,False,False,False
+Demand cell 1912,51.4688452432,-0.5096494013,False,False,,False,True,True,True,True,True,True
+Demand cell 1868,51.3338848073,-0.016018257,False,True,wood,False,True,True,True,False,False,False
+Demand cell 636,51.34765386804017,-0.01956919692381752,False,False,,True,False,True,True,True,False,False
+Demand cell 1212,51.37209101890752,-0.01934047969214573,False,False,,True,False,True,False,False,False,False
+Demand cell 890,51.37941069447279,-0.017907878513895508,False,False,,True,True,True,True,True,True,False
+Demand cell 946,51.397081801127214,-0.03188815055957422,False,True,garden,True,False,True,True,False,False,False
+Demand cell 595,51.41117763354613,-0.03227555683890619,False,False,,True,True,True,True,True,True,False
+Demand cell 416,51.436738137188556,-0.020824598634613084,False,False,,False,True,True,True,True,True,True
+Demand cell 1019,51.560827193354385,-0.017021100144774565,False,True,allotments,False,True,True,True,False,False,False
+Demand cell 321,51.56609802671779,-0.01833969057986142,False,True,school,False,True,True,True,False,False,False
+Demand cell 673,51.599109345703496,-0.01876495154637835,False,False,,True,True,True,True,True,True,False
+Demand cell 668,51.615493499479626,-0.018362795186866513,False,False,,True,True,True,True,True,True,False
+Demand cell 1214,51.623460914597565,-0.018121101616231386,False,False,,True,True,True,True,True,True,False
+Demand cell 680,51.64182913005524,-0.03507928225066945,False,True,scrub,False,True,True,True,False,False,False
+Demand cell 590,51.65584151097228,-0.03369172847010219,False,False,,True,True,True,True,True,True,False
+Demand cell 511,51.67200922845471,-0.033700667939600186,False,False,,True,False,True,True,True,False,False
+Demand cell 1295,51.679654239883845,-0.03356362286929477,False,True,wood,False,True,True,True,False,False,False
+Demand cell 1844,51.332967525394864,-0.0508038623862965,False,True,wood,False,False,True,True,False,False,False
+Demand cell 904,51.34785288823564,-0.045022413624720196,False,False,,True,False,True,True,True,False,False
+Demand cell 1615,51.35468305130487,-0.04475039452263484,False,False,,False,False,True,True,True,False,False
+Demand cell 1367,51.372946733354915,-0.04644044812321986,False,False,,True,True,True,True,True,True,False
+Demand cell 1351,51.38832555617334,-0.043931478476306685,False,False,,True,False,True,True,True,False,False
+Demand cell 569,51.396886442690324,-0.046089709078292136,False,False,,True,True,True,True,True,True,False
+Demand cell 474,51.41319040310072,-0.04650891625600831,False,True,school,False,False,True,True,False,False,False
+Demand cell 528,51.460211502032294,-0.044379140282084104,False,False,,True,False,True,True,True,False,False
+Demand cell 659,51.56630063808256,-0.04604484466614502,False,True,meadow,False,True,False,False,False,False,False
+Demand cell 686,51.58860412966603,-0.04216197245214705,False,False,,False,True,True,True,True,True,True
+Demand cell 1318,51.597607561305786,-0.04393128679416984,False,True,nature_reserve,False,True,False,True,False,False,False
+Demand cell 851,51.60770310345,-0.0474565341826087,False,False,,False,True,False,True,False,False,False
+Demand cell 494,51.63106981689601,-0.0466291241100609,False,False,,True,False,True,True,True,False,False
+Demand cell 602,51.64050168820675,-0.04574191642587106,False,False,,True,True,True,True,True,True,False
+Demand cell 361,51.64774075694527,-0.044793911160411655,False,False,,True,True,True,True,True,True,False
+Demand cell 495,51.66440447941433,-0.044555034050007464,False,False,,True,False,True,True,True,False,False
+Demand cell 1149,51.67964072541763,-0.04576627248047793,False,False,,True,True,True,True,True,True,False
+Demand cell 1466,51.331629946280906,-0.074115415202712,False,False,,True,True,True,True,True,True,False
+Demand cell 1195,51.34596666440134,-0.05842923764543434,False,False,,True,True,True,True,True,True,False
+Demand cell 1371,51.35564467019057,-0.05677361800040918,False,True,farmland,False,False,False,False,False,False,False
+Demand cell 1253,51.3748234301192,-0.07579298731940297,False,False,,True,False,True,True,True,False,False
+Demand cell 376,51.387854336309296,-0.0597138579272375,False,False,,True,False,True,True,True,False,False
+Demand cell 333,51.43691175292706,-0.057140528818047355,False,False,,True,True,True,True,True,True,False
+Demand cell 318,51.4538477366599,-0.06915835383820176,False,False,,True,False,True,True,True,False,False
+Demand cell 760,51.64121588241531,-0.0578741746253724,False,False,,True,True,True,True,True,True,False
+Demand cell 623,51.64838324158966,-0.05775348129685749,False,False,,False,True,True,True,True,True,True
+Demand cell 473,51.66450386836309,-0.05898979000014015,False,False,,True,False,True,True,True,False,False
+Demand cell 1334,51.680547699507066,-0.05580902703722561,False,True,college,False,False,False,False,False,False,False
+Demand cell 1887,51.3019585748,-0.1038816997,False,False,,True,True,True,True,True,True,False
+Demand cell 1658,51.31544969621865,-0.08574542009818699,False,False,,False,True,True,True,True,True,True
+Demand cell 1299,51.32324961001359,-0.10050653664220485,False,False,,True,True,True,True,True,True,False
+Demand cell 1042,51.34774017775957,-0.0975401868073098,False,False,,True,True,True,True,True,True,False
+Demand cell 748,51.35519543059459,-0.09824682931408477,False,False,,True,False,True,True,True,False,False
+Demand cell 453,51.435566307386054,-0.09888794609353575,False,False,,True,True,True,True,True,True,False
+Demand cell 322,51.45320793772933,-0.09890936259528048,False,False,,True,True,True,True,True,True,False
+Demand cell 375,51.60629900814755,-0.08451123009379242,False,False,,True,True,True,True,True,True,False
+Demand cell 781,51.624208214105465,-0.09699452423755307,False,True,allotments,False,False,True,True,False,False,False
+Demand cell 1211,51.64030238154874,-0.08193124565335896,False,False,,True,False,True,True,True,False,False
+Demand cell 547,51.6501580939287,-0.08234827560902684,False,False,,True,True,True,True,True,True,False
+Demand cell 541,51.66454155310109,-0.0866480110447555,False,False,,True,True,True,True,True,True,False
+Demand cell 1580,51.681484168644225,-0.09900499345537724,False,False,,True,True,True,True,True,True,False
+Demand cell 1894,51.6898419263,-0.0907123555,False,True,wood,False,False,False,False,False,False,False
+Demand cell 1688,51.29902321448958,-0.1132464777433714,False,False,,True,False,True,True,True,False,False
+Demand cell 1661,51.31655151706426,-0.1132714677125123,False,False,,True,False,True,False,False,False,False
+Demand cell 1121,51.33067735476001,-0.1101926181662384,False,False,,True,True,True,True,True,True,False
+Demand cell 599,51.33935690544933,-0.11311788202772972,False,False,,True,True,True,True,True,True,False
+Demand cell 1015,51.35510489124465,-0.11006381214632818,False,True,park,False,False,False,True,False,False,False
+Demand cell 896,51.404092766165576,-0.11119118460700096,False,False,,True,False,True,False,False,False,False
+Demand cell 313,51.42885720582025,-0.10900698364669807,False,False,,True,False,True,False,False,False,False
+Demand cell 349,51.436116126925796,-0.10833580770545713,False,True,railway,False,True,True,True,False,False,False
+Demand cell 406,51.607570723440936,-0.11105924629615821,False,False,,True,True,True,True,True,True,False
+Demand cell 587,51.62266071185319,-0.10852374977624048,False,False,,True,True,True,True,True,True,False
+Demand cell 1306,51.63972334255932,-0.11097172666330721,False,False,,True,False,True,True,True,False,False
+Demand cell 1522,51.654971091521205,-0.1087254551743472,False,False,,False,True,True,True,True,True,True
+Demand cell 1370,51.666515254290935,-0.10659586134922369,False,False,,False,True,True,True,True,True,True
+Demand cell 1809,51.68669255245,-0.11524190005,False,False,,False,False,True,True,True,False,False
+Demand cell 1858,51.289103121,-0.1260043962,False,True,wood,False,False,True,False,False,False,False
+Demand cell 1448,51.30744966965455,-0.12298110385496352,False,False,,True,True,True,True,True,True,False
+Demand cell 1288,51.31635337522866,-0.13743601879580025,False,True,railway,False,True,True,True,False,False,False
+Demand cell 931,51.331602413461766,-0.12331534056582354,False,False,,False,True,True,True,True,True,True
+Demand cell 407,51.33946086277414,-0.11953930646410765,False,False,,False,True,True,True,True,True,True
+Demand cell 583,51.35487075639007,-0.13496828063883898,False,False,,True,False,True,True,True,False,False
+Demand cell 515,51.362917020798626,-0.1205707386124583,False,False,,False,True,True,True,True,True,True
+Demand cell 397,51.38751506840435,-0.12219830624657115,False,True,school,False,True,True,True,False,False,False
+Demand cell 966,51.39634193489123,-0.12360677655121158,False,False,,True,False,True,True,True,False,False
+Demand cell 767,51.60017097887937,-0.12026972961605298,False,True,railway,False,True,True,True,False,False,False
+Demand cell 466,51.61579096613177,-0.1388472558812105,False,False,,True,True,True,True,True,True,False
+Demand cell 674,51.63301578218214,-0.12502619431012824,False,False,,True,True,True,True,True,True,False
+Demand cell 849,51.63938410557274,-0.13564872143029494,False,False,,True,True,True,True,True,True,False
+Demand cell 866,51.646096660403714,-0.13599371169147198,False,False,,True,True,True,True,True,True,False
+Demand cell 1746,51.675613614999996,-0.12455903236666666,False,False,,False,True,True,True,True,True,True
+Demand cell 1804,51.6783785464,-0.1310361671,False,False,,True,False,True,True,True,False,False
+Demand cell 1624,51.30604011588897,-0.1470674281102778,False,False,,False,True,True,True,True,True,True
+Demand cell 1558,51.314117725588936,-0.15042048477175612,False,True,scrub,False,True,True,True,False,False,False
+Demand cell 1561,51.3216886763898,-0.14889106762016147,False,False,,True,False,True,True,True,False,False
+Demand cell 1010,51.347287158109765,-0.14750007216938835,False,False,,True,True,True,True,True,True,False
+Demand cell 307,51.356553579400625,-0.14935531836870275,False,False,,True,True,True,True,True,True,False
+Demand cell 719,51.37966433851189,-0.16106637689658101,False,True,wood,False,True,True,True,False,False,False
+Demand cell 1079,51.3962157439553,-0.1624408379852155,False,False,,True,True,True,True,True,True,False
+Demand cell 338,51.405043631922474,-0.16311139924170384,False,False,,False,True,True,True,True,True,True
+Demand cell 425,51.436889170539146,-0.16160591554602882,False,False,,False,True,True,True,True,True,True
+Demand cell 323,51.47583076451958,-0.14936160689865838,False,False,,False,True,True,True,True,True,True
+Demand cell 591,51.557626906671224,-0.1480443991493417,False,True,village_green,False,True,True,True,False,False,False
+Demand cell 645,51.565814650309015,-0.1484195995292253,False,False,,True,False,True,False,False,False,False
+Demand cell 420,51.59033773064815,-0.14813512465425677,False,False,,True,True,True,True,True,True,False
+Demand cell 886,51.59935213710289,-0.14877974821472997,False,False,,True,True,True,True,True,True,False
+Demand cell 469,51.61512968399196,-0.14768922503830934,False,False,,True,True,True,True,True,True,False
+Demand cell 1181,51.63099220196419,-0.14989916878909212,False,False,,False,False,True,True,True,False,False
+Demand cell 795,51.64239910525469,-0.16179425253249907,False,True,park,False,True,True,True,False,False,False
+Demand cell 1006,51.6477454155764,-0.14932035928136989,False,False,,True,True,True,True,True,True,False
+Demand cell 1677,51.66678849567675,-0.15853621106871504,False,False,,True,False,True,True,True,False,False
+Demand cell 1889,51.6806159844,-0.1653411523,False,False,,False,False,True,True,True,False,False
+Demand cell 1805,51.6875065952,-0.16052181285,False,False,,False,True,False,True,False,False,False
+Demand cell 764,51.34697054425983,-0.19162312710992238,False,False,,True,True,True,True,True,True,False
+Demand cell 409,51.35659490907441,-0.18922736739890256,False,False,,True,True,True,True,True,True,False
+Demand cell 529,51.39653954925003,-0.17506049616268624,False,False,,True,True,True,True,True,True,False
+Demand cell 353,51.41333248726417,-0.18849344957603173,False,True,education,False,True,True,True,False,False,False
+Demand cell 324,51.42805334155291,-0.1745534236183889,False,True,university,False,True,True,True,False,False,False
+Demand cell 442,51.43743546708292,-0.1877033811984475,False,False,,False,True,True,True,True,True,True
+Demand cell 340,51.55730271067223,-0.17691290184267786,False,False,,True,True,True,True,True,True,False
+Demand cell 881,51.57362994301511,-0.19017698061889768,False,False,,True,False,True,True,True,False,False
+Demand cell 576,51.591337144081116,-0.17427305178050123,False,False,,True,False,True,True,True,False,False
+Demand cell 467,51.59911899599628,-0.1755422879167324,False,True,allotments,True,True,True,True,False,False,False
+Demand cell 480,51.61710745996298,-0.18527410500946337,False,False,,True,False,True,False,False,False,False
+Demand cell 654,51.62358223052582,-0.17596359995841315,False,False,,True,True,True,True,True,True,False
+Demand cell 1074,51.63820465425903,-0.17666150791049814,False,False,,True,False,True,True,True,False,False
+Demand cell 305,51.647659225353635,-0.18885059919696903,False,False,,True,True,True,True,True,True,False
+Demand cell 1753,51.666737156269654,-0.17491757038284397,False,False,,True,True,True,True,True,True,False
+Demand cell 1835,51.305861299958906,0.02426146277571105,False,False,,True,False,True,False,False,False,False
+Demand cell 1729,51.313352553264316,0.024948404993517102,False,False,,True,True,True,False,False,False,False
+Demand cell 1670,51.33263331654,0.00583173262,False,True,wood,False,True,True,True,False,False,False
+Demand cell 1618,51.337741005875,0.00573778565,False,False,,False,True,True,True,True,True,True
+Demand cell 1789,51.35697457293333,0.02039448593333333,False,True,farmland,False,False,False,True,False,False,False
+Demand cell 1161,51.3726618794024,0.004603205655784256,False,False,,True,False,True,True,True,False,False
+Demand cell 1377,51.37793108948445,0.008659155767854145,False,False,,True,True,True,True,True,True,False
+Demand cell 496,51.39734553171958,0.020705188823508365,False,False,,True,True,True,True,True,True,False
+Demand cell 589,51.42911635450431,0.020030940497669066,False,False,,True,False,True,True,True,False,False
+Demand cell 578,51.43523111225381,0.006721039242928023,False,False,,True,False,True,True,True,False,False
+Demand cell 352,51.454151928587045,0.01844971491785997,False,False,,True,False,True,True,True,False,False
+Demand cell 519,51.46051619469681,0.004203663522230571,False,True,grass,True,True,True,True,False,False,False
+Demand cell 470,51.477627319558614,0.019416345231021245,False,True,park,False,False,True,True,False,False,False
+Demand cell 626,51.58199540686617,0.0217787116921446,False,False,,True,True,True,True,True,True,False
+Demand cell 819,51.598481284241736,0.020936788658853428,False,False,,False,True,True,True,True,True,True
+Demand cell 661,51.61330595638191,0.01684145557911752,False,True,forest,False,False,True,True,False,False,False
+Demand cell 751,51.62275490498271,0.0071302681553457115,False,False,,True,False,True,True,True,False,False
+Demand cell 1817,51.639948840200006,0.01183818175,False,True,golf_course,False,False,True,True,False,False,False
+Demand cell 1581,51.5119723808,0.22184991662222223,False,True,farmland,False,True,True,True,False,False,False
+Demand cell 1533,51.51741076508181,0.22319633287272725,False,False,,False,True,True,False,False,False,False
+Demand cell 1590,51.524884507955555,0.22606979537777777,False,True,farmland,False,True,True,True,False,False,False
+Demand cell 1382,51.552329493578625,0.22678797891222224,False,False,,True,True,True,True,True,True,False
+Demand cell 917,51.55852833464822,0.2261905683337909,False,True,wood,False,False,False,True,False,False,False
+Demand cell 1467,51.56616050385935,0.2277239727818061,False,False,,True,False,True,False,False,False,False
+Demand cell 1057,51.58173283845469,0.22630174628637306,False,False,,True,True,True,False,False,False,False
+Demand cell 694,51.599921976452436,0.22681091708755236,False,False,,True,True,True,True,True,True,False
+Demand cell 650,51.607371502048316,0.2269640279766831,False,False,,True,False,True,True,True,False,False
+Demand cell 1824,51.6230808989,0.22964594324999998,False,True,wood,False,False,True,True,False,False,False
+Demand cell 1630,51.52742056488571,0.25124864532857144,False,True,park,False,False,True,True,False,False,False
+Demand cell 1593,51.54409896998495,0.2526350550094368,False,False,,True,True,True,True,True,True,False
+Demand cell 940,51.55790340213899,0.25078908818644374,False,False,,True,True,True,True,True,True,False
+Demand cell 1694,51.57632731095602,0.2563223102430478,False,True,farmland,False,False,True,True,False,False,False
+Demand cell 1776,51.59132993006667,0.25204924553333335,False,True,meadow,False,False,False,True,False,False,False
+Demand cell 1647,51.60089080116572,0.25059963106492505,False,False,,True,True,True,True,True,True,False
+Demand cell 1689,51.604370860719996,0.25122253292,False,False,,False,True,True,True,True,True,True
+Demand cell 1803,51.5217880079,0.2610350108,False,True,wood,False,False,False,False,False,False,False
+Demand cell 1672,51.53541620579999,0.28005969298,False,False,,False,False,True,True,True,False,False
+Demand cell 1567,51.54201044357778,0.2790430688111111,False,True,farmland,False,False,True,True,False,False,False
+Demand cell 1358,51.56005934736657,0.26721090985634105,False,False,,True,True,True,True,True,True,False
+Demand cell 900,51.56845940636701,0.2690827661474686,False,False,,True,True,True,False,False,False,False
+Demand cell 1908,51.5791135558,0.2649724128,False,True,wood,False,False,True,True,False,False,False
+Demand cell 1849,51.598942641,0.2676058955,False,True,scrub,False,False,False,False,False,False,False
+Demand cell 1863,51.6090168164,0.2600730277,False,False,,False,True,True,True,True,True,True
+Demand cell 1779,51.551543734666666,0.2922976813666667,False,True,farmland,False,False,False,True,False,False,False
+Demand cell 1791,51.557894599533334,0.29212303106666665,False,True,farmland,False,True,False,True,False,False,False
+Demand cell 1815,51.571710666,0.28679137460000004,False,False,,False,True,True,True,True,True,True
+Demand cell 1241,51.3083438631715,0.031320304661697586,False,False,,True,False,True,False,False,False,False
+Demand cell 807,51.314243294601795,0.03440727867129689,False,False,,True,True,True,True,True,True,False
+Demand cell 1543,51.32050737067118,0.03011800798693352,False,False,,False,True,True,True,True,True,True
+Demand cell 1761,51.349214211,0.047879308033333325,False,True,farmland,False,False,True,True,False,False,False
+Demand cell 1664,51.357420677283336,0.0336861601,False,True,wood,False,False,False,True,False,False,False
+Demand cell 1510,51.36394103670435,0.04560942882592304,False,False,,False,False,True,False,False,False,False
+Demand cell 1163,51.38661298518811,0.04217387382035329,False,False,,True,False,True,True,True,False,False
+Demand cell 728,51.39604086712686,0.03173347918249723,False,False,,True,False,True,True,True,False,False
+Demand cell 864,51.4043491481342,0.03187798827431533,False,False,,True,True,True,True,True,True,False
+Demand cell 504,51.42869713254024,0.046267161255836284,False,False,,True,True,True,True,True,True,False
+Demand cell 1051,51.435907015420824,0.04629661369869761,False,False,,False,True,True,True,True,True,True
+Demand cell 752,51.45264296560685,0.04761894213415651,False,False,,True,False,True,True,True,False,False
+Demand cell 548,51.46103443433891,0.031788041402261366,False,False,,False,True,True,True,True,True,True
+Demand cell 373,51.47530249368666,0.04524619613859841,False,True,park,False,False,True,True,False,False,False
+Demand cell 384,51.48552174216083,0.033260093753616826,False,False,,True,True,True,True,True,True,False
+Demand cell 563,51.51161579096676,0.03166401834136524,False,False,,True,True,True,True,True,True,False
+Demand cell 355,51.51862948799497,0.03339602878231306,False,True,park,False,False,True,True,False,False,False
+Demand cell 356,51.542650560010216,0.03285895578747499,False,True,garden,True,True,True,True,False,False,False
+Demand cell 1243,51.55816756080196,0.04368614175070173,False,True,cemetery,False,True,True,True,False,False,False
+Demand cell 932,51.57554728568998,0.04640001107492913,False,False,,True,False,True,True,True,False,False
+Demand cell 954,51.59192271401871,0.030685182354012918,False,False,,True,True,True,True,True,True,False
+Demand cell 854,51.598120269171424,0.030517985260083903,False,False,,True,False,True,True,True,False,False
+Demand cell 754,51.60688412675019,0.032663998235642616,False,False,,True,True,True,True,True,True,False
+Demand cell 1752,51.622485600542966,0.0300364098839465,False,False,,True,False,True,True,True,False,False
+Demand cell 1886,51.2895891878,0.0588970235,False,True,meadow,False,False,True,True,False,False,False
+Demand cell 1801,51.3150140463,0.0554522447,False,True,farmland,False,False,True,True,False,False,False
+Demand cell 1777,51.33252659433333,0.052967516066666664,False,True,farmland,False,False,True,True,False,False,False
+Demand cell 1301,51.34041934394918,0.05806780281385794,False,False,,True,False,True,False,False,False,False
+Demand cell 1807,51.3530790159,0.056227022,False,True,wood,False,False,False,True,False,False,False
+Demand cell 803,51.36489774210437,0.058561487147947365,False,True,hospital,False,True,True,True,False,False,False
+Demand cell 1393,51.38685176223284,0.05786104093533281,False,False,,True,False,True,False,False,False,False
+Demand cell 1535,51.396479787381914,0.05726308609112292,False,True,wood,False,True,True,True,False,False,False
+Demand cell 1473,51.40479487278325,0.057438535534004964,False,False,,True,False,True,True,True,False,False
+Demand cell 999,51.429070383704044,0.05775167770174988,False,False,,True,False,True,True,True,False,False
+Demand cell 1200,51.43525207296921,0.05912992230289733,False,True,recreation_ground,False,True,True,True,False,False,False
+Demand cell 385,51.45118207746547,0.057631264976982836,False,False,,False,True,True,True,True,True,True
+Demand cell 921,51.46098509016546,0.056944849256488655,False,False,,True,False,True,True,True,False,False
+Demand cell 710,51.47891345054076,0.06100602793227824,False,False,,True,False,True,True,True,False,False
+Demand cell 732,51.511590883031786,0.05991796816708089,False,True,park,False,True,True,True,False,False,False
+Demand cell 603,51.51702263383405,0.05812069811893232,False,False,,True,True,True,True,True,True,False
+Demand cell 804,51.55766476130396,0.06122978265983437,False,True,golf_course,False,True,False,True,False,False,False
+Demand cell 695,51.57540366163258,0.059265561597497046,False,False,,True,True,True,True,True,True,False
+Demand cell 933,51.584269466983606,0.05614419965640153,False,False,,True,True,True,True,True,True,False
+Demand cell 1127,51.59833260998776,0.060081524006967535,False,True,park,False,False,True,False,False,False,False
+Demand cell 1357,51.60707649077128,0.05587534816466281,False,False,,True,True,True,True,True,True,False
+Demand cell 1750,51.298327076550095,0.08519709356624443,False,True,farmland,False,False,True,True,False,False,False
+Demand cell 1757,51.313496050252375,0.07346395386114296,False,True,meadow,False,False,False,True,False,False,False
+Demand cell 1854,51.3207401995,0.0710133241,False,False,,True,False,True,True,True,False,False
+Demand cell 1720,51.347528217925,0.089135183375,False,True,farmland,False,True,True,True,False,False,False
+Demand cell 1115,51.35558646719796,0.0875676864020408,False,False,,False,True,True,True,True,True,True
+Demand cell 1271,51.36308376505801,0.08510533279907025,False,False,,True,False,True,False,False,False,False
+Demand cell 1244,51.38867874986295,0.07349896366968556,False,False,,False,True,True,True,True,True,True
+Demand cell 1650,51.39642579889474,0.087390840867853,False,False,,True,False,True,True,True,False,False
+Demand cell 1394,51.4126249848943,0.08141119373880741,False,False,,True,False,True,True,True,False,False
+Demand cell 1080,51.42896869605541,0.08773487246355378,False,False,,False,True,True,True,True,True,True
+Demand cell 827,51.43620703166132,0.07047845055424717,False,False,,True,True,True,True,True,True,False
+Demand cell 1208,51.446011739902694,0.08546266644903323,False,False,,True,False,True,True,True,False,False
+Demand cell 1228,51.470765362044794,0.06923954342957353,False,False,,True,True,True,True,True,True,False
+Demand cell 388,51.47893667932758,0.06985528638494301,False,False,,True,False,True,True,True,False,False
+Demand cell 704,51.508581024493225,0.0722831510788994,False,False,,True,True,True,True,True,True,False
+Demand cell 994,51.51756445528069,0.07048811880429723,False,False,,False,True,True,True,True,True,True
+Demand cell 430,51.54132185627599,0.08132061636261577,False,False,,True,True,True,True,True,True,False
+Demand cell 458,51.575539817487076,0.06850965936084799,False,False,,True,True,True,True,True,True,False
+Demand cell 777,51.59063233205816,0.08280560544820252,False,False,,False,True,True,True,True,True,True
+Demand cell 840,51.60053310319981,0.08393445570754532,False,False,,True,False,True,True,True,False,False
+Demand cell 1436,51.604875032525676,0.08586422548195453,False,False,,True,False,True,True,True,False,False
+Demand cell 1884,51.3327079127,0.1069128084,False,True,farmyard,False,False,True,False,False,False,False
+Demand cell 1509,51.347040820836554,0.11051768600421386,False,True,meadow,False,False,True,True,False,False,False
+Demand cell 1413,51.35580817674219,0.1077221521726146,False,False,,True,False,True,True,True,False,False
+Demand cell 821,51.373250032690066,0.09788588817500792,False,False,,False,True,True,True,True,True,True
+Demand cell 688,51.38934941335741,0.1123791837167395,False,False,,False,True,False,True,False,False,False
+Demand cell 660,51.39566859696021,0.11140248450265419,False,False,,True,True,True,True,True,True,False
+Demand cell 671,51.4038902397432,0.10916087456057724,False,False,,True,True,True,True,True,True,False
+Demand cell 579,51.427641050172234,0.0985454538836533,False,False,,True,True,True,True,True,True,False
+Demand cell 724,51.43613500475355,0.09768647933802041,False,False,,True,True,True,True,True,True,False
+Demand cell 1095,51.451769943733176,0.10820727500678355,False,False,,True,True,True,True,True,True,False
+Demand cell 791,51.46165088736661,0.1096439786881702,False,False,,False,True,True,True,True,True,True
+Demand cell 538,51.478527212035196,0.0993919459636599,False,True,cemetery,False,True,True,True,False,False,False
+Demand cell 607,51.49971189731766,0.09752188739372512,False,False,,False,True,True,True,True,True,True
+Demand cell 928,51.52019592644214,0.10706457149287488,False,False,,True,True,True,False,False,False,False
+Demand cell 491,51.53462976788435,0.0978792697166986,False,False,,True,True,True,True,True,True,False
+Demand cell 552,51.55095330372739,0.11001598549753187,False,False,,False,True,True,True,True,True,True
+Demand cell 1024,51.55963940932658,0.09616141104081638,False,False,,True,True,True,True,True,True,False
+Demand cell 303,51.576615670351565,0.11097675503798127,False,True,hospital,False,False,False,True,False,False,False
+Demand cell 1169,51.58055999370403,0.0967401856530771,False,False,,True,False,True,False,False,False,False
+Demand cell 1544,51.59915426733848,0.0968430522590488,False,False,,False,True,True,True,True,True,True
+Demand cell 725,51.60781037876975,0.10779336318351009,False,False,,False,True,True,True,True,True,True
+Demand cell 1745,51.34564988353333,0.12535765286666667,False,False,,False,True,True,True,True,True,True
+Demand cell 1700,51.35824984515707,0.12428046312317016,False,False,,True,False,True,True,True,False,False
+Demand cell 922,51.37454970581624,0.12098039537469446,False,False,,True,True,True,True,True,True,False
+Demand cell 1032,51.378858667430805,0.1215383682304793,False,False,,True,False,True,True,True,False,False
+Demand cell 736,51.39521537344013,0.12195947362697782,False,False,,True,False,True,True,True,False,False
+Demand cell 1225,51.413013170310585,0.1235040450863184,False,False,,False,True,False,True,False,False,False
+Demand cell 1089,51.418764105075404,0.1242411888318156,False,True,wood,False,True,False,True,False,False,False
+Demand cell 1248,51.43755394593159,0.12403160158033784,False,False,,True,True,True,True,True,True,False
+Demand cell 1364,51.45225709001621,0.12277598611467821,False,True,park,False,False,True,True,False,False,False
+Demand cell 1111,51.46082957881267,0.12439048031687877,False,False,,False,False,True,True,True,False,False
+Demand cell 1056,51.478407703016615,0.1220258361440465,False,False,,False,False,True,False,False,False,False
+Demand cell 560,51.50181946690248,0.1222415888210478,False,False,,False,True,True,True,True,True,True
+Demand cell 798,51.533515742405896,0.1241457652954766,False,True,school,False,True,True,True,False,False,False
+Demand cell 723,51.551139008390166,0.12428677003100279,False,False,,True,False,True,True,True,False,False
+Demand cell 565,51.55784327646815,0.12540370135536524,False,False,,True,True,True,True,True,True,False
+Demand cell 347,51.56695043212708,0.1228419089900702,False,False,,True,True,True,True,True,True,False
+Demand cell 899,51.58256725224151,0.12523746557171025,False,True,scrub,False,False,True,True,False,False,False
+Demand cell 1246,51.609015882074544,0.12096669512359505,False,False,,False,True,True,False,False,False,False
+Demand cell 1721,51.34774110325,0.134975502225,False,True,farmland,False,False,True,True,False,False,False
+Demand cell 1231,51.35715991309809,0.1373428155273239,False,True,school,False,False,True,True,False,False,False
+Demand cell 1861,51.3739324429,0.1381943745,False,False,,False,False,True,False,False,False,False
+Demand cell 1532,51.38522488544545,0.13777191223636362,False,False,,False,True,True,True,True,True,True
+Demand cell 1833,51.3969385651,0.14438479155,False,True,meadow,False,False,True,False,False,False,False
+Demand cell 1655,51.412494299916666,0.13458121615,False,False,,False,True,False,True,False,False,False
+Demand cell 1464,51.4277860376579,0.13346588091599995,False,True,meadow,False,False,False,True,False,False,False
+Demand cell 1449,51.4373181130315,0.14960227371915635,False,False,,True,False,True,True,True,False,False
+Demand cell 446,51.45519130172742,0.14901061551837688,False,False,,False,True,True,True,True,True,True
+Demand cell 643,51.45978929752654,0.13491316671016318,False,False,,True,True,True,True,True,True,False
+Demand cell 846,51.47770452659478,0.14884647015422903,False,False,,True,False,True,True,True,False,False
+Demand cell 542,51.4926576001549,0.13677889023806272,False,False,,True,False,True,True,True,False,False
+Demand cell 1652,51.509851355310474,0.1336800462360024,False,True,park,False,False,True,False,False,False,False
+Demand cell 1514,51.51856380874167,0.14575663590000001,False,False,,False,True,True,False,False,False,False
+Demand cell 485,51.53416918074031,0.14911704028339495,False,False,,True,True,True,True,True,True,False
+Demand cell 523,51.54246442604034,0.14887264494790312,False,False,,False,True,True,True,True,True,True
+Demand cell 646,51.57349007413595,0.1369202236068833,False,False,,True,True,True,True,True,True,False
+Demand cell 735,51.58302140855303,0.1370979015788061,False,False,,True,False,True,True,True,False,False
+Demand cell 1422,51.59804205105728,0.15291322004553434,False,False,,True,True,True,True,True,True,False
+Demand cell 1723,51.60684217471598,0.15533238534199562,False,False,,True,False,True,False,False,False,False
+Demand cell 1855,51.43103137267872,0.1657427434147404,False,False,,True,False,True,False,False,False,False
+Demand cell 1659,51.43704568604719,0.16252793380361308,False,False,,False,False,True,True,True,False,False
+Demand cell 531,51.45153596457334,0.17739150935061873,False,False,,False,True,True,True,True,True,True
+Demand cell 679,51.46992340080559,0.17671953256485254,False,False,,True,False,True,True,True,False,False
+Demand cell 489,51.478247302223416,0.17853906953705384,False,False,,True,False,True,True,True,False,False
+Demand cell 459,51.48383672057476,0.17530854953633204,False,False,,True,True,True,True,True,True,False
+Demand cell 1423,51.5011994670875,0.16224332891874998,False,False,,False,True,True,False,False,False,False
+Demand cell 1542,51.51778901455,0.1746158446,False,False,,False,True,True,True,True,True,True
+Demand cell 482,51.52622153908741,0.1723316164780783,False,False,,True,True,True,True,True,True,False
+Demand cell 444,51.541716928203016,0.16238538338107064,False,False,,True,True,True,True,True,True,False
+Demand cell 961,51.557279280163,0.16274041883335114,False,True,park,False,False,False,True,False,False,False
+Demand cell 575,51.58208399698343,0.17610063433781492,False,False,,False,True,True,True,True,True,True
+Demand cell 914,51.59930904410777,0.1615449392701979,False,False,,False,True,True,True,True,True,True
+Demand cell 1077,51.60724290935109,0.17379623670551841,False,False,,True,False,True,False,False,False,False
+Demand cell 964,51.452835413504204,0.18817781535446693,False,False,,False,True,False,True,False,False,False
+Demand cell 329,51.469718725520956,0.18754500161190085,False,False,,True,True,True,True,True,True,False
+Demand cell 498,51.4766716897571,0.18571971288330869,False,False,,True,True,True,True,True,True,False
+Demand cell 1701,51.4819852259,0.1839283645,False,True,water,False,True,False,True,False,False,False
+Demand cell 1595,51.511624789325,0.187376072875,False,True,wetland,False,True,True,True,False,False,False
+Demand cell 862,51.517626712058046,0.188910394557048,False,True,railway,False,True,True,True,False,False,False
+Demand cell 720,51.52462324996682,0.18812638083004196,False,False,,True,True,True,True,True,True,False
+Demand cell 1022,51.54215981266922,0.18847453694656047,False,True,park,False,False,True,True,False,False,False
+Demand cell 1368,51.55964788439282,0.18729810148269635,False,False,,False,False,True,True,True,False,False
+Demand cell 354,51.583005515979174,0.18940629106563503,False,False,,True,True,True,True,True,True,False
+Demand cell 1604,51.60036354903147,0.18596518855878175,False,True,grass,False,False,False,True,False,False,False
+Demand cell 1518,51.616648011951504,0.18472283743173287,False,False,,True,False,True,True,True,False,False
+Demand cell 1521,51.4559792305,0.20013810226363635,False,False,,False,True,True,True,True,True,True
+Demand cell 1483,51.471285710713545,0.19604360457027897,False,False,,True,False,True,True,True,False,False
+Demand cell 1407,51.475970694752014,0.19937454667844212,False,True,wetland,False,True,True,True,False,False,False
+Demand cell 1457,51.51075833915313,0.2174997094037401,False,True,farmland,False,False,True,True,False,False,False
+Demand cell 837,51.5186949420644,0.20072017475734774,False,True,garden,True,True,True,True,False,False,False
+Demand cell 1232,51.534639859909596,0.19885198387888753,False,False,,False,False,True,True,True,False,False
+Demand cell 1049,51.54241482344185,0.19960726781191557,False,True,grass,True,False,True,True,False,False,False
+Demand cell 892,51.55868233040607,0.20425255095325986,False,True,park,False,False,False,False,False,False,False
+Demand cell 912,51.565611712565136,0.2164290614020843,False,True,garden,True,True,False,True,False,False,False
+Demand cell 950,51.59283407337298,0.21608081789917474,False,False,,False,True,True,True,True,True,True
+Demand cell 524,51.59906657705307,0.2143396917631083,False,False,,True,True,True,True,True,True,False
+Demand cell 334,51.60693791230449,0.2160232203138894,False,False,,True,True,True,True,True,True,False
+Demand cell 1814,51.62368311925279,0.21436799647633376,False,False,,False,False,True,False,False,False,False

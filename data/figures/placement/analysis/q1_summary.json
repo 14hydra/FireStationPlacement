@@ -1,0 +1,47 @@
+{
+ "overall": [
+  {
+   "year": 2024,
+   "recorded": 325.8796039164035,
+   "busy_model": 310.4898460902468,
+   "dispatch_model": 313.69685173353434
+  },
+  {
+   "year": 2025,
+   "recorded": 331.9860754401708,
+   "busy_model": 311.6922214178691,
+   "dispatch_model": 314.86281428001536
+  }
+ ],
+ "cells_30plus": 1203,
+ "share_calls_in_them": 0.9248615279883653,
+ "cell_weighted_mae": 23.378055184581246,
+ "cell_weighted_sd_after_mean": 25.272050230335207,
+ "cell_residual_corr_2024_2025": 0.6251617608842008,
+ "cell_noise_sd": 12.650073309002678,
+ "top10pct_cells_share_abs_error": 0.349327014338716,
+ "responder_recorded_nearest": 0.6942970309284731,
+ "responder_model_nearest": 0.6915292115134162,
+ "responder_avg_prob_on_recorded_station": 0.5655323641449401,
+ "responder_recorded_in_model_list": 0.9945229217272911,
+ "recorded_all_prep": 328.99186070550763,
+ "recorded_without_gap": 310.54888515268084,
+ "recorded_without_gap_or_empty": 302.30585432684444,
+ "ground_resid_sd": 11.305623538799079,
+ "ground_resid_range": [
+  -6.506255550249591,
+  52.0103669382583
+ ],
+ "ground_corr_resid_gap": -0.0381594812285017,
+ "ground_corr_resid_empty": -0.3450133521596083,
+ "ground_corr_nearest_model_vs_recorded": 0.9246999998792556,
+ "ground_resid_on_gap_empty_R2": 0.1206335405616984,
+ "ground_slope_gap_s_per_point": 0.18037042664190622,
+ "move10_changed_cells": {
+  "calls_share": 0.13289445183649473,
+  "resid": 4.559366949605946,
+  "resid_other": 19.048830472425376,
+  "mae": 15.093141980499318,
+  "mae_other": 24.70304969570548
+ }
+}

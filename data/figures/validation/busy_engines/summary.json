@@ -1,0 +1,70 @@
+{
+  "doc": "How much time could covering busy stations save? Measured from LFB's own records.\n\nNo travel-time or dispatch model: each engine's busy periods (mobilised to left the scene)\nare replayed from the mobilisation records to find, at each call, whether the home engines\nof the call's station area were all out. Then:\n\n  check     when the area's station is empty, how often does another station respond?\n  penalty   first-engine attendance when empty vs not, within the same 500 m square\n            and period of the day (so busy areas and hours are compared with themselves)\n  ceiling   share of calls x penalty: the most that perfect cover could recover\n  timing    how long the station had been empty when the call came: a covering engine\n            needs minutes to get there, so only calls after that can gain\n  neighbours whether a neighbouring station had an engine to spare at that moment\n\nLimits: an engine out for other reasons (training, repairs, fire safety visits) looks free, so\n\"empty\" is undercounted; the time to return from the scene is not counted; a ceiling is not\nwhat a real cover rule would achieve, because the moved engine leaves its own area thinner.\n\nWrites data/figures/validation/busy_engines/: summary.json, by_period.csv.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/busy_engine_check.py [--year 2024]\n",
+  "year": 2024,
+  "fields_present": {
+    "t0": 1.0,
+    "t_arr": 1.0,
+    "t_left": 1.0,
+    "t_ret": 0.0
+  },
+  "resolution": {
+    "share_t0_with_seconds": 0.983
+  },
+  "deployed_from": {
+    "Home Station": 0.9601,
+    "Other Station": 0.0399
+  },
+  "regular_engines": 142,
+  "stations": 102,
+  "calls": 127153,
+  "busy_median_min": 15.3,
+  "busy_mean_min": 23.3,
+  "mean_attendance_s": 322.7,
+  "share_over_6min": 0.3158,
+  "share_empty": 0.0576,
+  "penalty_s": 122.2,
+  "penalty_lo": 117.3,
+  "penalty_hi": 127.0,
+  "penalty_over6_points": 40.2,
+  "ceiling_avg_s": 7.04,
+  "ceiling_over6_points": 2.31,
+  "first_from_own_station_when_empty": 0.0567,
+  "first_from_own_station_when_not_empty": 0.7625,
+  "timing_by_minutes_empty": {
+    "0": {
+      "share_of_all_calls": 0.0576,
+      "penalty_s": 122.2,
+      "ceiling_s": 7.04
+    },
+    "3": {
+      "share_of_all_calls": 0.0492,
+      "penalty_s": 120.6,
+      "ceiling_s": 5.94
+    },
+    "5": {
+      "share_of_all_calls": 0.0437,
+      "penalty_s": 118.5,
+      "ceiling_s": 5.18
+    },
+    "8": {
+      "share_of_all_calls": 0.036,
+      "penalty_s": 115.5,
+      "ceiling_s": 4.16
+    },
+    "10": {
+      "share_of_all_calls": 0.0319,
+      "penalty_s": 114.6,
+      "ceiling_s": 3.65
+    },
+    "15": {
+      "share_of_all_calls": 0.0235,
+      "penalty_s": 111.2,
+      "ceiling_s": 2.61
+    }
+  },
+  "when_empty_a_near_station_has_a_free_engine": 0.9954,
+  "when_empty_a_near_station_has_two_free_engines": 0.6487,
+  "share_of_empty_calls_in_top_10_stations": 0.286,
+  "over6_when_empty": 0.659,
+  "over6_when_not_empty": 0.295
+}

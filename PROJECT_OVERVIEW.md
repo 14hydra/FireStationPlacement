@@ -6,9 +6,11 @@ ASI
 
 We predict how long a London fire engine takes to reach an incident from the characteristics of the streets it drives. We then use those predictions to decide where new fire stations should go. Team: Ricky Zhao and Sarp Akalin (ASI), targeting CSEF and possibly ISEF. We use London Fire Brigade (LFB) data, which records the station each engine actually left from, its turnout and driving times, and London's closure of 10 fire stations in 2014.
 
-**Research question:** Does placing fire stations with travel times learned from street characteristics reduce real response times more than placing them by distance?
+**Research question:** Why does the first engine so often not come from the local station when its engine appears free, and how much time would fixing that save?
 
-**Hypothesis:** Station sites chosen with a street-aware decision tree travel time model will give lower average and 90th-percentile response times on held-out 2025 London Fire Brigade calls than sites chosen by road distance or by the Kolesar travel time formula (Kolesar et al., 1975). Because travel times from a station that does not exist yet cannot be observed, we also test whether the model predicts a real change: the response times recorded after London closed 10 fire stations in 2014.
+**Hypothesis:** Much of the daytime excess comes from engines being away on unrecorded duties, so changing when they go could save more time than moving 10 stations.
+
+**Original question (Part 1, tested):** Does placing fire stations with travel times learned from street characteristics reduce real response times more than placing them by distance? We hypothesized that street-aware sites would give lower average and 90th-percentile response times on held-out 2025 London Fire Brigade calls than sites chosen by road distance or by the Kolesar travel time formula (Kolesar et al., 1975). This got weak support: with hidden real stations scored on recorded trips, the street-aware model's sites saved only 0.2 to 0.6 seconds more, and moving 10 stations saves about 5.6 seconds in the model. We also test whether the model predicts a real change: the response times recorded after London closed 10 fire stations in 2014.
 
 ## Prior work
 

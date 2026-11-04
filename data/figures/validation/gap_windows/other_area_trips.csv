@@ -1,0 +1,25 @@
+year,windows,stations,away_free_hours,available_free_hours,trips_away,trips_available,trips_per_100h_away_matched,trips_per_100h_available_matched,rate_ratio,ratio_lo,ratio_hi
+2024,as fitted,all,9023,654936,323,38025,3.58,8.56,0.394,0.334,0.461
+2024,as fitted,one engine,6553,375357,78,15767,1.19,5.97,0.166,0.131,0.208
+2024,as fitted,two engines,2470,279578,245,22258,9.92,13.03,0.635,0.532,0.779
+2024,windows moved 7 days (placebo),all,7927,661544,811,38432,10.23,8.48,1.101,1.024,1.186
+2024,windows moved 7 days (placebo),one engine,5600,380800,416,15829,7.43,5.8,1.142,1.0,1.295
+2024,windows moved 7 days (placebo),two engines,2326,280744,395,22603,16.98,13.13,1.063,0.982,1.153
+2021,as fitted,all,5687,667191,247,29961,4.34,6.69,0.655,0.529,0.797
+2021,as fitted,one engine,4130,385665,59,12911,1.43,4.81,0.263,0.175,0.363
+2021,as fitted,two engines,1557,281526,188,17050,12.07,9.65,1.128,0.926,1.399
+2021,windows moved 7 days (placebo),all,5077,672738,461,30543,9.08,6.82,1.267,1.14,1.407
+2021,windows moved 7 days (placebo),one engine,3564,390325,236,13041,6.62,4.75,1.234,1.066,1.426
+2021,windows moved 7 days (placebo),two engines,1512,282413,225,17502,14.88,10.01,1.301,1.121,1.546
+2022,as fitted,all,8912,655339,429,34905,4.81,7.76,0.58,0.47,0.698
+2022,as fitted,one engine,6088,376819,91,14709,1.49,5.59,0.235,0.191,0.282
+2022,as fitted,two engines,2825,278520,338,20196,11.97,11.31,0.913,0.769,1.091
+2022,windows moved 7 days (placebo),all,7932,661738,810,35615,10.21,7.9,1.146,1.061,1.221
+2022,windows moved 7 days (placebo),one engine,5223,382178,349,14738,6.68,5.42,1.114,1.008,1.216
+2022,windows moved 7 days (placebo),two engines,2709,279560,461,20877,17.02,11.9,1.171,1.079,1.291
+2023,as fitted,all,8823,655436,303,35743,3.43,8.15,0.39,0.326,0.456
+2023,as fitted,one engine,6231,376433,80,14908,1.28,5.92,0.186,0.148,0.225
+2023,as fitted,two engines,2592,279002,223,20835,8.6,11.76,0.601,0.53,0.712
+2023,windows moved 7 days (placebo),all,7818,661670,771,36011,9.86,8.07,1.107,0.989,1.216
+2023,windows moved 7 days (placebo),one engine,5338,381533,376,14896,7.04,5.7,1.122,1.022,1.241
+2023,windows moved 7 days (placebo),two engines,2480,280137,395,21115,15.93,11.88,1.095,0.928,1.295

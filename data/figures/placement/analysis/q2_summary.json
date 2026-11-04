@@ -1,0 +1,64 @@
+{
+ "models": [
+  {
+   "model": "year",
+   "r2": 0.043017132613262676
+  },
+  {
+   "model": "year+engines",
+   "r2": 0.42005592215434895
+  },
+  {
+   "model": "year+workload",
+   "r2": 0.20074022058475305
+  },
+  {
+   "model": "year+area",
+   "r2": 0.3074874153663162
+  },
+  {
+   "model": "year+engines+workload+area",
+   "r2": 0.5267418105168695
+  },
+  {
+   "model": "year+station",
+   "r2": 0.8108026769511679
+  },
+  {
+   "model": "year+station+workload",
+   "r2": 0.8190812156539935
+  }
+ ],
+ "out_of_year_corr": {
+  "year+engines+workload+area": 0.6670626547630134,
+  "year+station": 0.8097516108403648
+ },
+ "within_slope_points_per_log_workload": -14.98099327635334,
+ "within_slope_ci": [
+  -22.611793848410205,
+  -7.551044209075286
+ ],
+ "workload_sd_within": 0.10162852417847466,
+ "year_pair_corr_mean": 0.7290467056630174,
+ "gap_station_sd": 6.402939987074311,
+ "between": {
+  "corr_workload": 0.42943923922047356,
+  "corr_d_centre": -0.39390678650030797,
+  "corr_own_km": -0.4083832716973213,
+  "one_engine": 30.412378371547717,
+  "two_engine": 21.71421964723867
+ },
+ "neighbour_corr_raw": 0.27457273331095133,
+ "neighbour_corr_after_controls": 0.08288199817660598,
+ "same_place": {
+  "squares": 180,
+  "slope": 0.8806106161870182,
+  "ci": [
+   0.5634833011977058,
+   1.1501027733401492
+  ],
+  "corr": 0.36695936045908767
+ },
+ "engine_changes": [],
+ "stations": 102
+}

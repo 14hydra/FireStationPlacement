@@ -1,0 +1,47 @@
+{
+ "sites": 370,
+ "new": 268,
+ "existing_flagged_excluded": 0,
+ "new_excluded": 56,
+ "new_no_road_100": 14,
+ "new_no_main_300": 12,
+ "rule_a": 199,
+ "rule_b": 169,
+ "rule_c": 70,
+ "detail": {
+  "park": 6,
+  "sports_centre": 5,
+  "hospital": 5,
+  "railway": 4,
+  "aerodrome": 4,
+  "school": 3,
+  "wood": 3,
+  "forest": 3
+ },
+ "official": {
+  "official Add 3 (1 s)": {
+   "sites": 3,
+   "excluded": 0,
+   "no_road": 0,
+   "no_main": 0,
+   "plot_300": 2,
+   "residential": 1
+  },
+  "official Move 10 (1 s)": {
+   "sites": 10,
+   "excluded": 0,
+   "no_road": 0,
+   "no_main": 0,
+   "plot_300": 8,
+   "residential": 0
+  },
+  "official redesign (1 s)": {
+   "sites": 46,
+   "excluded": 0,
+   "no_road": 0,
+   "no_main": 0,
+   "plot_300": 38,
+   "residential": 2
+  }
+ }
+}

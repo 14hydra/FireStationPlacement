@@ -1,0 +1,13 @@
+year,measure,trips_away,trips_available_matched,when_away,when_available
+2024,"on outside duty, %",311,2989,0.64,0.74
+2024,"from another station, %",311,2989,13.18,12.55
+2024,"attendance, s",311,2989,478.12,451.98
+2021,"on outside duty, %",241,1905,0.83,1.2
+2021,"from another station, %",241,1905,16.6,10.29
+2021,"attendance, s",241,1905,452.87,437.06
+2022,"on outside duty, %",414,3116,1.21,0.27
+2022,"from another station, %",414,3116,21.74,11.38
+2022,"attendance, s",414,3116,471.64,453.89
+2023,"on outside duty, %",294,2603,0.68,0.26
+2023,"from another station, %",294,2603,15.65,12.18
+2023,"attendance, s",294,2603,476.59,453.6

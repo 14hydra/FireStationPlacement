@@ -1,0 +1,25 @@
+year,check,stations,mean,min,max
+2021,no return-trip allowance,all,0.745,0.745,0.745
+2021,no return-trip allowance,one engine,0.423,0.423,0.423
+2021,no return-trip allowance,two engines,1.155,1.155,1.155
+2021,"simulated, no link to trips",all,0.713,0.652,0.801
+2021,"simulated, no link to trips",one engine,0.559,0.5,0.615
+2021,"simulated, no link to trips",two engines,0.86,0.782,1.019
+2022,no return-trip allowance,all,0.647,0.647,0.647
+2022,no return-trip allowance,one engine,0.334,0.334,0.334
+2022,no return-trip allowance,two engines,0.969,0.969,0.969
+2022,"simulated, no link to trips",all,0.71,0.636,0.754
+2022,"simulated, no link to trips",one engine,0.546,0.51,0.578
+2022,"simulated, no link to trips",two engines,0.856,0.728,0.947
+2023,no return-trip allowance,all,0.491,0.491,0.491
+2023,no return-trip allowance,one engine,0.298,0.298,0.298
+2023,no return-trip allowance,two engines,0.698,0.698,0.698
+2023,"simulated, no link to trips",all,0.657,0.582,0.713
+2023,"simulated, no link to trips",one engine,0.522,0.468,0.598
+2023,"simulated, no link to trips",two engines,0.774,0.657,0.909
+2024,no return-trip allowance,all,0.47,0.47,0.47
+2024,no return-trip allowance,one engine,0.297,0.297,0.297
+2024,no return-trip allowance,two engines,0.665,0.665,0.665
+2024,"simulated, no link to trips",all,0.698,0.645,0.766
+2024,"simulated, no link to trips",one engine,0.531,0.454,0.618
+2024,"simulated, no link to trips",two engines,0.847,0.774,0.933
