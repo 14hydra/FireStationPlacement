@@ -328,39 +328,16 @@ def fig_06():
 
 # --------------------------------------------------------------------------- 07
 def fig_07():
-    d = pd.read_csv(FIG / "placement/layout_scoring/scores.csv")
-    d = d[d["response"] == "dispatch"]
-    # Judge slice: one clear story — Move 10 with no borough worse, three scorers
-    layout = "lgbm_replace_10_boroughs1s"
-    label = "Move up to 10 stations\n(no borough worse than today)"
-    scorers = [("lgbm", "Our travel-time model", BLUE),
-               ("road", "Classic formula (road)", ORANGE),
-               ("kolesar", "Classic formula (straight)", GREY)]
-    fig, axes = plt.subplots(1, 2, figsize=(12.5, 5.0))
-    for ax, col, title in zip(axes, ("d_mean_s", "d_slowest10_s"),
-                              ("Average first-engine time", "Slowest 10% of calls")):
-        vals, names, colors = [], [], []
-        for sc, name, colr in scorers:
-            row = d[(d.layout == layout) & (d.scorer == sc)]
-            if row.empty:
-                continue
-            vals.append(-float(row[col].iloc[0]))
-            names.append(name)
-            colors.append(colr)
-        x = np.arange(len(vals))
-        ax.bar(x, vals, color=colors, width=0.55)
-        for i, v in enumerate(vals):
-            ax.text(i, v + 0.15, f"{v:.1f} s\nfaster", ha="center", va="bottom",
-                    fontsize=11, fontweight="bold", color=INK)
-        ax.set_xticks(x, names, fontsize=10)
-        ax.axhline(0, color=INK, lw=0.8)
-        ax.set_title(title)
-        ax.set_ylabel("Seconds faster than today's stations")
-        ax.grid(axis="y", color=GRID)
-        ax.set_ylim(0, max(vals) * 1.35 if vals else 1)
-    fig.suptitle(f"Better layouts still win — under every travel-time model\n{label.replace(chr(10), ' ')}",
-                 fontsize=14, fontweight="bold", color=INK, y=1.05)
-    save(fig, "07_layouts_beat_today.png")
+    """Coverage heatmaps: before / after / difference for move-10 (fair)."""
+    import os
+    import subprocess
+    import sys
+
+    script = ROOT / "scripts" / "plot_placement_coverage_heatmaps.py"
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(ROOT / "src") + os.pathsep + env.get("PYTHONPATH", "")
+    subprocess.check_call([sys.executable, str(script)], cwd=str(ROOT), env=env)
+    print("wrote 07_coverage_heatmaps.png")
 
 
 # --------------------------------------------------------------------------- 08
@@ -521,7 +498,8 @@ Ten figures that tell the whole project. Open **01 → 10** in order.
 | 04 | `04_station_busyness.png` | Busiest stations — engines out most often. |
 | 05 | `05_capacity_mismatches.png` | Move pumps: busy 1-engine ↔ quiet 2-engine (same scale). |
 | 06 | `06_station_types.png` | Station types + what that means for the model and resize. |
-| 07 | `07_layouts_beat_today.png` | Move-10 fair layout wins under every travel-time model. |
+| 07 | `07_coverage_heatmaps.png` | Before / after / Δ / demand — coverage change sized by call weight. |
+| 07b | `07b_move_rationale.png` | Why each open/close: local demand share + response change. |
 | 08 | `08_price_of_fairness.png` | Stricter borough rules → smaller citywide gain. |
 | 09 | `09_closure_2014.png` | 2014 closures: nearest vs learned dispatch vs oracle. |
 | 10 | `10_results_summary.png` | Plain-English results on one page. |

@@ -10,7 +10,8 @@ Ten figures that tell the whole project. Open **01 → 10** in order.
 | 04 | `04_station_busyness.png` | Busiest stations — engines out most often. |
 | 05 | `05_capacity_mismatches.png` | Move pumps: busy 1-engine ↔ quiet 2-engine (same scale). |
 | 06 | `06_station_types.png` | Station types + what that means for the model and resize. |
-| 07 | `07_layouts_beat_today.png` | Move-10 fair layout wins under every travel-time model. |
+| 07 | `07_coverage_heatmaps.png` | **Before / after / Δ / demand** — coverage change plus call-weight so opens/closes are demand-justified (dot size ∝ demand). |
+| 07b | `07b_move_rationale.png` | Per-station local demand + response Δ with plain-language why each site opens or closes. |
 | 08 | `08_price_of_fairness.png` | Stricter borough rules → smaller citywide gain. |
 | 09 | `09_closure_2014.png` | 2014 closures: nearest vs learned dispatch vs oracle. |
 | 10 | `10_results_summary.png` | Plain-English results on one page. |
