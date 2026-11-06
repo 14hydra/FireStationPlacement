@@ -21,8 +21,8 @@ sites near commercial or industrial land passed with 10 relocations (10.8-14.3 s
 (3.7-4.8 s against 2.0-2.5 s) but the target boroughs about half as much. The model under-predicts outer-London drive
 times by about 18 s, but by the same amount at every trip length, so the error largely cancels when layouts are compared.
 
-Small, targeted relocations can give the worst-served areas a clear gain with every borough protected. A fixed
-prediction for 2026 calls is the final test.
+A prediction fixed before using January-July 2026 calls passed in full: 13.0-16.1 s faster, no borough slower.
+Small, targeted relocations can give the worst-served areas a clear gain with every borough protected.
 
 ---
 
@@ -32,9 +32,6 @@ prediction for 2026 calls is the final test.
 
 **One-sentence pitch:** We learn how London's streets slow fire engines, then move a few stations so the boroughs that wait
 longest get about 10-14 s faster help while no borough gets slower.
-
-**To update after the 2026 test:** replace the last sentence of the results paragraph's conclusion with the 2026 result
-(`docs/prediction_2026.md`), pass or fail.
 
 ---
 

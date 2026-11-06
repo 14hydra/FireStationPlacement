@@ -923,6 +923,54 @@ the slope is across trips, not a before-and-after test of a moved station; part 
 stations (Woodford +52 s, 5.2), and a new site's offset is unknown. The 2026 test repeats the slope check as a fixed
 prediction (`docs/prediction_2026.md`).
 
+### 5.8 Part 2 final test on 2026 (run once, 2026-11-05)
+
+Source: `scripts/final_test_2026.py`, `data/figures/placement/final_test_2026/` (result.json, scores.csv, boroughs.csv).
+Prediction and pass marks fixed and committed first (`docs/prediction_2026.md`, commit c40c34b). Calls dated 1 January to
+31 July 2026 (80,710 calls, 10,992 in the target boroughs). Scoring as 5.6; only the calls counted changed.
+
+**Main layout (Rule B targeted Move 10), change in the target boroughs (s), [95 % range from call sampling]:**
+
+| Model | 2026 | 2025 (5.6) | London average | Boroughs 1+ s worse | Worst borough (s) |
+|---|---|---|---|---|---|
+| LightGBM | **-13.7** [-14.4, -12.9] | -12.2 | -2.4 | 0 | 0.0 |
+| Road Kolesar | **-16.1** [-16.9, -15.3] | -14.3 | -2.8 | 0 | +0.1 |
+| Straight-line Kolesar | **-13.0** [-13.8, -12.1] | -10.8 | -2.2 | 0 | +0.4 |
+
+Drive-time slope in the target boroughs (2026 first-engine trips from the home station, engine not busy, 7,602 trips):
+1.04 [1.01, 1.07]; recorded minus model +21.3 s (2025: 1.00 and +17.8 s).
+
+| Prediction | Pass mark | Result |
+|---|---|---|
+| 1. Targets faster | at least 10 s under all three models | **Pass** (-13.7 / -16.1 / -13.0) |
+| 2. No borough slower | no borough 1+ s worse under any model | **Pass** (worst +0.4 s) |
+| 3. Model error does not shrink the saving | slope 0.9 to 1.1 | **Pass** (1.04) |
+
+All other layouts, reported as fixed (target-borough change, L / R / K; boroughs 1+ s worse L / R / K):
+
+| Layout | Moved | Target boroughs | London | Boroughs 1+ s worse |
+|---|---|---|---|---|
+| Rule B targeted, up to 20 | 13 | -15.5 / -18.4 / -14.2 | -2.8 / -3.2 / -2.6 | 0 / 0 / 0 |
+| Targeted up to 10 | 10 | -14.5 / -15.1 / -13.0 | -2.7 / -2.8 / -2.5 | 0 / 0 / 0 |
+| Targeted up to 20 | 15 | -16.1 / -18.5 / -15.5 | -2.9 / -3.2 / -2.8 | 0 / 0 / 0 |
+| Citywide Move 10 | 10 | -7.1 / -9.8 / -7.5 | -4.5 / -5.2 / -4.1 | 0 / 0 / 2 (up to +6.3) |
+| Planner Move 10 (5.4) | 10 | -11.5 / -10.8 / -6.8 | -6.1 / -4.9 / -2.8 | 0 / 1 / 3 (up to +7.7) |
+| Planner Move 20 (5.4) | 20 | -13.2 / -13.7 / -7.6 | -8.3 / -8.0 / -4.7 | 0 / 0 / 2 (up to +8.6) |
+
+Reading:
+
+- The fixed prediction passed in full. Every targeted layout kept every borough within 1 s under all three models; the
+  citywide and planner layouts again did not under Kolesar. The protection carrying across models is the most stable result
+  of Part 2 (2025 and 2026).
+- Gains were larger than in 2025 under every model (1.5 to 2.2 s more). 2026 covers only January to July, so part of this may
+  be the season or the mix of calls; it should not be quoted as an improvement over time.
+- 1.5 to 1.8 % of calls are 30+ s slower with the main layout; borough averages are protected, single calls are not.
+- The drive-time slope (1.04) is slightly above 1, so if anything the model slightly under-states the savings in the target
+  boroughs. The offset grew to +21 s.
+- Still modelled: the layouts are scored on 2026 calls with travel models; no station has actually moved. The test checks that
+  the result holds on new calls and that the model's outer-London error stays a fixed offset, not that the stations would
+  perform as modelled once built.
+
 ---
 
 ## 6. Do the layouts hold up under other travel time models?
