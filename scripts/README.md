@@ -25,6 +25,8 @@ Runnable entry points. Library code lives in `src/firestation/`.
 | `plot_results_figures.py` | Station-count sweep and dispatch-share figures for `docs/results.md` |
 | `relabel_grid_sites.py` | Name grid-cell sites in saved layouts after their nearest street |
 | `placement_slow_calls.py` | Optimise the slowest calls |
+| `plot_part2_figures.py` | Part 2 figures 11-13 in `data/figures/final/`: change map, three-model chart, every borough's change |
+| `build_part2_poster.py` | Part 2 poster layout (figures + empty text slots) in `data/figures/part2_poster/` |
 | `build_fire_station_race_3d.py` | 3D race visual for a planner run |
 | `embed_analysis_metrics_2d.py` | Join all station metrics → PCA / UMAP / t-SNE |
 | `closure_2014_*.py`, `rank_closed_stations_2014.py`, `validate_london_2014_closures.py` | 2014 closure validation |
