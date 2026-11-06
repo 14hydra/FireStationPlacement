@@ -1,0 +1,31 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+2,Barking,existing_fire_station,0.0888736549390424,51.53000055,True,,2
+5,Beckenham,existing_fire_station,-0.0342898308077814,51.408058049999994,True,,1
+16,Dagenham,existing_fire_station,0.1570281714646305,51.55946845,True,,2
+18,Dockhead,existing_fire_station,-0.0707950071742421,51.5008984,True,,1
+21,East Greenwich,existing_fire_station,0.0222960967435707,51.48697755,True,,2
+23,Edmonton,existing_fire_station,-0.0690767018132989,51.62723145,True,,2
+32,Greenwich,existing_fire_station,-0.013655847633136,51.47385895,True,,1
+33,Hainault,existing_fire_station,0.1043983327517823,51.60617575,True,,1
+34,Hammersmith,existing_fire_station,-0.224293537625646,51.4960867,True,,2
+37,Hayes,existing_fire_station,-0.4316736479820627,51.49438,True,,1
+38,Heathrow,existing_fire_station,-0.4590324166476678,51.48022665,True,,1
+40,Heston,existing_fire_station,-0.3431990961907811,51.47502,True,,2
+44,Hornchurch,existing_fire_station,0.2205802941206759,51.56451135,True,,1
+45,Hornsey,existing_fire_station,-0.1272021246958989,51.58652805,True,,2
+47,Islington,existing_fire_station,-0.1023069299975422,51.5402671,True,,1
+50,Kingston,existing_fire_station,-0.3065912404057513,51.429441,True,,2
+53,Lewisham,existing_fire_station,-0.0131157201655826,51.4570297,True,,1
+56,Mill Hill,existing_fire_station,-0.2432100393349606,51.61499645,True,,1
+57,Millwall,existing_fire_station,-0.0255593731203916,51.50081445,True,,1
+59,New Cross,existing_fire_station,-0.0493004024826299,51.4735264,True,,1
+67,Park Royal,existing_fire_station,-0.264824544196401,51.5357937,True,,1
+69,Plaistow,existing_fire_station,0.0324907696420734,51.5209984,True,,1
+74,Romford,existing_fire_station,0.1811242124324326,51.59367685,True,,1
+75,Ruislip,existing_fire_station,-0.4367001982307689,51.5883815,True,,1
+76,Shadwell,existing_fire_station,-0.0557891963357072,51.5108626,True,,1
+79,Soho,existing_fire_station,-0.1300890958229078,51.51246085,True,,2
+94,Wennington,existing_fire_station,0.2203615409801693,51.50593515,True,,1
+96,West Norwood,existing_fire_station,-0.1054584646052626,51.42590975,True,,2
+100,Woodford,existing_fire_station,0.0239671628839159,51.60954165,True,,1
+101,Woodside,existing_fire_station,-0.0621930777407106,51.3857831,True,,1

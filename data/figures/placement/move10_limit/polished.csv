@@ -1,0 +1,11 @@
+plan,moved,avg_2024,avg_2025,slowest10,faster_30s_pct,slower_30s_pct,slower_120s_pct
+start: exact free,10,-5.87,-5.21,6.36,11.4,4.4,0.57
+improved from: exact free,10,-5.99,-5.07,7.36,10.5,4.0,0.57
+start: planner's Move 10,10,-5.48,-4.95,-1.2,9.6,3.7,0.11
+improved from: planner's Move 10,10,-5.96,-5.3,6.2,9.4,3.0,0.37
+start: today,0,0.0,0.0,0.0,0.0,0.0,0.0
+improved from: today,10,-6.07,-5.25,7.59,10.3,3.3,0.61
+best Move 10 + street refinement,10,-7.0,-6.22,5.91,11.7,3.2,0.61
+add 10: exact,0,-12.84,-12.6,-6.54,13.1,0.0,0.0
+add 10: improved,0,-12.86,-12.72,-7.9,13.1,0.0,0.0
+add 10: improved + street refinement,0,-13.94,-13.87,-8.67,13.8,0.0,0.0

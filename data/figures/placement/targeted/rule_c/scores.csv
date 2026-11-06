@@ -1,0 +1,7 @@
+layout,rule,scorer,moved,d_target_s,target_lo,target_hi,d_london_s,d_rest_s,d_slowest10_s,boroughs_worse_1s,worst_borough_s,worst_borough,worst_other_borough_s,target_calls_30s_faster_pct,calls_30s_slower_pct
+target_10,none,lgbm,10,-7.11,-7.72,-6.53,-2.47,-1.74,-1.0,0,0.0,BRENT,0.0,16.6,1.4
+target_20,none,lgbm,10,-7.11,-7.72,-6.53,-2.47,-1.74,-1.0,0,0.0,BRENT,0.0,16.6,1.4
+target_10,none,road,10,-7.54,-8.26,-6.87,-2.74,-1.98,-2.76,0,0.1,LEWISHAM,0.1,18.7,1.5
+target_20,none,road,10,-7.54,-8.26,-6.87,-2.74,-1.98,-2.76,0,0.1,LEWISHAM,0.1,18.7,1.5
+target_10,none,kolesar,10,-4.5,-5.18,-3.84,-2.06,-1.68,-1.46,1,7.0,HAVERING,0.5,14.0,1.9
+target_20,none,kolesar,10,-4.5,-5.18,-3.84,-2.06,-1.68,-1.46,1,7.0,HAVERING,0.5,14.0,1.9

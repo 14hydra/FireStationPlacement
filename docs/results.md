@@ -1,7 +1,7 @@
 # Results and comparisons
 
 Every comparison the project makes, in one place, with where each number comes from and
-which figures show it. Update this file when a script is rerun. Last updated 2026-11-04.
+which figures show it. Update this file when a script is rerun. Last updated 2026-11-05.
 
 **How to read the numbers**
 
@@ -705,6 +705,188 @@ Grouped together, 201 of 887 new wide-pool sites sit on excluded land. All 10 of
 | Move 20 + 10 further engine moves | -8.44 |
 
 Engines alone are not a substitute for moving stations, and they need not follow the building. As an addition, 9 or 10 engine moves add 0.9 to 1.4 s with no construction. The busy-engine formula does not model away time.
+
+### 5.3 The limit of Move 10, with every protection removed
+
+Source: `scripts/move10_limit.py`, `scripts/move10_polish.py`, `data/figures/placement/move10_limit/`. Busy engines, chosen on 2024, scored by the models on 2025. No slowest-10 %, average or borough floor, no 10-minute cap. "Quietest" means the 10 stations with
+the fewest calls. "Central" means new sites within 8 km of Charing Cross, and outer stations are over 12 km from it.
+
+Exact solver, no street refinement:
+
+| Plan | Sites | Moved | Average | Road | Kolesar | Slowest 10 % | Calls 30+ s slower | Calls 120+ s slower |
+|---|---|---|---|---|---|---|---|---|
+| Free choice | 989 | 10 | -5.21 | -4.51 | -2.73 | +6.36 | 4.4 % | 0.57 % |
+| Close the quietest, open anywhere | 989 | 10 | -3.75 | -2.72 | -1.73 | +18.81 | 4.2 % | 1.27 % |
+| Close the quietest, open central | 989 | 10 | -1.62 | -0.78 | -0.23 | +35.27 | 5.5 % | 2.09 % |
+| Close outer only, open central | 989 | 8 (10 allowed) | -1.72 | -0.94 | -0.89 | +25.27 | 5.2 % | 1.27 % |
+| Close the quietest, open central | 370 | 10 | -1.22 | -0.31 | +0.07 | +35.44 | 5.1 % | 2.09 % |
+| Close outer only, open central | 370 | 6 (10 allowed) | -1.64 | -0.91 | -0.85 | +19.56 | 3.2 % | 1.13 % |
+
+The exact solver fixes busy rates in each round, so its layout need not be the best once they are recalculated. Improving the layouts under the full model (989 sites):
+
+| Layout | 2024 demand | 2025 calls | Slowest 10 % | Calls 30+ s faster | Calls 30+ s slower |
+|---|---|---|---|---|---|
+| Search from the exact free-choice layout | -5.99 | -5.07 | +7.36 | 10.5 % | 4.0 % |
+| Search from the planner's Move 10 | -5.96 | -5.30 | +6.20 | 9.4 % | 3.0 % |
+| Search from today's stations | -6.07 | -5.25 | +7.59 | 10.3 % | 3.3 % |
+| **Best Move 10 + street refinement** | **-7.00** | **-6.22** | +5.91 | 11.7 % | 3.2 % |
+| Ceiling: add 10 stations, 2 new engines each, close none, street refinement | -13.94 | -13.87 | -8.67 | 13.8 % | 0.0 % |
+
+Reading:
+
+- Three different starts reach about -6.0 s on 2024 demand, and street refinement adds about 1 s. Removing every protection gives only about 0.2 s more on 2025 than the planner's Move 10 with the slowest-10 % floor (-6.02 s). That layout improves the slowest 10 % by 2.3 s on 2024 demand; this one worsens them by 5.9 s on 2025 calls.
+- Moving outer stations to the centre is the weakest option, with no gain on Kolesar for the 370-site quietest plan. Forced to choose outer stations, the solver stops before 10 moves.
+- The ceiling is a limit from the model, not a proof that Move 10 could reach it. The best layout found is less than half of it. Closing 10 stations costs about 7 s of what opening 10 gives.
+- The 2025 scores are modelled and the search is not proven optimal, so about -6 s is the best found, not the true maximum.
+
+### 5.4 Planner on the wider sites, moves against saving
+
+Source: `scripts/recommended_placement.py --scenarios replace_10,replace_20,replace_30,replace_46,redesign --keep-boroughs 1 --no-references --demand-candidates 300 --spread-km 1.5 --solver-time 900 --out-dir data/figures/placement/recommended_wide`.
+989 candidate sites, the same rules as section 5: busy engines, slowest 10 % and average no worse than today, 10-minute cap, every borough within 1 s, street refinement. Chosen on 2024 demand. LightGBM only.
+
+| Stations moved | Average, 2025 calls | Average, 2024 demand | Slowest 10 % | Within 6 min (today 81.6 %) | Boroughs 5+ s better | Boroughs 1+ s worse | Solver |
+|---|---|---|---|---|---|---|---|
+| 10 | -5.8 s | -5.7 s | -4.0 s | 83.6 % | 12 | 0 | GA + swaps |
+| 20 | -8.1 s | -8.1 s | -5.2 s | 84.5 % | 19 | 0 | GA + swaps |
+| 30 | -12.8 s | -13.1 s | -7.8 s | 86.8 % | 24 | 0 | GA + swaps |
+| 46 | -18.0 s | -18.5 s | -14.4 s | 88.0 % | 31 | 0 | GA + swaps |
+| 64 (full redesign, no limit) | -20.6 s | -20.7 s | -16.0 s | 89.0 % | 31 | 0 | GA + swaps |
+
+Same rules on the 370 standard sites: 10 moved -5.3 s, full redesign (46 moved) -15.6 s. The wider sites add 0.5 s at 10 moved and 5.0 s for the full redesign. Standard sites have not been run at 20 or 30 moved.
+
+Reading:
+
+- The exact solver found no valid layout within its limit in any of these runs, so every layout comes from the genetic algorithm and swap search and is not proven optimal. The gain from 20 to 30 moved (4.7 s) is larger than from 10 to 20 (2.3 s), which suggests the 20-move layout could improve, so the shape of the curve is not settled.
+- Savings are modelled, not observed. Section 5.5 scores these layouts under the other travel models and land rules.
+- Borough averages are protected, not individual streets.
+
+### 5.5 The wider-site layouts under other models and land rules
+
+Source: `scripts/score_wide_layouts.py`, `data/figures/placement/recommended_wide/rescore/`. Layouts of 5.4, chosen with LightGBM on 2024 demand and not solved again. Scored on 2025 calls with busy engines. Land rules as in 5.2. A new site that fails a rule moves to the nearest
+unused passing candidate, keeping its engines, with no re-optimising or street refinement, so the rule rows are a cautious estimate.
+
+Change in average attendance (s):
+
+| Stations moved | LightGBM | Road | Kolesar | Rule B: LightGBM | Rule B: road | Rule B: Kolesar | Rule C: LightGBM | Rule C: road | Rule C: Kolesar |
+|---|---|---|---|---|---|---|---|---|---|
+| 10 | -5.76 | -4.56 | -2.57 | -5.17 | -4.21 | -2.46 | -4.02 | -3.38 | -2.02 |
+| 20 | -8.10 | -7.83 | -4.59 | -8.02 | -7.74 | -4.82 | -7.05 | -7.16 | -4.43 |
+| 30 | -12.76 | -10.71 | -6.17 | -11.52 | -10.05 | -6.26 | -10.35 | -9.13 | -5.55 |
+| 46 | -17.98 | -14.95 | -8.64 | -16.70 | -14.15 | -8.38 | -14.76 | -12.46 | -7.65 |
+| 64 (full redesign) | -20.59 | -17.19 | -8.64 | -18.11 | -15.64 | -8.87 | -14.91 | -12.72 | -6.60 |
+| Standard sites: 10 | -5.31 | -4.56 | -2.33 | -4.77 | -4.21 | -2.25 | -4.76 | -4.08 | -2.21 |
+| Standard sites: redesign (46) | -15.63 | -12.19 | -6.07 | -14.06 | -11.54 | -6.28 | -13.11 | -10.45 | -5.85 |
+
+Every 95 % range is below 0. The ranges are about 0.1 to 0.25 s either way because they only cover which calls occur. The difference between models is the larger uncertainty. Rule A changes only one site, in the full redesign (-20.45, -17.02, -8.71).
+
+New sites passing each rule:
+
+| Layout | New sites | Rule A | Rule B | Rule C | Median move for Rule B |
+|---|---|---|---|---|---|
+| 10 | 10 | 10 | 8 | 7 | 0.99 km |
+| 20 | 20 | 20 | 19 | 18 | 0.92 km |
+| 30 | 30 | 30 | 23 | 23 | 0.94 km |
+| 46 | 46 | 46 | 42 | 38 | 0.95 km |
+| 64 | 64 | 63 | 53 | 49 | 0.73 km |
+
+Who gains and loses, no land rule:
+
+| Stations moved | Calls 30+ s faster (LightGBM) | Calls 30+ s slower: LightGBM / road / Kolesar | Slowest 10 %: LightGBM / road / Kolesar | Boroughs 1+ s worse: LightGBM / road / Kolesar | Worst borough: LightGBM / road / Kolesar |
+|---|---|---|---|---|---|
+| 10 | 9.1 % | 1.6 / 2.0 / 2.6 % | -4.45 / -5.49 / -4.49 s | 1 / 1 / 4 | +1.2 / +8.4 / +7.9 s |
+| 20 | 13.0 % | 3.6 / 3.6 / 4.6 % | -4.83 / -6.81 / -4.79 s | 0 / 0 / 1 | +0.7 / +0.5 / +8.1 s |
+| 30 | 19.4 % | 4.8 / 5.8 / 7.2 % | -7.39 / -7.74 / -5.62 s | 0 / 1 / 2 | +0.1 / +1.5 / +8.1 s |
+| 46 | 28.8 % | 8.5 / 9.7 / 11.3 % | -13.54 / -10.45 / -7.38 s | 0 / 2 / 4 | +0.4 / +7.0 / +7.8 s |
+| 64 | 32.6 % | 8.6 / 11.3 / 14.1 % | -15.38 / -12.68 / -6.86 s | 0 / 0 / 5 | -2.0 / -0.7 / +9.9 s |
+
+With the learned dispatch model (LightGBM): -5.13, -8.00, -11.59, -16.20, -19.51 s for 10, 20, 30, 46, 64 moved.
+
+Reading:
+
+- Every layout wins under all three models, with or without Rule A or B, and the wider sites at least match the standard sites at both 10 moved and the redesign.
+- Under Rule C at 10 moved, the standard sites do better than the wider sites (-4.76 vs -4.02 s, LightGBM), because the wider layout has more sites to move.
+- The saving depends heavily on the model. On the wider-site layouts, road keeps 79 to 97 % of the LightGBM saving, and Kolesar keeps 42 to 57 %. The layouts were chosen with LightGBM, so its score is likely to be the most favourable of the three.
+- Under Kolesar the redesign adds nothing beyond 46 moved (-8.64 s for both), and under Rule C the redesign adds little beyond 46 moved for LightGBM and road.
+- The 1 s borough rule was enforced with LightGBM on 2024 demand, and it does not hold fully under other models: up to 5 boroughs are 1+ s worse, by up to about 10 s.
+- Bigger plans also make more calls slower: 46 moved has 8.5 to 11.3 % of calls 30+ s slower.
+- Rule C costs more because some sites move up to about 3.3 km with nothing else adjusted. There, some boroughs break the rule by up to +30 s (LightGBM). Re-optimising under the rule would be needed before quoting those rows as limits.
+- The land rules use OpenStreetMap labels only. They do not show a plot is for sale, large enough or allowed by planning rules.
+
+### 5.6 Option A: speeding up the slowest boroughs with no borough slower
+
+Source: `scripts/targeted_areas.py`, `data/figures/placement/targeted/` (re-optimised under land rules: `targeted/rule_b/`, `targeted/rule_c/`).
+The target rule and pass marks were written down before the run, in `docs/targeted_areas_rule.md`.
+
+- **Targets:** the 5 boroughs with the slowest recorded average attendance in 2024 (1,000+ calls): Hillingdon 384.5 s, Havering 371.4 s,
+  Enfield 366.5 s, Bromley 366.1 s, Redbridge 358.3 s. Recorded times only, so the choice does not depend on a model.
+- **Layouts:** best-swap search on the 989 wider sites, chosen on 2024 demand with LightGBM and busy engines. Objective: the target boroughs'
+  average. Every step keeps, on 2024 demand, every borough no worse at all (0 s), the London average no worse and the slowest 10 % no worse.
+  "Citywide" uses the same search and limits but minimises the London average. "Planner" is the 1 s borough-floor layout of 5.4, not built for
+  these boroughs. No street refinement on the searched layouts.
+- **Scoring:** 2025 calls, busy engines, three travel models. Land rules as in 5.2: "shifted" moves failing sites to the nearest passing site
+  (as in 5.5), "re-optimised" searches again using only passing sites.
+- **Pass marks set in advance:** (1) target boroughs at least 10 s faster under all three models; (2) no borough 1+ s worse under any model.
+
+Change in the target boroughs' average (s), 2025 calls, [95 % range from call sampling]:
+
+| Layout | Moved | LightGBM | Road | Kolesar | London average (LightGBM / road / Kolesar) | Boroughs 1+ s worse (L / R / K) | Worst borough (L / R / K) |
+|---|---|---|---|---|---|---|---|
+| **Targeted, up to 10** | 10 | **-11.9** [-12.7, -11.2] | **-12.0** [-12.9, -11.2] | **-9.8** [-10.6, -8.9] | -2.4 / -2.3 / -2.0 | 0 / 0 / 0 | 0.0 / +0.6 / +0.5 |
+| Targeted, up to 20 (search stopped) | 15 | -15.2 | -17.2 | -14.1 | -2.7 / -2.9 / -2.6 | 0 / 0 / 0 | 0.0 / +0.6 / +0.5 |
+| Targeted 10, Rule B re-optimised | 10 | -12.2 | -14.3 | -10.8 | -2.3 / -2.5 / -2.0 | 0 / 0 / 0 | 0.0 / +0.1 / +0.5 |
+| Targeted 20, Rule B re-optimised | 13 | -14.5 | -17.2 | -12.9 | -2.7 / -3.0 / -2.4 | 0 / 0 / 0 | 0.0 / +0.2 / +0.5 |
+| Targeted 10, Rule C re-optimised | 10 | -7.1 | -7.5 | -4.5 | -2.5 / -2.7 / -2.1 | 0 / 0 / 1 | 0.0 / +0.1 / +7.0 (Havering) |
+| Targeted 10, Rule B shifted | 10 | -10.7 | -11.4 | -7.1 | -2.3 / -2.4 / -1.7 | 0 / 0 / 1 | 0.0 / +0.2 / +2.2 |
+| Targeted up to 20, Rule B shifted | 15 | -12.9 | -16.3 | -11.5 | -2.5 / -2.9 / -2.3 | 0 / 0 / 1 | 0.0 / +0.2 / +2.2 |
+| Targeted up to 20, Rule C shifted | 15 | +3.9 | +4.6 | -0.4 | -0.7 / -0.6 / -1.3 | 3 / 3 / 4 | up to +36 |
+| Targeted 10, Rule C shifted | 10 | 0.0 | +0.6 | -0.5 | -0.9 / -0.8 / -0.9 | 3 / 3 / 4 | up to +13 |
+| Citywide, up to 10 | 10 | -6.2 | -8.6 | -6.2 | -4.2 / -4.8 / -3.7 | 0 / 0 / 2 | 0.0 / 0.0 / +6.0 |
+| Citywide, up to 20 | 20 | -7.7 | -10.8 | -7.1 | -7.4 / -7.8 / -6.3 | 0 / 1 / 2 | 0.0 / +4.9 / +5.8 |
+| Planner Move 10 (5.4) | 10 | -10.2 | -9.5 | -5.7 | -5.8 / -4.6 / -2.6 | 1 / 1 / 4 | +1.2 / +8.4 / +7.9 |
+| Planner Move 20 (5.4) | 20 | -13.1 | -13.6 | -7.5 | -8.1 / -7.8 / -4.6 | 0 / 0 / 1 | +0.7 / +0.5 / +8.1 |
+
+Each target borough, targeted up to 10 (LightGBM / road / Kolesar, s): Redbridge -19.7 / -25.3 / -18.4, Bromley -13.2 / -11.3 / -15.3,
+Havering -19.9 / -14.2 / -7.4, Hillingdon -5.4 / -5.8 / -4.9, Enfield -4.7 / -7.0 / -4.4. Every target borough gains under every model.
+The 10 moves close Biggin Hill, Bromley, Orpington, Harold Hill, Wennington, Hainault, Woodford, Ruislip, Heathrow and Edmonton and reopen
+nearby, so they are mostly relocations within or next to the target boroughs.
+
+Reading:
+
+- **Against the pass marks, tests fixed in advance only.** The rule (`docs/targeted_areas_rule.md`) set two layouts (up to 10 and up to 20
+  moves) and applied land rules B and C by moving failing sites to the nearest passing site ("shifted").
+
+  | Pre-set test | (1) Targets 10+ s faster under all 3 models | (2) No borough 1+ s worse under any model |
+  |---|---|---|
+  | Up to 10 moves | Missed under Kolesar (-9.8 s, range -10.6 to -8.9) | Passed (worst +0.6 s) |
+  | Up to 20 moves (stopped at 15) | **Passed** (-15.2 / -17.2 / -14.1) | **Passed** (worst +0.6 s) |
+  | Up to 10, Rule B shifted | Missed under Kolesar (-7.1) | Missed under Kolesar (one borough +2.2 s) |
+  | Up to 20, Rule B shifted | Passed (-12.9 / -16.3 / -11.5) | Missed under Kolesar (one borough +2.2 s) |
+  | Rule C shifted (10 or 20) | Missed | Missed |
+
+  So one pre-set test passes in full (up to 20 moves, no land rule), and the 10-move version misses by 0.2 s under one model. Once sites must
+  be buildable under Rule B, no pre-set test passes in full.
+- **Added after the first results, not set in advance:** searching again using only Rule B sites ("re-optimised"). It passes both marks at 10
+  moves (-12.2 / -14.3 / -10.8 s) and at up to 20 (13 moved; -14.5 / -17.2 / -12.9 s). It is a fair analysis but must be labelled as decided
+  after seeing results. The 2026 test (still unused) is where it can be tested as a fixed prediction.
+- **How much comes from targeting.** The planner's ordinary Move 10 (5.4), not built for these boroughs, already speeds them up by
+  -10.2 / -9.5 / -5.7 s. Targeting adds 1.7 / 2.5 / 4.1 s for the target boroughs, so the gain is largest under Kolesar, and keeps every borough
+  protected. Against the planner Move 10 it costs London 3.4 / 2.2 / 0.6 s of average.
+- **Not everyone is protected.** Borough averages are protected, single calls are not: 1.9 to 2.0 % of all calls are 30+ s slower in the targeted
+  Move 10, against 21 to 25 % of target-borough calls 30+ s faster. The slowest 10 % of calls improve slightly under all three models
+  (-0.1 / -1.9 / -1.0 s) without land rules, but get worse with Rule B shifted (+1.2 / -1.2 / +2.1 s).
+- **Rerun check (2026-11-05).** The script was edited after the first run, to add `--rule`. The main case was rerun with the final script and
+  every layout, score and borough file came out identical.
+- The 0 s borough limit set with LightGBM held under the other two models (worst +0.6 s). The planner's 1 s limit did not (up to +8.4 s), and
+  neither did the citywide search's (up to +6.0 s). Requiring no change at all, rather than 1 s, seems to make the protection travel across models.
+- Against the citywide search with the same limits, targeting costs London 1.8 / 2.5 / 1.7 s of average (LightGBM: -2.4 against -4.2 s) and
+  gives the target boroughs about twice the gain under LightGBM (-11.9 against -6.2 s), 1.4 times under road and 1.6 times under Kolesar. This
+  is the "cost of fairness" to quote. An earlier figure of 2.3 s compared two other layouts: the planner's Move 10 without and with a 0 s
+  borough floor (section 5).
+- The strictest land rule (Rule C: site itself not residential) halves the gain even when re-optimised (-7.1 / -7.5 / -4.5 s), and Havering is
+  7 s worse under Kolesar. Outer boroughs have few non-residential plots. Rule B, which only needs a commercial or industrial plot within 300 m,
+  costs nothing once the search is re-run with it, but costs 1 to 3 s when failing sites are only shifted.
+- The search is not proven optimal: Rule B re-optimised beat the unrestricted search under road and Kolesar, which a perfect search could not
+  do. The "up to 20" search stopped at 15 moves. Savings are modelled, not observed. 2026 is not used.
 
 ---
 

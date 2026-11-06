@@ -1,0 +1,11 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+5,Beckenham,existing_fire_station,-0.0342898308077814,51.408058049999994,True,,1
+16,Dagenham,existing_fire_station,0.1570281714646305,51.55946845,True,,2
+23,Edmonton,existing_fire_station,-0.0690767018132989,51.62723145,True,,2
+43,Homerton,existing_fire_station,-0.0439337508623871,51.54865169999999,True,,2
+56,Mill Hill,existing_fire_station,-0.2432100393349606,51.61499645,True,,1
+57,Millwall,existing_fire_station,-0.0255593731203916,51.50081445,True,,1
+76,Shadwell,existing_fire_station,-0.0557891963357072,51.5108626,True,,1
+78,Sidcup,existing_fire_station,0.0945067633431096,51.4268951,True,,2
+88,Tottenham,existing_fire_station,-0.0718471337316405,51.59230965,True,,2
+94,Wennington,existing_fire_station,0.2203615409801693,51.50593515,True,,1

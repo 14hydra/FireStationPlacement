@@ -18,7 +18,7 @@ Runnable entry points. Library code lives in `src/firestation/`.
 | `plot_incident_density.py` | City incident density map |
 | `plot_travel_time_maps.py` | First-engine area maps |
 | `plan_fire_station_locations.py` | Placement planner (redesign / replace / expand / resize) |
-| `recommended_placement.py` | Recommended layout pack |
+| `recommended_placement.py` | Recommended layout pack (`--demand-candidates`, `--spread-km`, `--out-dir` for other site lists) |
 | `score_layouts.py` | Score named layouts under LightGBM / Kolesar / road |
 | `placement_tradeoff.py` | Efficiency–equity α curves |
 | `placement_robustness.py` | Layouts by time / severity / borough / income |
@@ -39,6 +39,10 @@ Runnable entry points. Library code lives in `src/firestation/`.
 | `gap_overlap.py` | Whether neighbouring stations are away together, and the cost when the next-nearest station is passed over |
 | `gap_shift.py` | How much moving away time to quieter hours, or reducing it, could save |
 | `placement_methods.py` | Screens placement methods on one scoring: moves against saving, over-6-minute objective, away time, wider sites, moving engines only |
+| `score_wide_layouts.py` | Scores the wider-site layouts under three travel models and the land rules, moving sites that fail to the nearest allowed site |
+| `targeted_areas.py` | Option A: layouts that speed up the 5 slowest boroughs (rule fixed in `docs/targeted_areas_rule.md`) with no borough slower, scored under three travel models and the land rules; `--rule rule_b/rule_c` re-optimises using only passing sites |
+| `move10_limit.py` | Exact Move 10 with every protection removed, including forced outer-to-central moves, and the add-10 ceiling |
+| `move10_polish.py` | Improves `move10_limit.py` layouts under the full busy model, then refines sites to street junctions |
 | `placement_analysis.py` | Five placement checks: model vs recorded calls, what the gap follows, savings across years, land and road limits on sites, engines vs buildings |
 | `new_station_check.py` | Hold-out new stations (`--summarize-only` to report saved folds) |
 | `new_station_check_combined.py` | Hold-out new stations for street speeds + LightGBM correction |

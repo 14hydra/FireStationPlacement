@@ -1,0 +1,11 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+990,New site on Lower Clapton Road,street_junction,-0.0520059,51.5508403,False,,
+1000,New site on Kilburn High Road,street_junction,-0.1919941,51.5367646,False,,
+1002,New site on Monument Way / High Road,street_junction,-0.0705059,51.588947,False,,
+1007,New site on Bow Road / Fairfield Road,street_junction,-0.0192682,51.5281522,False,,
+1017,New site on Sterling Way,street_junction,-0.0668713,51.6146541,False,,
+1023,New site on Whalebone Lane South,street_junction,0.1478035,51.5614773,False,,
+1025,New site on Green Lane / High Street,street_junction,-0.0516564,51.4138659,False,,
+1036,New site on Deansbrook Road,street_junction,-0.2654826,51.6092725,False,,
+1038,New site on Chislehurst Road / Frognal Corner,street_junction,0.0981466,51.4192422,False,,
+1043,New site on Rainham Road,street_junction,0.1904484,51.5222686,False,,
