@@ -41,6 +41,8 @@ Runnable entry points. Library code lives in `src/firestation/`.
 | `placement_methods.py` | Screens placement methods on one scoring: moves against saving, over-6-minute objective, away time, wider sites, moving engines only |
 | `score_wide_layouts.py` | Scores the wider-site layouts under three travel models and the land rules, moving sites that fail to the nearest allowed site |
 | `targeted_areas.py` | Option A: layouts that speed up the 5 slowest boroughs (rule fixed in `docs/targeted_areas_rule.md`) with no borough slower, scored under three travel models and the land rules; `--rule rule_b/rule_c` re-optimises using only passing sites |
+| `outer_error_check.py` | Whether the model's outer-London error shrinks the Part 2 saving: drive-time slope and responder share in the target boroughs, 2025 |
+| `final_test_2026.py` | Part 2 final test on 2026 against `docs/prediction_2026.md`; runs once (`--check-year 2025` is a dry run that reproduces 5.6) |
 | `move10_limit.py` | Exact Move 10 with every protection removed, including forced outer-to-central moves, and the add-10 ceiling |
 | `move10_polish.py` | Improves `move10_limit.py` layouts under the full busy model, then refines sites to street junctions |
 | `placement_analysis.py` | Five placement checks: model vs recorded calls, what the gap follows, savings across years, land and road limits on sites, engines vs buildings |

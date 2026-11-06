@@ -1,23 +1,49 @@
 # Abstract
 
-**Title:** Optimizing Fire Station Placement with Street-Aware Travel Times  
-**Authors:** Ricky Zhao and Sarp Akalin (ASI)  
-**Fair:** CSEF / ISEF
+**Title:** Faster Help for London's Slowest Boroughs: Relocating Fire Stations with Street-Learned Travel Times
+**Authors:** Ricky Zhao and Sarp Akalin (ASI)
+**Fair:** Synopsys / CSEF / ISEF
 
 ---
 
-Fire engines do not travel at a constant speed: signals, turns, 20 mph streets and junctions change how long a trip takes. Placement studies usually ignore that and treat travel time as a function of distance alone. We ask whether stations chosen with travel times learned from street characteristics reach real London calls faster than stations chosen by distance-based formulas.
+In 2024 the first fire engine took about 45 s longer to reach calls in London's five slowest boroughs than the city
+average (371 s against 326 s). Can relocating a few stations make these boroughs clearly faster without making any borough slower?
 
-We train gradient-boosted decision trees (LightGBM) on London Fire Brigade engine trips to predict driving time from the legal OpenStreetMap route’s street traits, time of day and context—without station IDs, so the model can score sites that do not yet exist. On 200,624 held-out 2025 trips the model’s mean absolute error is **58.9 s**, against **68.7 s** for the classic Kolesar formula on road distance. Interaction features and calibration aimed at outer long drives (from a station embedding analysis) contribute to that gain.
+A gradient-boosted model (LightGBM), trained on 2021-2024 London Fire Brigade engine trips, predicts driving time from
+the street route (2025 first-engine error 45.5 s, against 53.8 s for the standard distance formula). A placement model
+allows for busy engines. Before searching, we fixed the targets (the five boroughs with the
+slowest recorded 2024 times) and the pass marks: at least 10 s faster under LightGBM and two distance formulas, and no borough
+1 s or more slower.
 
-Those predictions feed a placement optimiser (p-median integer program with busy-engine and fairness rules). A learned dispatch model estimates which of the fastest open stations sends the first engine. On London’s real 2014 ten-station closures—trained only on 2009–2013 data—dispatch raises the correlation of predicted vs recorded area slowdowns from **0.48** (assume nearest) to about **0.56**. Recommended layouts that move up to 10 stations with no borough worse than today cut citywide first-engine time by roughly **2.5–5.5 s** on average and improve the slowest 10% of calls, under every travel-time scorer we tested.
+On 2025 calls, not used to choose, 15 relocations sped up the target boroughs by 14.1-17.2 s with no borough 1 s or
+more slower, passing both marks; 10 relocations missed the first mark by 0.2 s under one model. A later search limited to
+sites near commercial or industrial land passed with 10 relocations (10.8-14.3 s). A citywide search speeds up London more
+(3.7-4.8 s against 2.0-2.5 s) but the target boroughs about half as much. The model under-predicts outer-London drive
+times by about 18 s, but by the same amount at every trip length, so the error largely cancels when layouts are compared.
 
-Street-aware travel times beat distance formulas on held-out calls and on a historical closure test; using them for placement produces layouts that still win when scored by the older formulas.
+Small, targeted relocations can give the worst-served areas a clear gain with every borough protected. A fixed
+prediction for 2026 calls is the final test.
 
 ---
 
-**Word count:** ~250  
+**Word count:** about 245
 
-**Keywords:** fire station location; emergency response; travel time; LightGBM; London Fire Brigade; 2014 closures
+**Keywords:** fire station location; emergency response equity; travel time; LightGBM; London Fire Brigade
 
-**One-sentence pitch:** We learn how London streets slow fire engines, then use those times—not raw distance—to place stations, and we check both against real LFB calls and the 2014 closures.
+**One-sentence pitch:** We learn how London's streets slow fire engines, then move a few stations so the boroughs that wait
+longest get about 10-14 s faster help while no borough gets slower.
+
+**To update after the 2026 test:** replace the last sentence of the results paragraph's conclusion with the 2026 result
+(`docs/prediction_2026.md`), pass or fail.
+
+---
+
+## Earlier abstract (Part 1 only, kept for the record)
+
+Part 1 asked whether stations chosen with street-learned travel times reach real London calls faster than stations chosen
+by distance formulas. Its abstract (git history before 2026-11-05) reported a 58.9 s model error on all 2025 trips against
+68.7 s for the Kolesar formula, a 2014-closure correlation of about 0.56 with dispatch, and Move 10 layouts cutting citywide
+attendance by about 2.5-5.5 s. Later results changed some of these: the error that applies to placement is 45.5 s on
+first-engine trips (results.md 1.1b), the dispatch correlation is 0.59 (3.2), and the neutral test (6.1) found that the
+learned model picks nearly the same sites as the formulas (under 1 s difference). Part 1's answer is therefore: the learned
+model predicts times better, but choosing with it barely changes the layout.

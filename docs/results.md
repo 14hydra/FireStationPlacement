@@ -888,6 +888,41 @@ Reading:
 - The search is not proven optimal: Rule B re-optimised beat the unrestricted search under road and Kolesar, which a perfect search could not
   do. The "up to 20" search stopped at 15 moves. Savings are modelled, not observed. 2026 is not used.
 
+### 5.7 Does the outer-London model error shrink the Part 2 saving?
+
+Source: `scripts/outer_error_check.py`, `data/figures/placement/outer_error/`. 2025 recorded data only.
+
+The model under-predicts recorded attendance in outer London (5.2: +28 s beyond 20 km; +26.5 s in the target boroughs'
+station grounds against +15.7 s elsewhere). A saving is the difference between two modelled times, so a fixed offset cancels.
+Two things would not cancel: recorded time rising less than one second per modelled second, and the local station
+responding less often than the model expects.
+
+Drive time, 2025 first-engine trips from the home station, engine not busy (recorded on modelled, least squares, 95 % range
+from resampling trips):
+
+| Trips | n | Recorded minus model (s) | Slope, production model | Slope, never-seen-stations model |
+|---|---:|---:|---|---|
+| Target boroughs | 12,497 | +17.8 | 1.00 [0.98, 1.02] | 0.96 [0.94, 0.98] |
+| Rest of London | 75,440 | +13.9 | 1.01 [1.00, 1.02] | 0.94 [0.93, 0.94] |
+
+In the target boroughs the offset is the same at every trip length (+18, +20, +16, +15, +20 s across the five fifths of
+modelled time). Per borough the slope is 0.97 to 1.07. Who responds: the local station sent the first engine on 74.9 % of
+target-borough calls against 76.0 % modelled (ratio 0.986; rest of London 68.6 % against 68.1 %).
+
+Scaling the target-borough savings by slope x ratio (a rough first-order check, not a re-score):
+
+| Layout | Modelled (L / R / K) | Adjusted, production slope | Adjusted, never-seen slope |
+|---|---|---|---|
+| Targeted up to 10 | -11.9 / -12.0 / -9.8 | -11.8 / -11.9 / -9.7 | -11.3 / -11.4 / -9.3 |
+| Targeted up to 20 | -15.2 / -17.2 / -14.1 | -15.0 / -17.0 / -13.9 | -14.4 / -16.3 / -13.4 |
+| Rule B re-optimised 10 | -12.2 / -14.3 / -10.8 | -12.0 / -14.1 / -10.7 | -11.6 / -13.6 / -10.3 |
+
+Reading: the outer-London error is mostly a fixed offset of about 18 s on the drive, plus about 9 s from dispatch and other
+causes, and it shrinks the saving by 1 to 5 %. Absolute times in outer London are optimistic; the changes are not. Limits:
+the slope is across trips, not a before-and-after test of a moved station; part of the offset may belong to particular
+stations (Woodford +52 s, 5.2), and a new site's offset is unknown. The 2026 test repeats the slope check as a fixed
+prediction (`docs/prediction_2026.md`).
+
 ---
 
 ## 6. Do the layouts hold up under other travel time models?

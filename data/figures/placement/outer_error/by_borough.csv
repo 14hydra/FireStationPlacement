@@ -1,0 +1,6 @@
+borough,trips,slope,slope_lo,slope_hi,recorded_minus_model_s,mean_model_s,recorded_minus_model_attendance_s,share_ratio
+HILLINGDON,2649,0.999,0.954,1.048,16.2,258.5,27.6,0.982
+HAVERING,2106,0.97,0.916,1.033,14.4,236.3,25.8,0.995
+ENFIELD,2734,1.01,0.961,1.058,18.6,238.2,24.6,1.006
+BROMLEY,2858,0.98,0.939,1.012,18.0,240.3,21.1,0.986
+REDBRIDGE,2150,1.071,1.019,1.124,21.9,226.4,34.8,0.953

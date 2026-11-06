@@ -1,0 +1,374 @@
+{
+  "doc": "Does the model's error in outer London shrink or grow the Part 2 savings? 2025 recorded data only; 2026 is not used.\n\nThe model under-predicts recorded attendance in outer London (results.md 5.2: +28 s beyond 20 km). A layout's saving is a\ndifference between two modelled times, so a fixed offset cancels. What does not cancel:\n\n  1. Drive time.  If recorded drive time rises less (or more) than one second per modelled second, a modelled saving shows\n     up scaled by that slope.  Fitted on 2025 first-engine trips from the home station with the engine not busy (the trips\n     placement scores), in the 5 target boroughs and elsewhere.  Also with predictions from the never-seen-stations test,\n     which is closer to a new site.  Slope = how recorded time changes with modelled time across trips (least squares,\n     ranges from resampling trips).\n  2. Who responds.  A moved station only helps when its own engine responds.  If the local station responds less often than\n     the model expects, the saving shrinks by about recorded share / modelled share (station-ground table from\n     placement_analysis.py q1, 2025).\n\nAdjusted saving = modelled saving x drive slope x (recorded share / modelled share).  This is a rough first-order check,\nnot a re-score: it ignores that the second station's time also changes.\n\nWrites data/figures/placement/outer_error/summary.json and by_borough.csv.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/outer_error_check.py\n",
+  "targets": [
+    "HILLINGDON",
+    "HAVERING",
+    "ENFIELD",
+    "BROMLEY",
+    "REDBRIDGE"
+  ],
+  "drive": {
+    "target boroughs": {
+      "production model": {
+        "trips": 12497,
+        "slope": 1.001,
+        "slope_lo": 0.982,
+        "slope_hi": 1.023,
+        "recorded_minus_model_s": 17.8,
+        "mean_model_s": 240.6
+      },
+      "never-seen stations": {
+        "trips": 12497,
+        "slope": 0.963,
+        "slope_lo": 0.941,
+        "slope_hi": 0.982,
+        "recorded_minus_model_s": 11.3,
+        "mean_model_s": 247.2
+      }
+    },
+    "rest of London": {
+      "production model": {
+        "trips": 75440,
+        "slope": 1.011,
+        "slope_lo": 1.002,
+        "slope_hi": 1.019,
+        "recorded_minus_model_s": 13.9,
+        "mean_model_s": 200.3
+      },
+      "never-seen stations": {
+        "trips": 75440,
+        "slope": 0.935,
+        "slope_lo": 0.926,
+        "slope_hi": 0.944,
+        "recorded_minus_model_s": 6.2,
+        "mean_model_s": 208.0
+      }
+    },
+    "all": {
+      "production model": {
+        "trips": 87937,
+        "slope": 1.012,
+        "slope_lo": 1.004,
+        "slope_hi": 1.021,
+        "recorded_minus_model_s": 14.5,
+        "mean_model_s": 206.0
+      },
+      "never-seen stations": {
+        "trips": 87937,
+        "slope": 0.948,
+        "slope_lo": 0.94,
+        "slope_hi": 0.957,
+        "recorded_minus_model_s": 6.9,
+        "mean_model_s": 213.6
+      }
+    }
+  },
+  "drive_binned": {
+    "target boroughs": [
+      {
+        "model_s": 133.7,
+        "recorded_s": 151.9,
+        "trips": 2500
+      },
+      {
+        "model_s": 195.3,
+        "recorded_s": 215.3,
+        "trips": 2499
+      },
+      {
+        "model_s": 237.6,
+        "recorded_s": 253.3,
+        "trips": 2499
+      },
+      {
+        "model_s": 279.6,
+        "recorded_s": 294.6,
+        "trips": 2499
+      },
+      {
+        "model_s": 357.1,
+        "recorded_s": 377.2,
+        "trips": 2500
+      }
+    ],
+    "rest of London": [
+      {
+        "model_s": 115.0,
+        "recorded_s": 128.8,
+        "trips": 15088
+      },
+      {
+        "model_s": 162.5,
+        "recorded_s": 175.8,
+        "trips": 15088
+      },
+      {
+        "model_s": 196.1,
+        "recorded_s": 209.1,
+        "trips": 15088
+      },
+      {
+        "model_s": 231.0,
+        "recorded_s": 245.4,
+        "trips": 15088
+      },
+      {
+        "model_s": 296.7,
+        "recorded_s": 311.9,
+        "trips": 15088
+      }
+    ],
+    "all": [
+      {
+        "model_s": 116.8,
+        "recorded_s": 131.1,
+        "trips": 17588
+      },
+      {
+        "model_s": 165.9,
+        "recorded_s": 179.5,
+        "trips": 17587
+      },
+      {
+        "model_s": 200.9,
+        "recorded_s": 215.1,
+        "trips": 17587
+      },
+      {
+        "model_s": 238.0,
+        "recorded_s": 252.5,
+        "trips": 17587
+      },
+      {
+        "model_s": 308.4,
+        "recorded_s": 324.4,
+        "trips": 17588
+      }
+    ]
+  },
+  "responder": {
+    "target boroughs": {
+      "grounds": 18,
+      "calls": 17498,
+      "recorded_minus_model_attendance_s": 26.5,
+      "model_nearest_pct": 76.0,
+      "recorded_nearest_pct": 74.9,
+      "gap_share_pct": 12.8,
+      "empty_share_pct": 8.3,
+      "share_ratio": 0.986
+    },
+    "rest of London": {
+      "grounds": 84,
+      "calls": 111769,
+      "recorded_minus_model_attendance_s": 15.7,
+      "model_nearest_pct": 68.1,
+      "recorded_nearest_pct": 68.6,
+      "gap_share_pct": 13.0,
+      "empty_share_pct": 12.7,
+      "share_ratio": 1.007
+    }
+  },
+  "by_borough": [
+    {
+      "borough": "HILLINGDON",
+      "trips": 2649,
+      "slope": 0.999,
+      "slope_lo": 0.954,
+      "slope_hi": 1.048,
+      "recorded_minus_model_s": 16.2,
+      "mean_model_s": 258.5,
+      "recorded_minus_model_attendance_s": 27.6,
+      "share_ratio": 0.982
+    },
+    {
+      "borough": "HAVERING",
+      "trips": 2106,
+      "slope": 0.97,
+      "slope_lo": 0.916,
+      "slope_hi": 1.033,
+      "recorded_minus_model_s": 14.4,
+      "mean_model_s": 236.3,
+      "recorded_minus_model_attendance_s": 25.8,
+      "share_ratio": 0.995
+    },
+    {
+      "borough": "ENFIELD",
+      "trips": 2734,
+      "slope": 1.01,
+      "slope_lo": 0.961,
+      "slope_hi": 1.058,
+      "recorded_minus_model_s": 18.6,
+      "mean_model_s": 238.2,
+      "recorded_minus_model_attendance_s": 24.6,
+      "share_ratio": 1.006
+    },
+    {
+      "borough": "BROMLEY",
+      "trips": 2858,
+      "slope": 0.98,
+      "slope_lo": 0.939,
+      "slope_hi": 1.012,
+      "recorded_minus_model_s": 18.0,
+      "mean_model_s": 240.3,
+      "recorded_minus_model_attendance_s": 21.1,
+      "share_ratio": 0.986
+    },
+    {
+      "borough": "REDBRIDGE",
+      "trips": 2150,
+      "slope": 1.071,
+      "slope_lo": 1.019,
+      "slope_hi": 1.124,
+      "recorded_minus_model_s": 21.9,
+      "mean_model_s": 226.4,
+      "recorded_minus_model_attendance_s": 34.8,
+      "share_ratio": 0.953
+    }
+  ],
+  "adjusted_target_savings": {
+    "Targeted up to 10": {
+      "production model": {
+        "lgbm": {
+          "modelled": -11.94,
+          "adjusted": -11.78,
+          "adjusted_low": -11.56
+        },
+        "road": {
+          "modelled": -12.02,
+          "adjusted": -11.86,
+          "adjusted_low": -11.64
+        },
+        "kolesar": {
+          "modelled": -9.79,
+          "adjusted": -9.66,
+          "adjusted_low": -9.48
+        }
+      },
+      "never-seen stations": {
+        "lgbm": {
+          "modelled": -11.94,
+          "adjusted": -11.34,
+          "adjusted_low": -11.08
+        },
+        "road": {
+          "modelled": -12.02,
+          "adjusted": -11.41,
+          "adjusted_low": -11.15
+        },
+        "kolesar": {
+          "modelled": -9.79,
+          "adjusted": -9.3,
+          "adjusted_low": -9.08
+        }
+      }
+    },
+    "Targeted up to 20": {
+      "production model": {
+        "lgbm": {
+          "modelled": -15.17,
+          "adjusted": -14.97,
+          "adjusted_low": -14.69
+        },
+        "road": {
+          "modelled": -17.21,
+          "adjusted": -16.99,
+          "adjusted_low": -16.66
+        },
+        "kolesar": {
+          "modelled": -14.12,
+          "adjusted": -13.94,
+          "adjusted_low": -13.67
+        }
+      },
+      "never-seen stations": {
+        "lgbm": {
+          "modelled": -15.17,
+          "adjusted": -14.4,
+          "adjusted_low": -14.08
+        },
+        "road": {
+          "modelled": -17.21,
+          "adjusted": -16.34,
+          "adjusted_low": -15.97
+        },
+        "kolesar": {
+          "modelled": -14.12,
+          "adjusted": -13.41,
+          "adjusted_low": -13.1
+        }
+      }
+    },
+    "Targeted 10, Rule B re-optimised": {
+      "production model": {
+        "lgbm": {
+          "modelled": -12.17,
+          "adjusted": -12.01,
+          "adjusted_low": -11.78
+        },
+        "road": {
+          "modelled": -14.3,
+          "adjusted": -14.11,
+          "adjusted_low": -13.85
+        },
+        "kolesar": {
+          "modelled": -10.83,
+          "adjusted": -10.69,
+          "adjusted_low": -10.49
+        }
+      },
+      "never-seen stations": {
+        "lgbm": {
+          "modelled": -12.17,
+          "adjusted": -11.56,
+          "adjusted_low": -11.29
+        },
+        "road": {
+          "modelled": -14.3,
+          "adjusted": -13.58,
+          "adjusted_low": -13.27
+        },
+        "kolesar": {
+          "modelled": -10.83,
+          "adjusted": -10.28,
+          "adjusted_low": -10.05
+        }
+      }
+    },
+    "Targeted 20, Rule B re-optimised": {
+      "production model": {
+        "lgbm": {
+          "modelled": -14.5,
+          "adjusted": -14.31,
+          "adjusted_low": -14.04
+        },
+        "road": {
+          "modelled": -17.2,
+          "adjusted": -16.98,
+          "adjusted_low": -16.65
+        },
+        "kolesar": {
+          "modelled": -12.94,
+          "adjusted": -12.77,
+          "adjusted_low": -12.53
+        }
+      },
+      "never-seen stations": {
+        "lgbm": {
+          "modelled": -14.5,
+          "adjusted": -13.77,
+          "adjusted_low": -13.45
+        },
+        "road": {
+          "modelled": -17.2,
+          "adjusted": -16.33,
+          "adjusted_low": -15.96
+        },
+        "kolesar": {
+          "modelled": -12.94,
+          "adjusted": -12.29,
+          "adjusted_low": -12.01
+        }
+      }
+    }
+  }
+}
