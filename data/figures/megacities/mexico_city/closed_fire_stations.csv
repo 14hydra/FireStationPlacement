@@ -1,0 +1,11 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+5,Mexico City Station 6,existing_fire_station,-99.01137245366182,19.485330226969243,True,,1
+8,Mexico City Station 9,existing_fire_station,-98.99850564675204,19.471539734444413,True,,1
+11,Mexico City Station 12,existing_fire_station,-99.21666955439014,19.508389083092624,True,,1
+12,Mexico City Station 13,existing_fire_station,-99.05092131903866,19.251942221881748,True,,1
+20,Mexico City Station 21,existing_fire_station,-98.97014042339956,19.30545611702024,True,,1
+21,Mexico City Station 22,existing_fire_station,-99.22672258203004,19.291999915863855,True,,1
+24,Mexico City Station 25,existing_fire_station,-99.28308058889527,19.314469056812104,True,,1
+31,Mexico City Station 32,existing_fire_station,-98.98709394674526,19.44419389445981,True,,1
+32,Mexico City Station 33,existing_fire_station,-98.98666296914377,19.26569084728655,True,,1
+38,Mexico City Station 39,existing_fire_station,-99.00907259255368,19.376756103544,True,,1

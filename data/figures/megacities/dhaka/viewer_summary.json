@@ -1,0 +1,296 @@
+{
+  "id": "dhaka",
+  "name": "Dhaka",
+  "center": {
+    "lat": 23.81,
+    "lon": 90.39
+  },
+  "bbox": {
+    "west": 90.25,
+    "south": 23.65,
+    "east": 90.55,
+    "north": 23.95
+  },
+  "pop_millions": 23.0,
+  "notes": "",
+  "metrics": {
+    "city_id": "dhaka",
+    "mode": "replace",
+    "objective": "response_time",
+    "severity": "all",
+    "severity_rule": "every call counts 1",
+    "alpha": 1.0,
+    "solver_kind": "genetic",
+    "response_model": "nearest engine free",
+    "scorer": "kolesar",
+    "demand_years": [],
+    "eval_years": [],
+    "use_busy": false,
+    "n_existing_fire_stations": 48,
+    "n_candidates": 108,
+    "n_demand_cells": 161,
+    "n_incidents": 13098,
+    "n_incidents_dropped_far": 0,
+    "n_selected": 48,
+    "n_closed": 10,
+    "n_opened": 10,
+    "threshold_min": 10.0,
+    "total_pumps_baseline": 48,
+    "total_pumps_plan": 48,
+    "plan": {
+      "label": "plan_replace",
+      "n_posts": 48,
+      "expected_response_s": 260.3,
+      "median_response_s": 284.7,
+      "p90_response_s": 334.6,
+      "cvar90_response_s": 372.7,
+      "worst_cell_response_s": 453.5,
+      "coverage_share_within_threshold": 1.0,
+      "area_mean_response_s": 282.9,
+      "areas_over_threshold_share": 0.0,
+      "threshold_s": 600.0,
+      "demand_cells": 161,
+      "areas_with_demand": 161,
+      "objective_value": 260.2799791279895,
+      "lfb_first_engine": {
+        "mean_s": 260.2799791279895,
+        "p90_s": 345.5379909583865,
+        "share_within_6min": 0.9451061230722247,
+        "share_within_10min": 1.0,
+        "meets_avg_6": true,
+        "meets_90pct_10": true,
+        "passes": true
+      },
+      "total_pumps": 48
+    },
+    "baselines": {
+      "current_fire_stations": {
+        "label": "current_fire_stations",
+        "n_posts": 48,
+        "expected_response_s": 312.3,
+        "median_response_s": 301.4,
+        "p90_response_s": 418.9,
+        "cvar90_response_s": 469.6,
+        "worst_cell_response_s": 626.7,
+        "coverage_share_within_threshold": 0.9979,
+        "area_mean_response_s": 327.0,
+        "areas_over_threshold_share": 0.0124,
+        "threshold_s": 600.0,
+        "demand_cells": 161,
+        "areas_with_demand": 161,
+        "lfb_first_engine": {
+          "mean_s": 312.3032996615266,
+          "p90_s": 420.4890666955935,
+          "share_within_6min": 0.7393495190105359,
+          "share_within_10min": 0.9979386165826843,
+          "meets_avg_6": true,
+          "meets_90pct_10": true,
+          "passes": true
+        },
+        "total_pumps": 48
+      },
+      "random_replace": {
+        "label": "random_replace",
+        "n_posts": 48,
+        "expected_response_s": 287.4,
+        "median_response_s": 293.2,
+        "p90_response_s": 392.5,
+        "cvar90_response_s": 426.9,
+        "worst_cell_response_s": 476.7,
+        "coverage_share_within_threshold": 1.0,
+        "area_mean_response_s": 306.2,
+        "areas_over_threshold_share": 0.0,
+        "threshold_s": 600.0,
+        "demand_cells": 161,
+        "areas_with_demand": 161,
+        "lfb_first_engine": {
+          "mean_s": 287.37937247067384,
+          "p90_s": 393.2825802951962,
+          "share_within_6min": 0.817376698732631,
+          "share_within_10min": 1.0,
+          "meets_avg_6": true,
+          "meets_90pct_10": true,
+          "passes": true
+        }
+      }
+    },
+    "eval": null,
+    "delta_vs_current_s": -52.0,
+    "travel": {
+      "scorer": "kolesar",
+      "surrogate_speed_kph": 28.0,
+      "kolesar": {
+        "a": 15.846,
+        "b": 180.913,
+        "c": 145.697,
+        "e": 71.783,
+        "breakpoint_km": 1.913
+      },
+      "kolesar_fit": {
+        "source": "london_default",
+        "n_pairs": 0
+      },
+      "turnout": {
+        "source": "default",
+        "default_s": 60.0,
+        "n_existing_with_prior": 0,
+        "existing_min_s": 60.0,
+        "existing_median_s": 60.0,
+        "existing_max_s": 60.0
+      },
+      "pumps": {
+        "baseline_total": 48,
+        "n_two_plus": 0,
+        "min_pumps": 1,
+        "max_pumps": 3
+      }
+    },
+    "busy_vs_ignoring_busy": null,
+    "pump_moves": [
+      {
+        "from": 2,
+        "to": 85,
+        "pumps": 1,
+        "km": 4.88,
+        "from_name": "Dhaka Station 3",
+        "to_name": "Demand cell 37"
+      },
+      {
+        "from": 5,
+        "to": 57,
+        "pumps": 1,
+        "km": 11.31,
+        "from_name": "Dhaka Station 6",
+        "to_name": "Demand cell 9"
+      },
+      {
+        "from": 11,
+        "to": 95,
+        "pumps": 1,
+        "km": 6.52,
+        "from_name": "Dhaka Station 12",
+        "to_name": "Demand cell 52"
+      },
+      {
+        "from": 17,
+        "to": 48,
+        "pumps": 1,
+        "km": 16.17,
+        "from_name": "Dhaka Station 18",
+        "to_name": "Demand cell 0"
+      },
+      {
+        "from": 18,
+        "to": 64,
+        "pumps": 1,
+        "km": 14.65,
+        "from_name": "Dhaka Station 19",
+        "to_name": "Demand cell 16"
+      },
+      {
+        "from": 23,
+        "to": 72,
+        "pumps": 1,
+        "km": 7.43,
+        "from_name": "Dhaka Station 24",
+        "to_name": "Demand cell 24"
+      },
+      {
+        "from": 30,
+        "to": 99,
+        "pumps": 1,
+        "km": 7.97,
+        "from_name": "Dhaka Station 31",
+        "to_name": "Demand cell 46"
+      },
+      {
+        "from": 35,
+        "to": 74,
+        "pumps": 1,
+        "km": 8.97,
+        "from_name": "Dhaka Station 36",
+        "to_name": "Demand cell 26"
+      },
+      {
+        "from": 39,
+        "to": 52,
+        "pumps": 1,
+        "km": 11.59,
+        "from_name": "Dhaka Station 40",
+        "to_name": "Demand cell 4"
+      },
+      {
+        "from": 43,
+        "to": 98,
+        "pumps": 1,
+        "km": 11.35,
+        "from_name": "Dhaka Station 44",
+        "to_name": "Demand cell 41"
+      }
+    ],
+    "street_refinement": null,
+    "floors": {
+      "keep_slowest": true,
+      "keep_average": true,
+      "keep_boroughs": null,
+      "today_mean_s": 312.3,
+      "today_slowest10_s": 469.62
+    },
+    "expand_pumps": "move",
+    "replace_r": 10,
+    "n_replaced": 10,
+    "solver": {
+      "solver": "genetic algorithm",
+      "optimal": null,
+      "objective_value": 260.28,
+      "generations": 145,
+      "evaluations": 11680,
+      "solve_s": 1.21,
+      "params": {
+        "population": 80,
+        "max_generations": 400,
+        "elite": 4,
+        "tournament": 3,
+        "mutation_rate": 0.3,
+        "patience": 80,
+        "seed": 42,
+        "busy_aware": false,
+        "busy_load_dependent": false,
+        "cap_s": 720.0,
+        "feasible": true
+      },
+      "history_every_10": [
+        276.751,
+        262.91,
+        261.322,
+        260.919,
+        260.479,
+        260.332,
+        260.332,
+        260.28,
+        260.28,
+        260.28,
+        260.28,
+        260.28,
+        260.28,
+        260.28,
+        260.28
+      ]
+    },
+    "honesty": "Response = predicted drive + station turnout (LFB attendance is mobilise->arrive; travel-only scoring was wrong). Judged on LFB first-engine KPIs: mean <= 6 min, > 90% within 10 min. Drive comes from the chosen scorer (kolesar). Turnout: default (existing stations), 60 s for new sites. Discrete candidates (existing houses + demand centroids); house sites are OpenStreetMap station buildings. No land, zoning or staffing constraints. Station size (n_pumps) defaults from LFB two-pump inference (~40 stations with a second appliance). resize mode reallocates a fixed pump budget under a capacity-scaled busy model; other modes keep baseline pumps unless overridden. Busy blend applies when use_busy=True or mode=resize (location optimisation still uses nearest engine).",
+    "city_name": "Dhaka",
+    "n_stations": 48,
+    "elapsed_s": 3.1,
+    "demand": "population_proxy",
+    "average_s_today": 312.3032996615266,
+    "average_s_plan": 260.2799791279896,
+    "delta_s": -52.023320533537046,
+    "within_6min_today": 0.7393495190105361,
+    "within_6min_plan": 0.9451061230722249,
+    "within_10min_today": 0.9979386165826846,
+    "within_10min_plan": 1.0,
+    "pct_callweight_5s_faster": 40.30386318521912,
+    "status": "ok"
+  },
+  "caveat": "Population-proxy demand + Kolesar travel times; not validated on local fire records."
+}

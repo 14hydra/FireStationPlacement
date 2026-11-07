@@ -1,0 +1,11 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+1,Cairo Station 2,existing_fire_station,31.122898341257233,30.008284922282865,True,,1
+4,Cairo Station 5,existing_fire_station,31.17630823489605,30.1021073372709,True,,1
+11,Cairo Station 12,existing_fire_station,31.260803627191116,30.158910495582525,True,,1
+12,Cairo Station 13,existing_fire_station,31.40637297839414,30.216942790571615,True,,1
+17,Cairo Station 18,existing_fire_station,31.16118241331296,29.909868469161815,True,,1
+20,Cairo Station 21,existing_fire_station,31.49762646290211,29.944123059451147,True,,1
+22,Cairo Station 23,existing_fire_station,31.2457746443921,29.925802446713423,True,,1
+29,Cairo Station 30,existing_fire_station,31.125549993868155,29.987910611243105,True,,1
+33,Cairo Station 34,existing_fire_station,31.187437050064325,30.218985849891293,True,,1
+36,Cairo Station 37,existing_fire_station,31.120656929008643,29.98398611224825,True,,1

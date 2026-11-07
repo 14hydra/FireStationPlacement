@@ -1,0 +1,11 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+5,Mumbai Station 6,existing_fire_station,72.79058674376853,18.92047100327537,True,,1
+8,Mumbai Station 9,existing_fire_station,72.88987033595537,19.123746349415157,True,,1
+16,Mumbai Station 17,existing_fire_station,72.92938787797107,19.081960055687816,True,,1
+18,Mumbai Station 19,existing_fire_station,72.9665578234359,19.13903744580282,True,,1
+23,Mumbai Station 24,existing_fire_station,72.79019266233942,19.255013478260626,True,,1
+26,Mumbai Station 27,existing_fire_station,73.00085506145963,19.22722876863435,True,,1
+31,Mumbai Station 32,existing_fire_station,72.93902893543779,18.91221193533564,True,,1
+38,Mumbai Station 39,existing_fire_station,72.96086711771667,18.91990774813043,True,,1
+42,Mumbai Station 43,existing_fire_station,72.77959608411474,18.940297097886045,True,,1
+47,Mumbai Station 48,existing_fire_station,72.88277436757684,18.92420004575243,True,,1

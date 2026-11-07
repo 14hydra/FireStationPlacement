@@ -1,0 +1,274 @@
+{
+  "city_id": "mexico_city",
+  "mode": "replace",
+  "objective": "response_time",
+  "severity": "all",
+  "severity_rule": "every call counts 1",
+  "alpha": 1.0,
+  "solver_kind": "genetic",
+  "response_model": "nearest engine free",
+  "scorer": "kolesar",
+  "demand_years": [],
+  "eval_years": [],
+  "use_busy": false,
+  "n_existing_fire_stations": 48,
+  "n_candidates": 108,
+  "n_demand_cells": 184,
+  "n_incidents": 12932,
+  "n_incidents_dropped_far": 0,
+  "n_selected": 48,
+  "n_closed": 10,
+  "n_opened": 10,
+  "threshold_min": 10.0,
+  "total_pumps_baseline": 48,
+  "total_pumps_plan": 48,
+  "plan": {
+    "label": "plan_replace",
+    "n_posts": 48,
+    "expected_response_s": 286.6,
+    "median_response_s": 299.5,
+    "p90_response_s": 370.0,
+    "cvar90_response_s": 394.8,
+    "worst_cell_response_s": 498.7,
+    "coverage_share_within_threshold": 1.0,
+    "area_mean_response_s": 300.8,
+    "areas_over_threshold_share": 0.0,
+    "threshold_s": 600.0,
+    "demand_cells": 184,
+    "areas_with_demand": 184,
+    "objective_value": 286.59057417364147,
+    "lfb_first_engine": {
+      "mean_s": 286.59057417364147,
+      "p90_s": 370.50891813349165,
+      "share_within_6min": 0.871481596040829,
+      "share_within_10min": 1.0,
+      "meets_avg_6": true,
+      "meets_90pct_10": true,
+      "passes": true
+    },
+    "total_pumps": 48
+  },
+  "baselines": {
+    "current_fire_stations": {
+      "label": "current_fire_stations",
+      "n_posts": 48,
+      "expected_response_s": 357.6,
+      "median_response_s": 366.0,
+      "p90_response_s": 468.7,
+      "cvar90_response_s": 512.7,
+      "worst_cell_response_s": 572.7,
+      "coverage_share_within_threshold": 1.0,
+      "area_mean_response_s": 355.9,
+      "areas_over_threshold_share": 0.0,
+      "threshold_s": 600.0,
+      "demand_cells": 184,
+      "areas_with_demand": 184,
+      "lfb_first_engine": {
+        "mean_s": 357.57317395779563,
+        "p90_s": 469.0981031836597,
+        "share_within_6min": 0.4927312094030312,
+        "share_within_10min": 1.0,
+        "meets_avg_6": true,
+        "meets_90pct_10": true,
+        "passes": true
+      },
+      "total_pumps": 48
+    },
+    "random_replace": {
+      "label": "random_replace",
+      "n_posts": 48,
+      "expected_response_s": 310.1,
+      "median_response_s": 302.3,
+      "p90_response_s": 415.6,
+      "cvar90_response_s": 452.4,
+      "worst_cell_response_s": 592.8,
+      "coverage_share_within_threshold": 1.0,
+      "area_mean_response_s": 321.9,
+      "areas_over_threshold_share": 0.0,
+      "threshold_s": 600.0,
+      "demand_cells": 184,
+      "areas_with_demand": 184,
+      "lfb_first_engine": {
+        "mean_s": 310.0525928596506,
+        "p90_s": 415.9960166067093,
+        "share_within_6min": 0.7351531085678936,
+        "share_within_10min": 1.0,
+        "meets_avg_6": true,
+        "meets_90pct_10": true,
+        "passes": true
+      }
+    }
+  },
+  "eval": null,
+  "delta_vs_current_s": -71.0,
+  "travel": {
+    "scorer": "kolesar",
+    "surrogate_speed_kph": 28.0,
+    "kolesar": {
+      "a": 15.846,
+      "b": 180.913,
+      "c": 145.697,
+      "e": 71.783,
+      "breakpoint_km": 1.913
+    },
+    "kolesar_fit": {
+      "source": "london_default",
+      "n_pairs": 0
+    },
+    "turnout": {
+      "source": "default",
+      "default_s": 60.0,
+      "n_existing_with_prior": 0,
+      "existing_min_s": 60.0,
+      "existing_median_s": 60.0,
+      "existing_max_s": 60.0
+    },
+    "pumps": {
+      "baseline_total": 48,
+      "n_two_plus": 0,
+      "min_pumps": 1,
+      "max_pumps": 3
+    }
+  },
+  "busy_vs_ignoring_busy": null,
+  "pump_moves": [
+    {
+      "from": 5,
+      "to": 98,
+      "pumps": 1,
+      "km": 9.1,
+      "from_name": "Mexico City Station 6",
+      "to_name": "Demand cell 89"
+    },
+    {
+      "from": 8,
+      "to": 58,
+      "pumps": 1,
+      "km": 11.69,
+      "from_name": "Mexico City Station 9",
+      "to_name": "Demand cell 10"
+    },
+    {
+      "from": 11,
+      "to": 74,
+      "pumps": 1,
+      "km": 4.79,
+      "from_name": "Mexico City Station 12",
+      "to_name": "Demand cell 26"
+    },
+    {
+      "from": 12,
+      "to": 54,
+      "pumps": 1,
+      "km": 18.33,
+      "from_name": "Mexico City Station 13",
+      "to_name": "Demand cell 6"
+    },
+    {
+      "from": 20,
+      "to": 76,
+      "pumps": 1,
+      "km": 15.8,
+      "from_name": "Mexico City Station 21",
+      "to_name": "Demand cell 28"
+    },
+    {
+      "from": 21,
+      "to": 69,
+      "pumps": 1,
+      "km": 11.55,
+      "from_name": "Mexico City Station 22",
+      "to_name": "Demand cell 21"
+    },
+    {
+      "from": 24,
+      "to": 86,
+      "pumps": 1,
+      "km": 15.77,
+      "from_name": "Mexico City Station 25",
+      "to_name": "Demand cell 38"
+    },
+    {
+      "from": 31,
+      "to": 80,
+      "pumps": 1,
+      "km": 5.35,
+      "from_name": "Mexico City Station 32",
+      "to_name": "Demand cell 32"
+    },
+    {
+      "from": 32,
+      "to": 70,
+      "pumps": 1,
+      "km": 15.49,
+      "from_name": "Mexico City Station 33",
+      "to_name": "Demand cell 22"
+    },
+    {
+      "from": 38,
+      "to": 67,
+      "pumps": 1,
+      "km": 5.8,
+      "from_name": "Mexico City Station 39",
+      "to_name": "Demand cell 19"
+    }
+  ],
+  "street_refinement": null,
+  "floors": {
+    "keep_slowest": true,
+    "keep_average": true,
+    "keep_boroughs": null,
+    "today_mean_s": 357.57,
+    "today_slowest10_s": 512.7
+  },
+  "expand_pumps": "move",
+  "replace_r": 10,
+  "n_replaced": 10,
+  "solver": {
+    "solver": "genetic algorithm",
+    "optimal": null,
+    "objective_value": 286.5906,
+    "generations": 180,
+    "evaluations": 14480,
+    "solve_s": 1.39,
+    "params": {
+      "population": 80,
+      "max_generations": 400,
+      "elite": 4,
+      "tournament": 3,
+      "mutation_rate": 0.3,
+      "patience": 80,
+      "seed": 42,
+      "busy_aware": false,
+      "busy_load_dependent": false,
+      "cap_s": 720.0,
+      "feasible": true
+    },
+    "history_every_10": [
+      306.112,
+      289.056,
+      287.425,
+      287.254,
+      286.867,
+      286.866,
+      286.866,
+      286.866,
+      286.866,
+      286.866,
+      286.591,
+      286.591,
+      286.591,
+      286.591,
+      286.591,
+      286.591,
+      286.591,
+      286.591,
+      286.591
+    ]
+  },
+  "honesty": "Response = predicted drive + station turnout (LFB attendance is mobilise->arrive; travel-only scoring was wrong). Judged on LFB first-engine KPIs: mean <= 6 min, > 90% within 10 min. Drive comes from the chosen scorer (kolesar). Turnout: default (existing stations), 60 s for new sites. Discrete candidates (existing houses + demand centroids); house sites are OpenStreetMap station buildings. No land, zoning or staffing constraints. Station size (n_pumps) defaults from LFB two-pump inference (~40 stations with a second appliance). resize mode reallocates a fixed pump budget under a capacity-scaled busy model; other modes keep baseline pumps unless overridden. Busy blend applies when use_busy=True or mode=resize (location optimisation still uses nearest engine).",
+  "city_name": "Mexico City",
+  "n_stations": 48,
+  "elapsed_s": 3.2,
+  "demand": "population_proxy"
+}

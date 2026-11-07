@@ -1,0 +1,112 @@
+[
+  {
+    "role": "opened",
+    "name": "Demand cell 9",
+    "lat": 28.61610054970224,
+    "lon": 77.12210948236371,
+    "local_share": 0.03159937888198758,
+    "local_before_s": 480.67689435627597,
+    "local_after_s": 292.99139369739174,
+    "local_delta_s": -187.68550065888417,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 10",
+    "lat": 28.6164406779661,
+    "lon": 77.2904049473202,
+    "local_share": 0.03190993788819876,
+    "local_before_s": 420.58676310055625,
+    "local_after_s": 284.8265115279961,
+    "local_delta_s": -135.76025157256012,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 15",
+    "lat": 28.599899338113623,
+    "lon": 77.23403805846662,
+    "local_share": 0.033850931677018636,
+    "local_before_s": 474.16287005982224,
+    "local_after_s": 309.3677079311756,
+    "local_delta_s": -164.79516212864664,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 20",
+    "lat": 28.616256756756755,
+    "lon": 77.06562702702703,
+    "local_share": 0.02422360248447205,
+    "local_before_s": 668.3256808450534,
+    "local_after_s": 302.9892175018184,
+    "local_delta_s": -365.33646334323504,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 241",
+    "lat": 28.573074324324324,
+    "lon": 77.0338947876448,
+    "local_share": 0.017934782608695653,
+    "local_before_s": 545.9048066660284,
+    "local_after_s": 297.99631729346873,
+    "local_delta_s": -247.90848937255976,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 200",
+    "lat": 28.506290322580643,
+    "lon": 77.1378299912816,
+    "local_share": 0.020496894409937887,
+    "local_before_s": 669.8934756624516,
+    "local_after_s": 299.1385867962389,
+    "local_delta_s": -370.75488886621275,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 255",
+    "lat": 28.740427927927925,
+    "lon": 77.15386486486487,
+    "local_share": 0.018944099378881987,
+    "local_before_s": 635.528928122663,
+    "local_after_s": 302.24656732744245,
+    "local_delta_s": -333.2823607952206,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 174",
+    "lat": 28.506486486486487,
+    "lon": 77.21810810810811,
+    "local_share": 0.021506211180124225,
+    "local_before_s": 567.8442922017094,
+    "local_after_s": 299.2602575785136,
+    "local_delta_s": -268.5840346231957,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 83",
+    "lat": 28.700254677754675,
+    "lon": 77.21833264033263,
+    "local_share": 0.025,
+    "local_before_s": 620.2687334202811,
+    "local_after_s": 299.7595227826477,
+    "local_delta_s": -320.50921063763354,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 253",
+    "lat": 28.740427927927925,
+    "lon": 77.21808108108108,
+    "local_share": 0.018788819875776398,
+    "local_before_s": 820.2362612777491,
+    "local_after_s": 301.3179355689968,
+    "local_delta_s": -518.9183257087524,
+    "why": "Large local modelled speed-up"
+  }
+]

@@ -1,0 +1,11 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+3,Delhi Station 4,existing_fire_station,77.44976433464002,28.780298611803783,True,,1
+7,Delhi Station 8,existing_fire_station,77.17338912525037,28.865241788705404,True,,1
+15,Delhi Station 16,existing_fire_station,77.28783749312971,28.422878850944176,True,,1
+16,Delhi Station 17,existing_fire_station,77.42988804113149,28.53137862563523,True,,1
+19,Delhi Station 20,existing_fire_station,77.40046064286743,28.498069852958828,True,,1
+29,Delhi Station 30,existing_fire_station,77.06334596319763,28.415753751331405,True,,1
+33,Delhi Station 34,existing_fire_station,76.90592544856494,28.525744672557643,True,,1
+41,Delhi Station 42,existing_fire_station,77.38992837151442,28.44351976811059,True,,1
+42,Delhi Station 43,existing_fire_station,77.40822980451122,28.8888097444723,True,,1
+45,Delhi Station 46,existing_fire_station,76.904969637476,28.582944153914692,True,,1

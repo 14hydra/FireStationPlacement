@@ -1,0 +1,11 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+0,Beijing Station 1,existing_fire_station,116.40253792374902,40.09057017019892,True,,1
+3,Beijing Station 4,existing_fire_station,116.22171248667688,39.90889935268819,True,,1
+4,Beijing Station 5,existing_fire_station,116.59546931497988,39.95619078647635,True,,1
+7,Beijing Station 8,existing_fire_station,116.5372104241576,40.028666768670234,True,,1
+26,Beijing Station 27,existing_fire_station,116.6164184049771,39.86999541825249,True,,1
+29,Beijing Station 30,existing_fire_station,116.60545347010704,39.87713063148982,True,,1
+39,Beijing Station 40,existing_fire_station,116.20875931507452,39.86633835309864,True,,1
+41,Beijing Station 42,existing_fire_station,116.2073876044693,39.9776359926712,True,,1
+43,Beijing Station 44,existing_fire_station,116.30956229240608,39.77541251112439,True,,1
+47,Beijing Station 48,existing_fire_station,116.27722343918762,40.01503266802876,True,,1

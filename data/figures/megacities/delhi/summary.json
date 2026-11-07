@@ -1,0 +1,272 @@
+{
+  "city_id": "delhi",
+  "mode": "replace",
+  "objective": "response_time",
+  "severity": "all",
+  "severity_rule": "every call counts 1",
+  "alpha": 1.0,
+  "solver_kind": "genetic",
+  "response_model": "nearest engine free",
+  "scorer": "kolesar",
+  "demand_years": [],
+  "eval_years": [],
+  "use_busy": false,
+  "n_existing_fire_stations": 48,
+  "n_candidates": 146,
+  "n_demand_cells": 453,
+  "n_incidents": 12880,
+  "n_incidents_dropped_far": 0,
+  "n_selected": 48,
+  "n_closed": 10,
+  "n_opened": 10,
+  "threshold_min": 10.0,
+  "total_pumps_baseline": 48,
+  "total_pumps_plan": 48,
+  "plan": {
+    "label": "plan_replace",
+    "n_posts": 48,
+    "expected_response_s": 371.4,
+    "median_response_s": 376.0,
+    "p90_response_s": 480.2,
+    "cvar90_response_s": 526.9,
+    "worst_cell_response_s": 663.5,
+    "coverage_share_within_threshold": 0.9968,
+    "area_mean_response_s": 386.0,
+    "areas_over_threshold_share": 0.011,
+    "threshold_s": 600.0,
+    "demand_cells": 453,
+    "areas_with_demand": 453,
+    "objective_value": 371.4318169728745,
+    "lfb_first_engine": {
+      "mean_s": 371.4318169728745,
+      "p90_s": 480.27441823171455,
+      "share_within_6min": 0.4254658385093168,
+      "share_within_10min": 0.9968167701863354,
+      "meets_avg_6": false,
+      "meets_90pct_10": true,
+      "passes": false
+    },
+    "total_pumps": 48
+  },
+  "baselines": {
+    "current_fire_stations": {
+      "label": "current_fire_stations",
+      "n_posts": 48,
+      "expected_response_s": 461.3,
+      "median_response_s": 446.6,
+      "p90_response_s": 646.4,
+      "cvar90_response_s": 744.5,
+      "worst_cell_response_s": 965.0,
+      "coverage_share_within_threshold": 0.83,
+      "area_mean_response_s": 474.3,
+      "areas_over_threshold_share": 0.1965,
+      "threshold_s": 600.0,
+      "demand_cells": 453,
+      "areas_with_demand": 453,
+      "lfb_first_engine": {
+        "mean_s": 461.31869758294175,
+        "p90_s": 649.6341179710505,
+        "share_within_6min": 0.26296583850931676,
+        "share_within_10min": 0.8299689440993789,
+        "meets_avg_6": false,
+        "meets_90pct_10": false,
+        "passes": false
+      },
+      "total_pumps": 48
+    },
+    "random_replace": {
+      "label": "random_replace",
+      "n_posts": 48,
+      "expected_response_s": 430.2,
+      "median_response_s": 419.1,
+      "p90_response_s": 607.6,
+      "cvar90_response_s": 729.8,
+      "worst_cell_response_s": 965.0,
+      "coverage_share_within_threshold": 0.8976,
+      "area_mean_response_s": 441.9,
+      "areas_over_threshold_share": 0.1325,
+      "threshold_s": 600.0,
+      "demand_cells": 453,
+      "areas_with_demand": 453,
+      "lfb_first_engine": {
+        "mean_s": 430.2460526539992,
+        "p90_s": 607.7875101939533,
+        "share_within_6min": 0.31653726708074537,
+        "share_within_10min": 0.8975931677018634,
+        "meets_avg_6": false,
+        "meets_90pct_10": false,
+        "passes": false
+      }
+    }
+  },
+  "eval": null,
+  "delta_vs_current_s": -89.9,
+  "travel": {
+    "scorer": "kolesar",
+    "surrogate_speed_kph": 28.0,
+    "kolesar": {
+      "a": 15.846,
+      "b": 180.913,
+      "c": 145.697,
+      "e": 71.783,
+      "breakpoint_km": 1.913
+    },
+    "kolesar_fit": {
+      "source": "london_default",
+      "n_pairs": 0
+    },
+    "turnout": {
+      "source": "default",
+      "default_s": 60.0,
+      "n_existing_with_prior": 0,
+      "existing_min_s": 60.0,
+      "existing_median_s": 60.0,
+      "existing_max_s": 60.0
+    },
+    "pumps": {
+      "baseline_total": 48,
+      "n_two_plus": 0,
+      "min_pumps": 1,
+      "max_pumps": 3
+    }
+  },
+  "busy_vs_ignoring_busy": null,
+  "pump_moves": [
+    {
+      "from": 3,
+      "to": 129,
+      "pumps": 1,
+      "km": 18.32,
+      "from_name": "Delhi Station 4",
+      "to_name": "Demand cell 83"
+    },
+    {
+      "from": 7,
+      "to": 117,
+      "pumps": 1,
+      "km": 13.87,
+      "from_name": "Delhi Station 8",
+      "to_name": "Demand cell 255"
+    },
+    {
+      "from": 15,
+      "to": 126,
+      "pumps": 1,
+      "km": 10.43,
+      "from_name": "Delhi Station 16",
+      "to_name": "Demand cell 174"
+    },
+    {
+      "from": 16,
+      "to": 58,
+      "pumps": 1,
+      "km": 13.49,
+      "from_name": "Delhi Station 17",
+      "to_name": "Demand cell 10"
+    },
+    {
+      "from": 19,
+      "to": 63,
+      "pumps": 1,
+      "km": 16.12,
+      "from_name": "Delhi Station 20",
+      "to_name": "Demand cell 15"
+    },
+    {
+      "from": 29,
+      "to": 113,
+      "pumps": 1,
+      "km": 11.26,
+      "from_name": "Delhi Station 30",
+      "to_name": "Demand cell 200"
+    },
+    {
+      "from": 33,
+      "to": 93,
+      "pumps": 1,
+      "km": 10.3,
+      "from_name": "Delhi Station 34",
+      "to_name": "Demand cell 241"
+    },
+    {
+      "from": 41,
+      "to": 57,
+      "pumps": 1,
+      "km": 26.62,
+      "from_name": "Delhi Station 42",
+      "to_name": "Demand cell 9"
+    },
+    {
+      "from": 42,
+      "to": 130,
+      "pumps": 1,
+      "km": 21.04,
+      "from_name": "Delhi Station 43",
+      "to_name": "Demand cell 253"
+    },
+    {
+      "from": 45,
+      "to": 68,
+      "pumps": 1,
+      "km": 11.73,
+      "from_name": "Delhi Station 46",
+      "to_name": "Demand cell 20"
+    }
+  ],
+  "street_refinement": null,
+  "floors": {
+    "keep_slowest": true,
+    "keep_average": true,
+    "keep_boroughs": null,
+    "today_mean_s": 461.32,
+    "today_slowest10_s": 744.54
+  },
+  "expand_pumps": "move",
+  "replace_r": 10,
+  "n_replaced": 10,
+  "solver": {
+    "solver": "genetic algorithm",
+    "optimal": null,
+    "objective_value": 371.4318,
+    "generations": 160,
+    "evaluations": 12880,
+    "solve_s": 1.69,
+    "params": {
+      "population": 80,
+      "max_generations": 400,
+      "elite": 4,
+      "tournament": 3,
+      "mutation_rate": 0.3,
+      "patience": 80,
+      "seed": 42,
+      "busy_aware": false,
+      "busy_load_dependent": false,
+      "cap_s": 720.0,
+      "feasible": true
+    },
+    "history_every_10": [
+      403.936,
+      375.272,
+      372.094,
+      371.915,
+      371.586,
+      371.586,
+      371.586,
+      371.536,
+      371.432,
+      371.432,
+      371.432,
+      371.432,
+      371.432,
+      371.432,
+      371.432,
+      371.432,
+      371.432
+    ]
+  },
+  "honesty": "Response = predicted drive + station turnout (LFB attendance is mobilise->arrive; travel-only scoring was wrong). Judged on LFB first-engine KPIs: mean <= 6 min, > 90% within 10 min. Drive comes from the chosen scorer (kolesar). Turnout: default (existing stations), 60 s for new sites. Discrete candidates (existing houses + demand centroids); house sites are OpenStreetMap station buildings. No land, zoning or staffing constraints. Station size (n_pumps) defaults from LFB two-pump inference (~40 stations with a second appliance). resize mode reallocates a fixed pump budget under a capacity-scaled busy model; other modes keep baseline pumps unless overridden. Busy blend applies when use_busy=True or mode=resize (location optimisation still uses nearest engine).",
+  "city_name": "Delhi",
+  "n_stations": 48,
+  "elapsed_s": 3.5,
+  "demand": "population_proxy"
+}

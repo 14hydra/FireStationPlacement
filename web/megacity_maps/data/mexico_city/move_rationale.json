@@ -1,0 +1,134 @@
+[
+  {
+    "role": "closed",
+    "name": "Mexico City Station 12",
+    "lat": 19.508389083092624,
+    "lon": -99.21666955439014,
+    "local_share": 0.010361892978657593,
+    "local_before_s": 263.01883931343775,
+    "local_after_s": 263.01883931343775,
+    "local_delta_s": 0.0,
+    "why": "Nearby demand still within ~6 min (modelled)"
+  },
+  {
+    "role": "closed",
+    "name": "Mexico City Station 39",
+    "lat": 19.376756103544,
+    "lon": -99.00907259255368,
+    "local_share": 0.0017785338694710794,
+    "local_before_s": 311.1063717120056,
+    "local_after_s": 311.1063717120056,
+    "local_delta_s": 0.0,
+    "why": "Low local demand share"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 6",
+    "lat": 19.405972866567357,
+    "lon": -99.14859650989573,
+    "local_share": 0.07206928549334983,
+    "local_before_s": 448.4452996984339,
+    "local_after_s": 287.6414719508588,
+    "local_delta_s": -160.80382774757513,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 10",
+    "lat": 19.44623832923833,
+    "lon": -99.16234336609337,
+    "local_share": 0.07616764614908754,
+    "local_before_s": 369.6435981521693,
+    "local_after_s": 278.19418771936097,
+    "local_delta_s": -91.44941043280838,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 19",
+    "lat": 19.406185965782296,
+    "lon": -99.07839046615425,
+    "local_share": 0.06371790906278998,
+    "local_before_s": 426.5392998141577,
+    "local_after_s": 278.60075100557725,
+    "local_delta_s": -147.9385488085805,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 21",
+    "lat": 19.39204661542276,
+    "lon": -99.17891241011654,
+    "local_share": 0.07407980204144757,
+    "local_before_s": 364.42710934737937,
+    "local_after_s": 280.4108568647603,
+    "local_delta_s": -84.016252482619,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 22",
+    "lat": 19.378037162162165,
+    "lon": -99.1202742117117,
+    "local_share": 0.060702134240643364,
+    "local_before_s": 391.93475806690213,
+    "local_after_s": 281.18384645335976,
+    "local_delta_s": -110.75091161354239,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 26",
+    "lat": 19.47220427709263,
+    "lon": -99.17855247966412,
+    "local_share": 0.06101144447881225,
+    "local_before_s": 377.22992587686605,
+    "local_after_s": 263.20123619764985,
+    "local_delta_s": -114.02868967921623,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 28",
+    "lat": 19.42014626391097,
+    "lon": -99.10617845786965,
+    "local_share": 0.07438911227961646,
+    "local_before_s": 479.4879696584193,
+    "local_after_s": 290.7554860179497,
+    "local_delta_s": -188.7324836404695,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 32",
+    "lat": 19.446035,
+    "lon": -99.06417520270271,
+    "local_share": 0.04902567274976802,
+    "local_before_s": 402.0237789210437,
+    "local_after_s": 271.7146906227878,
+    "local_delta_s": -130.30908829825577,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 38",
+    "lat": 19.44603254274683,
+    "lon": -99.19523648648648,
+    "local_share": 0.06580575317042994,
+    "local_before_s": 408.56584307421804,
+    "local_after_s": 282.5048749928974,
+    "local_delta_s": -126.06096808132064,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 89",
+    "lat": 19.51417389758179,
+    "lon": -99.13442647581792,
+    "local_share": 0.03371481596040829,
+    "local_before_s": 436.3653284593241,
+    "local_after_s": 281.98458348557216,
+    "local_delta_s": -154.38074497375186,
+    "why": "Large local modelled speed-up"
+  }
+]

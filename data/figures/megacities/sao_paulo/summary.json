@@ -1,0 +1,275 @@
+{
+  "city_id": "sao_paulo",
+  "mode": "replace",
+  "objective": "response_time",
+  "severity": "all",
+  "severity_rule": "every call counts 1",
+  "alpha": 1.0,
+  "solver_kind": "genetic",
+  "response_model": "nearest engine free",
+  "scorer": "kolesar",
+  "demand_years": [],
+  "eval_years": [],
+  "use_busy": false,
+  "n_existing_fire_stations": 48,
+  "n_candidates": 116,
+  "n_demand_cells": 267,
+  "n_incidents": 13086,
+  "n_incidents_dropped_far": 0,
+  "n_selected": 48,
+  "n_closed": 10,
+  "n_opened": 10,
+  "threshold_min": 10.0,
+  "total_pumps_baseline": 48,
+  "total_pumps_plan": 48,
+  "plan": {
+    "label": "plan_replace",
+    "n_posts": 48,
+    "expected_response_s": 312.4,
+    "median_response_s": 303.3,
+    "p90_response_s": 404.7,
+    "cvar90_response_s": 443.2,
+    "worst_cell_response_s": 622.1,
+    "coverage_share_within_threshold": 0.9995,
+    "area_mean_response_s": 329.0,
+    "areas_over_threshold_share": 0.0037,
+    "threshold_s": 600.0,
+    "demand_cells": 267,
+    "areas_with_demand": 267,
+    "objective_value": 312.3751569309589,
+    "lfb_first_engine": {
+      "mean_s": 312.3751569309589,
+      "p90_s": 404.93451905904533,
+      "share_within_6min": 0.6717866422130521,
+      "share_within_10min": 0.9995414947271893,
+      "meets_avg_6": true,
+      "meets_90pct_10": true,
+      "passes": true
+    },
+    "total_pumps": 48
+  },
+  "baselines": {
+    "current_fire_stations": {
+      "label": "current_fire_stations",
+      "n_posts": 48,
+      "expected_response_s": 373.3,
+      "median_response_s": 370.7,
+      "p90_response_s": 492.7,
+      "cvar90_response_s": 539.9,
+      "worst_cell_response_s": 652.1,
+      "coverage_share_within_threshold": 0.9886,
+      "area_mean_response_s": 379.4,
+      "areas_over_threshold_share": 0.015,
+      "threshold_s": 600.0,
+      "demand_cells": 267,
+      "areas_with_demand": 267,
+      "lfb_first_engine": {
+        "mean_s": 373.3262871422128,
+        "p90_s": 492.7371472172885,
+        "share_within_6min": 0.43244688980589946,
+        "share_within_10min": 0.9886137857252025,
+        "meets_avg_6": false,
+        "meets_90pct_10": true,
+        "passes": false
+      },
+      "total_pumps": 48
+    },
+    "random_replace": {
+      "label": "random_replace",
+      "n_posts": 48,
+      "expected_response_s": 365.7,
+      "median_response_s": 364.0,
+      "p90_response_s": 491.5,
+      "cvar90_response_s": 560.7,
+      "worst_cell_response_s": 735.6,
+      "coverage_share_within_threshold": 0.9769,
+      "area_mean_response_s": 377.1,
+      "areas_over_threshold_share": 0.0337,
+      "threshold_s": 600.0,
+      "demand_cells": 267,
+      "areas_with_demand": 267,
+      "lfb_first_engine": {
+        "mean_s": 365.74989647317113,
+        "p90_s": 492.7371472172885,
+        "share_within_6min": 0.45414947271893624,
+        "share_within_10min": 0.9769219012685313,
+        "meets_avg_6": false,
+        "meets_90pct_10": true,
+        "passes": false
+      }
+    }
+  },
+  "eval": null,
+  "delta_vs_current_s": -60.9,
+  "travel": {
+    "scorer": "kolesar",
+    "surrogate_speed_kph": 28.0,
+    "kolesar": {
+      "a": 15.846,
+      "b": 180.913,
+      "c": 145.697,
+      "e": 71.783,
+      "breakpoint_km": 1.913
+    },
+    "kolesar_fit": {
+      "source": "london_default",
+      "n_pairs": 0
+    },
+    "turnout": {
+      "source": "default",
+      "default_s": 60.0,
+      "n_existing_with_prior": 0,
+      "existing_min_s": 60.0,
+      "existing_median_s": 60.0,
+      "existing_max_s": 60.0
+    },
+    "pumps": {
+      "baseline_total": 48,
+      "n_two_plus": 0,
+      "min_pumps": 1,
+      "max_pumps": 3
+    }
+  },
+  "busy_vs_ignoring_busy": null,
+  "pump_moves": [
+    {
+      "from": 2,
+      "to": 59,
+      "pumps": 1,
+      "km": 18.45,
+      "from_name": "S\u00e3o Paulo Station 3",
+      "to_name": "Demand cell 11"
+    },
+    {
+      "from": 6,
+      "to": 67,
+      "pumps": 1,
+      "km": 14.27,
+      "from_name": "S\u00e3o Paulo Station 7",
+      "to_name": "Demand cell 19"
+    },
+    {
+      "from": 10,
+      "to": 82,
+      "pumps": 1,
+      "km": 10.29,
+      "from_name": "S\u00e3o Paulo Station 11",
+      "to_name": "Demand cell 34"
+    },
+    {
+      "from": 11,
+      "to": 91,
+      "pumps": 1,
+      "km": 9.32,
+      "from_name": "S\u00e3o Paulo Station 12",
+      "to_name": "Demand cell 141"
+    },
+    {
+      "from": 17,
+      "to": 69,
+      "pumps": 1,
+      "km": 12.96,
+      "from_name": "S\u00e3o Paulo Station 18",
+      "to_name": "Demand cell 21"
+    },
+    {
+      "from": 21,
+      "to": 64,
+      "pumps": 1,
+      "km": 11.9,
+      "from_name": "S\u00e3o Paulo Station 22",
+      "to_name": "Demand cell 16"
+    },
+    {
+      "from": 22,
+      "to": 109,
+      "pumps": 1,
+      "km": 13.22,
+      "from_name": "S\u00e3o Paulo Station 23",
+      "to_name": "Demand cell 75"
+    },
+    {
+      "from": 23,
+      "to": 58,
+      "pumps": 1,
+      "km": 11.31,
+      "from_name": "S\u00e3o Paulo Station 24",
+      "to_name": "Demand cell 10"
+    },
+    {
+      "from": 31,
+      "to": 96,
+      "pumps": 1,
+      "km": 9.09,
+      "from_name": "S\u00e3o Paulo Station 32",
+      "to_name": "Demand cell 44"
+    },
+    {
+      "from": 39,
+      "to": 104,
+      "pumps": 1,
+      "km": 8.03,
+      "from_name": "S\u00e3o Paulo Station 40",
+      "to_name": "Demand cell 43"
+    }
+  ],
+  "street_refinement": null,
+  "floors": {
+    "keep_slowest": true,
+    "keep_average": true,
+    "keep_boroughs": null,
+    "today_mean_s": 373.33,
+    "today_slowest10_s": 539.89
+  },
+  "expand_pumps": "move",
+  "replace_r": 10,
+  "n_replaced": 10,
+  "solver": {
+    "solver": "genetic algorithm",
+    "optimal": null,
+    "objective_value": 312.3752,
+    "generations": 196,
+    "evaluations": 15760,
+    "solve_s": 1.62,
+    "params": {
+      "population": 80,
+      "max_generations": 400,
+      "elite": 4,
+      "tournament": 3,
+      "mutation_rate": 0.3,
+      "patience": 80,
+      "seed": 42,
+      "busy_aware": false,
+      "busy_load_dependent": false,
+      "cap_s": 720.0,
+      "feasible": true
+    },
+    "history_every_10": [
+      336.802,
+      317.779,
+      314.609,
+      314.003,
+      312.801,
+      312.712,
+      312.712,
+      312.712,
+      312.594,
+      312.594,
+      312.594,
+      312.594,
+      312.375,
+      312.375,
+      312.375,
+      312.375,
+      312.375,
+      312.375,
+      312.375,
+      312.375
+    ]
+  },
+  "honesty": "Response = predicted drive + station turnout (LFB attendance is mobilise->arrive; travel-only scoring was wrong). Judged on LFB first-engine KPIs: mean <= 6 min, > 90% within 10 min. Drive comes from the chosen scorer (kolesar). Turnout: default (existing stations), 60 s for new sites. Discrete candidates (existing houses + demand centroids); house sites are OpenStreetMap station buildings. No land, zoning or staffing constraints. Station size (n_pumps) defaults from LFB two-pump inference (~40 stations with a second appliance). resize mode reallocates a fixed pump budget under a capacity-scaled busy model; other modes keep baseline pumps unless overridden. Busy blend applies when use_busy=True or mode=resize (location optimisation still uses nearest engine).",
+  "city_name": "S\u00e3o Paulo",
+  "n_stations": 48,
+  "elapsed_s": 3.4,
+  "demand": "population_proxy"
+}

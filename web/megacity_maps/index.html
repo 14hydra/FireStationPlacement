@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Megacity fire-station placement</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <aside id="panel">
+    <header>
+      <h1>Megacity placement</h1>
+      <p class="sub">Move-up-to-10 · Kolesar travel times · population-proxy demand</p>
+    </header>
+
+    <label class="field">
+      City
+      <select id="citySelect"></select>
+    </label>
+
+    <section id="metrics" class="card">
+      <h2>Modelled metrics</h2>
+      <div id="metricsBody" class="muted">Select a city…</div>
+    </section>
+
+    <section class="card">
+      <h2>Layers</h2>
+      <label class="check"><input type="checkbox" id="layerKept" checked /> Kept stations</label>
+      <label class="check"><input type="checkbox" id="layerClosed" checked /> Closed</label>
+      <label class="check"><input type="checkbox" id="layerOpened" checked /> Opened</label>
+      <label class="check"><input type="checkbox" id="layerDemand" checked /> Demand heat</label>
+      <label class="check"><input type="checkbox" id="layerDelta" checked /> Coverage Δ (faster = blue)</label>
+    </section>
+
+    <section id="rationale" class="card">
+      <h2>Why move</h2>
+      <div id="rationaleBody" class="muted">—</div>
+    </section>
+
+    <p class="caveat">
+      Not LFB-grade validation. Demand is a population proxy; travel times use the
+      Kolesar formula (London-calibrated fallback when local pairs are thin).
+      London ISEF figures are unchanged.
+    </p>
+  </aside>
+  <main id="map"></main>
+
+  <script>
+    window.GOOGLE_MAPS_API_KEY = "__GOOGLE_MAPS_API_KEY__";
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>

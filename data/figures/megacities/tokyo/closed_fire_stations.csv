@@ -1,0 +1,11 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+4,Tokyo Station 5,existing_fire_station,139.5938881408124,35.823775096141155,True,,1
+15,Tokyo Station 16,existing_fire_station,139.45724546206705,35.66202676853562,True,,1
+22,Tokyo Station 23,existing_fire_station,139.40338445683395,35.552650657604225,True,,1
+25,Tokyo Station 26,existing_fire_station,139.533861205787,35.53640286796411,True,,1
+27,Tokyo Station 28,existing_fire_station,139.44928941226388,35.80875356979205,True,,1
+33,Tokyo Station 34,existing_fire_station,139.90269226190082,35.57594020490764,True,,1
+39,Tokyo Station 40,existing_fire_station,139.90131254283514,35.54574309399329,True,,1
+40,Tokyo Station 41,existing_fire_station,139.50313528957275,35.808142614065964,True,,1
+43,Tokyo Station 44,existing_fire_station,139.5021394679704,35.60361564806773,True,,1
+47,Tokyo Station 48,existing_fire_station,139.4989818896796,35.81865291831882,True,,1
