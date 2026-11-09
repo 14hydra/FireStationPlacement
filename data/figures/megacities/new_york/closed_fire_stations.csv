@@ -1,0 +1,11 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+7,New York Station 8,existing_fire_station,-73.7813372871512,40.86290072776673,True,,1
+16,New York Station 17,existing_fire_station,-73.79961512046921,40.69691320399831,True,,1
+22,New York Station 23,existing_fire_station,-73.9126856445342,40.592823757644496,True,,1
+23,New York Station 24,existing_fire_station,-73.81739884518002,40.86130994636649,True,,1
+25,New York Station 26,existing_fire_station,-73.90316519311047,40.89857824041721,True,,1
+31,New York Station 32,existing_fire_station,-73.99507613178967,40.775749599781555,True,,1
+41,New York Station 42,existing_fire_station,-73.97678167268381,40.58685602715287,True,,1
+48,New York Station 49,existing_fire_station,-73.79379798217859,40.68012607329327,True,,1
+50,New York Station 51,existing_fire_station,-73.94451086994337,40.56397657000613,True,,1
+55,New York Station 56,existing_fire_station,-73.8149787575868,40.65165060181185,True,,1

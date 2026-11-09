@@ -18,8 +18,8 @@ a Google Maps viewer.
 
 ## Cities
 
-Tokyo, Delhi, Shanghai, Dhaka, Cairo, São Paulo, Mexico City, Beijing, Mumbai, Osaka  
-(registry: `src/firestation/megacities.py`)
+Tokyo, Delhi, Shanghai, Dhaka, Cairo, São Paulo, Mexico City, Beijing, Mumbai, Osaka, plus **London** and **New York**  
+(registry: `src/firestation/megacities.py`). Stations are clipped to each city outline so markers are not drawn outside the border.
 
 ## Rebuild
 
@@ -56,3 +56,7 @@ Open either file in a browser (no server / API key; needs network once for map t
 City dropdown, kept / closed / opened stations, demand heat, coverage Δ, and
 per-move rationale. Rebuild the HTML after re-running placement by regenerating
 from `web/megacity_maps/data/` (same embed used above).
+
+## Realistic station counts
+
+Non-London cities use a **London-like station density** (~0.038 stations per km² of the study bbox, clipped to 70–120), inside the city outline. OSM stations are preferred when Overpass works; otherwise synthetic fill. This stops sparse 48-station synthetics from exaggerating move-10 savings versus London’s 102 real stations.

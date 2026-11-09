@@ -153,18 +153,22 @@ def fetch_stations_osmnx(bbox: tuple[float, float, float, float]) -> pd.DataFram
 
 
 def synthetic_stations(city, n: int = 40, seed: int = 0) -> pd.DataFrame:
-    """Fallback lattice biased toward the urban core when OSM is unavailable."""
+    """Fallback lattice — only inside urban_extent.geojson when that file exists."""
+    from firestation.geo_clip import load_rings, points_in_rings
+
     rng = np.random.default_rng(seed + abs(hash(city.id)) % 10_000)
     west, south, east, north = city.bbox
     clon, clat = city.center
-    # ~sqrt(n) grid with jitter, denser near center via rejection
+    rings = load_rings(city.raw_dir / "urban_extent.geojson")
     rows = []
     attempts = 0
-    while len(rows) < n and attempts < n * 40:
+    max_attempts = n * (80 if rings else 40)
+    while len(rows) < n and attempts < max_attempts:
         attempts += 1
         lon = rng.uniform(west, east)
         lat = rng.uniform(south, north)
-        # prefer center
+        if rings and not bool(points_in_rings(np.array([lon]), np.array([lat]), rings)[0]):
+            continue
         d = ((lon - clon) / max(east - west, 1e-6)) ** 2 + ((lat - clat) / max(north - south, 1e-6)) ** 2
         if rng.random() > np.exp(-3.5 * d):
             continue
@@ -178,7 +182,56 @@ def synthetic_stations(city, n: int = 40, seed: int = 0) -> pd.DataFrame:
                 "source": "synthetic_fallback",
             }
         )
+    if len(rows) < max(8, n // 3) and rings:
+        # Polygon too tight vs bbox — sample lon/lat from ring bounding box only
+        all_xy = np.vstack(rings)
+        west, east = float(all_xy[:, 0].min()), float(all_xy[:, 0].max())
+        south, north = float(all_xy[:, 1].min()), float(all_xy[:, 1].max())
+        while len(rows) < n and attempts < max_attempts * 3:
+            attempts += 1
+            lon = rng.uniform(west, east)
+            lat = rng.uniform(south, north)
+            if not bool(points_in_rings(np.array([lon]), np.array([lat]), rings)[0]):
+                continue
+            rows.append(
+                {
+                    "facilityname": f"{city.name} Station {len(rows)+1}",
+                    "lat": float(lat),
+                    "lon": float(lon),
+                    "osm_element": None,
+                    "osm_id": None,
+                    "source": "synthetic_fallback",
+                }
+            )
     return pd.DataFrame(rows)
+
+
+def _clip_to_extent(city, df: pd.DataFrame) -> pd.DataFrame:
+    from firestation.geo_clip import filter_frame_inside
+
+    before = len(df)
+    out = filter_frame_inside(df, city.raw_dir / "urban_extent.geojson")
+    if len(out) < before:
+        print(f"  clipped stations to urban outline: {before} → {len(out)}")
+    return out
+
+
+def london_real_stations() -> pd.DataFrame | None:
+    path = ROOT / "data" / "raw" / "london" / "london_fire_stations.csv"
+    if not path.exists():
+        return None
+    df = pd.read_csv(path)
+    name_col = "facilityname" if "facilityname" in df.columns else "name"
+    return pd.DataFrame(
+        {
+            "facilityname": df[name_col].astype(str),
+            "lat": pd.to_numeric(df["lat"], errors="coerce"),
+            "lon": pd.to_numeric(df["lon"], errors="coerce"),
+            "osm_element": df.get("osm_element"),
+            "osm_id": df.get("osm_id"),
+            "source": "lfb_osm_matched",
+        }
+    ).dropna(subset=["lat", "lon"]).reset_index(drop=True)
 
 
 def build_one(
@@ -187,24 +240,38 @@ def build_one(
     force: bool = False,
     allow_synthetic: bool = True,
     synthetic_only: bool = False,
-    n_synthetic: int = 48,
+    n_synthetic: int | None = None,
 ) -> Path:
+    """Build a London-density station set inside the city outline.
+
+    Prefers real OSM / LFB points; fills with synthetic sites only up to a
+    London-like density target so move-10 savings are comparable across cities.
+    """
+    from firestation.geo_clip import target_station_count
+
     city = get_megacity(city_id)
     out = city.fire_stations_path
     if out.exists() and not force:
         print(f"{city.id}: keep existing {out} ({sum(1 for _ in out.open())-1} rows)")
         return out
 
+    target = n_synthetic or (
+        102 if city.id == "london" else target_station_count(city.bbox)
+    )
     df = pd.DataFrame()
     source = "none"
-    if synthetic_only:
-        print(f"{city.id}: synthetic stations (n={n_synthetic})", flush=True)
-        df = synthetic_stations(city, n=n_synthetic)
-        source = "synthetic_fallback"
-    else:
+
+    if city.id == "london":
+        real = london_real_stations()
+        if real is not None and len(real) >= 8:
+            df = real
+            source = "lfb_osm_matched"
+            print(f"{city.id}: using {len(df)} real LFB stations", flush=True)
+
+    if df.empty and not synthetic_only:
         print(f"{city.id}: fetching OSM fire stations in {city.bbox} …", flush=True)
         try:
-            df = fetch_stations_overpass(city.bbox, timeout_s=12.0)
+            df = fetch_stations_overpass(city.bbox, timeout_s=15.0)
             source = "osm_overpass"
         except Exception as exc:  # noqa: BLE001
             print(f"{city.id}: direct Overpass failed ({exc}); trying osmnx…")
@@ -214,19 +281,68 @@ def build_one(
             except Exception as exc2:  # noqa: BLE001
                 print(f"{city.id}: osmnx also failed ({exc2})")
 
-        if len(df) < 8:
-            if not allow_synthetic:
-                raise RuntimeError(f"{city.id}: only {len(df)} OSM fire stations")
-            print(f"{city.id}: OSM returned {len(df)} stations — using synthetic fallback (n={n_synthetic})")
-            df = synthetic_stations(city, n=n_synthetic)
-            source = "synthetic_fallback"
+    if df.empty and allow_synthetic:
+        print(f"{city.id}: synthetic stations to London-like density (n={target})", flush=True)
+        df = synthetic_stations(city, n=target)
+        source = "synthetic_density"
+
+    df = _clip_to_extent(city, df)
+
+    # Top up to density target with synthetic sites inside the outline
+    if allow_synthetic and len(df) < target:
+        need = target - len(df)
+        print(f"{city.id}: {len(df)} real/OSM inside outline — adding {need} synthetic to reach {target}")
+        extra = synthetic_stations(city, n=need + 20)
+        extra = _clip_to_extent(city, extra)
+        if len(df):
+            # drop synthetics that land on top of existing
+            keep = []
+            existing = df[["lat", "lon"]].to_numpy(float)
+            for _, r in extra.iterrows():
+                d2 = (existing[:, 0] - r.lat) ** 2 + (existing[:, 1] - r.lon) ** 2
+                if len(d2) and float(d2.min()) < (0.004 ** 2):
+                    continue
+                keep.append(r)
+                if len(keep) >= need:
+                    break
+            if keep:
+                df = pd.concat([df, pd.DataFrame(keep)], ignore_index=True)
+                source = f"{source}+synthetic_fill"
+        else:
+            df = extra.head(target)
+            source = "synthetic_density"
+
+    if len(df) < 20:
+        raise RuntimeError(f"{city.id}: only {len(df)} stations after density build")
+
+    # Unique names
+    seen: dict[str, int] = {}
+    uniq = []
+    for n in df["facilityname"].astype(str):
+        if n not in seen:
+            seen[n] = 0
+            uniq.append(n)
+        else:
+            seen[n] += 1
+            uniq.append(f"{n} ({seen[n]+1})")
+    df = df.copy()
+    df["facilityname"] = uniq
 
     city.raw_dir.mkdir(parents=True, exist_ok=True)
     df.to_csv(out, index=False)
     (city.raw_dir / "stations_meta.json").write_text(
-        json.dumps({"source": source, "n_stations": int(len(df))}, indent=2) + "\n"
+        json.dumps(
+            {
+                "source": source,
+                "n_stations": int(len(df)),
+                "target_stations": int(target),
+                "note": "Density matched to ~London LFB stations per km² of study bbox",
+            },
+            indent=2,
+        )
+        + "\n"
     )
-    print(f"{city.id}: wrote {len(df)} stations ({source}) → {out}")
+    print(f"{city.id}: wrote {len(df)} stations (target {target}, {source}) → {out}")
     return out
 
 
@@ -238,9 +354,14 @@ def main() -> int:
     ap.add_argument(
         "--synthetic",
         action="store_true",
-        help="Skip Overpass and write a synthetic station lattice (fast / offline)",
+        help="Skip Overpass; build a London-density synthetic lattice inside the outline",
     )
-    ap.add_argument("--n-synthetic", type=int, default=48)
+    ap.add_argument(
+        "--n-synthetic",
+        type=int,
+        default=None,
+        help="Override density target (default = London-like stations/km² of bbox)",
+    )
     args = ap.parse_args()
     cities = iter_megacities([args.city] if args.city else None)
     failed = []

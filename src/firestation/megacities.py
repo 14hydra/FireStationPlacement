@@ -124,6 +124,23 @@ MEGACITIES: dict[str, Megacity] = {
         pop_millions=19.0,
         notes="Osaka–Kobe–Kyoto core slice around Osaka",
     ),
+    # Study / comparison cities (same viewer; London uses real LFB stations when available)
+    "london": Megacity(
+        id="london",
+        name="London",
+        bbox=(-0.50, 51.28, 0.35, 51.70),
+        center=(-0.12, 51.50),
+        pop_millions=9.7,
+        notes="Greater London; real LFB stations preferred",
+    ),
+    "new_york": Megacity(
+        id="new_york",
+        name="New York",
+        bbox=(-74.05, 40.55, -73.70, 40.92),
+        center=(-73.98, 40.75),
+        pop_millions=18.8,
+        notes="NYC five-borough core",
+    ),
 }
 
 

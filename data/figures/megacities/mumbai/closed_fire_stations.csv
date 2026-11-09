@@ -1,11 +1,11 @@
 candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
-5,Mumbai Station 6,existing_fire_station,72.79058674376853,18.92047100327537,True,,1
-8,Mumbai Station 9,existing_fire_station,72.88987033595537,19.123746349415157,True,,1
-16,Mumbai Station 17,existing_fire_station,72.92938787797107,19.081960055687816,True,,1
-18,Mumbai Station 19,existing_fire_station,72.9665578234359,19.13903744580282,True,,1
-23,Mumbai Station 24,existing_fire_station,72.79019266233942,19.255013478260626,True,,1
-26,Mumbai Station 27,existing_fire_station,73.00085506145963,19.22722876863435,True,,1
-31,Mumbai Station 32,existing_fire_station,72.93902893543779,18.91221193533564,True,,1
-38,Mumbai Station 39,existing_fire_station,72.96086711771667,18.91990774813043,True,,1
-42,Mumbai Station 43,existing_fire_station,72.77959608411474,18.940297097886045,True,,1
-47,Mumbai Station 48,existing_fire_station,72.88277436757684,18.92420004575243,True,,1
+2,Mumbai Station 3,existing_fire_station,72.8273132739007,18.913241956274227,True,,1
+9,Mumbai Station 10,existing_fire_station,72.81308794850572,18.900878203051835,True,,1
+12,Mumbai Station 13,existing_fire_station,72.82711894864518,18.95293151917183,True,,1
+15,Mumbai Station 16,existing_fire_station,72.82782559168857,19.016160099761024,True,,1
+22,Mumbai Station 23,existing_fire_station,72.82504322609516,18.96177240459056,True,,1
+30,Mumbai Station 31,existing_fire_station,72.85533241740762,19.032477867401255,True,,1
+48,Mumbai Station 49,existing_fire_station,72.83793645040508,19.0135713142466,True,,1
+53,Mumbai Station 54,existing_fire_station,72.85134737458216,19.034032580331452,True,,1
+59,Mumbai Station 60,existing_fire_station,72.83174975625141,18.925149744691975,True,,1
+60,Mumbai Station 61,existing_fire_station,72.84194226901725,19.018453902315667,True,,1

@@ -1,11 +1,11 @@
 candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
-0,Shanghai Station 1,existing_fire_station,121.47635914575277,31.444920020876513,True,,1
-13,Shanghai Station 14,existing_fire_station,121.3223912798082,31.39343093530415,True,,1
-15,Shanghai Station 16,existing_fire_station,121.37301067386544,31.087608234196264,True,,1
-16,Shanghai Station 17,existing_fire_station,121.72449016172038,31.21934383660881,True,,1
-17,Shanghai Station 18,existing_fire_station,121.74672910844188,31.407332481491732,True,,1
-22,Shanghai Station 23,existing_fire_station,121.47096420130516,31.070574213305473,True,,1
-28,Shanghai Station 29,existing_fire_station,121.72297115273248,31.213766474614125,True,,1
-41,Shanghai Station 42,existing_fire_station,121.67908527141756,31.179181476572005,True,,1
-44,Shanghai Station 45,existing_fire_station,121.20435137411845,31.27192525394237,True,,1
-46,Shanghai Station 47,existing_fire_station,121.55895939844012,31.395302137336937,True,,1
+14,Shanghai Station 15,existing_fire_station,121.20833349767491,31.186172897936757,True,,1
+23,Shanghai Station 24,existing_fire_station,121.21210100816135,31.174821116175025,True,,1
+32,Shanghai Station 33,existing_fire_station,121.26577676911884,31.12674053932162,True,,1
+33,Shanghai Station 34,existing_fire_station,121.6662727232586,31.420219471804256,True,,1
+39,Shanghai Station 40,existing_fire_station,121.2077586025268,31.13484327034675,True,,1
+47,Shanghai Station 48,existing_fire_station,121.66699433475029,31.301308845691175,True,,1
+52,Shanghai Station 53,existing_fire_station,121.35984359940264,31.370904522767944,True,,1
+60,Shanghai Station 61,existing_fire_station,121.33846684444494,31.10179548234907,True,,1
+63,Shanghai Station 64,existing_fire_station,121.2522427774608,31.173284301178875,True,,1
+66,Shanghai Station 67,existing_fire_station,121.30951018454728,31.391390602414624,True,,1

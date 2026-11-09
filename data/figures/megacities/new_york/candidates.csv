@@ -1,0 +1,135 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+0,New York Station 1,existing_fire_station,-73.98110271017785,40.682655568908295,True,,1
+1,New York Station 2,existing_fire_station,-73.99457457218412,40.77082312525519,True,,1
+2,New York Station 3,existing_fire_station,-73.9898623958528,40.74847037234328,True,,1
+3,New York Station 4,existing_fire_station,-73.8028039204113,40.72359007769253,True,,1
+4,New York Station 5,existing_fire_station,-74.00049557359235,40.73204787401872,True,,1
+5,New York Station 6,existing_fire_station,-73.94777555144617,40.72778591156635,True,,1
+6,New York Station 7,existing_fire_station,-73.80450440350802,40.764523736911414,True,,1
+7,New York Station 8,existing_fire_station,-73.7813372871512,40.86290072776673,True,,1
+8,New York Station 9,existing_fire_station,-73.93467007647735,40.64807299337358,True,,1
+9,New York Station 10,existing_fire_station,-73.87395909127373,40.76385671351451,True,,1
+10,New York Station 11,existing_fire_station,-73.99376237137118,40.781688228838846,True,,1
+11,New York Station 12,existing_fire_station,-73.92424242786072,40.63608229523794,True,,1
+12,New York Station 13,existing_fire_station,-74.02896991258,40.66293362766913,True,,1
+13,New York Station 14,existing_fire_station,-73.98445386492764,40.57994793993697,True,,1
+14,New York Station 15,existing_fire_station,-73.98337255762661,40.56415367088684,True,,1
+15,New York Station 16,existing_fire_station,-73.92821182025827,40.84184215786905,True,,1
+16,New York Station 17,existing_fire_station,-73.79961512046921,40.69691320399831,True,,1
+17,New York Station 18,existing_fire_station,-73.86574702055657,40.81898964756152,True,,1
+18,New York Station 19,existing_fire_station,-73.87459820991049,40.725250759933125,True,,1
+19,New York Station 20,existing_fire_station,-73.84249115368696,40.838979345210745,True,,1
+20,New York Station 21,existing_fire_station,-73.95586714056215,40.81911312335965,True,,1
+21,New York Station 22,existing_fire_station,-73.93980065905936,40.60368487409051,True,,1
+22,New York Station 23,existing_fire_station,-73.9126856445342,40.592823757644496,True,,1
+23,New York Station 24,existing_fire_station,-73.81739884518002,40.86130994636649,True,,1
+24,New York Station 25,existing_fire_station,-74.02233069294655,40.70910646301984,True,,1
+25,New York Station 26,existing_fire_station,-73.90316519311047,40.89857824041721,True,,1
+26,New York Station 27,existing_fire_station,-73.86873807650929,40.61751324452611,True,,1
+27,New York Station 28,existing_fire_station,-73.87309235650699,40.80810593305521,True,,1
+28,New York Station 29,existing_fire_station,-73.8686878257134,40.767209813632235,True,,1
+29,New York Station 30,existing_fire_station,-73.89918094868762,40.8488983838319,True,,1
+30,New York Station 31,existing_fire_station,-73.86580962223188,40.756449877324535,True,,1
+31,New York Station 32,existing_fire_station,-73.99507613178967,40.775749599781555,True,,1
+32,New York Station 33,existing_fire_station,-73.97295194261338,40.67454935903838,True,,1
+33,New York Station 34,existing_fire_station,-74.03049776859334,40.64449637716158,True,,1
+34,New York Station 35,existing_fire_station,-73.85632909016496,40.72133502130646,True,,1
+35,New York Station 36,existing_fire_station,-73.90429139654049,40.802142244852654,True,,1
+36,New York Station 37,existing_fire_station,-73.76601158593216,40.60458890862125,True,,1
+37,New York Station 38,existing_fire_station,-73.90862658076071,40.82097274995421,True,,1
+38,New York Station 39,existing_fire_station,-73.935837454081,40.83248163817754,True,,1
+39,New York Station 40,existing_fire_station,-73.95950487567441,40.75485643321498,True,,1
+40,New York Station 41,existing_fire_station,-73.90096422610148,40.84015449912113,True,,1
+41,New York Station 42,existing_fire_station,-73.97678167268381,40.58685602715287,True,,1
+42,New York Station 43,existing_fire_station,-73.89232158062754,40.62063330431406,True,,1
+43,New York Station 44,existing_fire_station,-73.92892832378496,40.77286620919506,True,,1
+44,New York Station 45,existing_fire_station,-73.90414484125924,40.77385035460063,True,,1
+45,New York Station 46,existing_fire_station,-73.9849147660238,40.77692234822812,True,,1
+46,New York Station 47,existing_fire_station,-73.89024516039075,40.578553901903994,True,,1
+47,New York Station 48,existing_fire_station,-73.96159867154209,40.70679348007116,True,,1
+48,New York Station 49,existing_fire_station,-73.79379798217859,40.68012607329327,True,,1
+49,New York Station 50,existing_fire_station,-73.92142282391481,40.82603616678486,True,,1
+50,New York Station 51,existing_fire_station,-73.94451086994337,40.56397657000613,True,,1
+51,New York Station 52,existing_fire_station,-73.96652762476522,40.66031426952594,True,,1
+52,New York Station 53,existing_fire_station,-73.9249518738546,40.871082161306774,True,,1
+53,New York Station 54,existing_fire_station,-73.87164374070564,40.777157734864055,True,,1
+54,New York Station 55,existing_fire_station,-73.92359624911627,40.611999468920054,True,,1
+55,New York Station 56,existing_fire_station,-73.8149787575868,40.65165060181185,True,,1
+56,New York Station 57,existing_fire_station,-73.91879288085187,40.7787662990719,True,,1
+57,New York Station 58,existing_fire_station,-73.90198249809623,40.752268297340976,True,,1
+58,New York Station 59,existing_fire_station,-73.94707909381421,40.84175938840448,True,,1
+59,New York Station 60,existing_fire_station,-73.99587136458213,40.69983412160035,True,,1
+60,New York Station 61,existing_fire_station,-73.94063432890007,40.67450293195345,True,,1
+61,New York Station 62,existing_fire_station,-73.90668247377958,40.79936606990464,True,,1
+62,New York Station 63,existing_fire_station,-73.91503434597021,40.723121567916394,True,,1
+63,New York Station 64,existing_fire_station,-73.84997735901958,40.7553642083393,True,,1
+64,New York Station 65,existing_fire_station,-73.97395293502865,40.72047022287058,True,,1
+65,New York Station 66,existing_fire_station,-73.9070364650265,40.84782550340942,True,,1
+66,New York Station 67,existing_fire_station,-73.98898596153506,40.66635571411558,True,,1
+67,New York Station 68,existing_fire_station,-73.91887325062349,40.68732038157193,True,,1
+68,New York Station 69,existing_fire_station,-73.84828600235404,40.649795573744704,True,,1
+69,New York Station 70,existing_fire_station,-73.97558949736278,40.67090688939831,True,,1
+70,Demand cell 0,demand_cell,-73.94954857276358,40.755958546427664,False,,1
+71,Demand cell 1,demand_cell,-73.96713723058501,40.7557085443038,False,,1
+72,Demand cell 2,demand_cell,-73.98463677433435,40.732713622872105,False,,1
+73,Demand cell 3,demand_cell,-73.96698404350151,40.76971001069709,False,,1
+74,Demand cell 4,demand_cell,-73.98450990346963,40.75596526272653,False,,1
+75,Demand cell 5,demand_cell,-73.98457301247609,40.769675243602585,False,,1
+76,Demand cell 6,demand_cell,-73.94989945024484,40.76984300563615,False,,1
+77,Demand cell 7,demand_cell,-73.96702755705442,40.73288471311097,False,,1
+78,Demand cell 8,demand_cell,-74.00237228587268,40.75586518987342,False,,1
+79,Demand cell 9,demand_cell,-73.94966004281459,40.78378772338049,False,,1
+80,Demand cell 10,demand_cell,-73.94982129560685,40.71877151898734,False,,1
+81,Demand cell 11,demand_cell,-73.94979241450973,40.73285465709427,False,,1
+82,Demand cell 12,demand_cell,-73.93224811071227,40.75586518987342,False,,1
+83,Demand cell 13,demand_cell,-73.98468463064424,40.783685443037974,False,,1
+84,Demand cell 14,demand_cell,-73.93210143237842,40.76963586656515,False,,1
+85,Demand cell 15,demand_cell,-73.96725599600266,40.78358085562006,False,,1
+86,Demand cell 16,demand_cell,-73.98483327781479,40.718841243932616,False,,1
+87,Demand cell 17,demand_cell,-73.93220036642238,40.718910968877886,False,,1
+88,Demand cell 18,demand_cell,-73.967223017988,40.70486139240506,False,,1
+89,Demand cell 19,demand_cell,-73.96682728181212,40.718945831350524,False,,1
+90,Demand cell 20,demand_cell,-74.00219620253164,40.732576265822786,False,,1
+91,Demand cell 21,demand_cell,-73.93203572808967,40.73278782974201,False,,1
+92,Demand cell 22,demand_cell,-73.98453471349889,40.705038366025704,False,,1
+93,Demand cell 23,demand_cell,-74.00219620253165,40.71894985394352,False,,1
+94,Demand cell 24,demand_cell,-73.9494424150304,40.797595569620256,False,,1
+95,Demand cell 25,demand_cell,-74.00205696202532,40.70504538878842,False,,1
+96,Demand cell 26,demand_cell,-73.94958083544303,40.70489848607595,False,,1
+97,Demand cell 27,demand_cell,-73.9671602278481,40.797410101265825,False,,1
+98,Demand cell 28,demand_cell,-73.93208973050226,40.783461086157615,False,,1
+99,Demand cell 29,demand_cell,-73.91445685396727,40.73283243284965,False,,1
+100,Demand cell 30,demand_cell,-73.91445655926353,40.769736996547756,False,,1
+101,Demand cell 31,demand_cell,-73.93201898734176,40.79744101265823,False,,1
+102,Demand cell 32,demand_cell,-73.91473053797469,40.75586518987341,False,,1
+103,Demand cell 33,demand_cell,-73.98463346984363,40.69114608552282,False,,1
+104,Demand cell 34,demand_cell,-73.94956329113924,40.81138781377387,False,,1
+105,Demand cell 35,demand_cell,-73.91441845180137,40.71896966893865,False,,1
+106,Demand cell 36,demand_cell,-73.96699416193802,40.69103120907901,False,,1
+107,Demand cell 37,demand_cell,-73.93217023134002,40.70490136403318,False,,1
+108,Demand cell 38,demand_cell,-73.9144746835443,40.78364547140987,False,,1
+109,Demand cell 39,demand_cell,-73.93232678214524,40.81130233177881,False,,1
+110,Demand cell 162,demand_cell,-73.83004272151899,40.73268164556962,False,,1
+111,Demand cell 167,demand_cell,-73.83187025316455,40.74350063291139,False,,1
+112,Demand cell 175,demand_cell,-73.83113924050632,40.781367088607595,False,,1
+113,Demand cell 173,demand_cell,-73.86622784810126,40.66081265822785,False,,1
+114,Demand cell 136,demand_cell,-73.86301661392405,40.69136525768535,False,,1
+115,Demand cell 105,demand_cell,-73.86206669912366,40.71883096397273,False,,1
+116,Demand cell 91,demand_cell,-73.86197077438571,40.76982986597171,False,,1
+117,Demand cell 96,demand_cell,-73.86205572707627,40.783572352577956,False,,1
+118,Demand cell 119,demand_cell,-73.86206425426526,40.81137129884425,False,,1
+119,Demand cell 177,demand_cell,-73.92105379746836,40.62371898734177,False,,1
+120,Demand cell 100,demand_cell,-73.91466420534458,40.6633599859353,False,,1
+121,Demand cell 56,demand_cell,-73.91462372496007,40.69095126582278,False,,1
+122,Demand cell 55,demand_cell,-73.91441080865184,40.81155071279342,False,,1
+123,Demand cell 124,demand_cell,-73.9151600079114,40.852656487341775,False,,1
+124,Demand cell 149,demand_cell,-73.96679430379747,40.62371898734177,False,,1
+125,Demand cell 62,demand_cell,-73.94971835443037,40.66322468354431,False,,1
+126,Demand cell 110,demand_cell,-73.93222367088607,40.85305060759494,False,,1
+127,Demand cell 140,demand_cell,-73.9845277645092,40.62201302842131,False,,1
+128,Demand cell 75,demand_cell,-73.98455654925701,40.663282209686294,False,,1
+129,Demand cell 168,demand_cell,-74.01608544303798,40.622946202531644,False,,1
+130,Demand cell 89,demand_cell,-74.01979150721223,40.66329275831616,False,,1
+131,Demand cell 41,demand_cell,-74.0197013449367,40.69115826175407,False,,1
+132,Demand cell 70,demand_cell,-74.01838735523835,40.70436812550498,False,,1
+133,Demand cell 156,demand_cell,-74.01447721518987,40.74350063291139,False,,1

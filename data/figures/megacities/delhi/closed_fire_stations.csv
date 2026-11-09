@@ -1,11 +1,11 @@
 candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
-3,Delhi Station 4,existing_fire_station,77.44976433464002,28.780298611803783,True,,1
-7,Delhi Station 8,existing_fire_station,77.17338912525037,28.865241788705404,True,,1
-15,Delhi Station 16,existing_fire_station,77.28783749312971,28.422878850944176,True,,1
-16,Delhi Station 17,existing_fire_station,77.42988804113149,28.53137862563523,True,,1
-19,Delhi Station 20,existing_fire_station,77.40046064286743,28.498069852958828,True,,1
-29,Delhi Station 30,existing_fire_station,77.06334596319763,28.415753751331405,True,,1
-33,Delhi Station 34,existing_fire_station,76.90592544856494,28.525744672557643,True,,1
-41,Delhi Station 42,existing_fire_station,77.38992837151442,28.44351976811059,True,,1
-42,Delhi Station 43,existing_fire_station,77.40822980451122,28.8888097444723,True,,1
-45,Delhi Station 46,existing_fire_station,76.904969637476,28.582944153914692,True,,1
+15,Delhi Station 16,existing_fire_station,77.17670335011165,28.83210324250793,True,,1
+24,Delhi Station 25,existing_fire_station,76.91434908080966,28.550080574640248,True,,1
+39,Delhi Station 40,existing_fire_station,76.85453010727511,28.577387716278373,True,,1
+50,Delhi Station 51,existing_fire_station,77.2105413198947,28.53096337779293,True,,1
+58,Delhi Station 59,existing_fire_station,76.8515411794485,28.566910583713774,True,,1
+64,Delhi Station 65,existing_fire_station,76.95403862750426,28.61571186128143,True,,1
+84,Delhi Station 85,existing_fire_station,77.0281050788069,28.794784506724756,True,,1
+101,Delhi Station 102,existing_fire_station,77.09101457745332,28.790244246712955,True,,1
+103,Delhi Station 104,existing_fire_station,76.91716944530842,28.60802769824817,True,,1
+116,Delhi Station 117,existing_fire_station,77.00397230243318,28.763941091712717,True,,1

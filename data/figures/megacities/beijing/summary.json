@@ -11,88 +11,88 @@
   "demand_years": [],
   "eval_years": [],
   "use_busy": false,
-  "n_existing_fire_stations": 48,
-  "n_candidates": 119,
+  "n_existing_fire_stations": 70,
+  "n_candidates": 145,
   "n_demand_cells": 254,
-  "n_incidents": 13134,
+  "n_incidents": 14835,
   "n_incidents_dropped_far": 0,
-  "n_selected": 48,
+  "n_selected": 70,
   "n_closed": 10,
   "n_opened": 10,
   "threshold_min": 10.0,
-  "total_pumps_baseline": 48,
-  "total_pumps_plan": 48,
+  "total_pumps_baseline": 70,
+  "total_pumps_plan": 70,
   "plan": {
     "label": "plan_replace",
-    "n_posts": 48,
-    "expected_response_s": 310.6,
-    "median_response_s": 304.7,
-    "p90_response_s": 411.6,
-    "cvar90_response_s": 440.6,
-    "worst_cell_response_s": 551.9,
+    "n_posts": 70,
+    "expected_response_s": 296.3,
+    "median_response_s": 302.9,
+    "p90_response_s": 380.9,
+    "cvar90_response_s": 420.6,
+    "worst_cell_response_s": 559.2,
     "coverage_share_within_threshold": 1.0,
-    "area_mean_response_s": 328.6,
+    "area_mean_response_s": 307.4,
     "areas_over_threshold_share": 0.0,
     "threshold_s": 600.0,
     "demand_cells": 254,
     "areas_with_demand": 254,
-    "objective_value": 310.6307461385764,
+    "objective_value": 296.25742444435355,
     "lfb_first_engine": {
-      "mean_s": 310.6307461385764,
-      "p90_s": 411.74425998281816,
-      "share_within_6min": 0.7382366377341252,
+      "mean_s": 296.25742444435355,
+      "p90_s": 381.0241845139992,
+      "share_within_6min": 0.7803842264914055,
       "share_within_10min": 1.0,
       "meets_avg_6": true,
       "meets_90pct_10": true,
       "passes": true
     },
-    "total_pumps": 48
+    "total_pumps": 70
   },
   "baselines": {
     "current_fire_stations": {
       "label": "current_fire_stations",
-      "n_posts": 48,
-      "expected_response_s": 380.1,
-      "median_response_s": 374.5,
-      "p90_response_s": 540.9,
-      "cvar90_response_s": 582.1,
-      "worst_cell_response_s": 635.1,
-      "coverage_share_within_threshold": 0.9726,
-      "area_mean_response_s": 395.2,
-      "areas_over_threshold_share": 0.0354,
+      "n_posts": 70,
+      "expected_response_s": 341.4,
+      "median_response_s": 343.5,
+      "p90_response_s": 455.5,
+      "cvar90_response_s": 509.5,
+      "worst_cell_response_s": 619.4,
+      "coverage_share_within_threshold": 0.9926,
+      "area_mean_response_s": 347.3,
+      "areas_over_threshold_share": 0.0079,
       "threshold_s": 600.0,
       "demand_cells": 254,
       "areas_with_demand": 254,
       "lfb_first_engine": {
-        "mean_s": 380.0765529883761,
-        "p90_s": 541.1050570554894,
-        "share_within_6min": 0.4655855032739455,
-        "share_within_10min": 0.9725902238465053,
-        "meets_avg_6": false,
+        "mean_s": 341.37442137603136,
+        "p90_s": 456.1915593557079,
+        "share_within_6min": 0.5896191439164139,
+        "share_within_10min": 0.9925851027974385,
+        "meets_avg_6": true,
         "meets_90pct_10": true,
-        "passes": false
+        "passes": true
       },
-      "total_pumps": 48
+      "total_pumps": 70
     },
     "random_replace": {
       "label": "random_replace",
-      "n_posts": 48,
-      "expected_response_s": 354.1,
-      "median_response_s": 358.9,
-      "p90_response_s": 482.8,
-      "cvar90_response_s": 533.8,
-      "worst_cell_response_s": 626.2,
-      "coverage_share_within_threshold": 0.991,
-      "area_mean_response_s": 363.8,
-      "areas_over_threshold_share": 0.0197,
+      "n_posts": 70,
+      "expected_response_s": 318.2,
+      "median_response_s": 309.2,
+      "p90_response_s": 431.7,
+      "cvar90_response_s": 470.8,
+      "worst_cell_response_s": 559.8,
+      "coverage_share_within_threshold": 1.0,
+      "area_mean_response_s": 327.5,
+      "areas_over_threshold_share": 0.0,
       "threshold_s": 600.0,
       "demand_cells": 254,
       "areas_with_demand": 254,
       "lfb_first_engine": {
-        "mean_s": 354.139360833029,
-        "p90_s": 483.15294514228856,
-        "share_within_6min": 0.5076899649763972,
-        "share_within_10min": 0.9910156844830211,
+        "mean_s": 318.2130313883429,
+        "p90_s": 431.74259010985713,
+        "share_within_6min": 0.6589147286821705,
+        "share_within_10min": 1.0,
         "meets_avg_6": true,
         "meets_90pct_10": true,
         "passes": true
@@ -100,7 +100,7 @@
     }
   },
   "eval": null,
-  "delta_vs_current_s": -69.5,
+  "delta_vs_current_s": -45.1,
   "travel": {
     "scorer": "kolesar",
     "surrogate_speed_kph": 28.0,
@@ -124,7 +124,7 @@
       "existing_max_s": 60.0
     },
     "pumps": {
-      "baseline_total": 48,
+      "baseline_total": 70,
       "n_two_plus": 0,
       "min_pumps": 1,
       "max_pumps": 3
@@ -133,84 +133,84 @@
   "busy_vs_ignoring_busy": null,
   "pump_moves": [
     {
-      "from": 0,
-      "to": 70,
-      "pumps": 1,
-      "km": 14.84,
-      "from_name": "Beijing Station 1",
-      "to_name": "Demand cell 22"
-    },
-    {
-      "from": 3,
-      "to": 95,
-      "pumps": 1,
-      "km": 4.56,
-      "from_name": "Beijing Station 4",
-      "to_name": "Demand cell 60"
-    },
-    {
       "from": 4,
-      "to": 113,
+      "to": 99,
       "pumps": 1,
-      "km": 5.83,
+      "km": 26.39,
       "from_name": "Beijing Station 5",
-      "to_name": "Demand cell 80"
+      "to_name": "Demand cell 29"
     },
     {
-      "from": 7,
-      "to": 106,
+      "from": 8,
+      "to": 88,
       "pumps": 1,
-      "km": 9.02,
-      "from_name": "Beijing Station 8",
-      "to_name": "Demand cell 99"
+      "km": 9.25,
+      "from_name": "Beijing Station 9",
+      "to_name": "Demand cell 18"
     },
     {
-      "from": 26,
-      "to": 85,
+      "from": 10,
+      "to": 139,
       "pumps": 1,
-      "km": 15.61,
-      "from_name": "Beijing Station 27",
-      "to_name": "Demand cell 37"
+      "km": 8.24,
+      "from_name": "Beijing Station 11",
+      "to_name": "Demand cell 114"
     },
     {
-      "from": 29,
-      "to": 58,
+      "from": 19,
+      "to": 91,
       "pumps": 1,
-      "km": 12.45,
-      "from_name": "Beijing Station 30",
+      "km": 18.15,
+      "from_name": "Beijing Station 20",
+      "to_name": "Demand cell 21"
+    },
+    {
+      "from": 20,
+      "to": 120,
+      "pumps": 1,
+      "km": 7.58,
+      "from_name": "Beijing Station 21",
+      "to_name": "Demand cell 142"
+    },
+    {
+      "from": 34,
+      "to": 77,
+      "pumps": 1,
+      "km": 12.53,
+      "from_name": "Beijing Station 35",
+      "to_name": "Demand cell 7"
+    },
+    {
+      "from": 46,
+      "to": 115,
+      "pumps": 1,
+      "km": 25.0,
+      "from_name": "Beijing Station 47",
+      "to_name": "Demand cell 83"
+    },
+    {
+      "from": 48,
+      "to": 80,
+      "pumps": 1,
+      "km": 14.47,
+      "from_name": "Beijing Station 49",
       "to_name": "Demand cell 10"
     },
     {
-      "from": 39,
-      "to": 93,
+      "from": 49,
+      "to": 70,
       "pumps": 1,
-      "km": 5.4,
-      "from_name": "Beijing Station 40",
-      "to_name": "Demand cell 73"
+      "km": 13.05,
+      "from_name": "Beijing Station 50",
+      "to_name": "Demand cell 0"
     },
     {
-      "from": 41,
-      "to": 87,
+      "from": 62,
+      "to": 111,
       "pumps": 1,
-      "km": 9.43,
-      "from_name": "Beijing Station 42",
-      "to_name": "Demand cell 39"
-    },
-    {
-      "from": 43,
-      "to": 98,
-      "pumps": 1,
-      "km": 5.64,
-      "from_name": "Beijing Station 44",
-      "to_name": "Demand cell 115"
-    },
-    {
-      "from": 47,
-      "to": 100,
-      "pumps": 1,
-      "km": 5.37,
-      "from_name": "Beijing Station 48",
-      "to_name": "Demand cell 145"
+      "km": 9.19,
+      "from_name": "Beijing Station 63",
+      "to_name": "Demand cell 168"
     }
   ],
   "street_refinement": null,
@@ -218,8 +218,8 @@
     "keep_slowest": true,
     "keep_average": true,
     "keep_boroughs": null,
-    "today_mean_s": 380.08,
-    "today_slowest10_s": 582.07
+    "today_mean_s": 341.37,
+    "today_slowest10_s": 509.52
   },
   "expand_pumps": "move",
   "replace_r": 10,
@@ -227,10 +227,10 @@
   "solver": {
     "solver": "genetic algorithm",
     "optimal": null,
-    "objective_value": 310.6307,
-    "generations": 138,
-    "evaluations": 11120,
-    "solve_s": 1.12,
+    "objective_value": 296.2574,
+    "generations": 151,
+    "evaluations": 12160,
+    "solve_s": 1.34,
     "params": {
       "population": 80,
       "max_generations": 400,
@@ -245,25 +245,27 @@
       "feasible": true
     },
     "history_every_10": [
-      334.865,
-      316.458,
-      312.319,
-      311.849,
-      310.706,
-      310.668,
-      310.631,
-      310.631,
-      310.631,
-      310.631,
-      310.631,
-      310.631,
-      310.631,
-      310.631
+      307.511,
+      298.929,
+      298.26,
+      297.645,
+      297.645,
+      297.645,
+      297.645,
+      297.387,
+      296.257,
+      296.257,
+      296.257,
+      296.257,
+      296.257,
+      296.257,
+      296.257,
+      296.257
     ]
   },
   "honesty": "Response = predicted drive + station turnout (LFB attendance is mobilise->arrive; travel-only scoring was wrong). Judged on LFB first-engine KPIs: mean <= 6 min, > 90% within 10 min. Drive comes from the chosen scorer (kolesar). Turnout: default (existing stations), 60 s for new sites. Discrete candidates (existing houses + demand centroids); house sites are OpenStreetMap station buildings. No land, zoning or staffing constraints. Station size (n_pumps) defaults from LFB two-pump inference (~40 stations with a second appliance). resize mode reallocates a fixed pump budget under a capacity-scaled busy model; other modes keep baseline pumps unless overridden. Busy blend applies when use_busy=True or mode=resize (location optimisation still uses nearest engine).",
   "city_name": "Beijing",
-  "n_stations": 48,
-  "elapsed_s": 2.9,
+  "n_stations": 70,
+  "elapsed_s": 3.1,
   "demand": "population_proxy"
 }

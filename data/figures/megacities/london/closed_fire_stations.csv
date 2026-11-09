@@ -1,0 +1,11 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+8,Biggin Hill,existing_fire_station,0.0341143511908675,51.313615,True,,1
+12,Chingford,existing_fire_station,-0.0047711,51.6296127,True,,1
+25,Enfield,existing_fire_station,-0.05189325,51.6602193,True,,2
+35,Harold Hill,existing_fire_station,0.2235413607554786,51.5983747,True,,1
+37,Hayes,existing_fire_station,-0.4316736479820627,51.49438,True,,1
+44,Hornchurch,existing_fire_station,0.2205802941206759,51.56451135,True,,1
+65,Orpington,existing_fire_station,0.1107023454309018,51.37233395,True,,2
+72,Purley,existing_fire_station,-0.125150449999989,51.33182495,True,,1
+74,Romford,existing_fire_station,0.1811242124324326,51.59367685,True,,1
+75,Ruislip,existing_fire_station,-0.4367001982307689,51.5883815,True,,1

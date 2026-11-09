@@ -1,11 +1,11 @@
 candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
-4,Tokyo Station 5,existing_fire_station,139.5938881408124,35.823775096141155,True,,1
-15,Tokyo Station 16,existing_fire_station,139.45724546206705,35.66202676853562,True,,1
-22,Tokyo Station 23,existing_fire_station,139.40338445683395,35.552650657604225,True,,1
-25,Tokyo Station 26,existing_fire_station,139.533861205787,35.53640286796411,True,,1
-27,Tokyo Station 28,existing_fire_station,139.44928941226388,35.80875356979205,True,,1
-33,Tokyo Station 34,existing_fire_station,139.90269226190082,35.57594020490764,True,,1
-39,Tokyo Station 40,existing_fire_station,139.90131254283514,35.54574309399329,True,,1
-40,Tokyo Station 41,existing_fire_station,139.50313528957275,35.808142614065964,True,,1
-43,Tokyo Station 44,existing_fire_station,139.5021394679704,35.60361564806773,True,,1
-47,Tokyo Station 48,existing_fire_station,139.4989818896796,35.81865291831882,True,,1
+6,Tokyo Station 7,existing_fire_station,139.9086241503709,35.696367887710196,True,,1
+10,Tokyo Station 11,existing_fire_station,139.85560991002183,35.55735235515057,True,,1
+17,Tokyo Station 18,existing_fire_station,139.46179262178197,35.76490671871795,True,,1
+24,Tokyo Station 25,existing_fire_station,139.45255611850553,35.58252378736949,True,,1
+36,Tokyo Station 37,existing_fire_station,139.49708286841664,35.72795824164984,True,,1
+52,Tokyo Station 53,existing_fire_station,139.83672742336458,35.55669722746317,True,,1
+57,Tokyo Station 58,existing_fire_station,139.4783470505802,35.551939012383706,True,,1
+66,Tokyo Station 67,existing_fire_station,139.47005560997366,35.67447817095048,True,,1
+69,Tokyo Station 70,existing_fire_station,139.4767765314436,35.56100588044503,True,,1
+70,Tokyo Station 71,existing_fire_station,139.42895621880234,35.68024894215527,True,,1

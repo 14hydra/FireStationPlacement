@@ -1,0 +1,123 @@
+[
+  {
+    "role": "closed",
+    "name": "Chingford",
+    "lat": 51.6296127,
+    "lon": -0.0047711,
+    "local_share": 0.0004061463480674203,
+    "local_before_s": 375.3363371649818,
+    "local_after_s": 375.3363371649818,
+    "local_delta_s": 0.0,
+    "why": "Low local demand share"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 2",
+    "lat": 51.503236784432275,
+    "lon": -0.160294681655016,
+    "local_share": 0.02084884586746091,
+    "local_before_s": 281.46647428999097,
+    "local_after_s": 223.59227962891214,
+    "local_delta_s": -57.87419466107885,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 27",
+    "lat": 51.461051898734176,
+    "lon": -0.224126582278481,
+    "local_share": 0.02186421173762946,
+    "local_before_s": 294.9020110474824,
+    "local_after_s": 229.53727683552435,
+    "local_delta_s": -65.36473421195801,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 31",
+    "lat": 51.52929924050633,
+    "lon": -0.0110886075949367,
+    "local_share": 0.020171935287348543,
+    "local_before_s": 310.30246777240956,
+    "local_after_s": 250.21924582923174,
+    "local_delta_s": -60.083221943177776,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 39",
+    "lat": 51.43500768223483,
+    "lon": -0.0963037974683544,
+    "local_share": 0.01996886211331483,
+    "local_before_s": 323.8722072897235,
+    "local_after_s": 264.60921254085724,
+    "local_delta_s": -59.26299474886625,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 81",
+    "lat": 51.43483864482502,
+    "lon": -0.2240221518987341,
+    "local_share": 0.01814120354701144,
+    "local_before_s": 375.40835485914045,
+    "local_after_s": 261.4536180250548,
+    "local_delta_s": -113.9547368340857,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 133",
+    "lat": 51.43473544303797,
+    "lon": -0.2880379746835442,
+    "local_share": 0.013944357950314764,
+    "local_before_s": 326.83052316542665,
+    "local_after_s": 246.88180017766484,
+    "local_delta_s": -79.94872298776187,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 108",
+    "lat": 51.43495941287369,
+    "lon": 0.0098752356584971,
+    "local_share": 0.017328910850876598,
+    "local_before_s": 351.03906464666534,
+    "local_after_s": 259.4782171830526,
+    "local_delta_s": -91.56084746361276,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 137",
+    "lat": 51.46129113924051,
+    "lon": 0.0951882911392404,
+    "local_share": 0.016245853922696812,
+    "local_before_s": 349.9594307738868,
+    "local_after_s": 268.5740877959769,
+    "local_delta_s": -81.38534297790993,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 78",
+    "lat": 51.487058749069256,
+    "lon": 0.0740221518987341,
+    "local_share": 0.01773505719894402,
+    "local_before_s": 318.15519078101926,
+    "local_after_s": 248.81065124570358,
+    "local_delta_s": -69.34453953531562,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 199",
+    "lat": 51.52961319120586,
+    "lon": 0.1383182878081278,
+    "local_share": 0.009544439179584377,
+    "local_before_s": 429.83848006529024,
+    "local_after_s": 258.32328131949333,
+    "local_delta_s": -171.51519874579685,
+    "why": "Large local modelled speed-up"
+  }
+]

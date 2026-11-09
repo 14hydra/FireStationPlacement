@@ -1,0 +1,277 @@
+{
+  "city_id": "london",
+  "mode": "replace",
+  "objective": "response_time",
+  "severity": "all",
+  "severity_rule": "every call counts 1",
+  "alpha": 1.0,
+  "solver_kind": "genetic",
+  "response_model": "nearest engine free",
+  "scorer": "kolesar",
+  "demand_years": [],
+  "eval_years": [],
+  "use_busy": false,
+  "n_existing_fire_stations": 102,
+  "n_candidates": 193,
+  "n_demand_cells": 404,
+  "n_incidents": 14773,
+  "n_incidents_dropped_far": 0,
+  "n_selected": 102,
+  "n_closed": 10,
+  "n_opened": 10,
+  "threshold_min": 10.0,
+  "total_pumps_baseline": 142,
+  "total_pumps_plan": 142,
+  "plan": {
+    "label": "plan_replace",
+    "n_posts": 102,
+    "expected_response_s": 286.6,
+    "median_response_s": 292.3,
+    "p90_response_s": 370.9,
+    "cvar90_response_s": 393.5,
+    "worst_cell_response_s": 464.6,
+    "coverage_share_within_threshold": 1.0,
+    "area_mean_response_s": 298.6,
+    "areas_over_threshold_share": 0.0,
+    "threshold_s": 600.0,
+    "demand_cells": 404,
+    "areas_with_demand": 404,
+    "objective_value": 286.6287756996035,
+    "lfb_first_engine": {
+      "mean_s": 286.6287756996035,
+      "p90_s": 371.2642435535613,
+      "share_within_6min": 0.8614364042509984,
+      "share_within_10min": 1.0,
+      "meets_avg_6": true,
+      "meets_90pct_10": true,
+      "passes": true
+    },
+    "total_pumps": 142
+  },
+  "baselines": {
+    "current_fire_stations": {
+      "label": "current_fire_stations",
+      "n_posts": 102,
+      "expected_response_s": 301.0,
+      "median_response_s": 296.3,
+      "p90_response_s": 383.9,
+      "cvar90_response_s": 415.7,
+      "worst_cell_response_s": 513.3,
+      "coverage_share_within_threshold": 1.0,
+      "area_mean_response_s": 310.7,
+      "areas_over_threshold_share": 0.0,
+      "threshold_s": 600.0,
+      "demand_cells": 404,
+      "areas_with_demand": 404,
+      "lfb_first_engine": {
+        "mean_s": 301.01760454464886,
+        "p90_s": 384.4504827182968,
+        "share_within_6min": 0.8070127936099641,
+        "share_within_10min": 1.0,
+        "meets_avg_6": true,
+        "meets_90pct_10": true,
+        "passes": true
+      },
+      "total_pumps": 142
+    },
+    "random_replace": {
+      "label": "random_replace",
+      "n_posts": 102,
+      "expected_response_s": 302.3,
+      "median_response_s": 306.3,
+      "p90_response_s": 395.3,
+      "cvar90_response_s": 426.0,
+      "worst_cell_response_s": 513.3,
+      "coverage_share_within_threshold": 1.0,
+      "area_mean_response_s": 311.5,
+      "areas_over_threshold_share": 0.0,
+      "threshold_s": 600.0,
+      "demand_cells": 404,
+      "areas_with_demand": 404,
+      "lfb_first_engine": {
+        "mean_s": 302.3455509294957,
+        "p90_s": 395.49136052328237,
+        "share_within_6min": 0.7737087930684357,
+        "share_within_10min": 1.0,
+        "meets_avg_6": true,
+        "meets_90pct_10": true,
+        "passes": true
+      }
+    }
+  },
+  "eval": null,
+  "delta_vs_current_s": -14.4,
+  "travel": {
+    "scorer": "kolesar",
+    "surrogate_speed_kph": 28.0,
+    "kolesar": {
+      "a": 15.846,
+      "b": 180.913,
+      "c": 145.697,
+      "e": 71.783,
+      "breakpoint_km": 1.913
+    },
+    "kolesar_fit": {
+      "source": "london_default",
+      "n_pairs": 0
+    },
+    "turnout": {
+      "source": "recorded_mobilisation_median",
+      "default_s": 72.0,
+      "n_existing_with_prior": 102,
+      "existing_min_s": 56.0,
+      "existing_median_s": 72.0,
+      "existing_max_s": 86.0,
+      "years": "all"
+    },
+    "pumps": {
+      "baseline_total": 142,
+      "n_two_plus": 40,
+      "min_pumps": 1,
+      "max_pumps": 3
+    }
+  },
+  "busy_vs_ignoring_busy": null,
+  "pump_moves": [
+    {
+      "from": 8,
+      "to": 141,
+      "pumps": 1,
+      "km": 16.18,
+      "from_name": "Biggin Hill",
+      "to_name": "Demand cell 39"
+    },
+    {
+      "from": 12,
+      "to": 133,
+      "pumps": 1,
+      "km": 11.1,
+      "from_name": "Chingford",
+      "to_name": "Demand cell 31"
+    },
+    {
+      "from": 25,
+      "to": 104,
+      "pumps": 2,
+      "km": 18.91,
+      "from_name": "Enfield",
+      "to_name": "Demand cell 2"
+    },
+    {
+      "from": 35,
+      "to": 190,
+      "pumps": 1,
+      "km": 9.63,
+      "from_name": "Harold Hill",
+      "to_name": "Demand cell 199"
+    },
+    {
+      "from": 37,
+      "to": 164,
+      "pumps": 1,
+      "km": 11.94,
+      "from_name": "Hayes",
+      "to_name": "Demand cell 133"
+    },
+    {
+      "from": 44,
+      "to": 182,
+      "pumps": 1,
+      "km": 14.34,
+      "from_name": "Hornchurch",
+      "to_name": "Demand cell 137"
+    },
+    {
+      "from": 65,
+      "to": 175,
+      "pumps": 2,
+      "km": 9.84,
+      "from_name": "Orpington",
+      "to_name": "Demand cell 108"
+    },
+    {
+      "from": 72,
+      "to": 159,
+      "pumps": 1,
+      "km": 13.29,
+      "from_name": "Purley",
+      "to_name": "Demand cell 81"
+    },
+    {
+      "from": 74,
+      "to": 183,
+      "pumps": 1,
+      "km": 13.93,
+      "from_name": "Romford",
+      "to_name": "Demand cell 78"
+    },
+    {
+      "from": 75,
+      "to": 129,
+      "pumps": 1,
+      "km": 20.38,
+      "from_name": "Ruislip",
+      "to_name": "Demand cell 27"
+    }
+  ],
+  "street_refinement": null,
+  "floors": {
+    "keep_slowest": true,
+    "keep_average": true,
+    "keep_boroughs": null,
+    "today_mean_s": 301.02,
+    "today_slowest10_s": 415.69
+  },
+  "expand_pumps": "move",
+  "replace_r": 10,
+  "n_replaced": 10,
+  "solver": {
+    "solver": "genetic algorithm",
+    "optimal": null,
+    "objective_value": 286.6288,
+    "generations": 207,
+    "evaluations": 16640,
+    "solve_s": 2.35,
+    "params": {
+      "population": 80,
+      "max_generations": 400,
+      "elite": 4,
+      "tournament": 3,
+      "mutation_rate": 0.3,
+      "patience": 80,
+      "seed": 42,
+      "busy_aware": false,
+      "busy_load_dependent": false,
+      "cap_s": 720.0,
+      "feasible": true
+    },
+    "history_every_10": [
+      296.629,
+      290.234,
+      287.842,
+      287.383,
+      286.96,
+      286.768,
+      286.768,
+      286.768,
+      286.73,
+      286.73,
+      286.73,
+      286.73,
+      286.73,
+      286.629,
+      286.629,
+      286.629,
+      286.629,
+      286.629,
+      286.629,
+      286.629,
+      286.629
+    ]
+  },
+  "honesty": "Response = predicted drive + station turnout (LFB attendance is mobilise->arrive; travel-only scoring was wrong). Judged on LFB first-engine KPIs: mean <= 6 min, > 90% within 10 min. Drive comes from the chosen scorer (kolesar). Turnout: recorded_mobilisation_median (existing stations), 72 s for new sites. Discrete candidates (existing houses + demand centroids); house sites are OpenStreetMap station buildings. No land, zoning or staffing constraints. Station size (n_pumps) defaults from LFB two-pump inference (~40 stations with a second appliance). resize mode reallocates a fixed pump budget under a capacity-scaled busy model; other modes keep baseline pumps unless overridden. Busy blend applies when use_busy=True or mode=resize (location optimisation still uses nearest engine).",
+  "city_name": "London",
+  "n_stations": 102,
+  "elapsed_s": 7.5,
+  "demand": "population_proxy"
+}

@@ -1,109 +1,133 @@
 candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
-0,Mexico City Station 1,existing_fire_station,-99.15490676291304,19.480943614071546,True,,1
-1,Mexico City Station 2,existing_fire_station,-99.01061625245865,19.37959016589358,True,,1
-2,Mexico City Station 3,existing_fire_station,-98.9893304911536,19.38152810913948,True,,1
-3,Mexico City Station 4,existing_fire_station,-99.0782969175918,19.47399281964447,True,,1
-4,Mexico City Station 5,existing_fire_station,-99.00454399750096,19.45696115184654,True,,1
-5,Mexico City Station 6,existing_fire_station,-99.01137245366182,19.485330226969243,True,,1
-6,Mexico City Station 7,existing_fire_station,-99.01808051833896,19.39536257369716,True,,1
-7,Mexico City Station 8,existing_fire_station,-99.22532440186193,19.50213950867139,True,,1
-8,Mexico City Station 9,existing_fire_station,-98.99850564675204,19.471539734444413,True,,1
-9,Mexico City Station 10,existing_fire_station,-99.14692623986804,19.316543752955393,True,,1
-10,Mexico City Station 11,existing_fire_station,-99.1777676803398,19.261168959765097,True,,1
-11,Mexico City Station 12,existing_fire_station,-99.21666955439014,19.508389083092624,True,,1
-12,Mexico City Station 13,existing_fire_station,-99.05092131903866,19.251942221881748,True,,1
-13,Mexico City Station 14,existing_fire_station,-99.0463980933336,19.387445436291756,True,,1
-14,Mexico City Station 15,existing_fire_station,-99.10330944968396,19.328059950635556,True,,1
-15,Mexico City Station 16,existing_fire_station,-99.18022779038942,19.35467561725557,True,,1
-16,Mexico City Station 17,existing_fire_station,-99.29248912259456,19.463388144578445,True,,1
-17,Mexico City Station 18,existing_fire_station,-99.1612115462779,19.37135530161744,True,,1
-18,Mexico City Station 19,existing_fire_station,-99.2220708152055,19.359062575230123,True,,1
-19,Mexico City Station 20,existing_fire_station,-98.99710546322086,19.36383700296218,True,,1
-20,Mexico City Station 21,existing_fire_station,-98.97014042339956,19.30545611702024,True,,1
-21,Mexico City Station 22,existing_fire_station,-99.22672258203004,19.291999915863855,True,,1
-22,Mexico City Station 23,existing_fire_station,-99.25528743914968,19.50565835145065,True,,1
-23,Mexico City Station 24,existing_fire_station,-99.10870516046386,19.34170570313652,True,,1
-24,Mexico City Station 25,existing_fire_station,-99.28308058889527,19.314469056812104,True,,1
-25,Mexico City Station 26,existing_fire_station,-99.09093174556364,19.374320169052343,True,,1
-26,Mexico City Station 27,existing_fire_station,-99.09908232130353,19.46155746037029,True,,1
-27,Mexico City Station 28,existing_fire_station,-99.233930955082,19.41232018461243,True,,1
-28,Mexico City Station 29,existing_fire_station,-99.18506737431038,19.42136559305534,True,,1
-29,Mexico City Station 30,existing_fire_station,-99.20368726845888,19.499201358582734,True,,1
-30,Mexico City Station 31,existing_fire_station,-99.2429051122916,19.438373730847086,True,,1
-31,Mexico City Station 32,existing_fire_station,-98.98709394674526,19.44419389445981,True,,1
-32,Mexico City Station 33,existing_fire_station,-98.98666296914377,19.26569084728655,True,,1
-33,Mexico City Station 34,existing_fire_station,-99.06632545009958,19.53341697410764,True,,1
-34,Mexico City Station 35,existing_fire_station,-99.1352546543682,19.450058364067687,True,,1
-35,Mexico City Station 36,existing_fire_station,-99.11109019530276,19.343492181741674,True,,1
-36,Mexico City Station 37,existing_fire_station,-99.05238884203932,19.335614550685833,True,,1
-37,Mexico City Station 38,existing_fire_station,-99.0380819263499,19.42549604546967,True,,1
-38,Mexico City Station 39,existing_fire_station,-99.00907259255368,19.376756103544,True,,1
-39,Mexico City Station 40,existing_fire_station,-99.10431660393031,19.486493047214044,True,,1
-40,Mexico City Station 41,existing_fire_station,-98.99150837166844,19.514110861119605,True,,1
-41,Mexico City Station 42,existing_fire_station,-99.05283049687934,19.385308528263753,True,,1
-42,Mexico City Station 43,existing_fire_station,-99.10145165528388,19.35794065390831,True,,1
-43,Mexico City Station 44,existing_fire_station,-99.02042982848717,19.488311767959978,True,,1
-44,Mexico City Station 45,existing_fire_station,-98.9817500676974,19.366669492439343,True,,1
-45,Mexico City Station 46,existing_fire_station,-98.9942098476612,19.478266041277333,True,,1
-46,Mexico City Station 47,existing_fire_station,-99.1135703191769,19.460479992690477,True,,1
-47,Mexico City Station 48,existing_fire_station,-99.11753701037416,19.48151445739502,True,,1
-48,Demand cell 0,demand_cell,-99.17878716216215,19.40615057915058,False,,1
-49,Demand cell 1,demand_cell,-99.1787863620199,19.446049786628734,False,,1
-50,Demand cell 2,demand_cell,-99.10612729523416,19.406250051578294,False,,1
-51,Demand cell 3,demand_cell,-99.17884797297297,19.378018295218297,False,,1
-52,Demand cell 4,demand_cell,-99.12017349272348,19.406205509355512,False,,1
-53,Demand cell 5,demand_cell,-99.13432799531816,19.406099276441797,False,,1
-54,Demand cell 6,demand_cell,-99.14859650989573,19.405972866567357,False,,1
-55,Demand cell 7,demand_cell,-99.12046504575441,19.44610800170249,False,,1
-56,Demand cell 8,demand_cell,-99.14844992371404,19.445993570183088,False,,1
-57,Demand cell 9,demand_cell,-99.16238269827203,19.406118963225524,False,,1
-58,Demand cell 10,demand_cell,-99.16234336609337,19.44623832923833,False,,1
-59,Demand cell 11,demand_cell,-99.10627027027027,19.446088513513516,False,,1
-60,Demand cell 12,demand_cell,-99.13432551669317,19.4460373608903,False,,1
-61,Demand cell 13,demand_cell,-99.17874792099792,19.431902286902286,False,,1
-62,Demand cell 14,demand_cell,-99.0922633387698,19.44587861136999,False,,1
-63,Demand cell 15,demand_cell,-99.09242480195714,19.40591647250699,False,,1
-64,Demand cell 16,demand_cell,-99.17868367709815,19.42013798008535,False,,1
-65,Demand cell 17,demand_cell,-99.0783429054054,19.445904560810813,False,,1
-66,Demand cell 18,demand_cell,-99.17868074324325,19.48593219111969,False,,1
-67,Demand cell 19,demand_cell,-99.07839046615423,19.406185965782296,False,,1
-68,Demand cell 20,demand_cell,-99.13427894867345,19.377944086288124,False,,1
-69,Demand cell 21,demand_cell,-99.17891241011654,19.39204661542276,False,,1
-70,Demand cell 22,demand_cell,-99.1202742117117,19.378037162162165,False,,1
-71,Demand cell 23,demand_cell,-99.06421590047994,19.406151553422582,False,,1
-72,Demand cell 24,demand_cell,-99.14832464006062,19.378056958827987,False,,1
-73,Demand cell 25,demand_cell,-99.17866787941787,19.460241294178793,False,,1
-74,Demand cell 26,demand_cell,-99.17855247966413,19.47220427709263,False,,1
-75,Demand cell 27,demand_cell,-99.13450124639202,19.43218604040934,False,,1
-76,Demand cell 28,demand_cell,-99.10617845786965,19.42014626391097,False,,1
-77,Demand cell 29,demand_cell,-99.14836625596183,19.42014626391097,False,,1
-78,Demand cell 30,demand_cell,-99.16222765587368,19.377945544554454,False,,1
-79,Demand cell 31,demand_cell,-99.19500236486485,19.406140675675676,False,,1
-80,Demand cell 32,demand_cell,-99.06417520270271,19.446035000000002,False,,1
-81,Demand cell 33,demand_cell,-99.1063170945946,19.432228513513515,False,,1
-82,Demand cell 34,demand_cell,-99.10627027027027,19.378086216216214,False,,1
-83,Demand cell 35,demand_cell,-99.10612837837839,19.485986486486485,False,,1
-84,Demand cell 36,demand_cell,-99.12036486486487,19.431986486486487,False,,1
-85,Demand cell 37,demand_cell,-99.07822345559846,19.37817140099283,False,,1
-86,Demand cell 38,demand_cell,-99.19523648648648,19.44603254274683,False,,1
-87,Demand cell 39,demand_cell,-99.13446042471043,19.420108521787093,False,,1
-88,Demand cell 155,demand_cell,-99.05104986020504,19.3511458527493,False,,1
-89,Demand cell 84,demand_cell,-99.05031816626753,19.378255901471093,False,,1
-90,Demand cell 127,demand_cell,-99.05262766714083,19.445064011379802,False,,1
-91,Demand cell 128,demand_cell,-99.07826081081082,19.351983783783783,False,,1
-92,Demand cell 54,demand_cell,-99.09232588357588,19.486136174636176,False,,1
-93,Demand cell 166,demand_cell,-99.09534459459458,19.5097027027027,False,,1
-94,Demand cell 112,demand_cell,-99.12031756756757,19.352025971283783,False,,1
-95,Demand cell 142,demand_cell,-99.12088859591299,19.511007910349374,False,,1
-96,Demand cell 115,demand_cell,-99.1625375,19.35190472972973,False,,1
-97,Demand cell 43,demand_cell,-99.14841216216217,19.485897464474785,False,,1
-98,Demand cell 89,demand_cell,-99.13442647581793,19.51417389758179,False,,1
-99,Demand cell 88,demand_cell,-99.17869594594595,19.351837837837838,False,,1
-100,Demand cell 178,demand_cell,-99.19523648648648,19.508364864864863,False,,1
-101,Demand cell 172,demand_cell,-99.2212027027027,19.35402702702703,False,,1
-102,Demand cell 95,demand_cell,-99.22306351351351,19.378212355212355,False,,1
-103,Demand cell 73,demand_cell,-99.22327533783783,19.406211389961392,False,,1
-104,Demand cell 151,demand_cell,-99.220576709062,19.43293441971383,False,,1
-105,Demand cell 177,demand_cell,-99.21864864864864,19.48027027027027,False,,1
-106,Demand cell 157,demand_cell,-99.25021171171171,19.393608108108108,False,,1
-107,Demand cell 168,demand_cell,-99.24977305246423,19.40424960254372,False,,1
+0,Mexico City Station 1,existing_fire_station,-99.21750873609056,19.405664475536707,True,,1
+1,Mexico City Station 2,existing_fire_station,-99.2418131776054,19.25143285141034,True,,1
+2,Mexico City Station 3,existing_fire_station,-99.10872484158077,19.49159395015595,True,,1
+3,Mexico City Station 4,existing_fire_station,-99.11674938018896,19.48758862859552,True,,1
+4,Mexico City Station 5,existing_fire_station,-99.17687286634316,19.43727800754097,True,,1
+5,Mexico City Station 6,existing_fire_station,-99.27416461768546,19.325040752396355,True,,1
+6,Mexico City Station 7,existing_fire_station,-99.17156543266844,19.365575452835778,True,,1
+7,Mexico City Station 8,existing_fire_station,-99.0778860580115,19.450661265481816,True,,1
+8,Mexico City Station 9,existing_fire_station,-99.198250955845,19.511090756496465,True,,1
+9,Mexico City Station 10,existing_fire_station,-99.0230079747228,19.29750901331697,True,,1
+10,Mexico City Station 11,existing_fire_station,-98.9768474931344,19.253314836724503,True,,1
+11,Mexico City Station 12,existing_fire_station,-99.1690523677756,19.36371418820531,True,,1
+12,Mexico City Station 13,existing_fire_station,-99.13260175883936,19.329675418669016,True,,1
+13,Mexico City Station 14,existing_fire_station,-99.1250192665519,19.34572637736661,True,,1
+14,Mexico City Station 15,existing_fire_station,-98.99904080257556,19.35967602025744,True,,1
+15,Mexico City Station 16,existing_fire_station,-99.14965009014476,19.266315964753236,True,,1
+16,Mexico City Station 17,existing_fire_station,-99.19071490749536,19.411087026406168,True,,1
+17,Mexico City Station 18,existing_fire_station,-99.15951789387614,19.41358884642575,True,,1
+18,Mexico City Station 19,existing_fire_station,-99.09780516250034,19.42962109402148,True,,1
+19,Mexico City Station 20,existing_fire_station,-99.18236055949971,19.30624767066039,True,,1
+20,Mexico City Station 21,existing_fire_station,-99.07035865213948,19.462233161092566,True,,1
+21,Mexico City Station 22,existing_fire_station,-99.09714086284704,19.409265481442713,True,,1
+22,Mexico City Station 23,existing_fire_station,-99.12766162150156,19.2674896642345,True,,1
+23,Mexico City Station 24,existing_fire_station,-99.15045107912168,19.32742058259934,True,,1
+24,Mexico City Station 25,existing_fire_station,-99.13130174392096,19.395610621684376,True,,1
+25,Mexico City Station 26,existing_fire_station,-99.1111269489069,19.355343456982073,True,,1
+26,Mexico City Station 27,existing_fire_station,-99.12965969698362,19.510403916131523,True,,1
+27,Mexico City Station 28,existing_fire_station,-99.28989970263784,19.36001279897844,True,,1
+28,Mexico City Station 29,existing_fire_station,-99.09281044992548,19.4180047553296,True,,1
+29,Mexico City Station 30,existing_fire_station,-99.05292141520964,19.37896247488382,True,,1
+30,Mexico City Station 31,existing_fire_station,-99.0732180881641,19.263339242347687,True,,1
+31,Mexico City Station 32,existing_fire_station,-99.15174081955732,19.44692158764153,True,,1
+32,Mexico City Station 33,existing_fire_station,-99.06277838905362,19.286768679807516,True,,1
+33,Mexico City Station 34,existing_fire_station,-99.06102026401317,19.366785068824186,True,,1
+34,Mexico City Station 35,existing_fire_station,-99.25270269482898,19.38894653026521,True,,1
+35,Mexico City Station 36,existing_fire_station,-99.1800348078395,19.41246725392112,True,,1
+36,Mexico City Station 37,existing_fire_station,-99.17733155259066,19.30151653798696,True,,1
+37,Mexico City Station 38,existing_fire_station,-99.12288652570356,19.467070037769822,True,,1
+38,Mexico City Station 39,existing_fire_station,-99.14701474123088,19.53817507695042,True,,1
+39,Mexico City Station 40,existing_fire_station,-99.150907732075,19.451568530032233,True,,1
+40,Mexico City Station 41,existing_fire_station,-99.29270108505742,19.250032245445976,True,,1
+41,Mexico City Station 42,existing_fire_station,-99.23439929311208,19.3656440231096,True,,1
+42,Mexico City Station 43,existing_fire_station,-99.1590964401039,19.25531993585965,True,,1
+43,Mexico City Station 44,existing_fire_station,-99.14820968203396,19.43753688595783,True,,1
+44,Mexico City Station 45,existing_fire_station,-99.2464465111708,19.37077174249903,True,,1
+45,Mexico City Station 46,existing_fire_station,-99.11379201442624,19.315026928308885,True,,1
+46,Mexico City Station 47,existing_fire_station,-99.2712226001705,19.349316863196375,True,,1
+47,Mexico City Station 48,existing_fire_station,-99.16930002121686,19.367613656621845,True,,1
+48,Mexico City Station 49,existing_fire_station,-99.06353415742907,19.34030900683849,True,,1
+49,Mexico City Station 50,existing_fire_station,-99.1611353442079,19.37534018109088,True,,1
+50,Mexico City Station 51,existing_fire_station,-99.14873580574132,19.302101481721657,True,,1
+51,Mexico City Station 52,existing_fire_station,-99.19695644735772,19.426079065718103,True,,1
+52,Mexico City Station 53,existing_fire_station,-99.1247079322702,19.288395219829855,True,,1
+53,Mexico City Station 54,existing_fire_station,-99.14416852255503,19.42824826610349,True,,1
+54,Mexico City Station 55,existing_fire_station,-99.12113205353278,19.430369559452892,True,,1
+55,Mexico City Station 56,existing_fire_station,-99.07793521447432,19.3709706464942,True,,1
+56,Mexico City Station 57,existing_fire_station,-99.1180279952025,19.381869217673717,True,,1
+57,Mexico City Station 58,existing_fire_station,-99.12797060389067,19.446544207614675,True,,1
+58,Mexico City Station 59,existing_fire_station,-99.12469035939854,19.49567529673264,True,,1
+59,Mexico City Station 60,existing_fire_station,-99.12644630568892,19.469802223264978,True,,1
+60,Mexico City Station 61,existing_fire_station,-99.18845889323616,19.437900631099176,True,,1
+61,Mexico City Station 62,existing_fire_station,-99.04786236580831,19.35771079901361,True,,1
+62,Mexico City Station 63,existing_fire_station,-99.06244799845624,19.423409509766916,True,,1
+63,Mexico City Station 64,existing_fire_station,-99.187486711347,19.38530706117079,True,,1
+64,Mexico City Station 65,existing_fire_station,-99.22169495731995,19.317440949115124,True,,1
+65,Mexico City Station 66,existing_fire_station,-99.14878774587083,19.33697843156048,True,,1
+66,Mexico City Station 67,existing_fire_station,-99.10859182922262,19.491251808574,True,,1
+67,Mexico City Station 68,existing_fire_station,-99.13219045785074,19.52541972075153,True,,1
+68,Mexico City Station 69,existing_fire_station,-99.09673621398572,19.493007128970007,True,,1
+69,Mexico City Station 70,existing_fire_station,-99.19888900820486,19.321421199247485,True,,1
+70,Demand cell 0,demand_cell,-99.16454034336391,19.418831236261653,False,,1
+71,Demand cell 1,demand_cell,-99.10737642976972,19.418842763458898,False,,1
+72,Demand cell 2,demand_cell,-99.107388425099,19.444940941213016,False,,1
+73,Demand cell 3,demand_cell,-99.16437933406715,19.445032195927354,False,,1
+74,Demand cell 4,demand_cell,-99.10756534810126,19.392645490506332,False,,1
+75,Demand cell 5,demand_cell,-99.10748345617688,19.460247075789137,False,,1
+76,Demand cell 6,demand_cell,-99.16440109166597,19.46001312547787,False,,1
+77,Demand cell 7,demand_cell,-99.16426723400616,19.39260802257954,False,,1
+78,Demand cell 8,demand_cell,-99.10745569620252,19.377524766097963,False,,1
+79,Demand cell 9,demand_cell,-99.1645241505663,19.37751370514895,False,,1
+80,Demand cell 10,demand_cell,-99.12283994003998,19.445156324355192,False,,1
+81,Demand cell 11,demand_cell,-99.12280696202532,19.41879746835443,False,,1
+82,Demand cell 12,demand_cell,-99.13586474538603,19.418811817566915,False,,1
+83,Demand cell 13,demand_cell,-99.10750591844621,19.432041791477435,False,,1
+84,Demand cell 14,demand_cell,-99.14915741831027,19.445070209007948,False,,1
+85,Demand cell 15,demand_cell,-99.1071621399382,19.486364746337088,False,,1
+86,Demand cell 16,demand_cell,-99.09220969620254,19.41872227848101,False,,1
+87,Demand cell 17,demand_cell,-99.14919359493672,19.41884258227848,False,,1
+88,Demand cell 18,demand_cell,-99.16431678481013,19.486062329113924,False,,1
+89,Demand cell 19,demand_cell,-99.09217517354024,19.44484105757452,False,,1
+90,Demand cell 20,demand_cell,-99.16415633932218,19.43201633319722,False,,1
+91,Demand cell 21,demand_cell,-99.10754484408767,19.40563924050633,False,,1
+92,Demand cell 22,demand_cell,-99.13600114131563,19.445021477484953,False,,1
+93,Demand cell 23,demand_cell,-99.07905494821634,19.418781933256614,False,,1
+94,Demand cell 24,demand_cell,-99.14912341772153,19.39262082853855,False,,1
+95,Demand cell 25,demand_cell,-99.13596518987342,19.392606329113924,False,,1
+96,Demand cell 26,demand_cell,-99.12288006329115,19.460214556962026,False,,1
+97,Demand cell 27,demand_cell,-99.13585461653015,19.460009733007126,False,,1
+98,Demand cell 28,demand_cell,-99.1797522338049,19.445034943091162,False,,1
+99,Demand cell 29,demand_cell,-99.17975160909677,19.418701888006865,False,,1
+100,Demand cell 30,demand_cell,-99.1640587625491,19.405704059362726,False,,1
+101,Demand cell 31,demand_cell,-99.07894620253164,19.44540560890441,False,,1
+102,Demand cell 32,demand_cell,-99.12288324160704,19.392660814529446,False,,1
+103,Demand cell 33,demand_cell,-99.14920036642239,19.46001998667555,False,,1
+104,Demand cell 34,demand_cell,-99.19294466301746,19.418645056448852,False,,1
+105,Demand cell 35,demand_cell,-99.10757753164556,19.473449367088605,False,,1
+106,Demand cell 36,demand_cell,-99.09210443037975,19.46001265822785,False,,1
+107,Demand cell 37,demand_cell,-99.06595042194093,19.418936708860763,False,,1
+108,Demand cell 38,demand_cell,-99.10739420915651,19.50148876138649,False,,1
+109,Demand cell 39,demand_cell,-99.0922274044718,19.392603986750263,False,,1
+110,Demand cell 149,demand_cell,-99.0510886931235,19.35361597673623,False,,1
+111,Demand cell 45,demand_cell,-99.05058575027651,19.377497787882515,False,,1
+112,Demand cell 154,demand_cell,-99.0570158227848,19.418979379338502,False,,1
+113,Demand cell 111,demand_cell,-99.05432569620253,19.44488835443038,False,,1
+114,Demand cell 110,demand_cell,-99.09210443037976,19.351352151898734,False,,1
+115,Demand cell 77,demand_cell,-99.09220189873419,19.486134177215188,False,,1
+116,Demand cell 179,demand_cell,-99.09649050632912,19.51090506329114,False,,1
+117,Demand cell 72,demand_cell,-99.10792230002693,19.351806490708324,False,,1
+118,Demand cell 155,demand_cell,-99.1236841772152,19.5122835443038,False,,1
+119,Demand cell 53,demand_cell,-99.1641489848352,19.351182416342898,False,,1
+120,Demand cell 143,demand_cell,-99.14979086406164,19.514092460099064,False,,1
+121,Demand cell 109,demand_cell,-99.17982594936709,19.3512017721519,False,,1
+122,Demand cell 42,demand_cell,-99.17978377555988,19.392553310613437,False,,1
+123,Demand cell 87,demand_cell,-99.17982594936709,19.486313551749816,False,,1
+124,Demand cell 186,demand_cell,-99.20614240506328,19.51090506329114,False,,1
+125,Demand cell 145,demand_cell,-99.22013607594937,19.35202169981917,False,,1
+126,Demand cell 43,demand_cell,-99.22128280185005,19.392372565725417,False,,1
+127,Demand cell 44,demand_cell,-99.2208188899708,19.418544425511197,False,,1
+128,Demand cell 124,demand_cell,-99.21783860759494,19.44436799276673,False,,1
+129,Demand cell 165,demand_cell,-99.2164625837677,19.484588607594937,False,,1
+130,Demand cell 172,demand_cell,-99.24854113924052,19.379322784810128,False,,1
+131,Demand cell 180,demand_cell,-99.2456170886076,19.40563924050633,False,,1

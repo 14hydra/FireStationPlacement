@@ -55,6 +55,7 @@ def _ensure_inputs(
         extra = []
         if force:
             extra.append("--force")
+        # Default: try OSM then top up to London-like density. --synthetic skips OSM.
         if synthetic_stations:
             extra.append("--synthetic")
         _run_builder("build_megacity_stations.py", city_id, extra or None)
@@ -142,6 +143,16 @@ def _export_viewer(city_id: str, out_dir: Path, summary: dict) -> None:
     if after_c and before_c and delta_c is None:
         cells["response_s_delta"] = cells[after_c] - cells[before_c]
         delta_c = "response_s_delta"
+
+    # Keep markers inside the city outline (same polygon as demand / map border)
+    from firestation.geo_clip import filter_frame_inside
+
+    extent_path = city.raw_dir / "urban_extent.geojson"
+    kept = filter_frame_inside(kept, extent_path)
+    if len(closed):
+        closed = filter_frame_inside(closed, extent_path)
+    if len(opened):
+        opened = filter_frame_inside(opened, extent_path)
 
     (dest / "stations_kept.geojson").write_text(json.dumps(_pts_geojson(kept, name_col)))
     (dest / "stations_closed.geojson").write_text(json.dumps(_pts_geojson(closed)))
@@ -389,7 +400,11 @@ def main() -> int:
     ap.add_argument("--force", action="store_true", help="Rebuild station/demand inputs")
     ap.add_argument("--skip-graph", action="store_true", default=True)
     ap.add_argument("--with-graph", action="store_true", help="Also try OSM drive graph download")
-    ap.add_argument("--try-osm", action="store_true", help="Try Overpass for stations (slow; may fail SSL)")
+    ap.add_argument(
+        "--synthetic-stations",
+        action="store_true",
+        help="Skip OSM; build London-density synthetic stations only",
+    )
     ap.add_argument("--replace", type=int, default=10)
     ap.add_argument("--solver", choices=["exact", "genetic"], default="genetic")
     ap.add_argument("--solver-time", type=float, default=45.0)
@@ -409,7 +424,8 @@ def main() -> int:
                     replace=args.replace,
                     solver=args.solver,
                     solver_time=args.solver_time,
-                    synthetic_stations=not args.try_osm,
+                    # Default: OSM + density fill (realistic). Opt into pure synthetic.
+                    synthetic_stations=args.synthetic_stations,
                     n_cells=args.n_cells,
                 )
             )

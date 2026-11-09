@@ -1,0 +1,123 @@
+[
+  {
+    "role": "closed",
+    "name": "New York Station 32",
+    "lat": 40.775749599781555,
+    "lon": -73.99507613178967,
+    "local_share": 0.04783107333198408,
+    "local_before_s": 251.5307826046559,
+    "local_after_s": 245.48709452880496,
+    "local_delta_s": -6.043688075850936,
+    "why": "Nearby demand still within ~6 min (modelled)"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 3",
+    "lat": 40.76971001069709,
+    "lon": -73.96698404350151,
+    "local_share": 0.08480064764217769,
+    "local_before_s": 275.319118244016,
+    "local_after_s": 238.56790995908082,
+    "local_delta_s": -36.7512082849352,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 7",
+    "lat": 40.73288471311097,
+    "lon": -73.96702755705442,
+    "local_share": 0.08432840855427376,
+    "local_before_s": 253.52165295674,
+    "local_after_s": 228.69697493663645,
+    "local_delta_s": -24.824678020103548,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 12",
+    "lat": 40.75586518987342,
+    "lon": -73.93224811071227,
+    "local_share": 0.0798758685826081,
+    "local_before_s": 281.4853379286887,
+    "local_after_s": 243.9196609090993,
+    "local_delta_s": -37.565677019589394,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 24",
+    "lat": 40.797595569620256,
+    "lon": -73.9494424150304,
+    "local_share": 0.07468123861566485,
+    "local_before_s": 327.584829675229,
+    "local_after_s": 241.5727404883482,
+    "local_delta_s": -86.01208918688079,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 27",
+    "lat": 40.797410101265825,
+    "lon": -73.9671602278481,
+    "local_share": 0.0635498886865007,
+    "local_before_s": 318.4986488562149,
+    "local_after_s": 221.10259051322896,
+    "local_delta_s": -97.39605834298595,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 37",
+    "lat": 40.70490136403318,
+    "lon": -73.93217023134002,
+    "local_share": 0.07157795318086757,
+    "local_before_s": 284.64712081788656,
+    "local_after_s": 247.20312075429953,
+    "local_delta_s": -37.44400006358702,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 136",
+    "lat": 40.69136525768535,
+    "lon": -73.86301661392405,
+    "local_share": 0.03285434797274506,
+    "local_before_s": 407.8557519577233,
+    "local_after_s": 295.42393399668083,
+    "local_delta_s": -112.43181796104247,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 100",
+    "lat": 40.6633599859353,
+    "lon": -73.91466420534458,
+    "local_share": 0.0493152533225393,
+    "local_before_s": 311.04322130602776,
+    "local_after_s": 259.0060226716225,
+    "local_delta_s": -52.03719863440532,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 140",
+    "lat": 40.62201302842131,
+    "lon": -73.9845277645092,
+    "local_share": 0.021520609863050665,
+    "local_before_s": 427.7410774849064,
+    "local_after_s": 285.89920917920614,
+    "local_delta_s": -141.84186830570027,
+    "why": "Large local modelled speed-up"
+  },
+  {
+    "role": "opened",
+    "name": "Demand cell 41",
+    "lat": 40.69115826175407,
+    "lon": -74.0197013449367,
+    "local_share": 0.04904540241516562,
+    "local_before_s": 286.2576962632314,
+    "local_after_s": 238.94953511533856,
+    "local_delta_s": -47.30816114789286,
+    "why": "Large local modelled speed-up"
+  }
+]

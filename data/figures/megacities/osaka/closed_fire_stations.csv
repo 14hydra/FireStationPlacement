@@ -1,11 +1,11 @@
 candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
-2,Osaka Station 3,existing_fire_station,135.6602307936716,34.71623078077136,True,,1
-5,Osaka Station 6,existing_fire_station,135.6484114621221,34.62228610135215,True,,1
-6,Osaka Station 7,existing_fire_station,135.59256035078786,34.61580494055733,True,,1
-9,Osaka Station 10,existing_fire_station,135.38000585878814,34.80684995741244,True,,1
-15,Osaka Station 16,existing_fire_station,135.4592211142632,34.82630620174397,True,,1
-31,Osaka Station 32,existing_fire_station,135.6416738507092,34.79106949457802,True,,1
-33,Osaka Station 34,existing_fire_station,135.6673619422476,34.55229245112969,True,,1
-34,Osaka Station 35,existing_fire_station,135.4267813613521,34.74711693323462,True,,1
-35,Osaka Station 36,existing_fire_station,135.6164149745619,34.56797747967934,True,,1
-39,Osaka Station 40,existing_fire_station,135.62098239704076,34.60617009290848,True,,1
+5,Osaka Station 6,existing_fire_station,135.3848153523846,34.65991527923715,True,,1
+22,Osaka Station 23,existing_fire_station,135.54020947089484,34.70351169163943,True,,1
+41,Osaka Station 42,existing_fire_station,135.47735964231543,34.62314899508681,True,,1
+45,Osaka Station 46,existing_fire_station,135.49784122970368,34.66133768258335,True,,1
+47,Osaka Station 48,existing_fire_station,135.52391014184133,34.71909972561478,True,,1
+50,Osaka Station 51,existing_fire_station,135.52416110361565,34.67354490302185,True,,1
+56,Osaka Station 57,existing_fire_station,135.36049661351785,34.63018275815419,True,,1
+61,Osaka Station 62,existing_fire_station,135.52004589979018,34.639544952834186,True,,1
+64,Osaka Station 65,existing_fire_station,135.4794905720467,34.674978821152585,True,,1
+69,Osaka Station 70,existing_fire_station,135.57556851417243,34.60645323890674,True,,1

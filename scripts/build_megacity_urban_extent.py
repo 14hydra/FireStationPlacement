@@ -36,6 +36,8 @@ NOMINATIM_QUERY: dict[str, dict[str, str]] = {
     "beijing": {"q": "Beijing, China"},
     "mumbai": {"q": "Mumbai City District, Maharashtra, India"},
     "osaka": {"q": "Osaka, Japan"},
+    "london": {"q": "Greater London, United Kingdom"},
+    "new_york": {"q": "New York City, New York, United States"},
 }
 
 

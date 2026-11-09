@@ -1,0 +1,11 @@
+candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
+73,Demand cell 3,demand_cell,-73.96698404350151,40.76971001069709,False,,1
+77,Demand cell 7,demand_cell,-73.96702755705442,40.73288471311097,False,,1
+82,Demand cell 12,demand_cell,-73.93224811071227,40.75586518987342,False,,1
+94,Demand cell 24,demand_cell,-73.9494424150304,40.797595569620256,False,,1
+97,Demand cell 27,demand_cell,-73.9671602278481,40.797410101265825,False,,1
+107,Demand cell 37,demand_cell,-73.93217023134002,40.70490136403318,False,,1
+114,Demand cell 136,demand_cell,-73.86301661392405,40.69136525768535,False,,1
+120,Demand cell 100,demand_cell,-73.91466420534458,40.6633599859353,False,,1
+127,Demand cell 140,demand_cell,-73.9845277645092,40.62201302842131,False,,1
+131,Demand cell 41,demand_cell,-74.0197013449367,40.69115826175407,False,,1

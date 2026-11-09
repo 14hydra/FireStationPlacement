@@ -1,11 +1,11 @@
 candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
-0,Beijing Station 1,existing_fire_station,116.40253792374902,40.09057017019892,True,,1
-3,Beijing Station 4,existing_fire_station,116.22171248667688,39.90889935268819,True,,1
-4,Beijing Station 5,existing_fire_station,116.59546931497988,39.95619078647635,True,,1
-7,Beijing Station 8,existing_fire_station,116.5372104241576,40.028666768670234,True,,1
-26,Beijing Station 27,existing_fire_station,116.6164184049771,39.86999541825249,True,,1
-29,Beijing Station 30,existing_fire_station,116.60545347010704,39.87713063148982,True,,1
-39,Beijing Station 40,existing_fire_station,116.20875931507452,39.86633835309864,True,,1
-41,Beijing Station 42,existing_fire_station,116.2073876044693,39.9776359926712,True,,1
-43,Beijing Station 44,existing_fire_station,116.30956229240608,39.77541251112439,True,,1
-47,Beijing Station 48,existing_fire_station,116.27722343918762,40.01503266802876,True,,1
+4,Beijing Station 5,existing_fire_station,116.5423564830922,40.08383884018587,True,,1
+8,Beijing Station 9,existing_fire_station,116.62687024572358,39.949966241920706,True,,1
+10,Beijing Station 11,existing_fire_station,116.57293117197896,40.01520720150795,True,,1
+19,Beijing Station 20,existing_fire_station,116.5261985913944,40.07180796570654,True,,1
+20,Beijing Station 21,existing_fire_station,116.33535843016858,39.75440781870617,True,,1
+34,Beijing Station 35,existing_fire_station,116.5759535917837,39.99828643416447,True,,1
+46,Beijing Station 47,existing_fire_station,116.44276662594598,40.06999370430226,True,,1
+48,Beijing Station 49,existing_fire_station,116.3954588561934,40.02053791053907,True,,1
+49,Beijing Station 50,existing_fire_station,116.41572601024586,40.015923959811445,True,,1
+62,Beijing Station 63,existing_fire_station,116.27093178685476,39.98593363923401,True,,1

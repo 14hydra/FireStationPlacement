@@ -1,11 +1,11 @@
 candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
-2,Dhaka Station 3,existing_fire_station,90.25251886483284,23.79785946671933,True,,1
-5,Dhaka Station 6,existing_fire_station,90.43103899387984,23.671962280052707,True,,1
-11,Dhaka Station 12,existing_fire_station,90.27286899322014,23.87539110675029,True,,1
-17,Dhaka Station 18,existing_fire_station,90.29194101430308,23.686440719125795,True,,1
-18,Dhaka Station 19,existing_fire_station,90.33579023474567,23.674988784816637,True,,1
-23,Dhaka Station 24,existing_fire_station,90.40193473449958,23.678864105543177,True,,1
-30,Dhaka Station 31,existing_fire_station,90.2886295893559,23.92718793804124,True,,1
-35,Dhaka Station 36,existing_fire_station,90.50383318929062,23.736463916311937,True,,1
-39,Dhaka Station 40,existing_fire_station,90.25252540474656,23.735101772734893,True,,1
-43,Dhaka Station 44,existing_fire_station,90.4907403309337,23.944004510788268,True,,1
+0,Dhaka Station 1,existing_fire_station,90.25537838670068,23.79816367932067,True,,1
+12,Dhaka Station 13,existing_fire_station,90.27396647809148,23.918836257047385,True,,1
+17,Dhaka Station 18,existing_fire_station,90.28283378053172,23.929092726082143,True,,1
+32,Dhaka Station 33,existing_fire_station,90.44960262356209,23.8945852988206,True,,1
+46,Dhaka Station 47,existing_fire_station,90.44883866394714,23.655974870706345,True,,1
+57,Dhaka Station 58,existing_fire_station,90.27170136045476,23.891904645964775,True,,1
+58,Dhaka Station 59,existing_fire_station,90.28320970466363,23.84676689096085,True,,1
+61,Dhaka Station 62,existing_fire_station,90.47579217761556,23.718047336855015,True,,1
+65,Dhaka Station 66,existing_fire_station,90.2766698661722,23.71849384694176,True,,1
+66,Dhaka Station 67,existing_fire_station,90.29696349305424,23.89832708708884,True,,1

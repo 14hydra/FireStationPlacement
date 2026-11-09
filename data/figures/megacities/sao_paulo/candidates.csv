@@ -1,117 +1,142 @@
 candidate_id,site_name,layer,lon,lat,is_existing,borough,n_pumps_baseline
-0,São Paulo Station 1,existing_fire_station,-46.63793161223766,-23.440034565160673,True,,1
-1,São Paulo Station 2,existing_fire_station,-46.628113359035254,-23.559796751596256,True,,1
-2,São Paulo Station 3,existing_fire_station,-46.803595815362506,-23.404969656985152,True,,1
-3,São Paulo Station 4,existing_fire_station,-46.602329612143635,-23.6406574372066,True,,1
-4,São Paulo Station 5,existing_fire_station,-46.651103777812416,-23.66823352012755,True,,1
-5,São Paulo Station 6,existing_fire_station,-46.58991369427382,-23.545805336533046,True,,1
-6,São Paulo Station 7,existing_fire_station,-46.42367292187425,-23.431004851340308,True,,1
-7,São Paulo Station 8,existing_fire_station,-46.72857030766403,-23.650599247206603,True,,1
-8,São Paulo Station 9,existing_fire_station,-46.7230394449204,-23.45202948870456,True,,1
-9,São Paulo Station 10,existing_fire_station,-46.66345316510056,-23.450177559534193,True,,1
-10,São Paulo Station 11,existing_fire_station,-46.830011634929555,-23.63351757873562,True,,1
-11,São Paulo Station 12,existing_fire_station,-46.44376049081257,-23.455960848549143,True,,1
-12,São Paulo Station 13,existing_fire_station,-46.7052671310075,-23.510073657633257,True,,1
-13,São Paulo Station 14,existing_fire_station,-46.75765772143882,-23.466271190850097,True,,1
-14,São Paulo Station 15,existing_fire_station,-46.84715618970642,-23.526927528471283,True,,1
-15,São Paulo Station 16,existing_fire_station,-46.53053611825189,-23.580790790921423,True,,1
-16,São Paulo Station 17,existing_fire_station,-46.5025190235938,-23.642251940092574,True,,1
-17,São Paulo Station 18,existing_fire_station,-46.61189569317831,-23.71138474874601,True,,1
-18,São Paulo Station 19,existing_fire_station,-46.67437635788378,-23.69757685419533,True,,1
-19,São Paulo Station 20,existing_fire_station,-46.57982142608756,-23.532308725902155,True,,1
-20,São Paulo Station 21,existing_fire_station,-46.4439039552625,-23.53554889603332,True,,1
-21,São Paulo Station 22,existing_fire_station,-46.44750572482868,-23.602179679909824,True,,1
-22,São Paulo Station 23,existing_fire_station,-46.68509667817194,-23.746075257938195,True,,1
-23,São Paulo Station 24,existing_fire_station,-46.607947348676035,-23.412137324192507,True,,1
-24,São Paulo Station 25,existing_fire_station,-46.66452345327159,-23.691614252436747,True,,1
-25,São Paulo Station 26,existing_fire_station,-46.50183304422256,-23.680223167958943,True,,1
-26,São Paulo Station 27,existing_fire_station,-46.84841884796689,-23.659348425053658,True,,1
-27,São Paulo Station 28,existing_fire_station,-46.61195552414987,-23.4733284568609,True,,1
-28,São Paulo Station 29,existing_fire_station,-46.527616216983546,-23.67780022910566,True,,1
-29,São Paulo Station 30,existing_fire_station,-46.6327520077063,-23.62929075594787,True,,1
-30,São Paulo Station 31,existing_fire_station,-46.75785080332351,-23.539034984865932,True,,1
-31,São Paulo Station 32,existing_fire_station,-46.577876167006735,-23.409274958166726,True,,1
-32,São Paulo Station 33,existing_fire_station,-46.637463609123365,-23.565243833269616,True,,1
-33,São Paulo Station 34,existing_fire_station,-46.776215273687896,-23.640983462667464,True,,1
-34,São Paulo Station 35,existing_fire_station,-46.476216346840815,-23.59902125650444,True,,1
-35,São Paulo Station 36,existing_fire_station,-46.497499966753345,-23.566531577771183,True,,1
-36,São Paulo Station 37,existing_fire_station,-46.48386454461586,-23.67324515924519,True,,1
-37,São Paulo Station 38,existing_fire_station,-46.58038436698691,-23.588246504719233,True,,1
-38,São Paulo Station 39,existing_fire_station,-46.58390009267369,-23.4285378492797,True,,1
-39,São Paulo Station 40,existing_fire_station,-46.68102096522154,-23.41946913894976,True,,1
-40,São Paulo Station 41,existing_fire_station,-46.66759869204336,-23.540849623717857,True,,1
-41,São Paulo Station 42,existing_fire_station,-46.681739621687186,-23.533115677633287,True,,1
-42,São Paulo Station 43,existing_fire_station,-46.70116882200207,-23.50835517820193,True,,1
-43,São Paulo Station 44,existing_fire_station,-46.59119913477256,-23.611170070785732,True,,1
-44,São Paulo Station 45,existing_fire_station,-46.546117059185825,-23.587631654982747,True,,1
-45,São Paulo Station 46,existing_fire_station,-46.72458494045423,-23.62038107270915,True,,1
-46,São Paulo Station 47,existing_fire_station,-46.69602067000697,-23.6013957603303,True,,1
-47,São Paulo Station 48,existing_fire_station,-46.4675927057928,-23.496553648592418,True,,1
-48,Demand cell 0,demand_cell,-46.618855600445805,-23.556221997770965,False,,1
-49,Demand cell 1,demand_cell,-46.61904179437169,-23.542271245472275,False,,1
-50,Demand cell 2,demand_cell,-46.61897972972973,-23.528175675675676,False,,1
-51,Demand cell 3,demand_cell,-46.66124575090555,-23.570124477570353,False,,1
-52,Demand cell 4,demand_cell,-46.61910515202703,-23.570122466216215,False,,1
-53,Demand cell 5,demand_cell,-46.66118499288763,-23.556220981507824,False,,1
-54,Demand cell 6,demand_cell,-46.66099487908962,-23.528372830725466,False,,1
-55,Demand cell 7,demand_cell,-46.5890705146636,-23.556071017826337,False,,1
-56,Demand cell 8,demand_cell,-46.66112162162163,-23.542422225416903,False,,1
-57,Demand cell 9,demand_cell,-46.660992153443765,-23.514279424585872,False,,1
-58,Demand cell 10,demand_cell,-46.61885026155188,-23.514178727114206,False,,1
-59,Demand cell 11,demand_cell,-46.69122297297297,-23.556218814968815,False,,1
-60,Demand cell 12,demand_cell,-46.58901069201069,-23.58457068607068,False,,1
-61,Demand cell 13,demand_cell,-46.61897972972973,-23.584210498960495,False,,1
-62,Demand cell 14,demand_cell,-46.588610810810806,-23.54206689189189,False,,1
-63,Demand cell 15,demand_cell,-46.58914895232311,-23.51418098997874,False,,1
-64,Demand cell 16,demand_cell,-46.61918266018828,-23.598412162162163,False,,1
-65,Demand cell 17,demand_cell,-46.661189265107815,-23.584207030063766,False,,1
-66,Demand cell 18,demand_cell,-46.588878378378375,-23.5702649559672,False,,1
-67,Demand cell 19,demand_cell,-46.55891385135135,-23.528282094594598,False,,1
-68,Demand cell 20,demand_cell,-46.69094932432433,-23.54206334459459,False,,1
-69,Demand cell 21,demand_cell,-46.661121621621625,-23.598304520037278,False,,1
-70,Demand cell 22,demand_cell,-46.69101296354494,-23.528284569453174,False,,1
-71,Demand cell 23,demand_cell,-46.5890200317965,-23.52828585055644,False,,1
-72,Demand cell 24,demand_cell,-46.55849034749035,-23.514239864864862,False,,1
-73,Demand cell 25,demand_cell,-46.69107963320463,-23.584253378378378,False,,1
-74,Demand cell 26,demand_cell,-46.55927871621621,-23.556270270270268,False,,1
-75,Demand cell 27,demand_cell,-46.69115043959622,-23.570204737870398,False,,1
-76,Demand cell 28,demand_cell,-46.58880584500162,-23.598355747313576,False,,1
-77,Demand cell 29,demand_cell,-46.55906716053403,-23.570317567567567,False,,1
-78,Demand cell 30,demand_cell,-46.55899728081741,-23.54245138431114,False,,1
-79,Demand cell 31,demand_cell,-46.55885135135135,-23.58442267267267,False,,1
-80,Demand cell 32,demand_cell,-46.69092567567568,-23.59846996996997,False,,1
-81,Demand cell 33,demand_cell,-46.61936564449065,-23.490656185031188,False,,1
-82,Demand cell 34,demand_cell,-46.72093840956341,-23.570317567567567,False,,1
-83,Demand cell 35,demand_cell,-46.69114478764479,-23.514189189189185,False,,1
-84,Demand cell 36,demand_cell,-46.619057915057915,-23.612277027027027,False,,1
-85,Demand cell 37,demand_cell,-46.52867567567567,-23.556457567567566,False,,1
-86,Demand cell 38,demand_cell,-46.72124405405406,-23.542285405405405,False,,1
-87,Demand cell 39,demand_cell,-46.66096108108108,-23.61245945945946,False,,1
-88,Demand cell 233,demand_cell,-46.47248648648648,-23.542222972972972,False,,1
-89,Demand cell 258,demand_cell,-46.47449324324324,-23.565635135135135,False,,1
-90,Demand cell 207,demand_cell,-46.51430470793373,-23.48980993897123,False,,1
-91,Demand cell 141,demand_cell,-46.51375587544066,-23.527972091656874,False,,1
-92,Demand cell 147,demand_cell,-46.51355810810811,-23.556062162162164,False,,1
-93,Demand cell 178,demand_cell,-46.51377550675675,-23.584364864864863,False,,1
-94,Demand cell 164,demand_cell,-46.52824565637065,-23.502422297297297,False,,1
-95,Demand cell 108,demand_cell,-46.58975405405405,-23.462621621621622,False,,1
-96,Demand cell 44,demand_cell,-46.58896199324324,-23.491171452702705,False,,1
-97,Demand cell 86,demand_cell,-46.58966792202038,-23.626429995569335,False,,1
-98,Demand cell 250,demand_cell,-46.625,-23.43920945945946,False,,1
-99,Demand cell 94,demand_cell,-46.61897972972973,-23.462944547996276,False,,1
-100,Demand cell 67,demand_cell,-46.61925758835759,-23.626434719334718,False,,1
-101,Demand cell 241,demand_cell,-46.61897972972972,-23.65928378378378,False,,1
-102,Demand cell 255,demand_cell,-46.661121621621625,-23.43920945945946,False,,1
-103,Demand cell 107,demand_cell,-46.661121621621625,-23.463302702702705,False,,1
-104,Demand cell 43,demand_cell,-46.661121621621625,-23.490976351351353,False,,1
-105,Demand cell 60,demand_cell,-46.66121147640178,-23.626576643807983,False,,1
-106,Demand cell 259,demand_cell,-46.67316216216216,-23.65928378378378,False,,1
-107,Demand cell 194,demand_cell,-46.70627364864865,-23.462621621621626,False,,1
-108,Demand cell 47,demand_cell,-46.69113818043395,-23.490716216216217,False,,1
-109,Demand cell 75,demand_cell,-46.69112741312742,-23.626581081081074,False,,1
-110,Demand cell 238,demand_cell,-46.71831418918919,-23.462621621621622,False,,1
-111,Demand cell 89,demand_cell,-46.72112364864866,-23.490638175675674,False,,1
-112,Demand cell 46,demand_cell,-46.721157094594595,-23.58449493243243,False,,1
-113,Demand cell 87,demand_cell,-46.72112364864866,-23.62650675675675,False,,1
-114,Demand cell 187,demand_cell,-46.76663477951636,-23.570317567567567,False,,1
-115,Demand cell 205,demand_cell,-46.76696185701831,-23.584213818657368,False,,1
+0,São Paulo Station 1,existing_fire_station,-46.488887646509816,-23.50928907812478,True,,1
+1,São Paulo Station 2,existing_fire_station,-46.65505212448564,-23.53707343723917,True,,1
+2,São Paulo Station 3,existing_fire_station,-46.665016000666874,-23.6396480901133,True,,1
+3,São Paulo Station 4,existing_fire_station,-46.56240184176467,-23.5235126907419,True,,1
+4,São Paulo Station 5,existing_fire_station,-46.71170286546305,-23.453439785448897,True,,1
+5,São Paulo Station 6,existing_fire_station,-46.68213633975349,-23.702448463227505,True,,1
+6,São Paulo Station 7,existing_fire_station,-46.6984727023404,-23.424239661178405,True,,1
+7,São Paulo Station 8,existing_fire_station,-46.61159598724446,-23.619946086867657,True,,1
+8,São Paulo Station 9,existing_fire_station,-46.655806527718966,-23.53457083461944,True,,1
+9,São Paulo Station 10,existing_fire_station,-46.695880999077254,-23.573440483893854,True,,1
+10,São Paulo Station 11,existing_fire_station,-46.68464954817754,-23.53015071001079,True,,1
+11,São Paulo Station 12,existing_fire_station,-46.58664196027227,-23.626765346029877,True,,1
+12,São Paulo Station 13,existing_fire_station,-46.458565195203775,-23.513057950880285,True,,1
+13,São Paulo Station 14,existing_fire_station,-46.70045893570527,-23.62525101741177,True,,1
+14,São Paulo Station 15,existing_fire_station,-46.63743338526449,-23.55246082243616,True,,1
+15,São Paulo Station 16,existing_fire_station,-46.54449048225566,-23.50888967860538,True,,1
+16,São Paulo Station 17,existing_fire_station,-46.72954354705297,-23.484548778067285,True,,1
+17,São Paulo Station 18,existing_fire_station,-46.6627420982771,-23.45493730116485,True,,1
+18,São Paulo Station 19,existing_fire_station,-46.525803417554,-23.569332106191688,True,,1
+19,São Paulo Station 20,existing_fire_station,-46.738393636789205,-23.62500120015638,True,,1
+20,São Paulo Station 21,existing_fire_station,-46.49558930672726,-23.5022792763988,True,,1
+21,São Paulo Station 22,existing_fire_station,-46.720263252047786,-23.515148003465256,True,,1
+22,São Paulo Station 23,existing_fire_station,-46.65700111792708,-23.642368473748853,True,,1
+23,São Paulo Station 24,existing_fire_station,-46.66193072079559,-23.706187617440573,True,,1
+24,São Paulo Station 25,existing_fire_station,-46.724208686044165,-23.590654599725134,True,,1
+25,São Paulo Station 26,existing_fire_station,-46.65265436146644,-23.614373043209888,True,,1
+26,São Paulo Station 27,existing_fire_station,-46.659358997927384,-23.53006380160829,True,,1
+27,São Paulo Station 28,existing_fire_station,-46.72850351219014,-23.626551756578113,True,,1
+28,São Paulo Station 29,existing_fire_station,-46.70264313552577,-23.485312223128464,True,,1
+29,São Paulo Station 30,existing_fire_station,-46.50491798408983,-23.52513032281395,True,,1
+30,São Paulo Station 31,existing_fire_station,-46.53207324576097,-23.59756381526717,True,,1
+31,São Paulo Station 32,existing_fire_station,-46.73461414467188,-23.56046871505162,True,,1
+32,São Paulo Station 33,existing_fire_station,-46.69587789216847,-23.55108555328296,True,,1
+33,São Paulo Station 34,existing_fire_station,-46.60643123945531,-23.60925188088039,True,,1
+34,São Paulo Station 35,existing_fire_station,-46.7126613085251,-23.579961142926873,True,,1
+35,São Paulo Station 36,existing_fire_station,-46.42699299739379,-23.62300679148632,True,,1
+36,São Paulo Station 37,existing_fire_station,-46.65763522617497,-23.7312788988618,True,,1
+37,São Paulo Station 38,existing_fire_station,-46.50147002579904,-23.583242637381527,True,,1
+38,São Paulo Station 39,existing_fire_station,-46.77113591549339,-23.45543950684321,True,,1
+39,São Paulo Station 40,existing_fire_station,-46.62690146048007,-23.56566401806709,True,,1
+40,São Paulo Station 41,existing_fire_station,-46.60289094576686,-23.429845443862828,True,,1
+41,São Paulo Station 42,existing_fire_station,-46.763587366805936,-23.587832148705107,True,,1
+42,São Paulo Station 43,existing_fire_station,-46.617214734380475,-23.44837127959391,True,,1
+43,São Paulo Station 44,existing_fire_station,-46.63188364654584,-23.57100180442811,True,,1
+44,São Paulo Station 45,existing_fire_station,-46.70520610400729,-23.46200989935233,True,,1
+45,São Paulo Station 46,existing_fire_station,-46.49462322051106,-23.594776352308788,True,,1
+46,São Paulo Station 47,existing_fire_station,-46.7036812600316,-23.660162762504022,True,,1
+47,São Paulo Station 48,existing_fire_station,-46.70607802546548,-23.589021342650625,True,,1
+48,São Paulo Station 49,existing_fire_station,-46.66470983367094,-23.58682061111146,True,,1
+49,São Paulo Station 50,existing_fire_station,-46.71888685573168,-23.567104798664587,True,,1
+50,São Paulo Station 51,existing_fire_station,-46.745212888161625,-23.51690003457455,True,,1
+51,São Paulo Station 52,existing_fire_station,-46.70994773331413,-23.68680205651175,True,,1
+52,São Paulo Station 53,existing_fire_station,-46.66791749929608,-23.65592942115789,True,,1
+53,São Paulo Station 54,existing_fire_station,-46.67566250821643,-23.527792911336977,True,,1
+54,São Paulo Station 55,existing_fire_station,-46.63794643781891,-23.512294987689952,True,,1
+55,São Paulo Station 56,existing_fire_station,-46.53087166531687,-23.602684491307624,True,,1
+56,São Paulo Station 57,existing_fire_station,-46.55238729151399,-23.52203451384194,True,,1
+57,São Paulo Station 58,existing_fire_station,-46.70436532199842,-23.51541917448758,True,,1
+58,São Paulo Station 59,existing_fire_station,-46.69117905865828,-23.477667520697356,True,,1
+59,São Paulo Station 60,existing_fire_station,-46.71325667839747,-23.61973600368069,True,,1
+60,São Paulo Station 61,existing_fire_station,-46.70457709369033,-23.5863815883055,True,,1
+61,São Paulo Station 62,existing_fire_station,-46.549495497726866,-23.564455419894365,True,,1
+62,São Paulo Station 63,existing_fire_station,-46.68038530585377,-23.65204206623892,True,,1
+63,São Paulo Station 64,existing_fire_station,-46.4641763628079,-23.491979122086622,True,,1
+64,São Paulo Station 65,existing_fire_station,-46.45146598797332,-23.629127796647523,True,,1
+65,São Paulo Station 66,existing_fire_station,-46.62535700499304,-23.53386391768282,True,,1
+66,São Paulo Station 67,existing_fire_station,-46.59323466186564,-23.43694466412166,True,,1
+67,São Paulo Station 68,existing_fire_station,-46.733233737275064,-23.72124683435859,True,,1
+68,São Paulo Station 69,existing_fire_station,-46.516304342160154,-23.54494549534257,True,,1
+69,São Paulo Station 70,existing_fire_station,-46.66264853265552,-23.726280557988076,True,,1
+70,Demand cell 0,demand_cell,-46.63341410488246,-23.58356329113924,False,,1
+71,Demand cell 1,demand_cell,-46.605216810744054,-23.583433389935166,False,,1
+72,Demand cell 2,demand_cell,-46.6786667721519,-23.583881803797468,False,,1
+73,Demand cell 3,demand_cell,-46.58848830723021,-23.583586301222915,False,,1
+74,Demand cell 4,demand_cell,-46.66170410016511,-23.58363866263071,False,,1
+75,Demand cell 5,demand_cell,-46.560367733808526,-23.583665693744624,False,,1
+76,Demand cell 6,demand_cell,-46.54340018987342,-23.583816012658225,False,,1
+77,Demand cell 7,demand_cell,-46.706487025316456,-23.58372829113924,False,,1
+78,Demand cell 8,demand_cell,-46.63334493670886,-23.52890189873418,False,,1
+79,Demand cell 9,demand_cell,-46.605147571686906,-23.542149186256783,False,,1
+80,Demand cell 10,demand_cell,-46.66159752002067,-23.542328209764918,False,,1
+81,Demand cell 11,demand_cell,-46.66177014983209,-23.52908047016275,False,,1
+82,Demand cell 12,demand_cell,-46.661712606561615,-23.555352169981916,False,,1
+83,Demand cell 13,demand_cell,-46.58828680020879,-23.542104430379748,False,,1
+84,Demand cell 14,demand_cell,-46.63363508702532,-23.5554454113924,False,,1
+85,Demand cell 15,demand_cell,-46.6334588607595,-23.542241495253165,False,,1
+86,Demand cell 16,demand_cell,-46.67857278481012,-23.568420886075945,False,,1
+87,Demand cell 17,demand_cell,-46.60526265822784,-23.555308346518988,False,,1
+88,Demand cell 18,demand_cell,-46.67851279288985,-23.542057769997307,False,,1
+89,Demand cell 19,demand_cell,-46.63327888499865,-23.56828090492863,False,,1
+90,Demand cell 20,demand_cell,-46.60556261782925,-23.56828090492863,False,,1
+91,Demand cell 21,demand_cell,-46.60550262590896,-23.528992862914087,False,,1
+92,Demand cell 22,demand_cell,-46.66165506329114,-23.56846754645839,False,,1
+93,Demand cell 23,demand_cell,-46.67826959983667,-23.555404144548795,False,,1
+94,Demand cell 24,demand_cell,-46.58822366271948,-23.554932523478968,False,,1
+95,Demand cell 25,demand_cell,-46.58834493670886,-23.56823018712163,False,,1
+96,Demand cell 26,demand_cell,-46.605510536931426,-23.51593257059396,False,,1
+97,Demand cell 27,demand_cell,-46.5886582278481,-23.529043670886075,False,,1
+98,Demand cell 28,demand_cell,-46.66152689873418,-23.515837816455697,False,,1
+99,Demand cell 29,demand_cell,-46.56034098101266,-23.555212816455697,False,,1
+100,Demand cell 30,demand_cell,-46.734772943037974,-23.583572784810123,False,,1
+101,Demand cell 31,demand_cell,-46.56014873417722,-23.541953186381487,False,,1
+102,Demand cell 32,demand_cell,-46.633394041903095,-23.516040048013966,False,,1
+103,Demand cell 33,demand_cell,-46.633655578451574,-23.598970415072124,False,,1
+104,Demand cell 34,demand_cell,-46.58854165440094,-23.599021415955253,False,,1
+105,Demand cell 35,demand_cell,-46.56034776619508,-23.568369285182428,False,,1
+106,Demand cell 36,demand_cell,-46.63372423678332,-23.50262974683544,False,,1
+107,Demand cell 37,demand_cell,-46.588412070524406,-23.51589240506329,False,,1
+108,Demand cell 38,demand_cell,-46.58841287936556,-23.502735435412536,False,,1
+109,Demand cell 39,demand_cell,-46.56021667683392,-23.529104735397286,False,,1
+110,Demand cell 253,demand_cell,-46.47556012658227,-23.542104430379748,False,,1
+111,Demand cell 237,demand_cell,-46.47368037974683,-23.55380063291139,False,,1
+112,Demand cell 120,demand_cell,-46.514840353557396,-23.50262974683544,False,,1
+113,Demand cell 86,demand_cell,-46.51544946016381,-23.528946202531646,False,,1
+114,Demand cell 88,demand_cell,-46.515287313432836,-23.555000802947287,False,,1
+115,Demand cell 40,demand_cell,-46.51496686746988,-23.583640041177365,False,,1
+116,Demand cell 251,demand_cell,-46.565787974683545,-23.467541139240502,False,,1
+117,Demand cell 182,demand_cell,-46.5289986437613,-23.502629746835442,False,,1
+118,Demand cell 150,demand_cell,-46.5882343633656,-23.463843075204764,False,,1
+119,Demand cell 108,demand_cell,-46.5891635361372,-23.625369130257248,False,,1
+120,Demand cell 257,demand_cell,-46.62218037974683,-23.441224683544306,False,,1
+121,Demand cell 106,demand_cell,-46.63364077174357,-23.46336729277256,False,,1
+122,Demand cell 77,demand_cell,-46.63345886075949,-23.625251898734174,False,,1
+123,Demand cell 258,demand_cell,-46.62218037974683,-23.66052848101266,False,,1
+124,Demand cell 264,demand_cell,-46.65037658227848,-23.441224683544306,False,,1
+125,Demand cell 113,demand_cell,-46.66165506329114,-23.463081962025317,False,,1
+126,Demand cell 44,demand_cell,-46.67857278481012,-23.50273672429762,False,,1
+127,Demand cell 80,demand_cell,-46.66173679141442,-23.62537630709961,False,,1
+128,Demand cell 213,demand_cell,-46.706416534810124,-23.46246973892405,False,,1
+129,Demand cell 82,demand_cell,-46.706768987341775,-23.502500744601633,False,,1
+130,Demand cell 51,demand_cell,-46.706697604550556,-23.54215995032847,False,,1
+131,Demand cell 50,demand_cell,-46.70669849683544,-23.568366060126582,False,,1
+132,Demand cell 138,demand_cell,-46.70603797468354,-23.624627637130796,False,,1
+133,Demand cell 268,demand_cell,-46.718047468354435,-23.467541139240506,False,,1
+134,Demand cell 145,demand_cell,-46.73411398375926,-23.502795259135418,False,,1
+135,Demand cell 102,demand_cell,-46.73487567811935,-23.54196518987342,False,,1
+136,Demand cell 78,demand_cell,-46.73464294755877,-23.568546202531646,False,,1
+137,Demand cell 170,demand_cell,-46.73421329113924,-23.624757594936707,False,,1
+138,Demand cell 206,demand_cell,-46.76538291139241,-23.56749050632911,False,,1
+139,Demand cell 226,demand_cell,-46.77725949367089,-23.582675632911393,False,,1
+140,Demand cell 255,demand_cell,-46.76316139240507,-23.621053797468353,False,,1
