@@ -27,7 +27,7 @@ what you thought at each step; this file can't record that. Times are local (Pac
 - Targets: the 5 boroughs with the slowest recorded 2024 attendance (Hillingdon 384.5 s, Havering 371.4, Enfield 366.5,
   Bromley 366.1, Redbridge 358.3). Recorded times, so no model is involved in choosing them.
 - Pass marks: (1) target boroughs at least 10 s faster under all three travel models; (2) no borough 1 s or more slower.
-- **Be honest if asked:** the rule was committed to git at 16:29 (commit 75c6b90), after the first targeted runs had started
+- **Be honest if asked:** the rule was committed to git at 16:29 (commit 7433060), after the first targeted runs had started
   (the Rule B run's output is timed 16:14). The order rests on the file time, 15:31, not on git.
 
 ### 2026-11-05 afternoon: 2025 results against the pre-set test
@@ -53,7 +53,7 @@ what you thought at each step; this file can't record that. Times are local (Pac
 - Conclusion: the error is a fixed offset, which cancels when comparing layouts; savings shrink by 1-5 % at most.
 - Source: results.md 5.7.
 
-### 2026-11-05 20:02: 2026 prediction committed (commit c40c34b)
+### 2026-11-05 20:02: 2026 prediction committed (commit c896434)
 
 - File: docs/prediction_2026.md, with scripts/final_test_2026.py.
 - Main layout: Rule B targeted Move 10. Data: January to July 2026 calls only.
@@ -74,6 +74,14 @@ what you thought at each step; this file can't record that. Times are local (Pac
 - Gains larger than 2025, but 2026 is only January to July, so don't call it an improvement.
 - Still modelled: no station has moved.
 - Source: results.md 5.8; data/figures/placement/final_test_2026/result.json.
+
+### 2026-11-06: why 13 s matters (added after the test, not a pass mark)
+
+- LFB's own standard: first engine in 6 minutes (360 s) on average, aimed at in every borough. Four of the five targets
+  missed it in 2024 (Hillingdon 384.5, Havering 371.4, Enfield 366.5, Bromley 366.1; Redbridge 358.3 was under).
+- The gain is uneven: 25-36 s in Havering and Redbridge in 2026, 3-10 s in the others.
+- Recorded 2024 time plus modelled change: Havering goes under 360 s under every model in both years; Bromley is on the
+  line; Hillingdon and Enfield stay over. Source: results.md 5.8.
 
 ### What we would do next (for the "further research" question)
 
