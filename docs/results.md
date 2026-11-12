@@ -926,7 +926,7 @@ prediction (`docs/prediction_2026.md`).
 ### 5.8 Part 2 final test on 2026 (run once, 2026-11-05)
 
 Source: `scripts/final_test_2026.py`, `data/figures/placement/final_test_2026/` (result.json, scores.csv, boroughs.csv).
-Prediction and pass marks fixed and committed first (`docs/prediction_2026.md`, commit c40c34b). Calls dated 1 January to
+Prediction and pass marks fixed and committed first (`docs/prediction_2026.md`, commit c896434). Calls dated 1 January to
 31 July 2026 (80,710 calls, 10,992 in the target boroughs). Scoring as 5.6; only the calls counted changed.
 
 **Main layout (Rule B targeted Move 10), change in the target boroughs (s), [95 % range from call sampling]:**
@@ -970,6 +970,27 @@ Reading:
 - Still modelled: the layouts are scored on 2026 calls with travel models; no station has actually moved. The test checks that
   the result holds on new calls and that the model's outer-London error stays a fixed offset, not that the stations would
   perform as modelled once built.
+
+**What the saving means against LFB's own target (added 2026-11-06, after the test; not a pass mark).** LFB's attendance
+standard is a first engine in 6 minutes (360 s) on average, committed London-wide and aimed at in every borough. Four of the
+five target boroughs missed it in 2024. Recorded 2024 borough average plus the main layout's modelled change (from
+`final_test_2026/boroughs.csv` and `final_test_2026/check_2025/boroughs.csv`), in s, LightGBM / road / Kolesar:
+
+| Borough | Recorded 2024 | With main layout, 2025 calls | With main layout, 2026 calls | Under 360 s? |
+|---|---|---|---|---|
+| Hillingdon | 384.5 | 379.8 / 376.6 / 381.1 | 379.3 / 376.3 / 381.0 | No |
+| Havering | 371.4 | 351.5 / 348.4 / 357.0 | 344.7 / 338.4 / 345.9 | **Yes, all models, both years** |
+| Enfield | 366.5 | 361.8 / 359.5 / 362.1 | 363.3 / 361.2 / 363.4 | Road 2025 only |
+| Bromley | 366.1 | 358.5 / 361.4 / 357.0 | 357.8 / 361.2 / 355.8 | LightGBM and Kolesar only |
+| Redbridge | 358.3 | 329.1 / 323.4 / 331.1 | 327.7 / 322.2 / 330.7 | Already under |
+
+- The 13-16 s average hides an uneven gain: 25-36 s in Havering and Redbridge in 2026, 3-10 s in the other three.
+- Havering moves inside the target under every model in both years; Bromley sits on the line; Hillingdon and Enfield stay
+  outside it. Ten relocations do not close the gap for the two slowest-improving boroughs.
+- This mixes a recorded baseline with a modelled change, so the "with layout" times are estimates. The model's outer-London
+  offset (about 18-21 s, 5.7) cancels in the change but not in the baseline, which is why the recorded 2024 baseline is used.
+- The 360 s target is a borough average. It says nothing about single calls, and LFB does not commit to it below
+  borough level.
 
 ---
 
