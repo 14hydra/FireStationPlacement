@@ -19,7 +19,7 @@ a Google Maps viewer.
 ## Cities
 
 Tokyo, Delhi, Shanghai, Dhaka, Cairo, São Paulo, Mexico City, Beijing, Mumbai, Osaka, plus **London** and **New York**  
-(registry: `src/firestation/megacities.py`). Stations are clipped to each city outline so markers are not drawn outside the border.
+(registry: `src/firestation/megacities.py`). Demand heat, stations, and the map border all use the **study outline** (`urban_extent_study.geojson` = Nominatim admin/coast ∩ core bbox), so the heatmap follows the city shape instead of a rectangular bbox or the full metro sprawl. Refresh without re-running placement: `scripts/refresh_megacity_map_borders.py`.
 
 ## Rebuild
 

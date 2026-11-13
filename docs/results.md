@@ -1168,6 +1168,29 @@ Have (path under `data/figures/`) and still needed for the board / paper.
 
 ---
 
+## 8b. External weak-label check: NYC FDNY (2026-11-13)
+
+Source: `scripts/validate_nyc_fdny_travel.py`, `data/figures/validation/nyc_fdny/summary.json`.
+Background: `docs/megacity_validation_data.md`.
+
+Open FDNY CAD gives travel seconds but not which company responded. Destinations use the
+official alarm-box map (`v57i-gtxb`); origin is the **nearest Engine** firehouse. About 53k
+incidents match after filters. The **headline** slice is structural/non-structural fires
+with travel &lt; 600 s, scored with distance + hour + borough on a holdout.
+
+| Protocol | n | MAE (s) | Corr |
+|---|---:|---:|---:|
+| All calls · NYC Kolesar holdout | ~53k | 84.4 | 0.24 |
+| Fires &lt;10 min · NYC Kolesar | ~4.1k | 57.7 | 0.34 |
+| **Fires &lt;10 min · dist+hour+borough** | **~4.1k** | **55.3** | **0.44** |
+| Fires &lt;10 min · constant | ~4.1k | 62.3 | — |
+
+Reading: cleaning the slice (fires) and adding hour/borough lifts correlation from
+0.24 → **0.44** and MAE from 84 → **55 s**, beating the constant (62 s). The ceiling is
+still the missing responder — the same structural issue as London’s 2014 nearest-only
+closure test before the dispatch model. External open-CAD check only; not LFB-grade OD
+validation; does not validate LightGBM or megacity placement savings.
+
 ## 9. Limitations to state
 
 - Modelled attendance is about 18 s below recorded (314 vs 332 s); comparisons between
@@ -1181,3 +1204,5 @@ Have (path under `data/figures/`) and still needed for the board / paper.
   2014 closures, the likely cause of the remaining error).
 - Demand is past calls (2024), not predicted future calls; land, cost and staffing are not
   modelled.
+- Outside London, open CAD rarely names the responding station; the NYC weak-label check
+  (section 8b) shows that limit clearly.

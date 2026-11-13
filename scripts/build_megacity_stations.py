@@ -153,13 +153,17 @@ def fetch_stations_osmnx(bbox: tuple[float, float, float, float]) -> pd.DataFram
 
 
 def synthetic_stations(city, n: int = 40, seed: int = 0) -> pd.DataFrame:
-    """Fallback lattice — only inside urban_extent.geojson when that file exists."""
-    from firestation.geo_clip import load_rings, points_in_rings
+    """Fallback lattice — only inside the study city outline when that file exists."""
+    from firestation.geo_clip import clip_extent_to_bbox, load_rings, points_in_rings, study_extent_path
 
     rng = np.random.default_rng(seed + abs(hash(city.id)) % 10_000)
     west, south, east, north = city.bbox
     clon, clat = city.center
-    rings = load_rings(city.raw_dir / "urban_extent.geojson")
+    full = city.raw_dir / "urban_extent.geojson"
+    study = city.raw_dir / "urban_extent_study.geojson"
+    if full.exists() and not study.exists():
+        clip_extent_to_bbox(full, city.bbox, out_path=study)
+    rings = load_rings(study_extent_path(city.raw_dir))
     rows = []
     attempts = 0
     max_attempts = n * (80 if rings else 40)
@@ -207,10 +211,14 @@ def synthetic_stations(city, n: int = 40, seed: int = 0) -> pd.DataFrame:
 
 
 def _clip_to_extent(city, df: pd.DataFrame) -> pd.DataFrame:
-    from firestation.geo_clip import filter_frame_inside
+    from firestation.geo_clip import clip_extent_to_bbox, filter_frame_inside, study_extent_path
 
+    full = city.raw_dir / "urban_extent.geojson"
+    study = city.raw_dir / "urban_extent_study.geojson"
+    if full.exists() and not study.exists():
+        clip_extent_to_bbox(full, city.bbox, out_path=study)
     before = len(df)
-    out = filter_frame_inside(df, city.raw_dir / "urban_extent.geojson")
+    out = filter_frame_inside(df, study_extent_path(city.raw_dir))
     if len(out) < before:
         print(f"  clipped stations to urban outline: {before} → {len(out)}")
     return out
