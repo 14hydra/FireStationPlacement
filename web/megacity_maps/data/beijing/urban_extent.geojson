@@ -1,0 +1,1 @@
+{"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {"city_id": "beijing", "name": "\u5317\u4eac\u5e02, \u4e2d\u56fd", "source": "nominatim", "clip": "study_bbox"}, "geometry": {"type": "Polygon", "coordinates": [[[116.14, 39.743], [116.14, 40.107], [116.66000000000001, 40.107], [116.66000000000001, 39.743], [116.14, 39.743]]]}}]}

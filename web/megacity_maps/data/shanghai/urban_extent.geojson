@@ -1,0 +1,1 @@
+{"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {"city_id": "shanghai", "name": "\u4e0a\u6d77\u5e02, \u4e2d\u56fd", "source": "nominatim", "clip": "study_bbox"}, "geometry": {"type": "Polygon", "coordinates": [[[121.18900000000001, 31.042], [121.18900000000001, 31.458], [121.761, 31.458], [121.761, 31.042], [121.18900000000001, 31.042]]]}}]}

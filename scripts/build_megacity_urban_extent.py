@@ -80,16 +80,24 @@ def fetch_extent(city_id: str) -> dict:
 
 
 def build_one(city_id: str, *, force: bool = False) -> Path:
+    from firestation.geo_clip import clip_extent_to_bbox
+
     city = get_megacity(city_id)
     out = city.raw_dir / "urban_extent.geojson"
+    study = city.raw_dir / "urban_extent_study.geojson"
     if out.exists() and not force:
-        print(f"{city.id}: keep {out}")
+        if not study.exists():
+            clip_extent_to_bbox(out, city.bbox, out_path=study)
+            print(f"{city.id}: wrote study clip {study.name}")
+        else:
+            print(f"{city.id}: keep {out}")
         return out
     print(f"{city.id}: fetching urban extent…", flush=True)
     fc = fetch_extent(city.id)
     city.raw_dir.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(fc) + "\n")
-    print(f"{city.id}: wrote {out}")
+    clip_extent_to_bbox(out, city.bbox, out_path=study)
+    print(f"{city.id}: wrote {out} + {study.name}")
     time.sleep(1.1)  # Nominatim usage policy
     return out
 

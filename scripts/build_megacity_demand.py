@@ -117,31 +117,14 @@ def _from_geotiff(path: Path, bbox, n_cells: int, rng: np.random.Generator) -> p
 
 
 def _load_urban_rings(city) -> list[np.ndarray]:
-    """Exterior rings from cached Nominatim urban_extent.geojson as (N,2) lon/lat."""
-    path = city.raw_dir / "urban_extent.geojson"
-    if not path.exists():
-        return []
-    fc = json.loads(path.read_text())
-    rings: list[np.ndarray] = []
+    """Exterior rings from study-clipped urban outline (admin/coast ∩ bbox)."""
+    from firestation.geo_clip import clip_extent_to_bbox, load_rings, study_extent_path
 
-    def _add_polygon(coords):
-        if not coords:
-            return
-        # GeoJSON polygon: first ring is exterior
-        exterior = np.asarray(coords[0], dtype=float)
-        if exterior.ndim == 2 and len(exterior) >= 3:
-            rings.append(exterior[:, :2])
-
-    for feat in fc.get("features") or []:
-        geom = feat.get("geometry") or {}
-        gtype = geom.get("type")
-        coords = geom.get("coordinates")
-        if gtype == "Polygon":
-            _add_polygon(coords)
-        elif gtype == "MultiPolygon":
-            for poly in coords or []:
-                _add_polygon(poly)
-    return rings
+    full = city.raw_dir / "urban_extent.geojson"
+    study = city.raw_dir / "urban_extent_study.geojson"
+    if full.exists() and not study.exists():
+        clip_extent_to_bbox(full, city.bbox, out_path=study)
+    return load_rings(study_extent_path(city.raw_dir))
 
 
 def _points_in_rings(lon: np.ndarray, lat: np.ndarray, rings: list[np.ndarray]) -> np.ndarray:

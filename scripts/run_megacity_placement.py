@@ -144,19 +144,25 @@ def _export_viewer(city_id: str, out_dir: Path, summary: dict) -> None:
         cells["response_s_delta"] = cells[after_c] - cells[before_c]
         delta_c = "response_s_delta"
 
-    # Keep markers inside the city outline (same polygon as demand / map border)
-    from firestation.geo_clip import filter_frame_inside
+    # Keep markers inside the study city outline (admin/coast ∩ core bbox)
+    from firestation.geo_clip import clip_extent_to_bbox, filter_frame_inside, study_extent_path
 
-    extent_path = city.raw_dir / "urban_extent.geojson"
+    full_extent = city.raw_dir / "urban_extent.geojson"
+    if full_extent.exists() and not (city.raw_dir / "urban_extent_study.geojson").exists():
+        clip_extent_to_bbox(full_extent, city.bbox)
+    extent_path = study_extent_path(city.raw_dir)
     kept = filter_frame_inside(kept, extent_path)
     if len(closed):
         closed = filter_frame_inside(closed, extent_path)
     if len(opened):
         opened = filter_frame_inside(opened, extent_path)
+    cells = filter_frame_inside(cells, extent_path, lat_col="lat", lon_col="lon")
 
     (dest / "stations_kept.geojson").write_text(json.dumps(_pts_geojson(kept, name_col)))
     (dest / "stations_closed.geojson").write_text(json.dumps(_pts_geojson(closed)))
     (dest / "stations_opened.geojson").write_text(json.dumps(_pts_geojson(opened)))
+    if extent_path.exists():
+        (dest / "urban_extent.geojson").write_text(extent_path.read_text())
 
     cdf = cells.copy()
     cell_props = [c for c in ("weight", "share", before_c, after_c, delta_c) if c and c in cdf.columns]
