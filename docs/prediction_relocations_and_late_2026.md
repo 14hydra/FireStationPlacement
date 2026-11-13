@@ -135,3 +135,68 @@ uncommitted changes, and refuses to run a second time.
 
 Both tests are reported whatever they show, in results.md and the notebook, including partial passes and fails. Neither
 test changes the Part 2 headline, which is the January-July 2026 result.
+
+---
+
+## Notes added 2026-11-12, while writing the test scripts (before either test was run)
+
+No recorded attendance for any event area has been calculated. What was run: the 2014 code check, the model predictions
+(`--predictions-only`, which reads calls per cell, turnout, pump counts and busy rates, but no attendance in any event
+area), and Test B's dry runs on already-used months.
+
+**Test A: changes to the method above, and why**
+
+1. **Area rule.** The area is defined from first-engine trips in the mobilisation records (`PumpOrder` 1, with the
+   training-set filters), which is what the 2014 test actually did. The wording above ("incident records,
+   `FirstPumpArriving_DeployedFromStation`") did not match the 2014 code: with it, the code check failed (LightGBM busy
+   +68.6 s against +67.5 s; 57 area cells against 58).
+2. **Code check.** It found one bug (latitude and longitude swapped in the busy-rate distances; LightGBM busy +64.6 s).
+   After both fixes the script reproduces every 2014 number in results.md 3.1 to 0.01 s (recorded +70.5; LightGBM +76.8
+   free, +67.5 busy; road Kolesar +71.0 / +59.5; straight-line Kolesar +78.3 / +62.7).
+3. **The network in each window.** Several moves overlap. In every window (comparison or "during"), any other event whose
+   move covers more than half of the window is in place: its station is out and its engines work from their
+   destination. Without this, Dockhead's "before" window (April-October 2015) treated Deptford as open while Deptford was
+   being rebuilt, and Deptford's ground looked 94 % busy to the busy-engine model.
+4. **Details the method above left open, now fixed.**
+   - The predicted change per cell is weighted by the "during" window's calls, as in the 2014 code.
+   - Recorded 95 % range: calls are resampled within each window, separately in the area and in the control.
+   - Pumps per station in a window are home-station engine codes used 100+ times a year (pro rata), as in the 2014 code.
+   - Moved engines are a separate row at the destination's site, with their own station's turnout, engine count and
+     busy-model load per call. For another event in place, its crews' turnout is their median in the 365 days before
+     its move.
+   - Busy rates are the training set's busy flag: the share of first engines in each open station's ground (nearest
+     open station) that came from another station.
+   - The dispatch model is the saved one (`dispatch_lfb.joblib`), trained on 2021-2024 trips. That is after events 1-7,
+     but includes Lee Green's year.
+
+**Test A: model predictions, fixed now** (`data/figures/validation/relocations/predicted.csv`; the test checks that it
+reproduces these numbers)
+
+| Event | Station | Area cells | Calls during | LightGBM busy | Road Kolesar busy | Straight-line Kolesar busy |
+|---|---|---|---|---|---|---|
+| 1 | Leytonstone | 12 | 608 | +48.5 | +43.3 | +56.4 |
+| 2 | Shadwell | 2 | 398 | +53.3 | +50.1 | +65.2 |
+| 3 | Purley | 38 | 362 | +158.4 | +151.2 | +150.7 |
+| 4 | Dockhead | 7 | 324 | −32.1 | −22.2 | −16.0 |
+| 5 | Plaistow | 9 | 1,030 | +72.6 | +79.9 | +66.0 |
+| 6 | Deptford | 6 | 1,341 | +74.9 | +79.2 | +64.5 |
+| 7 | Dagenham (reported) | 33 | 1,295 | +92.1 | +89.7 | +98.4 |
+| 8 | Lee Green (reported) | 14 | 562 | +68.0 | +63.4 | +56.8 |
+
+Call-weighted average over events 1-6, LightGBM busy: +67.1 s. This replaces the guess under "What to expect" above:
+the models predict about as much slowing as in the 2014 closures, not less, and much more for Purley.
+
+**Dockhead (event 4).** The models predict it got *faster*. Its area comes from November 2014 to November 2015, when
+Deptford (its destination) was itself being rebuilt for 7 of the 12 months, so Dockhead's engine was covering part of
+Deptford's ground. One of its 7 cells is 0.1 km from Deptford station. Moving Dockhead's engines to Deptford then speeds
+up those cells. This was noticed from the model predictions, before any recorded attendance was looked at.
+**Decision (2026-11-13, before any recorded attendance for any event area was calculated):** keep event 4 scored. The models were given the real network in each window, including Deptford being closed, and still predict Dockhead got faster. That is a genuine, checkable prediction, and an unusual one, so it is a harder test of the models, not a broken one. Dropping it now, because its prediction looks odd, would weaken the test. The pass marks stay on events 1-6 as fixed. As a secondary check only, the results also report the same scores on events 1-3, 5 and 6 (without Dockhead); this does not change pass or fail.
+
+**Shadwell (event 2)** has only 2 area cells. It is kept, as fixed; its recorded range will be wide.
+
+**Test B: dry runs** (`data/figures/placement/final_test_2026_late/check_*`)
+
+- January-July 2026: reproduces `final_test_2026/result.json` exactly (0.00 s on every primary score).
+- August-December 2025 (a used year): −13.1 / −15.3 / −11.9 s, drive slope 0.967, all three marks met.
+- The training-trips file must have trips in the window's last month: the January-July file ends on 2026-07-30, not
+  the 31st, so "trips up to the last day" would have refused a file that is complete.

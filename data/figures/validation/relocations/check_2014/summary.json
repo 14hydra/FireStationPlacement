@@ -1,0 +1,21 @@
+{
+  "recorded_s": 70.48,
+  "recorded_lo": 66.34,
+  "recorded_hi": 75.25,
+  "area_cells": 58,
+  "area_calls_2014": 6151,
+  "predicted": {
+    "lightgbm / free": 76.82,
+    "lightgbm / busy": 67.51,
+    "kolesar(road_km) / free": 71.0,
+    "kolesar(road_km) / busy": 59.45,
+    "kolesar(crow_km) / free": 78.31,
+    "kolesar(crow_km) / busy": 62.65
+  },
+  "published": {
+    "recorded": 70.5,
+    "lightgbm / busy": 67.5,
+    "tolerance": 0.5
+  },
+  "pass": true
+}

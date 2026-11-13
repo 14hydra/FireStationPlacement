@@ -1,0 +1,22 @@
+layout,scorer,moved,d_target_s,target_lo,target_hi,d_london_s,d_slowest10_s,boroughs_worse_1s,worst_borough_s,worst_borough,calls_30s_slower_pct
+rule_b_target_10,lgbm,10,-13.1,-14.05,-12.13,-2.36,-1.24,0,0.0,BRENT,1.6
+rule_b_target_20,lgbm,13,-15.68,-16.95,-14.23,-2.79,-0.85,0,0.0,BRENT,2.6
+target_10,lgbm,10,-12.81,-14.08,-11.65,-2.43,-0.34,0,0.0,BRENT,1.8
+target_20,lgbm,15,-16.03,-17.28,-14.68,-2.82,-1.52,0,0.0,BRENT,2.8
+citywide_10,lgbm,10,-6.97,-7.97,-6.05,-4.36,-1.07,0,0.0,CAMDEN,2.5
+planner_10,lgbm,10,-10.62,-11.4,-9.89,-5.78,-4.77,1,1.5,TOWER HAMLETS,1.6
+planner_20,lgbm,20,-14.01,-15.09,-12.89,-8.27,-5.1,0,0.7,BRENT,3.6
+rule_b_target_10,road,10,-15.33,-16.37,-14.23,-2.64,-3.63,0,0.1,LEWISHAM,1.7
+rule_b_target_20,road,13,-18.46,-19.87,-16.89,-3.12,-3.09,0,0.2,LEWISHAM,2.8
+target_10,road,10,-13.14,-14.56,-11.83,-2.46,-2.1,0,0.5,HOUNSLOW,2.0
+target_20,road,15,-18.32,-19.7,-16.79,-3.06,-3.66,0,0.5,HOUNSLOW,3.0
+citywide_10,road,10,-9.36,-10.54,-8.29,-4.95,-3.34,0,0.0,CITY OF LONDON,2.5
+planner_10,road,10,-9.8,-10.57,-9.06,-4.56,-5.58,1,9.0,TOWER HAMLETS,2.1
+planner_20,road,20,-14.56,-15.73,-13.33,-7.97,-7.14,0,0.6,BRENT,3.5
+rule_b_target_10,kolesar,10,-11.85,-12.9,-10.74,-2.07,-1.7,0,0.5,LEWISHAM,1.9
+rule_b_target_20,kolesar,13,-14.08,-15.45,-12.59,-2.54,-0.16,0,0.5,LEWISHAM,3.0
+target_10,kolesar,10,-10.79,-12.19,-9.44,-2.11,-0.87,0,0.5,LEWISHAM,2.0
+target_20,kolesar,15,-15.08,-16.4,-13.63,-2.71,-1.75,0,0.5,LEWISHAM,3.0
+citywide_10,kolesar,10,-6.91,-7.94,-5.92,-3.87,-2.37,2,6.3,RICHMOND UPON THAMES,2.7
+planner_10,kolesar,10,-5.9,-6.6,-5.23,-2.57,-4.62,3,8.8,TOWER HAMLETS,2.6
+planner_20,kolesar,20,-8.27,-9.32,-7.21,-4.72,-5.3,2,8.8,RICHMOND UPON THAMES,4.6

@@ -1,0 +1,694 @@
+layout,scorer,borough,target,d_s
+rule_b_target_10,lgbm,BARKING AND DAGENHAM,False,-2.07
+rule_b_target_10,lgbm,BARNET,False,-0.06
+rule_b_target_10,lgbm,BEXLEY,False,-0.1
+rule_b_target_10,lgbm,BRENT,False,0.0
+rule_b_target_10,lgbm,BROMLEY,True,-8.34
+rule_b_target_10,lgbm,CAMDEN,False,0.0
+rule_b_target_10,lgbm,CITY OF LONDON,False,0.0
+rule_b_target_10,lgbm,CROYDON,False,-0.22
+rule_b_target_10,lgbm,EALING,False,-0.47
+rule_b_target_10,lgbm,ENFIELD,True,-3.23
+rule_b_target_10,lgbm,GREENWICH,False,-0.0
+rule_b_target_10,lgbm,HACKNEY,False,-0.0
+rule_b_target_10,lgbm,HAMMERSMITH AND FULHAM,False,0.0
+rule_b_target_10,lgbm,HARINGEY,False,-12.71
+rule_b_target_10,lgbm,HARROW,False,-0.9
+rule_b_target_10,lgbm,HAVERING,True,-26.72
+rule_b_target_10,lgbm,HILLINGDON,True,-5.22
+rule_b_target_10,lgbm,HOUNSLOW,False,0.0
+rule_b_target_10,lgbm,ISLINGTON,False,0.0
+rule_b_target_10,lgbm,KENSINGTON AND CHELSEA,False,0.0
+rule_b_target_10,lgbm,KINGSTON UPON THAMES,False,0.0
+rule_b_target_10,lgbm,LAMBETH,False,0.0
+rule_b_target_10,lgbm,LEWISHAM,False,-0.24
+rule_b_target_10,lgbm,MERTON,False,0.0
+rule_b_target_10,lgbm,NEWHAM,False,-0.13
+rule_b_target_10,lgbm,REDBRIDGE,True,-30.62
+rule_b_target_10,lgbm,RICHMOND UPON THAMES,False,0.0
+rule_b_target_10,lgbm,SOUTHWARK,False,0.0
+rule_b_target_10,lgbm,SUTTON,False,0.0
+rule_b_target_10,lgbm,TOWER HAMLETS,False,0.0
+rule_b_target_10,lgbm,WALTHAM FOREST,False,-2.79
+rule_b_target_10,lgbm,WANDSWORTH,False,0.0
+rule_b_target_10,lgbm,WESTMINSTER,False,0.0
+rule_b_target_20,lgbm,BARKING AND DAGENHAM,False,-0.1
+rule_b_target_20,lgbm,BARNET,False,-0.06
+rule_b_target_20,lgbm,BEXLEY,False,-2.21
+rule_b_target_20,lgbm,BRENT,False,0.0
+rule_b_target_20,lgbm,BROMLEY,True,-14.25
+rule_b_target_20,lgbm,CAMDEN,False,0.0
+rule_b_target_20,lgbm,CITY OF LONDON,False,0.0
+rule_b_target_20,lgbm,CROYDON,False,-0.22
+rule_b_target_20,lgbm,EALING,False,-0.47
+rule_b_target_20,lgbm,ENFIELD,True,-3.23
+rule_b_target_20,lgbm,GREENWICH,False,-0.0
+rule_b_target_20,lgbm,HACKNEY,False,-0.14
+rule_b_target_20,lgbm,HAMMERSMITH AND FULHAM,False,0.0
+rule_b_target_20,lgbm,HARINGEY,False,-12.71
+rule_b_target_20,lgbm,HARROW,False,-0.9
+rule_b_target_20,lgbm,HAVERING,True,-26.69
+rule_b_target_20,lgbm,HILLINGDON,True,-5.22
+rule_b_target_20,lgbm,HOUNSLOW,False,0.0
+rule_b_target_20,lgbm,ISLINGTON,False,0.0
+rule_b_target_20,lgbm,KENSINGTON AND CHELSEA,False,0.0
+rule_b_target_20,lgbm,KINGSTON UPON THAMES,False,0.0
+rule_b_target_20,lgbm,LAMBETH,False,0.0
+rule_b_target_20,lgbm,LEWISHAM,False,-0.23
+rule_b_target_20,lgbm,MERTON,False,0.0
+rule_b_target_20,lgbm,NEWHAM,False,-2.6
+rule_b_target_20,lgbm,REDBRIDGE,True,-33.63
+rule_b_target_20,lgbm,RICHMOND UPON THAMES,False,0.0
+rule_b_target_20,lgbm,SOUTHWARK,False,0.0
+rule_b_target_20,lgbm,SUTTON,False,0.0
+rule_b_target_20,lgbm,TOWER HAMLETS,False,0.0
+rule_b_target_20,lgbm,WALTHAM FOREST,False,-4.21
+rule_b_target_20,lgbm,WANDSWORTH,False,0.0
+rule_b_target_20,lgbm,WESTMINSTER,False,0.0
+target_10,lgbm,BARKING AND DAGENHAM,False,-7.76
+target_10,lgbm,BARNET,False,-0.06
+target_10,lgbm,BEXLEY,False,-1.25
+target_10,lgbm,BRENT,False,0.0
+target_10,lgbm,BROMLEY,True,-14.52
+target_10,lgbm,CAMDEN,False,0.0
+target_10,lgbm,CITY OF LONDON,False,0.0
+target_10,lgbm,CROYDON,False,-0.22
+target_10,lgbm,EALING,False,-0.47
+target_10,lgbm,ENFIELD,True,-3.23
+target_10,lgbm,GREENWICH,False,-0.0
+target_10,lgbm,HACKNEY,False,-0.0
+target_10,lgbm,HAMMERSMITH AND FULHAM,False,0.0
+target_10,lgbm,HARINGEY,False,-12.71
+target_10,lgbm,HARROW,False,-0.9
+target_10,lgbm,HAVERING,True,-29.87
+target_10,lgbm,HILLINGDON,True,-7.16
+target_10,lgbm,HOUNSLOW,False,-0.25
+target_10,lgbm,ISLINGTON,False,0.0
+target_10,lgbm,KENSINGTON AND CHELSEA,False,0.0
+target_10,lgbm,KINGSTON UPON THAMES,False,0.0
+target_10,lgbm,LAMBETH,False,0.0
+target_10,lgbm,LEWISHAM,False,-0.23
+target_10,lgbm,MERTON,False,0.0
+target_10,lgbm,NEWHAM,False,-0.08
+target_10,lgbm,REDBRIDGE,True,-21.46
+target_10,lgbm,RICHMOND UPON THAMES,False,0.0
+target_10,lgbm,SOUTHWARK,False,0.0
+target_10,lgbm,SUTTON,False,0.0
+target_10,lgbm,TOWER HAMLETS,False,0.0
+target_10,lgbm,WALTHAM FOREST,False,-2.79
+target_10,lgbm,WANDSWORTH,False,0.0
+target_10,lgbm,WESTMINSTER,False,0.0
+target_20,lgbm,BARKING AND DAGENHAM,False,-0.08
+target_20,lgbm,BARNET,False,-0.06
+target_20,lgbm,BEXLEY,False,-1.25
+target_20,lgbm,BRENT,False,0.0
+target_20,lgbm,BROMLEY,True,-14.52
+target_20,lgbm,CAMDEN,False,0.0
+target_20,lgbm,CITY OF LONDON,False,0.0
+target_20,lgbm,CROYDON,False,-0.22
+target_20,lgbm,EALING,False,-0.47
+target_20,lgbm,ENFIELD,True,-3.23
+target_20,lgbm,GREENWICH,False,-0.0
+target_20,lgbm,HACKNEY,False,-0.14
+target_20,lgbm,HAMMERSMITH AND FULHAM,False,0.0
+target_20,lgbm,HARINGEY,False,-12.71
+target_20,lgbm,HARROW,False,-0.9
+target_20,lgbm,HAVERING,True,-27.38
+target_20,lgbm,HILLINGDON,True,-7.16
+target_20,lgbm,HOUNSLOW,False,-0.25
+target_20,lgbm,ISLINGTON,False,0.0
+target_20,lgbm,KENSINGTON AND CHELSEA,False,0.0
+target_20,lgbm,KINGSTON UPON THAMES,False,0.0
+target_20,lgbm,LAMBETH,False,0.0
+target_20,lgbm,LEWISHAM,False,-0.23
+target_20,lgbm,MERTON,False,0.0
+target_20,lgbm,NEWHAM,False,-2.6
+target_20,lgbm,REDBRIDGE,True,-33.63
+target_20,lgbm,RICHMOND UPON THAMES,False,0.0
+target_20,lgbm,SOUTHWARK,False,0.0
+target_20,lgbm,SUTTON,False,0.0
+target_20,lgbm,TOWER HAMLETS,False,0.0
+target_20,lgbm,WALTHAM FOREST,False,-4.21
+target_20,lgbm,WANDSWORTH,False,0.0
+target_20,lgbm,WESTMINSTER,False,0.0
+citywide_10,lgbm,BARKING AND DAGENHAM,False,-32.06
+citywide_10,lgbm,BARNET,False,-7.11
+citywide_10,lgbm,BEXLEY,False,-0.03
+citywide_10,lgbm,BRENT,False,-2.18
+citywide_10,lgbm,BROMLEY,True,0.53
+citywide_10,lgbm,CAMDEN,False,0.0
+citywide_10,lgbm,CITY OF LONDON,False,0.0
+citywide_10,lgbm,CROYDON,False,-9.95
+citywide_10,lgbm,EALING,False,0.0
+citywide_10,lgbm,ENFIELD,True,-3.23
+citywide_10,lgbm,GREENWICH,False,-0.01
+citywide_10,lgbm,HACKNEY,False,-0.32
+citywide_10,lgbm,HAMMERSMITH AND FULHAM,False,0.0
+citywide_10,lgbm,HARINGEY,False,-12.71
+citywide_10,lgbm,HARROW,False,-4.08
+citywide_10,lgbm,HAVERING,True,-22.67
+citywide_10,lgbm,HILLINGDON,True,0.0
+citywide_10,lgbm,HOUNSLOW,False,-0.01
+citywide_10,lgbm,ISLINGTON,False,0.0
+citywide_10,lgbm,KENSINGTON AND CHELSEA,False,0.0
+citywide_10,lgbm,KINGSTON UPON THAMES,False,-34.71
+citywide_10,lgbm,LAMBETH,False,-2.3
+citywide_10,lgbm,LEWISHAM,False,-1.2
+citywide_10,lgbm,MERTON,False,-11.45
+citywide_10,lgbm,NEWHAM,False,-2.05
+citywide_10,lgbm,REDBRIDGE,True,-14.47
+citywide_10,lgbm,RICHMOND UPON THAMES,False,-6.14
+citywide_10,lgbm,SOUTHWARK,False,-0.02
+citywide_10,lgbm,SUTTON,False,-0.0
+citywide_10,lgbm,TOWER HAMLETS,False,-10.42
+citywide_10,lgbm,WALTHAM FOREST,False,-0.94
+citywide_10,lgbm,WANDSWORTH,False,-5.71
+citywide_10,lgbm,WESTMINSTER,False,0.0
+planner_10,lgbm,BARKING AND DAGENHAM,False,-33.14
+planner_10,lgbm,BARNET,False,-9.23
+planner_10,lgbm,BEXLEY,False,-4.71
+planner_10,lgbm,BRENT,False,-10.57
+planner_10,lgbm,BROMLEY,True,-14.91
+planner_10,lgbm,CAMDEN,False,-10.6
+planner_10,lgbm,CITY OF LONDON,False,-0.21
+planner_10,lgbm,CROYDON,False,-5.13
+planner_10,lgbm,EALING,False,0.0
+planner_10,lgbm,ENFIELD,True,-5.7
+planner_10,lgbm,GREENWICH,False,-0.14
+planner_10,lgbm,HACKNEY,False,-10.96
+planner_10,lgbm,HAMMERSMITH AND FULHAM,False,-0.25
+planner_10,lgbm,HARINGEY,False,-20.32
+planner_10,lgbm,HARROW,False,-10.21
+planner_10,lgbm,HAVERING,True,-33.92
+planner_10,lgbm,HILLINGDON,True,0.0
+planner_10,lgbm,HOUNSLOW,False,0.0
+planner_10,lgbm,ISLINGTON,False,-0.56
+planner_10,lgbm,KENSINGTON AND CHELSEA,False,-3.79
+planner_10,lgbm,KINGSTON UPON THAMES,False,0.0
+planner_10,lgbm,LAMBETH,False,-2.32
+planner_10,lgbm,LEWISHAM,False,-4.73
+planner_10,lgbm,MERTON,False,0.0
+planner_10,lgbm,NEWHAM,False,-4.55
+planner_10,lgbm,REDBRIDGE,True,-5.81
+planner_10,lgbm,RICHMOND UPON THAMES,False,0.0
+planner_10,lgbm,SOUTHWARK,False,-0.15
+planner_10,lgbm,SUTTON,False,0.0
+planner_10,lgbm,TOWER HAMLETS,False,0.36
+planner_10,lgbm,WALTHAM FOREST,False,-1.95
+planner_10,lgbm,WANDSWORTH,False,0.0
+planner_10,lgbm,WESTMINSTER,False,-7.75
+planner_20,lgbm,BARKING AND DAGENHAM,False,-35.24
+planner_20,lgbm,BARNET,False,0.12
+planner_20,lgbm,BEXLEY,False,-0.18
+planner_20,lgbm,BRENT,False,0.83
+planner_20,lgbm,BROMLEY,True,-5.15
+planner_20,lgbm,CAMDEN,False,-1.32
+planner_20,lgbm,CITY OF LONDON,False,-0.4
+planner_20,lgbm,CROYDON,False,-5.42
+planner_20,lgbm,EALING,False,-2.06
+planner_20,lgbm,ENFIELD,True,-5.71
+planner_20,lgbm,GREENWICH,False,-9.49
+planner_20,lgbm,HACKNEY,False,-1.51
+planner_20,lgbm,HAMMERSMITH AND FULHAM,False,-7.79
+planner_20,lgbm,HARINGEY,False,-14.05
+planner_20,lgbm,HARROW,False,-2.62
+planner_20,lgbm,HAVERING,True,-24.77
+planner_20,lgbm,HILLINGDON,True,-8.71
+planner_20,lgbm,HOUNSLOW,False,-12.21
+planner_20,lgbm,ISLINGTON,False,-7.26
+planner_20,lgbm,KENSINGTON AND CHELSEA,False,-2.52
+planner_20,lgbm,KINGSTON UPON THAMES,False,-46.74
+planner_20,lgbm,LAMBETH,False,-2.83
+planner_20,lgbm,LEWISHAM,False,-15.19
+planner_20,lgbm,MERTON,False,-11.82
+planner_20,lgbm,NEWHAM,False,-11.05
+planner_20,lgbm,REDBRIDGE,True,-26.19
+planner_20,lgbm,RICHMOND UPON THAMES,False,-4.34
+planner_20,lgbm,SOUTHWARK,False,-5.02
+planner_20,lgbm,SUTTON,False,-14.25
+planner_20,lgbm,TOWER HAMLETS,False,-15.48
+planner_20,lgbm,WALTHAM FOREST,False,-1.22
+planner_20,lgbm,WANDSWORTH,False,-7.13
+planner_20,lgbm,WESTMINSTER,False,-5.84
+rule_b_target_10,road,BARKING AND DAGENHAM,False,-4.9
+rule_b_target_10,road,BARNET,False,0.04
+rule_b_target_10,road,BEXLEY,False,0.0
+rule_b_target_10,road,BRENT,False,0.0
+rule_b_target_10,road,BROMLEY,True,-4.95
+rule_b_target_10,road,CAMDEN,False,0.0
+rule_b_target_10,road,CITY OF LONDON,False,0.0
+rule_b_target_10,road,CROYDON,False,-0.04
+rule_b_target_10,road,EALING,False,-0.43
+rule_b_target_10,road,ENFIELD,True,-5.28
+rule_b_target_10,road,GREENWICH,False,0.0
+rule_b_target_10,road,HACKNEY,False,-0.03
+rule_b_target_10,road,HAMMERSMITH AND FULHAM,False,0.0
+rule_b_target_10,road,HARINGEY,False,-10.52
+rule_b_target_10,road,HARROW,False,-2.13
+rule_b_target_10,road,HAVERING,True,-32.99
+rule_b_target_10,road,HILLINGDON,True,-8.21
+rule_b_target_10,road,HOUNSLOW,False,0.0
+rule_b_target_10,road,ISLINGTON,False,0.0
+rule_b_target_10,road,KENSINGTON AND CHELSEA,False,0.0
+rule_b_target_10,road,KINGSTON UPON THAMES,False,0.0
+rule_b_target_10,road,LAMBETH,False,0.0
+rule_b_target_10,road,LEWISHAM,False,0.11
+rule_b_target_10,road,MERTON,False,0.0
+rule_b_target_10,road,NEWHAM,False,-0.27
+rule_b_target_10,road,REDBRIDGE,True,-36.1
+rule_b_target_10,road,RICHMOND UPON THAMES,False,0.0
+rule_b_target_10,road,SOUTHWARK,False,0.0
+rule_b_target_10,road,SUTTON,False,0.0
+rule_b_target_10,road,TOWER HAMLETS,False,0.0
+rule_b_target_10,road,WALTHAM FOREST,False,-2.7
+rule_b_target_10,road,WANDSWORTH,False,0.0
+rule_b_target_10,road,WESTMINSTER,False,0.0
+rule_b_target_20,road,BARKING AND DAGENHAM,False,-1.07
+rule_b_target_20,road,BARNET,False,0.04
+rule_b_target_20,road,BEXLEY,False,-3.24
+rule_b_target_20,road,BRENT,False,0.0
+rule_b_target_20,road,BROMLEY,True,-11.87
+rule_b_target_20,road,CAMDEN,False,0.0
+rule_b_target_20,road,CITY OF LONDON,False,0.0
+rule_b_target_20,road,CROYDON,False,-0.04
+rule_b_target_20,road,EALING,False,-0.43
+rule_b_target_20,road,ENFIELD,True,-5.28
+rule_b_target_20,road,GREENWICH,False,-0.0
+rule_b_target_20,road,HACKNEY,False,-0.61
+rule_b_target_20,road,HAMMERSMITH AND FULHAM,False,0.0
+rule_b_target_20,road,HARINGEY,False,-10.52
+rule_b_target_20,road,HARROW,False,-2.13
+rule_b_target_20,road,HAVERING,True,-32.98
+rule_b_target_20,road,HILLINGDON,True,-8.21
+rule_b_target_20,road,HOUNSLOW,False,0.0
+rule_b_target_20,road,ISLINGTON,False,0.0
+rule_b_target_20,road,KENSINGTON AND CHELSEA,False,0.0
+rule_b_target_20,road,KINGSTON UPON THAMES,False,0.0
+rule_b_target_20,road,LAMBETH,False,0.0
+rule_b_target_20,road,LEWISHAM,False,0.12
+rule_b_target_20,road,MERTON,False,0.0
+rule_b_target_20,road,NEWHAM,False,-2.84
+rule_b_target_20,road,REDBRIDGE,True,-40.46
+rule_b_target_20,road,RICHMOND UPON THAMES,False,0.0
+rule_b_target_20,road,SOUTHWARK,False,0.0
+rule_b_target_20,road,SUTTON,False,0.0
+rule_b_target_20,road,TOWER HAMLETS,False,-0.0
+rule_b_target_20,road,WALTHAM FOREST,False,-2.95
+rule_b_target_20,road,WANDSWORTH,False,0.0
+rule_b_target_20,road,WESTMINSTER,False,0.0
+target_10,road,BARKING AND DAGENHAM,False,-10.49
+target_10,road,BARNET,False,0.04
+target_10,road,BEXLEY,False,-2.12
+target_10,road,BRENT,False,0.0
+target_10,road,BROMLEY,True,-12.62
+target_10,road,CAMDEN,False,0.0
+target_10,road,CITY OF LONDON,False,0.0
+target_10,road,CROYDON,False,-0.04
+target_10,road,EALING,False,-0.43
+target_10,road,ENFIELD,True,-5.28
+target_10,road,GREENWICH,False,0.0
+target_10,road,HACKNEY,False,-0.03
+target_10,road,HAMMERSMITH AND FULHAM,False,0.0
+target_10,road,HARINGEY,False,-10.52
+target_10,road,HARROW,False,-2.13
+target_10,road,HAVERING,True,-27.11
+target_10,road,HILLINGDON,True,-7.75
+target_10,road,HOUNSLOW,False,0.62
+target_10,road,ISLINGTON,False,0.0
+target_10,road,KENSINGTON AND CHELSEA,False,0.0
+target_10,road,KINGSTON UPON THAMES,False,0.0
+target_10,road,LAMBETH,False,0.0
+target_10,road,LEWISHAM,False,0.11
+target_10,road,MERTON,False,0.0
+target_10,road,NEWHAM,False,-0.15
+target_10,road,REDBRIDGE,True,-26.88
+target_10,road,RICHMOND UPON THAMES,False,0.0
+target_10,road,SOUTHWARK,False,0.0
+target_10,road,SUTTON,False,0.0
+target_10,road,TOWER HAMLETS,False,0.0
+target_10,road,WALTHAM FOREST,False,-2.7
+target_10,road,WANDSWORTH,False,0.0
+target_10,road,WESTMINSTER,False,0.0
+target_20,road,BARKING AND DAGENHAM,False,-1.01
+target_20,road,BARNET,False,0.04
+target_20,road,BEXLEY,False,-2.12
+target_20,road,BRENT,False,0.0
+target_20,road,BROMLEY,True,-12.62
+target_20,road,CAMDEN,False,0.0
+target_20,road,CITY OF LONDON,False,0.0
+target_20,road,CROYDON,False,-0.04
+target_20,road,EALING,False,-0.43
+target_20,road,ENFIELD,True,-5.28
+target_20,road,GREENWICH,False,-0.0
+target_20,road,HACKNEY,False,-0.61
+target_20,road,HAMMERSMITH AND FULHAM,False,0.0
+target_20,road,HARINGEY,False,-10.52
+target_20,road,HARROW,False,-2.13
+target_20,road,HAVERING,True,-33.65
+target_20,road,HILLINGDON,True,-7.75
+target_20,road,HOUNSLOW,False,0.62
+target_20,road,ISLINGTON,False,0.0
+target_20,road,KENSINGTON AND CHELSEA,False,0.0
+target_20,road,KINGSTON UPON THAMES,False,0.0
+target_20,road,LAMBETH,False,0.0
+target_20,road,LEWISHAM,False,0.11
+target_20,road,MERTON,False,0.0
+target_20,road,NEWHAM,False,-2.84
+target_20,road,REDBRIDGE,True,-40.46
+target_20,road,RICHMOND UPON THAMES,False,0.0
+target_20,road,SOUTHWARK,False,0.0
+target_20,road,SUTTON,False,0.0
+target_20,road,TOWER HAMLETS,False,-0.0
+target_20,road,WALTHAM FOREST,False,-2.95
+target_20,road,WANDSWORTH,False,0.0
+target_20,road,WESTMINSTER,False,0.0
+citywide_10,road,BARKING AND DAGENHAM,False,-39.97
+citywide_10,road,BARNET,False,-7.9
+citywide_10,road,BEXLEY,False,0.0
+citywide_10,road,BRENT,False,-2.12
+citywide_10,road,BROMLEY,True,-1.38
+citywide_10,road,CAMDEN,False,0.0
+citywide_10,road,CITY OF LONDON,False,0.04
+citywide_10,road,CROYDON,False,-7.32
+citywide_10,road,EALING,False,0.0
+citywide_10,road,ENFIELD,True,-5.28
+citywide_10,road,GREENWICH,False,0.0
+citywide_10,road,HACKNEY,False,-0.18
+citywide_10,road,HAMMERSMITH AND FULHAM,False,0.0
+citywide_10,road,HARINGEY,False,-10.52
+citywide_10,road,HARROW,False,-4.44
+citywide_10,road,HAVERING,True,-30.21
+citywide_10,road,HILLINGDON,True,0.0
+citywide_10,road,HOUNSLOW,False,-0.01
+citywide_10,road,ISLINGTON,False,0.0
+citywide_10,road,KENSINGTON AND CHELSEA,False,0.0
+citywide_10,road,KINGSTON UPON THAMES,False,-47.26
+citywide_10,road,LAMBETH,False,-1.58
+citywide_10,road,LEWISHAM,False,-1.57
+citywide_10,road,MERTON,False,-9.53
+citywide_10,road,NEWHAM,False,-2.6
+citywide_10,road,REDBRIDGE,True,-17.89
+citywide_10,road,RICHMOND UPON THAMES,False,-9.64
+citywide_10,road,SOUTHWARK,False,-0.02
+citywide_10,road,SUTTON,False,-0.0
+citywide_10,road,TOWER HAMLETS,False,-11.38
+citywide_10,road,WALTHAM FOREST,False,-0.46
+citywide_10,road,WANDSWORTH,False,-6.59
+citywide_10,road,WESTMINSTER,False,0.0
+planner_10,road,BARKING AND DAGENHAM,False,-28.12
+planner_10,road,BARNET,False,-8.1
+planner_10,road,BEXLEY,False,-1.26
+planner_10,road,BRENT,False,-9.46
+planner_10,road,BROMLEY,True,-12.64
+planner_10,road,CAMDEN,False,-8.69
+planner_10,road,CITY OF LONDON,False,-0.27
+planner_10,road,CROYDON,False,-3.49
+planner_10,road,EALING,False,0.0
+planner_10,road,ENFIELD,True,-6.24
+planner_10,road,GREENWICH,False,0.23
+planner_10,road,HACKNEY,False,-9.21
+planner_10,road,HAMMERSMITH AND FULHAM,False,-0.2
+planner_10,road,HARINGEY,False,-16.35
+planner_10,road,HARROW,False,-8.01
+planner_10,road,HAVERING,True,-32.34
+planner_10,road,HILLINGDON,True,0.0
+planner_10,road,HOUNSLOW,False,0.0
+planner_10,road,ISLINGTON,False,-0.81
+planner_10,road,KENSINGTON AND CHELSEA,False,-2.83
+planner_10,road,KINGSTON UPON THAMES,False,0.0
+planner_10,road,LAMBETH,False,-1.23
+planner_10,road,LEWISHAM,False,-3.52
+planner_10,road,MERTON,False,0.0
+planner_10,road,NEWHAM,False,-5.76
+planner_10,road,REDBRIDGE,True,-5.25
+planner_10,road,RICHMOND UPON THAMES,False,0.0
+planner_10,road,SOUTHWARK,False,-0.02
+planner_10,road,SUTTON,False,0.0
+planner_10,road,TOWER HAMLETS,False,6.91
+planner_10,road,WALTHAM FOREST,False,-1.17
+planner_10,road,WANDSWORTH,False,0.0
+planner_10,road,WESTMINSTER,False,-6.85
+planner_20,road,BARKING AND DAGENHAM,False,-30.36
+planner_20,road,BARNET,False,0.26
+planner_20,road,BEXLEY,False,0.0
+planner_20,road,BRENT,False,0.64
+planner_20,road,BROMLEY,True,-5.13
+planner_20,road,CAMDEN,False,0.09
+planner_20,road,CITY OF LONDON,False,0.04
+planner_20,road,CROYDON,False,-3.69
+planner_20,road,EALING,False,-1.44
+planner_20,road,ENFIELD,True,-6.39
+planner_20,road,GREENWICH,False,-1.86
+planner_20,road,HACKNEY,False,-0.94
+planner_20,road,HAMMERSMITH AND FULHAM,False,-7.77
+planner_20,road,HARINGEY,False,-12.8
+planner_20,road,HARROW,False,-2.32
+planner_20,road,HAVERING,True,-27.04
+planner_20,road,HILLINGDON,True,-9.32
+planner_20,road,HOUNSLOW,False,-11.47
+planner_20,road,ISLINGTON,False,-6.21
+planner_20,road,KENSINGTON AND CHELSEA,False,-0.83
+planner_20,road,KINGSTON UPON THAMES,False,-55.61
+planner_20,road,LAMBETH,False,-2.07
+planner_20,road,LEWISHAM,False,-10.25
+planner_20,road,MERTON,False,-12.48
+planner_20,road,NEWHAM,False,-12.53
+planner_20,road,REDBRIDGE,True,-24.84
+planner_20,road,RICHMOND UPON THAMES,False,-8.11
+planner_20,road,SOUTHWARK,False,-5.96
+planner_20,road,SUTTON,False,-28.42
+planner_20,road,TOWER HAMLETS,False,-12.39
+planner_20,road,WALTHAM FOREST,False,-0.9
+planner_20,road,WANDSWORTH,False,-5.31
+planner_20,road,WESTMINSTER,False,-9.01
+rule_b_target_10,kolesar,BARKING AND DAGENHAM,False,-3.56
+rule_b_target_10,kolesar,BARNET,False,-0.06
+rule_b_target_10,kolesar,BEXLEY,False,0.0
+rule_b_target_10,kolesar,BRENT,False,0.0
+rule_b_target_10,kolesar,BROMLEY,True,-10.29
+rule_b_target_10,kolesar,CAMDEN,False,0.0
+rule_b_target_10,kolesar,CITY OF LONDON,False,0.0
+rule_b_target_10,kolesar,CROYDON,False,-0.16
+rule_b_target_10,kolesar,EALING,False,-0.3
+rule_b_target_10,kolesar,ENFIELD,True,-3.13
+rule_b_target_10,kolesar,GREENWICH,False,0.0
+rule_b_target_10,kolesar,HACKNEY,False,0.0
+rule_b_target_10,kolesar,HAMMERSMITH AND FULHAM,False,0.0
+rule_b_target_10,kolesar,HARINGEY,False,-10.91
+rule_b_target_10,kolesar,HARROW,False,-0.66
+rule_b_target_10,kolesar,HAVERING,True,-25.53
+rule_b_target_10,kolesar,HILLINGDON,True,-3.5
+rule_b_target_10,kolesar,HOUNSLOW,False,0.0
+rule_b_target_10,kolesar,ISLINGTON,False,0.0
+rule_b_target_10,kolesar,KENSINGTON AND CHELSEA,False,0.0
+rule_b_target_10,kolesar,KINGSTON UPON THAMES,False,0.0
+rule_b_target_10,kolesar,LAMBETH,False,0.0
+rule_b_target_10,kolesar,LEWISHAM,False,0.41
+rule_b_target_10,kolesar,MERTON,False,0.0
+rule_b_target_10,kolesar,NEWHAM,False,-0.19
+rule_b_target_10,kolesar,REDBRIDGE,True,-27.61
+rule_b_target_10,kolesar,RICHMOND UPON THAMES,False,0.0
+rule_b_target_10,kolesar,SOUTHWARK,False,0.0
+rule_b_target_10,kolesar,SUTTON,False,0.0
+rule_b_target_10,kolesar,TOWER HAMLETS,False,0.0
+rule_b_target_10,kolesar,WALTHAM FOREST,False,-1.22
+rule_b_target_10,kolesar,WANDSWORTH,False,0.0
+rule_b_target_10,kolesar,WESTMINSTER,False,0.0
+rule_b_target_20,kolesar,BARKING AND DAGENHAM,False,0.09
+rule_b_target_20,kolesar,BARNET,False,-0.06
+rule_b_target_20,kolesar,BEXLEY,False,-2.54
+rule_b_target_20,kolesar,BRENT,False,0.0
+rule_b_target_20,kolesar,BROMLEY,True,-13.37
+rule_b_target_20,kolesar,CAMDEN,False,0.0
+rule_b_target_20,kolesar,CITY OF LONDON,False,0.0
+rule_b_target_20,kolesar,CROYDON,False,-0.16
+rule_b_target_20,kolesar,EALING,False,-0.3
+rule_b_target_20,kolesar,ENFIELD,True,-3.13
+rule_b_target_20,kolesar,GREENWICH,False,-0.01
+rule_b_target_20,kolesar,HACKNEY,False,-0.01
+rule_b_target_20,kolesar,HAMMERSMITH AND FULHAM,False,0.0
+rule_b_target_20,kolesar,HARINGEY,False,-10.91
+rule_b_target_20,kolesar,HARROW,False,-0.66
+rule_b_target_20,kolesar,HAVERING,True,-25.52
+rule_b_target_20,kolesar,HILLINGDON,True,-3.5
+rule_b_target_20,kolesar,HOUNSLOW,False,0.0
+rule_b_target_20,kolesar,ISLINGTON,False,0.0
+rule_b_target_20,kolesar,KENSINGTON AND CHELSEA,False,0.0
+rule_b_target_20,kolesar,KINGSTON UPON THAMES,False,0.0
+rule_b_target_20,kolesar,LAMBETH,False,0.0
+rule_b_target_20,kolesar,LEWISHAM,False,0.41
+rule_b_target_20,kolesar,MERTON,False,0.0
+rule_b_target_20,kolesar,NEWHAM,False,-3.99
+rule_b_target_20,kolesar,REDBRIDGE,True,-31.01
+rule_b_target_20,kolesar,RICHMOND UPON THAMES,False,0.0
+rule_b_target_20,kolesar,SOUTHWARK,False,0.0
+rule_b_target_20,kolesar,SUTTON,False,0.0
+rule_b_target_20,kolesar,TOWER HAMLETS,False,0.0
+rule_b_target_20,kolesar,WALTHAM FOREST,False,-4.62
+rule_b_target_20,kolesar,WANDSWORTH,False,0.0
+rule_b_target_20,kolesar,WESTMINSTER,False,0.0
+target_10,kolesar,BARKING AND DAGENHAM,False,-10.27
+target_10,kolesar,BARNET,False,-0.06
+target_10,kolesar,BEXLEY,False,-1.56
+target_10,kolesar,BRENT,False,0.0
+target_10,kolesar,BROMLEY,True,-17.62
+target_10,kolesar,CAMDEN,False,0.0
+target_10,kolesar,CITY OF LONDON,False,0.0
+target_10,kolesar,CROYDON,False,-0.16
+target_10,kolesar,EALING,False,-0.3
+target_10,kolesar,ENFIELD,True,-3.13
+target_10,kolesar,GREENWICH,False,-0.01
+target_10,kolesar,HACKNEY,False,0.0
+target_10,kolesar,HAMMERSMITH AND FULHAM,False,0.0
+target_10,kolesar,HARINGEY,False,-10.91
+target_10,kolesar,HARROW,False,-0.66
+target_10,kolesar,HAVERING,True,-21.96
+target_10,kolesar,HILLINGDON,True,-5.48
+target_10,kolesar,HOUNSLOW,False,-2.01
+target_10,kolesar,ISLINGTON,False,0.0
+target_10,kolesar,KENSINGTON AND CHELSEA,False,0.0
+target_10,kolesar,KINGSTON UPON THAMES,False,0.0
+target_10,kolesar,LAMBETH,False,0.0
+target_10,kolesar,LEWISHAM,False,0.41
+target_10,kolesar,MERTON,False,0.0
+target_10,kolesar,NEWHAM,False,-0.11
+target_10,kolesar,REDBRIDGE,True,-19.36
+target_10,kolesar,RICHMOND UPON THAMES,False,-0.01
+target_10,kolesar,SOUTHWARK,False,0.0
+target_10,kolesar,SUTTON,False,0.0
+target_10,kolesar,TOWER HAMLETS,False,0.0
+target_10,kolesar,WALTHAM FOREST,False,-1.22
+target_10,kolesar,WANDSWORTH,False,0.0
+target_10,kolesar,WESTMINSTER,False,0.0
+target_20,kolesar,BARKING AND DAGENHAM,False,0.2
+target_20,kolesar,BARNET,False,-0.06
+target_20,kolesar,BEXLEY,False,-1.56
+target_20,kolesar,BRENT,False,0.0
+target_20,kolesar,BROMLEY,True,-17.62
+target_20,kolesar,CAMDEN,False,0.0
+target_20,kolesar,CITY OF LONDON,False,0.0
+target_20,kolesar,CROYDON,False,-0.16
+target_20,kolesar,EALING,False,-0.3
+target_20,kolesar,ENFIELD,True,-3.13
+target_20,kolesar,GREENWICH,False,-0.01
+target_20,kolesar,HACKNEY,False,-0.01
+target_20,kolesar,HAMMERSMITH AND FULHAM,False,0.0
+target_20,kolesar,HARINGEY,False,-10.91
+target_20,kolesar,HARROW,False,-0.66
+target_20,kolesar,HAVERING,True,-24.98
+target_20,kolesar,HILLINGDON,True,-5.48
+target_20,kolesar,HOUNSLOW,False,-2.01
+target_20,kolesar,ISLINGTON,False,0.0
+target_20,kolesar,KENSINGTON AND CHELSEA,False,0.0
+target_20,kolesar,KINGSTON UPON THAMES,False,0.0
+target_20,kolesar,LAMBETH,False,0.0
+target_20,kolesar,LEWISHAM,False,0.41
+target_20,kolesar,MERTON,False,0.0
+target_20,kolesar,NEWHAM,False,-3.99
+target_20,kolesar,REDBRIDGE,True,-31.01
+target_20,kolesar,RICHMOND UPON THAMES,False,-0.01
+target_20,kolesar,SOUTHWARK,False,0.0
+target_20,kolesar,SUTTON,False,0.0
+target_20,kolesar,TOWER HAMLETS,False,0.0
+target_20,kolesar,WALTHAM FOREST,False,-4.62
+target_20,kolesar,WANDSWORTH,False,0.0
+target_20,kolesar,WESTMINSTER,False,0.0
+citywide_10,kolesar,BARKING AND DAGENHAM,False,-31.12
+citywide_10,kolesar,BARNET,False,-5.83
+citywide_10,kolesar,BEXLEY,False,-0.02
+citywide_10,kolesar,BRENT,False,-1.71
+citywide_10,kolesar,BROMLEY,True,-0.85
+citywide_10,kolesar,CAMDEN,False,0.0
+citywide_10,kolesar,CITY OF LONDON,False,0.0
+citywide_10,kolesar,CROYDON,False,-9.37
+citywide_10,kolesar,EALING,False,0.0
+citywide_10,kolesar,ENFIELD,True,-3.14
+citywide_10,kolesar,GREENWICH,False,-0.01
+citywide_10,kolesar,HACKNEY,False,-0.13
+citywide_10,kolesar,HAMMERSMITH AND FULHAM,False,0.0
+citywide_10,kolesar,HARINGEY,False,-10.91
+citywide_10,kolesar,HARROW,False,-3.99
+citywide_10,kolesar,HAVERING,True,-24.36
+citywide_10,kolesar,HILLINGDON,True,0.0
+citywide_10,kolesar,HOUNSLOW,False,0.01
+citywide_10,kolesar,ISLINGTON,False,0.0
+citywide_10,kolesar,KENSINGTON AND CHELSEA,False,0.0
+citywide_10,kolesar,KINGSTON UPON THAMES,False,-52.42
+citywide_10,kolesar,LAMBETH,False,-1.53
+citywide_10,kolesar,LEWISHAM,False,-1.26
+citywide_10,kolesar,MERTON,False,-7.9
+citywide_10,kolesar,NEWHAM,False,-0.82
+citywide_10,kolesar,REDBRIDGE,True,-13.44
+citywide_10,kolesar,RICHMOND UPON THAMES,False,6.26
+citywide_10,kolesar,SOUTHWARK,False,1.08
+citywide_10,kolesar,SUTTON,False,-0.0
+citywide_10,kolesar,TOWER HAMLETS,False,-3.42
+citywide_10,kolesar,WALTHAM FOREST,False,-0.27
+citywide_10,kolesar,WANDSWORTH,False,-8.86
+citywide_10,kolesar,WESTMINSTER,False,0.0
+planner_10,kolesar,BARKING AND DAGENHAM,False,-18.99
+planner_10,kolesar,BARNET,False,-3.42
+planner_10,kolesar,BEXLEY,False,0.67
+planner_10,kolesar,BRENT,False,-7.33
+planner_10,kolesar,BROMLEY,True,-8.39
+planner_10,kolesar,CAMDEN,False,-6.67
+planner_10,kolesar,CITY OF LONDON,False,0.0
+planner_10,kolesar,CROYDON,False,-1.88
+planner_10,kolesar,EALING,False,0.0
+planner_10,kolesar,ENFIELD,True,-0.65
+planner_10,kolesar,GREENWICH,False,1.17
+planner_10,kolesar,HACKNEY,False,-4.2
+planner_10,kolesar,HAMMERSMITH AND FULHAM,False,-0.13
+planner_10,kolesar,HARINGEY,False,-7.43
+planner_10,kolesar,HARROW,False,-7.37
+planner_10,kolesar,HAVERING,True,-22.85
+planner_10,kolesar,HILLINGDON,True,0.0
+planner_10,kolesar,HOUNSLOW,False,0.0
+planner_10,kolesar,ISLINGTON,False,-0.32
+planner_10,kolesar,KENSINGTON AND CHELSEA,False,-1.22
+planner_10,kolesar,KINGSTON UPON THAMES,False,0.0
+planner_10,kolesar,LAMBETH,False,-0.9
+planner_10,kolesar,LEWISHAM,False,-1.5
+planner_10,kolesar,MERTON,False,0.0
+planner_10,kolesar,NEWHAM,False,-4.03
+planner_10,kolesar,REDBRIDGE,True,-4.3
+planner_10,kolesar,RICHMOND UPON THAMES,False,0.0
+planner_10,kolesar,SOUTHWARK,False,2.73
+planner_10,kolesar,SUTTON,False,0.0
+planner_10,kolesar,TOWER HAMLETS,False,7.74
+planner_10,kolesar,WALTHAM FOREST,False,-0.37
+planner_10,kolesar,WANDSWORTH,False,0.0
+planner_10,kolesar,WESTMINSTER,False,-6.14
+planner_20,kolesar,BARKING AND DAGENHAM,False,-21.37
+planner_20,kolesar,BARNET,False,0.2
+planner_20,kolesar,BEXLEY,False,-0.05
+planner_20,kolesar,BRENT,False,0.35
+planner_20,kolesar,BROMLEY,True,-5.07
+planner_20,kolesar,CAMDEN,False,0.55
+planner_20,kolesar,CITY OF LONDON,False,-1.57
+planner_20,kolesar,CROYDON,False,-2.07
+planner_20,kolesar,EALING,False,-0.61
+planner_20,kolesar,ENFIELD,True,-1.22
+planner_20,kolesar,GREENWICH,False,-4.04
+planner_20,kolesar,HACKNEY,False,-0.53
+planner_20,kolesar,HAMMERSMITH AND FULHAM,False,1.69
+planner_20,kolesar,HARINGEY,False,-11.05
+planner_20,kolesar,HARROW,False,-0.51
+planner_20,kolesar,HAVERING,True,-17.44
+planner_20,kolesar,HILLINGDON,True,-4.0
+planner_20,kolesar,HOUNSLOW,False,-14.79
+planner_20,kolesar,ISLINGTON,False,-4.44
+planner_20,kolesar,KENSINGTON AND CHELSEA,False,-1.3
+planner_20,kolesar,KINGSTON UPON THAMES,False,-45.24
+planner_20,kolesar,LAMBETH,False,-1.38
+planner_20,kolesar,LEWISHAM,False,-5.3
+planner_20,kolesar,MERTON,False,-7.3
+planner_20,kolesar,NEWHAM,False,-10.14
+planner_20,kolesar,REDBRIDGE,True,-12.76
+planner_20,kolesar,RICHMOND UPON THAMES,False,8.59
+planner_20,kolesar,SOUTHWARK,False,-3.89
+planner_20,kolesar,SUTTON,False,-14.73
+planner_20,kolesar,TOWER HAMLETS,False,-1.75
+planner_20,kolesar,WALTHAM FOREST,False,-0.67
+planner_20,kolesar,WANDSWORTH,False,-4.42
+planner_20,kolesar,WESTMINSTER,False,-4.22
