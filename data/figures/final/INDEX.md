@@ -18,7 +18,8 @@ Ten figures that tell the whole project. Open **01 → 10** in order.
 
 Also `method_diagram.png`: how the project works, from data to validation (`scripts/build_method_diagram.py`).
 
-| 14 | `14_project_significance.png` | **Significance:** Part 2 2026 PASS (−13.7 s slowest boroughs, 0 boroughs worse), equity (−9.6 s poorest fifth), NYC FDNY weak-label check (r ≈ 0.44 on fires). |
+| 14 | `14_project_significance.png` | **Significance / novelty:** pre-registered 2026 promise (PASS), missing-engine gap (+148 s), street model + closure check. |
+| 15 | `15_what_is_new.png` | **Interview card:** plain-English “what is new” (promise · hidden delay · streets). |
 
 Regenerate:
 

@@ -30,8 +30,12 @@ Small, targeted relocations can give the worst-served areas a clear gain with ev
 
 **Keywords:** fire station location; emergency response equity; travel time; LightGBM; London Fire Brigade
 
-**One-sentence pitch:** We learn how London's streets slow fire engines, then move a few stations so the boroughs that wait
-longest get 13-16 s faster help on average (25-36 s in Havering and Redbridge) while no borough gets slower.
+**One-sentence pitch:** We learn how London's streets slow fire engines, write a pass/fail promise before seeing 2026, and
+show that moving a few stations can give the slowest boroughs 13-16 s faster help with no borough worse — while also
+finding a recorded ~2½-minute delay when the local engine looks free but isn't sent.
+
+**Novelty (board):** promise-first 2026 PASS + missing-engine gap (+148 s on ~13% of calls) + street-learned times checked
+on the 2014 closures. Details: `docs/novelty_board.md`.
 
 ---
 
