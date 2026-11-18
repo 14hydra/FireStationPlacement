@@ -49,6 +49,45 @@ On the same first-engine trips the classic formula (road distance) has 53.8 s an
 
 The worst 5 % are chosen by their error, so that column describes the error's long tail and is not an accuracy claim. They carry 26–28 % of the error in each slice.
 
+### 1.1c Quantile + conformal prediction intervals
+
+Source: `data/figures/analysis/travel_time_intervals/summary.json`
+(`scripts/train_travel_time_intervals.py`, `firestation.conformal_quantiles`). Quantile
+LightGBM at p10/p25/p50/p75/p90, then asymmetric CQR calibrated on 2024; scored on 2025.
+
+| Slice | p50 MAE (s) | 50% cov (target 0.50) | 50% median width (s) | 80% cov (target 0.80) | 80% median width (s) |
+|---|---:|---:|---:|---:|---:|
+| All 2025 | 58.7 | 0.504 | 76 | 0.806 | 163 |
+| First engine, home, not busy | 46.4 | 0.515 | 66 | 0.821 | 143 |
+
+Raw quantile bands under-cover (placement 50%/80%: 0.46 / 0.75); conformalization brings
+coverage onto target. Production median MAE on the same placement trips: 46.6 s (p50 is
+essentially tied). Detail: `docs/travel_time_intervals.md`. Figure:
+`data/figures/analysis/travel_time_intervals/coverage.png`.
+
+### 1.1d Advisor-style PDF travel-time model (vs LightGBM / Kolesar)
+
+Source: `data/figures/analysis/pdf_travel_time/summary.json`
+(`scripts/compare_pdf_travel_time.py`, `firestation.street_time_pdf`). Same 2021–2024 /
+2025 split as §1.1. Instead of a point predictor, this model stores empirical pace PDFs
+(s/km) by OSM road class (attributed from whole-trip times) and samples trip times from
+those PDFs. Point guess = sample median.
+
+| Model | MAE (s) | Median abs. error (s) | Notes |
+|---|---:|---:|---|
+| Constant (train median) | 111.9 | 85.0 | |
+| PDF street-class (sample median) | 84.0 | 56.7 | CRPS 63.9 s; 50%/80% coverage 0.39/0.66 |
+| PDF regime (distance × class × rush) | 72.2 | 47.5 | CRPS 53.7 s; coverage 0.48/0.77 |
+| Kolesar (road km) | 68.7 | 45.8 | |
+| **LightGBM (production)** | **58.9** | **36.1** | best point MAE |
+
+First-engine, not-busy (n=89,588): LightGBM **47.4 s**, Kolesar 54.7 s, PDF regime 56.0 s,
+PDF street-class 64.1 s. Figure: `data/figures/analysis/pdf_travel_time/comparison.png`.
+Detail: `docs/pdf_travel_time_comparison.md`.
+
+**Verdict:** LightGBM stays the placement travel-time model. The PDF sampler is useful for
+distributional simulation / other-city parameter swap, not for beating point MAE.
+
 Per route (one station to one spot of about 100 m; first-engine trips to exact addresses). The model predicts a typical (median) time, so the median comparison is the fair one; recorded means sit higher because of slow outliers.
 
 | Routes with at least | Routes | Trips | Single-trip MAE (s) | Route median vs recorded median, MAE (s) | Bias (s) | Route mean vs recorded mean, MAE (s) | Bias (s) | Sampling noise in recorded mean (s) |

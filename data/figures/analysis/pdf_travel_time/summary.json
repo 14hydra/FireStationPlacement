@@ -1,0 +1,157 @@
+{
+  "doc": "Advisor-style statistical travel-time model vs production LightGBM and Kolesar. PDF model samples fire-engine pace (s/km) from empirical distributions by OSM road class (attributed from whole-trip times), then rebuilds trip time from length shares. Train 2021\u20132024, test 2025. Point score = sample median MAE; also CRPS and interval coverage for the PDF models.",
+  "n_train": 701000,
+  "n_test": 200624,
+  "n_samples": 60,
+  "pdf_model": {
+    "n_train": 700930,
+    "class_pace_n": {
+      "major": 549031,
+      "primary": 1320671,
+      "secondary": 342307,
+      "tertiary": 558675,
+      "residential": 805677,
+      "minor": 143431
+    },
+    "class_pace_median_s_per_km": {
+      "major": 100.59555384286685,
+      "primary": 101.32139042026311,
+      "secondary": 108.3614698926143,
+      "tertiary": 102.49949939710383,
+      "residential": 109.47759210163709,
+      "minor": 118.53699360592894
+    },
+    "n_regimes": 96,
+    "dist_edges_km": [
+      0.0,
+      1.1622335086640125,
+      1.6407051163046409,
+      2.0559742634176446,
+      2.481470138085033,
+      2.966758301984218,
+      3.576682230400616,
+      4.491285529345837,
+      35.52673117697289
+    ]
+  },
+  "point_metrics": {
+    "constant_median_train": {
+      "n": 200624,
+      "mae_s": 111.86257875428663,
+      "medae_s": 85.0,
+      "bias_s": -36.85822234627961,
+      "rmse_s": 155.21323868688953,
+      "corr": NaN
+    },
+    "kolesar_road_km": {
+      "n": 200624,
+      "mae_s": 68.65946099046612,
+      "medae_s": 45.75738599492776,
+      "bias_s": -16.129319892841554,
+      "rmse_s": 106.29671050885231,
+      "corr": 0.7173380223149907
+    },
+    "lightgbm_production": {
+      "n": 200624,
+      "mae_s": 58.90079476627127,
+      "medae_s": 36.13368207753706,
+      "bias_s": -18.851969593490473,
+      "rmse_s": 96.29635934959235,
+      "corr": 0.7795676873471519
+    },
+    "pdf_street_class_median": {
+      "n": 200624,
+      "mae_s": 84.04203230350139,
+      "medae_s": 56.73329530776908,
+      "bias_s": 10.837153365838008,
+      "rmse_s": 125.2158211750198,
+      "corr": 0.7203664213295078
+    },
+    "pdf_regime_median": {
+      "n": 200624,
+      "mae_s": 72.16033475556264,
+      "medae_s": 47.5,
+      "bias_s": -22.888577637770158,
+      "rmse_s": 111.04250110385497,
+      "corr": 0.6934906732511806
+    }
+  },
+  "distributional": {
+    "pdf_street_class": {
+      "crps_s": 63.89801933561007,
+      "interval_50": {
+        "level": "50%",
+        "coverage": 0.38500378818087566,
+        "mean_width_s": 103.12195100217868,
+        "median_width_s": 91.52547184537235
+      },
+      "interval_80": {
+        "level": "80%",
+        "coverage": 0.6566811547970333,
+        "mean_width_s": 218.40929945582133,
+        "median_width_s": 194.97528319770072
+      }
+    },
+    "pdf_regime": {
+      "crps_s": 53.673559452840486,
+      "interval_50": {
+        "level": "50%",
+        "coverage": 0.47801858202408487,
+        "mean_width_s": 97.91613166919213,
+        "median_width_s": 87.75
+      },
+      "interval_80": {
+        "level": "80%",
+        "coverage": 0.7688262620623654,
+        "mean_width_s": 201.31370523965228,
+        "median_width_s": 181.00000000000006
+      }
+    },
+    "lightgbm_as_point": {
+      "mae_as_crps_proxy_s": 58.90079476627127
+    },
+    "kolesar_as_point": {
+      "mae_as_crps_proxy_s": 68.65946099046612
+    }
+  },
+  "slices": {
+    "first_engine_not_busy": {
+      "n": 89588,
+      "lightgbm": {
+        "n": 89588,
+        "mae_s": 47.446654276793254,
+        "medae_s": 30.468263567126854,
+        "bias_s": -15.70112215170408,
+        "rmse_s": 78.02417632610677,
+        "corr": 0.6652916594264515
+      },
+      "kolesar": {
+        "n": 89588,
+        "mae_s": 54.67076360662095,
+        "medae_s": 39.16489029276764,
+        "bias_s": -2.999448081640578,
+        "rmse_s": 83.23521475309546,
+        "corr": 0.5906231033873772
+      },
+      "pdf_street_class": {
+        "n": 89588,
+        "mae_s": 64.10518884912358,
+        "medae_s": 45.228489364616514,
+        "bias_s": -13.16241234513839,
+        "rmse_s": 94.93761898066343,
+        "corr": 0.5925244660192905
+      },
+      "pdf_regime": {
+        "n": 89588,
+        "mae_s": 55.962494977005846,
+        "medae_s": 40.0,
+        "bias_s": -6.719951332767781,
+        "rmse_s": 84.51983222496142,
+        "corr": 0.5801502252427593
+      }
+    }
+  },
+  "winner_point_mae": "lightgbm_production",
+  "verdict": "Best point MAE: lightgbm_production (58.9 s). PDF models are built for distribution / simulation use; LightGBM remains the point predictor for placement if it wins MAE.",
+  "elapsed_s": 31.5
+}

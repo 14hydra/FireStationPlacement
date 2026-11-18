@@ -107,7 +107,10 @@ held-out stations' trips).
 ## Still planned
 
 - Linear regression and small neural-net baselines on the same features.
-- Quantile LightGBM: **built** for the 90th percentile (`scripts/train_travel_time_quantile.py`; 2025 coverage 86.9 %, target 90 %). Other quantiles / full prediction intervals still planned.
+- Quantile LightGBM: **built** for the 90th percentile (`scripts/train_travel_time_quantile.py`; 2025 coverage 86.9 %, target 90 %).
+- Full p10–p90 bands + asymmetric conformal intervals: **built**
+  (`scripts/train_travel_time_intervals.py`; 2025 placement 50%/80% coverage 0.515 / 0.821,
+  median widths 66 s / 143 s). See `docs/travel_time_intervals.md`.
 - Learned per-street speeds for routing (instead of shortest / posted-limit routes).
 - OS NGD carriageway width and speed data.
 

@@ -1,0 +1,183 @@
+{
+  "doc": "Quantile LightGBM (p10/p25/p50/p75/p90) with asymmetric conformal calibration on 2024. Final models trained 2021\u20132024, scored on 2025. Intervals: 50% = p25\u2013p75, 80% = p10\u2013p90, each expanded by CQR so coverage matches the target.",
+  "n_train": 701000,
+  "n_test": 200624,
+  "n_placement": 87937,
+  "n_estimators": 900,
+  "alphas": [
+    0.1,
+    0.25,
+    0.5,
+    0.75,
+    0.9
+  ],
+  "cqr_mode": "asymmetric",
+  "intervals": {
+    "50": {
+      "lo_alpha": 0.25,
+      "hi_alpha": 0.75,
+      "nominal": 0.5,
+      "cqr": {
+        "mode": "asymmetric",
+        "miscoverage": 0.5,
+        "adj_lo_s": -0.640461472793703,
+        "adj_hi_s": 11.19345023935125,
+        "n_cal": 192467
+      },
+      "calibration_2024_raw": {
+        "nominal": 0.5,
+        "coverage": 0.4494069113146669,
+        "mean_width_s": 69.93941288183318,
+        "median_width_s": 63.403194873866056,
+        "mean_lo_s": 240.6162919401919,
+        "mean_hi_s": 310.55570482202506,
+        "n": 192467
+      },
+      "calibration_2024_conformal": {
+        "nominal": 0.5,
+        "coverage": 0.5000181849355994,
+        "mean_width_s": 80.49240164839073,
+        "median_width_s": 73.9561836404236,
+        "mean_lo_s": 241.25675341298566,
+        "mean_hi_s": 321.74915506137637,
+        "n": 192467
+      }
+    },
+    "80": {
+      "lo_alpha": 0.1,
+      "hi_alpha": 0.9,
+      "nominal": 0.8,
+      "cqr": {
+        "mode": "asymmetric",
+        "miscoverage": 0.19999999999999996,
+        "adj_lo_s": 3.74330423174996,
+        "adj_hi_s": 25.641583726486317,
+        "n_cal": 192467
+      },
+      "calibration_2024_raw": {
+        "nominal": 0.8,
+        "coverage": 0.7304109275875864,
+        "mean_width_s": 142.5339656479666,
+        "median_width_s": 128.8918929090006,
+        "mean_lo_s": 213.34156771234262,
+        "mean_hi_s": 355.8755333603092,
+        "n": 192467
+      },
+      "calibration_2024_conformal": {
+        "nominal": 0.8,
+        "coverage": 0.8000280567577819,
+        "mean_width_s": 171.91876336218778,
+        "median_width_s": 158.27678086723688,
+        "mean_lo_s": 209.5983537246078,
+        "mean_hi_s": 381.51711708679557,
+        "n": 192467
+      }
+    }
+  },
+  "test_2025": {
+    "point_p50": {
+      "n": 200624,
+      "mae_s": 58.70481437868411,
+      "medae_s": 35.994743903182,
+      "bias_s": -19.080697292462336,
+      "corr": 0.7815333830726239
+    },
+    "interval_50_raw": {
+      "nominal": 0.5,
+      "coverage": 0.45547890581386075,
+      "mean_width_s": 72.33666804040004,
+      "median_width_s": 65.43824854553324,
+      "mean_lo_s": 246.27894950895973,
+      "mean_hi_s": 318.61561754935974,
+      "n": 200624
+    },
+    "interval_50_conformal": {
+      "nominal": 0.5,
+      "coverage": 0.5041620145147141,
+      "mean_width_s": 82.88965680695759,
+      "median_width_s": 75.99123731209079,
+      "mean_lo_s": 246.9194109817535,
+      "mean_hi_s": 329.8090677887111,
+      "n": 200624
+    },
+    "interval_80_raw": {
+      "nominal": 0.8,
+      "coverage": 0.7386354573729963,
+      "mean_width_s": 148.02969270731055,
+      "median_width_s": 133.57273397687786,
+      "mean_lo_s": 217.659723425185,
+      "mean_hi_s": 365.6894161324956,
+      "n": 200624
+    },
+    "interval_80_conformal": {
+      "nominal": 0.8,
+      "coverage": 0.8059554190924316,
+      "mean_width_s": 177.4144606985921,
+      "median_width_s": 162.95762193511413,
+      "mean_lo_s": 213.91653916038976,
+      "mean_hi_s": 391.3309998589819,
+      "n": 200624
+    },
+    "point_production": {
+      "n": 200624,
+      "mae_s": 58.90079476627127,
+      "medae_s": 36.13368207753706,
+      "bias_s": -18.851969593490473,
+      "corr": 0.7795676873471519
+    }
+  },
+  "test_2025_placement": {
+    "point_p50": {
+      "n": 87937,
+      "mae_s": 46.42013024695276,
+      "medae_s": 29.889223813269012,
+      "bias_s": -15.792617548123504,
+      "corr": 0.6752953730776299
+    },
+    "interval_50_raw": {
+      "nominal": 0.5,
+      "coverage": 0.45959038857363793,
+      "mean_width_s": 58.10145760616359,
+      "median_width_s": 55.79884028859789,
+      "mean_lo_s": 178.99083172351558,
+      "mean_hi_s": 237.0922893296792,
+      "n": 87937
+    },
+    "interval_50_conformal": {
+      "nominal": 0.5,
+      "coverage": 0.5145956764501859,
+      "mean_width_s": 68.65444637272115,
+      "median_width_s": 66.35182905515543,
+      "mean_lo_s": 179.63129319630931,
+      "mean_hi_s": 248.28573956903045,
+      "n": 87937
+    },
+    "interval_80_raw": {
+      "nominal": 0.8,
+      "coverage": 0.7461364385867155,
+      "mean_width_s": 118.33689726957834,
+      "median_width_s": 113.85569213363382,
+      "mean_lo_s": 158.05729028585037,
+      "mean_hi_s": 276.39418755542874,
+      "n": 87937
+    },
+    "interval_80_conformal": {
+      "nominal": 0.8,
+      "coverage": 0.8210195935726713,
+      "mean_width_s": 147.72156638749925,
+      "median_width_s": 143.24058009187013,
+      "mean_lo_s": 154.3142048944158,
+      "mean_hi_s": 302.035771281915,
+      "n": 87937
+    },
+    "point_production": {
+      "n": 87937,
+      "mae_s": 46.58363357414451,
+      "medae_s": 30.08398436973158,
+      "bias_s": -15.71511545753851,
+      "corr": 0.6738359795343355
+    }
+  },
+  "verdict": "p50 MAE 58.7 s on all 2025; 46.4 s on placement trips; 50% conformal coverage 0.504 (target 0.50, median width 76 s); placement 50% cov 0.515, median width 66 s; 80% conformal coverage 0.806 (target 0.80, median width 163 s); placement 80% cov 0.821, median width 143 s.",
+  "elapsed_s": 570.6
+}
