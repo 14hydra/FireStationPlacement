@@ -1,0 +1,17 @@
+{
+  "doc": "Exploratory (not pre-registered): can all 5 target boroughs get under LFB's 6-minute average?\n\nQuestion asked 2026-11-15, after the Part 2 tests. Nothing here changes Part 2's fixed results.\n\n\"Under 6 minutes\" for a borough = recorded 2024 average + modelled change < 360 s (the same reading as results.md 5.8).\nTwo searches, both on 2024 demand with LightGBM and busy engines (targeted_areas.py's set-up and swap search):\n\n  moves_<k>  move up to k stations (5, 10, ..., 40), same engines, with targeted_areas.py's protections: no borough's\n             average worse, London average no worse, slowest 10 % no worse. Objective: total seconds the 5 target\n             boroughs are over 360 s (plus a tiny pull on their average).\n  add_<n>    add n new stations, closing none (greedy, one at a time), until every target borough is under 360 s.\n             --engines move: each new station takes the second engine of the nearest two-engine station (London's\n             engine count fixed); --engines new: each new station gets a new engine.\n\nEach layout is then scored on 2025 calls under LightGBM, road Kolesar and straight-line Kolesar.\nWrites data/figures/placement/all_targets_6min/.\n\nRun:  PYTHONPATH=src .venv/bin/python scripts/explore_all_targets_under_6min.py\n",
+  "targets": [
+    "HILLINGDON",
+    "HAVERING",
+    "ENFIELD",
+    "BROMLEY",
+    "REDBRIDGE"
+  ],
+  "over_360_today_2024": {
+    "HILLINGDON": 24.5,
+    "HAVERING": 11.4,
+    "ENFIELD": 6.5,
+    "BROMLEY": 6.1,
+    "REDBRIDGE": 0.0
+  }
+}
