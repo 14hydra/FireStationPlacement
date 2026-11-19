@@ -1,0 +1,63 @@
+{
+  "doc": "Does the travel time model reproduce the real distribution of drive times, not just the average? (eMentor meeting 2)\n\nProduction LightGBM model, 2025 trips (never used in training). Two versions are compared with the recorded drive times:\n\n  point      one prediction per trip (what placement uses)\n  simulated  the eMentor's statistical idea in its simplest form: prediction x a random ratio (recorded / predicted)\n             drawn from trips with a similar predicted time. Ratios are learned on January to June 2025 and the\n             comparison is on July to December 2025, so the spread is not learned from the trips it is tested on.\n\nAlso reports the error relative to the average recorded drive time (normalised error).\nTrips: all 2025 trips, and the trips placement scores (first engine, from its home station, local engine not busy).\n\nWrites data/figures/validation/travel_time_distribution/ (summary.json, percentiles.csv, distribution.png).\nRun:  PYTHONPATH=src .venv/bin/python scripts/travel_time_distribution.py\n",
+  "all_2025_trips": {
+    "trips_2025": 200624,
+    "mean_recorded_s": 297.9,
+    "median_recorded_s": 271.0,
+    "mae_s": 57.6,
+    "median_abs_error_s": 35.3,
+    "mae_over_mean_recorded_pct": 19.3,
+    "median_abs_pct_error": 13.9,
+    "trips_within_20pct": 65.2,
+    "test_half": {
+      "trips": 103238,
+      "point_vs_recorded": {
+        "wasserstein_s": 23.5,
+        "ks": 0.058,
+        "sd_s": 120.8
+      },
+      "simulated_vs_recorded": {
+        "wasserstein_s": 2.2,
+        "ks": 0.01,
+        "sd_s": 153.9
+      },
+      "recorded_sd_s": 154.5,
+      "over_360s_pct": {
+        "recorded": 28.6,
+        "point": 23.1,
+        "simulated": 28.2
+      },
+      "mean_error_s": -18.7
+    }
+  },
+  "placement_trips": {
+    "trips_2025": 87937,
+    "mean_recorded_s": 220.5,
+    "median_recorded_s": 207.0,
+    "mae_s": 45.5,
+    "median_abs_error_s": 29.4,
+    "mae_over_mean_recorded_pct": 20.6,
+    "median_abs_pct_error": 15.1,
+    "trips_within_20pct": 61.9,
+    "test_half": {
+      "trips": 44847,
+      "point_vs_recorded": {
+        "wasserstein_s": 20.0,
+        "ks": 0.087,
+        "sd_s": 69.6
+      },
+      "simulated_vs_recorded": {
+        "wasserstein_s": 1.4,
+        "ks": 0.009,
+        "sd_s": 101.3
+      },
+      "recorded_sd_s": 103.4,
+      "over_360s_pct": {
+        "recorded": 8.1,
+        "point": 2.5,
+        "simulated": 7.8
+      },
+      "mean_error_s": -15.2
+    }
+  }
+}

@@ -49,6 +49,40 @@ On the same first-engine trips the classic formula (road distance) has 53.8 s an
 
 The worst 5 % are chosen by their error, so that column describes the error's long tail and is not an accuracy claim. They carry 26–28 % of the error in each slice.
 
+### 1.1b2 Error against the size of the trip, and the whole distribution (added 2026-11-18)
+
+Asked for at the second eMentor meeting. Source: `scripts/travel_time_distribution.py`,
+`data/figures/validation/travel_time_distribution/` (summary.json, percentiles.csv, distribution.png). Production model,
+2025 trips.
+
+**Normalised error (the average trip it is wrong about):**
+
+| Trips | Mean recorded drive (s) | MAE (s) | MAE / mean drive | Median abs. error (s) | Median % error | Trips within ±20 % |
+|---|---:|---:|---:|---:|---:|---:|
+| All 2025 trips | 297.9 | 57.6 | 19 % | 35.3 | 14 % | 65 % |
+| First engine, home station, not busy (placement) | 220.5 | 45.5 | **21 %** | 29.4 | 15 % | 62 % |
+
+So the 60 s / 37 s figures are about a fifth of a typical drive. That is large for a single trip; placement uses the
+*change* in time between layouts, where an error tied to the address (an unusual access, a slow last street) appears on
+both sides and should largely cancel (argued, not tested directly; the 2014 closure and relocation tests are the direct checks).
+
+**Distribution (placement trips, July to December 2025, 44,847 trips):**
+
+| | p10 | p50 | p90 | p95 | p99 | SD (s) | Over 6 min of driving | Gap to recorded (avg. over percentiles) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Recorded | 111 | 209 | 344 | 398 | 560 | 103 | 8.1 % | - |
+| One prediction per trip | 122 | 202 | 300 | 331 | 394 | 70 | 2.5 % | 20 s (KS 0.087) |
+| Prediction + sampled spread | 110 | 208 | 341 | 394 | 547 | 101 | 7.8 % | **1.4 s** (KS 0.009) |
+
+- One prediction per trip is too narrow: it predicts each trip's typical time, so it misses the slow tail (8.1 % of real
+  drives are over 6 minutes, 2.5 % of predictions). This is what a point model does; it does not bias the average.
+- "Prediction + sampled spread" is the simplest form of the eMentor's statistical model: each trip's prediction is
+  multiplied by a random recorded/predicted ratio drawn from January to June trips with a similar predicted time (20 bins).
+  Tested on July to December, it reproduces the real distribution almost exactly, tail included.
+- What this shows and does not: the simulated distribution matches the real one as a whole; it does not make any single
+  trip's prediction more accurate. The over-6-minute counts in 5.9 use recorded times plus a modelled change, so they are not
+  affected by the point model's narrow tail.
+
 ### 1.1c Quantile + conformal prediction intervals
 
 Source: `data/figures/analysis/travel_time_intervals/summary.json`
