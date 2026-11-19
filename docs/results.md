@@ -49,7 +49,20 @@ On the same first-engine trips the classic formula (road distance) has 53.8 s an
 
 The worst 5 % are chosen by their error, so that column describes the error's long tail and is not an accuracy claim. They carry 26–28 % of the error in each slice.
 
-### 1.1c Quantile + conformal prediction intervals
+### 1.1c Normalized error + full residual histogram (advisor validation)
+
+Source: `data/figures/validation/travel_time_normalized/summary.json`
+(`scripts/validate_travel_time_normalized.py`). Absolute MAE alone understates relative
+misses (60 s on a 5-minute trip = 20%). Figure: `error_distribution.png`.
+
+| Slice | MAE (s) | MedAE (s) | MAPE | Median APE | Within 20% of actual | \|error\| > 400 s |
+|---|---:|---:|---:|---:|---:|---:|
+| All 2025 | 58.9 | 36.1 | 22.4% | 14.3% | 64% | 1,862 (0.9%) |
+| Placement | 46.6 | 30.1 | 22.7% | 15.5% | 61% | 422 (0.5%) |
+
+Detail: `docs/travel_time_normalized_validation.md`.
+
+### 1.1d Quantile + conformal prediction intervals
 
 Source: `data/figures/analysis/travel_time_intervals/summary.json`
 (`scripts/train_travel_time_intervals.py`, `firestation.conformal_quantiles`). Quantile
@@ -65,7 +78,7 @@ coverage onto target. Production median MAE on the same placement trips: 46.6 s 
 essentially tied). Detail: `docs/travel_time_intervals.md`. Figure:
 `data/figures/analysis/travel_time_intervals/coverage.png`.
 
-### 1.1d Advisor-style PDF travel-time model (vs LightGBM / Kolesar)
+### 1.1e Advisor-style PDF travel-time model (vs LightGBM / Kolesar)
 
 Source: `data/figures/analysis/pdf_travel_time/summary.json`
 (`scripts/compare_pdf_travel_time.py`, `firestation.street_time_pdf`). Same 2021–2024 /
