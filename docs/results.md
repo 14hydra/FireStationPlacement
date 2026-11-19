@@ -78,7 +78,8 @@ both sides and should largely cancel (argued, not tested directly; the 2014 clos
   drives are over 6 minutes, 2.5 % of predictions). This is what a point model does; it does not bias the average.
 - "Prediction + sampled spread" is the simplest form of the eMentor's statistical model: each trip's prediction is
   multiplied by a random recorded/predicted ratio drawn from January to June trips with a similar predicted time (20 bins).
-  Tested on July to December, it reproduces the real distribution almost exactly, tail included.
+  Tested on July to December, it reproduces the real distribution almost exactly, tail included. (1.1d is a fuller
+  version built from road-class pace PDFs; it has a larger point error than LightGBM.)
 - What this shows and does not: the simulated distribution matches the real one as a whole; it does not make any single
   trip's prediction more accurate. The over-6-minute counts in 5.9 use recorded times plus a modelled change, so they are not
   affected by the point model's narrow tail.
