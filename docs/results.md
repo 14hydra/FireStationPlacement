@@ -49,6 +49,41 @@ On the same first-engine trips the classic formula (road distance) has 53.8 s an
 
 The worst 5 % are chosen by their error, so that column describes the error's long tail and is not an accuracy claim. They carry 26–28 % of the error in each slice.
 
+### 1.1b2 Error against the size of the trip, and the whole distribution (added 2026-11-18)
+
+Asked for at the second eMentor meeting. Source: `scripts/travel_time_distribution.py`,
+`data/figures/validation/travel_time_distribution/` (summary.json, percentiles.csv, distribution.png). Production model,
+2025 trips.
+
+**Normalised error (the average trip it is wrong about):**
+
+| Trips | Mean recorded drive (s) | MAE (s) | MAE / mean drive | Median abs. error (s) | Median % error | Trips within ±20 % |
+|---|---:|---:|---:|---:|---:|---:|
+| All 2025 trips | 297.9 | 57.6 | 19 % | 35.3 | 14 % | 65 % |
+| First engine, home station, not busy (placement) | 220.5 | 45.5 | **21 %** | 29.4 | 15 % | 62 % |
+
+So the 60 s / 37 s figures are about a fifth of a typical drive. That is large for a single trip; placement uses the
+*change* in time between layouts, where an error tied to the address (an unusual access, a slow last street) appears on
+both sides and should largely cancel (argued, not tested directly; the 2014 closure and relocation tests are the direct checks).
+
+**Distribution (placement trips, July to December 2025, 44,847 trips):**
+
+| | p10 | p50 | p90 | p95 | p99 | SD (s) | Over 6 min of driving | Gap to recorded (avg. over percentiles) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Recorded | 111 | 209 | 344 | 398 | 560 | 103 | 8.1 % | - |
+| One prediction per trip | 122 | 202 | 300 | 331 | 394 | 70 | 2.5 % | 20 s (KS 0.087) |
+| Prediction + sampled spread | 110 | 208 | 341 | 394 | 547 | 101 | 7.8 % | **1.4 s** (KS 0.009) |
+
+- One prediction per trip is too narrow: it predicts each trip's typical time, so it misses the slow tail (8.1 % of real
+drive > 6 minutes, 2.5 % of predictions). This is what a point model does; it does not bias the average.
+- "Prediction + sampled spread" is the simplest form of the eMentor's statistical model: each trip's prediction is
+  multiplied by a random recorded/predicted ratio drawn from January to June trips with a similar predicted time (20 bins).
+  Tested on July to December, it reproduces the real distribution almost exactly, tail included. (1.1d is a fuller
+  version built from road-class pace PDFs; it has a larger point error than LightGBM.)
+- What this shows and does not: the simulated distribution matches the real one as a whole; it does not make any single
+  trip's prediction more accurate. The over-6-minute counts in 5.9 use recorded times plus a modelled change, so they are not
+  affected by the point model's narrow tail.
+
 ### 1.1c Normalized error + full residual histogram (advisor validation)
 
 Source: `data/figures/validation/travel_time_normalized/summary.json`
@@ -1043,6 +1078,75 @@ five target boroughs missed it in 2024. Recorded 2024 borough average plus the m
   offset (about 18-21 s, 5.7) cancels in the change but not in the baseline, which is why the recorded 2024 baseline is used.
 - The 360 s target is a borough average. It says nothing about single calls, and LFB does not commit to it below
   borough level.
+
+### 5.9 Beyond the average: calls over 6 minutes (exploratory, after Part 2, 2026-11-18)
+
+Asked for at the second eMentor meeting. Not a pass mark; nothing here changes 5.8. Source: `scripts/beyond_average.py`,
+`data/figures/placement/beyond_average/` (stats.csv, beyond_average.png). Same 2026 calls as 5.8 (1 January to 31 July).
+Each call's time after a change = its recorded first-engine time + the modelled change for its 0.9 km cell, so the "today"
+numbers are recorded and only the change is modelled. Check: the mean change reproduces 5.8 exactly (-13.7 / -16.1 / -13.0).
+
+**Calls whose first engine took over 6 minutes, change from today (L / R / K):**
+
+| Layout | 5 target boroughs (today 5,629) | London (today 29,227) |
+|---|---|---|
+| Rule B targeted Move 10 (main) | **-504 / -545 / -402** | -635 / -667 / -497 |
+| Rule B targeted, up to 20 | -635 / -661 / -484 | -806 / -810 / -622 |
+| Citywide Move 10 | -225 / -299 / -246 | **-1,082 / -1,137 / -932** |
+
+By borough (main layout, LightGBM): Redbridge 871 to 679, Havering 1,031 to 838, Hillingdon 1,443 to 1,362, Bromley
+1,244 to 1,212, Enfield 1,040 to 1,034. Over 8 minutes 2,356 to 2,207; over 10 minutes 1,004 to 944.
+
+**Targeting beats spreading the same 10 moves across London.** The London-wide Move 10 cuts more over-6-minute calls across
+London (-1,082 vs -635, LightGBM), but only -225 in the target boroughs, against -504 for the targeted layout. The same holds
+under all three models. Where the problem is concentrated, narrowing the scope buys more than twice the improvement there,
+which backs the decision to target the slowest boroughs.
+
+**The whole distribution, 5 target boroughs, main layout (today recorded; faster by, range over the three models):**
+
+| Measure | Today | Faster by |
+|---|---|---|
+| Median | 365 s | 14-18 s |
+| Mean | 389 s | 13-16 s |
+| Mean without the slowest 5 % | 365 s | 13-16 s |
+| 90th percentile | 587 s | 8-11 s |
+| 95th percentile | 686 s | 5-6 s |
+| Slowest 10 % (mean) | 735 s | 7-11 s |
+| Slowest 5 % (mean) | 839 s | 6-11 s |
+
+- The gain is mostly in the middle of the distribution. The target-borough median sits right at 360 s, so a 15 s shift
+  carries many calls just over the line under it; the slowest calls (8-14 minutes) improve far less and are likely slow for
+  reasons placement does not reach (busy engines, remote addresses).
+- The saving is concentrated: removing the 5 % of target calls that gain most drops the mean saving to 6-9 s; those calls
+  gain about 2-2.5 minutes each.
+- Hillingdon calls over 8 minutes rise slightly (583 to 592, LightGBM) even though its average improves.
+- Limitation: every call in a 0.9 km cell gets the same change, so this does not model which single calls get faster.
+
+**Can more calls be brought under 6 minutes?** Source: `scripts/explore_calls_under_6min.py`,
+`data/figures/placement/calls_under_6min/` (scores.csv and layouts). Exploratory search on 2024 calls, scored on the same 2026
+calls. "count" layouts aim directly at the number of target-borough calls over 360 s (smoothed) instead of borough averages.
+All count layouts keep the protections (no borough average worse, London average and slowest 10 % no worse, on 2024).
+"Engines from elsewhere" = each new station takes the second engine of the nearest two-engine station (London's engine count
+fixed); "new engines" adds one per station. Calls over 6 minutes in the 5 target boroughs, change from 5,629 (L / R / K):
+
+| Layout | Change | Worst other borough (s) | London over 6 min (from 29,227) |
+|---|---|---|---|
+| Main layout, Move 10 (5.8) | -504 / -545 / -402 | 0.0 / +0.1 / +0.4 | -635 / -667 / -497 |
+| Move 10, aimed at the call count | -509 / -520 / -436 | 0.0 / +0.6 / +0.4 | -662 / -658 / -585 |
+| Move 20, aimed at the call count (12 moved) | -618 / -645 / -543 | 0.0 / +0.6 / 0.0 | -869 / -873 / -767 |
+| Add 5, engines from elsewhere, aimed at averages (from 2026-11-15) | -583 / -627 / -592 | **+14.8 / +14.4 / +12.9** (Hounslow) | -462 / -503 / -528 |
+| Add 5, engines from elsewhere, aimed at the call count | **-680 / -688 / -628** | 0.0 / +0.4 / 0.0 | -729 / -742 / -703 |
+| Add 5, new engines, aimed at averages (from 2026-11-15) | -759 / -795 / -720 | 0.0 / 0.0 / 0.0 | -971 / -999 / -916 |
+| Add 5, new engines, aimed at the call count | **-833 / -863 / -766** | 0.0 / 0.0 / 0.0 | -886 / -914 / -820 |
+
+- Aiming the 10 moves at the call count instead of averages barely changes the result (-509 vs -504, LightGBM): moving
+  stations stalls at about a 9 % cut.
+- **Adding 5 stations with engines taken from elsewhere cuts 628-688 calls (11-12 %) when aimed at the call count, with no
+  borough worse.** The earlier average-aimed version cut fewer and made Hounslow 13-15 s slower; the protections fix that.
+- Five new engines cut the most, 766-863 (14-15 %). The count-aimed version leaves Havering unchanged (1,031) and takes
+  its gain in Redbridge, Bromley and Hillingdon instead.
+- Exploratory search, not proof of the best layout. Land, cost and staffing of new stations are not modelled; "engines from
+  elsewhere" leaves the donor station with one engine.
 
 ---
 
