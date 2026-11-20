@@ -1,0 +1,190 @@
+layout,group,threshold,recorded_today,simulated_today,simulated_after,change,change_lo,change_hi,change_pct
+rule_b_target_10,5 target boroughs,over_6min,5629,5440,4844,-596,-648,-544,-11.0
+rule_b_target_10,5 target boroughs,over_8min,2356,2059,1790,-269,-312,-227,-13.1
+rule_b_target_10,5 target boroughs,over_10min,1004,663,595,-68,-97,-38,-10.2
+rule_b_target_10,London,over_6min,29227,27918,27091,-827,-891,-765,-3.0
+rule_b_target_10,London,over_8min,10377,8405,7984,-421,-476,-369,-5.0
+rule_b_target_10,London,over_10min,3942,2497,2383,-114,-146,-83,-4.6
+rule_b_target_10,Hillingdon,over_6min,1443,1424,1354,-70,-86,-52,-4.9
+rule_b_target_10,Hillingdon,over_8min,583,549,535,-14,-29,4,-2.6
+rule_b_target_10,Hillingdon,over_10min,226,185,185,0,-12,13,0.2
+rule_b_target_10,Havering,over_6min,1031,965,776,-188,-223,-159,-19.5
+rule_b_target_10,Havering,over_8min,471,385,308,-78,-101,-54,-20.1
+rule_b_target_10,Havering,over_10min,217,132,111,-21,-38,-7,-15.9
+rule_b_target_10,Enfield,over_6min,1040,1018,965,-53,-79,-28,-5.2
+rule_b_target_10,Enfield,over_8min,460,362,352,-10,-29,8,-2.8
+rule_b_target_10,Enfield,over_10min,201,110,120,9,-3,22,8.5
+rule_b_target_10,Bromley,over_6min,1244,1220,1168,-52,-65,-39,-4.2
+rule_b_target_10,Bromley,over_8min,469,458,422,-37,-50,-25,-8.0
+rule_b_target_10,Bromley,over_10min,207,151,130,-20,-30,-12,-13.5
+rule_b_target_10,Redbridge,over_6min,871,814,581,-233,-262,-203,-28.6
+rule_b_target_10,Redbridge,over_8min,373,304,174,-131,-154,-109,-42.9
+rule_b_target_10,Redbridge,over_10min,153,85,49,-36,-47,-22,-42.2
+rule_b_target_20,5 target boroughs,over_6min,5629,5440,4757,-683,-743,-630,-12.6
+rule_b_target_20,5 target boroughs,over_8min,2356,2059,1771,-288,-335,-243,-14.0
+rule_b_target_20,5 target boroughs,over_10min,1004,663,595,-67,-99,-36,-10.2
+rule_b_target_20,London,over_6min,29227,27918,26981,-937,-1020,-877,-3.4
+rule_b_target_20,London,over_8min,10377,8405,7967,-438,-495,-379,-5.2
+rule_b_target_20,London,over_10min,3942,2497,2381,-116,-151,-82,-4.7
+rule_b_target_20,Hillingdon,over_6min,1443,1424,1354,-70,-86,-52,-4.9
+rule_b_target_20,Hillingdon,over_8min,583,549,535,-14,-29,4,-2.6
+rule_b_target_20,Hillingdon,over_10min,226,185,185,0,-12,13,0.2
+rule_b_target_20,Havering,over_6min,1031,965,776,-188,-223,-159,-19.5
+rule_b_target_20,Havering,over_8min,471,385,308,-77,-101,-54,-20.1
+rule_b_target_20,Havering,over_10min,217,132,111,-21,-38,-7,-15.9
+rule_b_target_20,Enfield,over_6min,1040,1018,965,-53,-79,-28,-5.2
+rule_b_target_20,Enfield,over_8min,460,362,352,-10,-29,8,-2.8
+rule_b_target_20,Enfield,over_10min,201,110,120,9,-3,22,8.5
+rule_b_target_20,Bromley,over_6min,1244,1220,1064,-156,-178,-128,-12.8
+rule_b_target_20,Bromley,over_8min,469,458,402,-56,-74,-39,-12.3
+rule_b_target_20,Bromley,over_10min,207,151,129,-21,-36,-8,-14.1
+rule_b_target_20,Redbridge,over_6min,871,814,598,-216,-252,-182,-26.6
+rule_b_target_20,Redbridge,over_8min,373,304,175,-130,-159,-104,-42.6
+rule_b_target_20,Redbridge,over_10min,153,85,50,-35,-47,-21,-41.0
+citywide_10,5 target boroughs,over_6min,5629,5440,5053,-387,-435,-342,-7.1
+citywide_10,5 target boroughs,over_8min,2356,2059,1881,-178,-221,-137,-8.6
+citywide_10,5 target boroughs,over_10min,1004,663,628,-34,-57,-9,-5.2
+citywide_10,London,over_6min,29227,27918,26409,-1509,-1572,-1430,-5.4
+citywide_10,London,over_8min,10377,8405,7734,-671,-732,-615,-8.0
+citywide_10,London,over_10min,3942,2497,2334,-163,-195,-123,-6.5
+citywide_10,Hillingdon,over_6min,1443,1424,1424,0,0,0,0.0
+citywide_10,Hillingdon,over_8min,583,549,549,0,0,0,0.0
+citywide_10,Hillingdon,over_10min,226,185,185,0,0,0,0.0
+citywide_10,Havering,over_6min,1031,965,782,-183,-201,-162,-19.0
+citywide_10,Havering,over_8min,471,385,279,-106,-132,-83,-27.6
+citywide_10,Havering,over_10min,217,132,92,-40,-54,-26,-30.3
+citywide_10,Enfield,over_6min,1040,1018,965,-53,-79,-28,-5.2
+citywide_10,Enfield,over_8min,460,362,352,-10,-29,8,-2.8
+citywide_10,Enfield,over_10min,201,110,120,9,-3,22,8.5
+citywide_10,Bromley,over_6min,1244,1220,1203,-17,-39,1,-1.4
+citywide_10,Bromley,over_8min,469,458,481,22,4,39,4.8
+citywide_10,Bromley,over_10min,207,151,169,18,6,29,12.2
+citywide_10,Redbridge,over_6min,871,814,680,-134,-159,-110,-16.5
+citywide_10,Redbridge,over_8min,373,304,221,-83,-104,-66,-27.4
+citywide_10,Redbridge,over_10min,153,85,63,-22,-34,-11,-25.9
+count_moves_10,5 target boroughs,over_6min,5629,5440,4773,-667,-726,-617,-12.3
+count_moves_10,5 target boroughs,over_8min,2356,2059,1804,-255,-301,-210,-12.4
+count_moves_10,5 target boroughs,over_10min,1004,663,611,-52,-79,-18,-7.8
+count_moves_10,London,over_6min,29227,27918,26960,-959,-1027,-904,-3.4
+count_moves_10,London,over_8min,10377,8405,7961,-444,-496,-392,-5.3
+count_moves_10,London,over_10min,3942,2497,2388,-109,-139,-71,-4.4
+count_moves_10,Hillingdon,over_6min,1443,1424,1310,-114,-134,-94,-8.0
+count_moves_10,Hillingdon,over_8min,583,549,522,-28,-48,-8,-5.0
+count_moves_10,Hillingdon,over_10min,226,185,182,-3,-17,11,-1.5
+count_moves_10,Havering,over_6min,1031,965,766,-199,-231,-168,-20.6
+count_moves_10,Havering,over_8min,471,385,298,-87,-113,-65,-22.6
+count_moves_10,Havering,over_10min,217,132,100,-31,-46,-18,-23.8
+count_moves_10,Enfield,over_6min,1040,1018,965,-53,-79,-28,-5.2
+count_moves_10,Enfield,over_8min,460,362,352,-10,-29,8,-2.8
+count_moves_10,Enfield,over_10min,201,110,120,9,-3,22,8.5
+count_moves_10,Bromley,over_6min,1244,1220,1104,-116,-139,-92,-9.5
+count_moves_10,Bromley,over_8min,469,458,430,-28,-46,-9,-6.1
+count_moves_10,Bromley,over_10min,207,151,149,-2,-13,11,-1.0
+count_moves_10,Redbridge,over_6min,871,814,629,-185,-213,-158,-22.8
+count_moves_10,Redbridge,over_8min,373,304,202,-102,-124,-81,-33.6
+count_moves_10,Redbridge,over_10min,153,85,60,-25,-36,-12,-29.8
+count_moves_20,5 target boroughs,over_6min,5629,5440,4659,-781,-844,-717,-14.4
+count_moves_20,5 target boroughs,over_8min,2356,2059,1748,-311,-369,-256,-15.1
+count_moves_20,5 target boroughs,over_10min,1004,663,600,-63,-92,-24,-9.5
+count_moves_20,London,over_6min,29227,27918,26713,-1205,-1275,-1139,-4.3
+count_moves_20,London,over_8min,10377,8405,7826,-579,-650,-522,-6.9
+count_moves_20,London,over_10min,3942,2497,2361,-136,-173,-93,-5.4
+count_moves_20,Hillingdon,over_6min,1443,1424,1310,-114,-134,-94,-8.0
+count_moves_20,Hillingdon,over_8min,583,549,522,-28,-48,-8,-5.0
+count_moves_20,Hillingdon,over_10min,226,185,182,-3,-17,11,-1.5
+count_moves_20,Havering,over_6min,1031,965,766,-199,-231,-168,-20.6
+count_moves_20,Havering,over_8min,471,385,298,-87,-113,-65,-22.6
+count_moves_20,Havering,over_10min,217,132,100,-31,-46,-18,-23.8
+count_moves_20,Enfield,over_6min,1040,1018,965,-53,-79,-28,-5.2
+count_moves_20,Enfield,over_8min,460,362,352,-10,-29,8,-2.8
+count_moves_20,Enfield,over_10min,201,110,120,9,-3,22,8.5
+count_moves_20,Bromley,over_6min,1244,1220,990,-230,-264,-193,-18.9
+count_moves_20,Bromley,over_8min,469,458,374,-84,-112,-54,-18.3
+count_moves_20,Bromley,over_10min,207,151,138,-12,-32,7,-8.2
+count_moves_20,Redbridge,over_6min,871,814,629,-185,-213,-158,-22.8
+count_moves_20,Redbridge,over_8min,373,304,202,-102,-124,-81,-33.6
+count_moves_20,Redbridge,over_10min,153,85,60,-25,-36,-12,-29.8
+add_5_move,5 target boroughs,over_6min,5629,5440,4670,-770,-808,-731,-14.2
+add_5_move,5 target boroughs,over_8min,2356,2059,1646,-413,-450,-376,-20.1
+add_5_move,5 target boroughs,over_10min,1004,663,520,-143,-163,-121,-21.5
+add_5_move,London,over_6min,29227,27918,27228,-690,-743,-626,-2.5
+add_5_move,London,over_8min,10377,8405,7971,-434,-485,-389,-5.2
+add_5_move,London,over_10min,3942,2497,2344,-153,-187,-118,-6.1
+add_5_move,Hillingdon,over_6min,1443,1424,1176,-248,-271,-222,-17.4
+add_5_move,Hillingdon,over_8min,583,549,407,-142,-164,-121,-25.9
+add_5_move,Hillingdon,over_10min,226,185,132,-52,-65,-37,-28.3
+add_5_move,Havering,over_6min,1031,965,738,-227,-245,-205,-23.5
+add_5_move,Havering,over_8min,471,385,236,-149,-173,-130,-38.8
+add_5_move,Havering,over_10min,217,132,71,-61,-74,-46,-46.4
+add_5_move,Enfield,over_6min,1040,1018,868,-150,-171,-129,-14.7
+add_5_move,Enfield,over_8min,460,362,289,-73,-87,-58,-20.1
+add_5_move,Enfield,over_10min,201,110,91,-19,-28,-11,-17.3
+add_5_move,Bromley,over_6min,1244,1220,1074,-146,-163,-129,-12.0
+add_5_move,Bromley,over_8min,469,458,410,-48,-60,-35,-10.6
+add_5_move,Bromley,over_10min,207,151,140,-10,-16,-4,-6.8
+add_5_move,Redbridge,over_6min,871,814,814,0,0,1,0.0
+add_5_move,Redbridge,over_8min,373,304,304,0,0,1,0.0
+add_5_move,Redbridge,over_10min,153,85,85,0,0,0,0.0
+count_add_5_move,5 target boroughs,over_6min,5629,5440,4731,-709,-764,-657,-13.0
+count_add_5_move,5 target boroughs,over_8min,2356,2059,1608,-451,-499,-400,-21.9
+count_add_5_move,5 target boroughs,over_10min,1004,663,490,-173,-201,-144,-26.1
+count_add_5_move,London,over_6min,29227,27918,27031,-887,-943,-825,-3.2
+count_add_5_move,London,over_8min,10377,8405,7839,-566,-622,-516,-6.7
+count_add_5_move,London,over_10min,3942,2497,2288,-209,-242,-177,-8.4
+count_add_5_move,Hillingdon,over_6min,1443,1424,1327,-97,-125,-70,-6.8
+count_add_5_move,Hillingdon,over_8min,583,549,493,-56,-76,-35,-10.1
+count_add_5_move,Hillingdon,over_10min,226,185,161,-24,-37,-11,-12.7
+count_add_5_move,Havering,over_6min,1031,965,789,-176,-193,-157,-18.2
+count_add_5_move,Havering,over_8min,471,385,259,-126,-148,-106,-32.7
+count_add_5_move,Havering,over_10min,217,132,79,-53,-66,-40,-40.4
+count_add_5_move,Enfield,over_6min,1040,1018,873,-144,-167,-120,-14.2
+count_add_5_move,Enfield,over_8min,460,362,272,-91,-112,-69,-25.0
+count_add_5_move,Enfield,over_10min,201,110,74,-37,-49,-24,-33.1
+count_add_5_move,Bromley,over_6min,1244,1220,1071,-149,-168,-127,-12.2
+count_add_5_move,Bromley,over_8min,469,458,387,-71,-87,-51,-15.5
+count_add_5_move,Bromley,over_10min,207,151,121,-29,-42,-17,-19.5
+count_add_5_move,Redbridge,over_6min,871,814,671,-143,-172,-111,-17.6
+count_add_5_move,Redbridge,over_8min,373,304,197,-107,-132,-82,-35.3
+count_add_5_move,Redbridge,over_10min,153,85,55,-30,-44,-19,-35.7
+add_5_new,5 target boroughs,over_6min,5629,5440,4517,-923,-965,-878,-17.0
+add_5_new,5 target boroughs,over_8min,2356,2059,1583,-476,-518,-435,-23.1
+add_5_new,5 target boroughs,over_10min,1004,663,497,-165,-193,-140,-24.9
+add_5_new,London,over_6min,29227,27918,26670,-1248,-1309,-1183,-4.5
+add_5_new,London,over_8min,10377,8405,7698,-708,-761,-660,-8.4
+add_5_new,London,over_10min,3942,2497,2263,-234,-265,-200,-9.4
+add_5_new,Hillingdon,over_6min,1443,1424,1065,-358,-388,-326,-25.2
+add_5_new,Hillingdon,over_8min,583,549,385,-164,-188,-138,-29.8
+add_5_new,Hillingdon,over_10min,226,185,134,-51,-65,-36,-27.6
+add_5_new,Havering,over_6min,1031,965,728,-237,-256,-215,-24.6
+add_5_new,Havering,over_8min,471,385,232,-153,-177,-133,-39.8
+add_5_new,Havering,over_10min,217,132,70,-62,-76,-47,-47.0
+add_5_new,Enfield,over_6min,1040,1018,836,-181,-204,-158,-17.8
+add_5_new,Enfield,over_8min,460,362,251,-111,-132,-92,-30.7
+add_5_new,Enfield,over_10min,201,110,68,-42,-54,-30,-38.1
+add_5_new,Bromley,over_6min,1244,1220,1074,-146,-163,-129,-12.0
+add_5_new,Bromley,over_8min,469,458,410,-48,-60,-35,-10.6
+add_5_new,Bromley,over_10min,207,151,140,-10,-16,-4,-6.8
+add_5_new,Redbridge,over_6min,871,814,814,0,0,0,-0.0
+add_5_new,Redbridge,over_8min,373,304,304,0,0,0,-0.0
+add_5_new,Redbridge,over_10min,153,85,85,0,0,0,0.0
+count_add_5_new,5 target boroughs,over_6min,5629,5440,4474,-966,-1012,-910,-17.8
+count_add_5_new,5 target boroughs,over_8min,2356,2059,1563,-496,-538,-453,-24.1
+count_add_5_new,5 target boroughs,over_10min,1004,663,499,-163,-189,-140,-24.7
+count_add_5_new,London,over_6min,29227,27918,26842,-1076,-1119,-1013,-3.9
+count_add_5_new,London,over_8min,10377,8405,7825,-580,-629,-536,-6.9
+count_add_5_new,London,over_10min,3942,2497,2306,-191,-216,-167,-7.6
+count_add_5_new,Hillingdon,over_6min,1443,1424,1065,-358,-388,-326,-25.2
+count_add_5_new,Hillingdon,over_8min,583,549,385,-164,-188,-138,-29.8
+count_add_5_new,Hillingdon,over_10min,226,185,134,-51,-65,-36,-27.6
+count_add_5_new,Havering,over_6min,1031,965,965,0,0,0,0.0
+count_add_5_new,Havering,over_8min,471,385,385,0,0,0,0.0
+count_add_5_new,Havering,over_10min,217,132,132,0,0,0,0.0
+count_add_5_new,Enfield,over_6min,1040,1018,847,-171,-193,-150,-16.8
+count_add_5_new,Enfield,over_8min,460,362,269,-94,-110,-78,-25.8
+count_add_5_new,Enfield,over_10min,201,110,77,-33,-44,-22,-30.1
+count_add_5_new,Bromley,over_6min,1244,1220,1055,-165,-183,-147,-13.6
+count_add_5_new,Bromley,over_8min,469,458,375,-83,-99,-66,-18.1
+count_add_5_new,Bromley,over_10min,207,151,116,-35,-47,-24,-23.1
+count_add_5_new,Redbridge,over_6min,871,814,542,-272,-298,-244,-33.4
+count_add_5_new,Redbridge,over_8min,373,304,148,-156,-176,-135,-51.3
+count_add_5_new,Redbridge,over_10min,153,85,41,-44,-55,-31,-52.1

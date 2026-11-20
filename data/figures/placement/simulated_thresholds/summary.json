@@ -1,0 +1,98 @@
+{
+  "doc": "Exploratory (2026-11-20): street PDF simulator as a second, independent check on every threshold result, plus\nchance-of-arrival maps.\n\nExtends scripts/simulate_calls_over_6min.py (same simulator, same busy model, same 2026 calls, same paired draws) to\nevery layout in results.md 5.9:\n\n  rule_b_target_10 (main), rule_b_target_20, citywide_10           pumps as saved with the layout (Part 2)\n  count_moves_10, count_moves_20                                    pumps move with their station (PumpPlan)\n  add_5_move, count_add_5_move                                      new stations take an engine from elsewhere\n  add_5_new, count_add_5_new                                        new stations get a new engine\n\nFor each it counts calls over 6, 8 and 10 minutes (5 target boroughs, London, each target borough), today and after,\nand sets them beside the recorded + modelled-change numbers (beyond_average/stats.csv, calls_under_6min/scores.csv).\n\nMaps: per 0.9 km cell, the chance the first engine arrives within 6 minutes (call to arrival) = share of the cell's\n2026 calls x 200 draws under 360 s; today, main layout, and the change.\n\nWrites data/figures/placement/simulated_thresholds/ (counts.csv, comparison.csv, cell_chance.csv, summary.json,\nchance_within_6min_map.png). Caches the site x call simulator times in data/processed/sim_cache/.\nRun:  PYTHONPATH=src .venv/bin/python scripts/simulate_threshold_checks.py\n",
+  "calls": 80710,
+  "draws": 200,
+  "chance_within_6min": {
+    "5 target boroughs": {
+      "today": 0.5051,
+      "rule_b_target_10": 0.5593,
+      "rule_b_target_20": 0.5673,
+      "citywide_10": 0.5403,
+      "count_moves_10": 0.5658,
+      "count_moves_20": 0.5762,
+      "add_5_move": 0.5752,
+      "count_add_5_move": 0.5696,
+      "add_5_new": 0.5891,
+      "count_add_5_new": 0.593,
+      "recorded": 0.4879
+    },
+    "London": {
+      "today": 0.6541,
+      "rule_b_target_10": 0.6643,
+      "rule_b_target_20": 0.6657,
+      "citywide_10": 0.6728,
+      "count_moves_10": 0.666,
+      "count_moves_20": 0.669,
+      "add_5_move": 0.6626,
+      "count_add_5_move": 0.6651,
+      "add_5_new": 0.6696,
+      "count_add_5_new": 0.6674,
+      "recorded": 0.6379
+    },
+    "Hillingdon": {
+      "today": 0.4541,
+      "rule_b_target_10": 0.481,
+      "rule_b_target_20": 0.481,
+      "citywide_10": 0.4541,
+      "count_moves_10": 0.4978,
+      "count_moves_20": 0.4978,
+      "add_5_move": 0.5491,
+      "count_add_5_move": 0.4913,
+      "add_5_new": 0.5915,
+      "count_add_5_new": 0.5915,
+      "recorded": 0.4467
+    },
+    "Havering": {
+      "today": 0.5194,
+      "rule_b_target_10": 0.6132,
+      "rule_b_target_20": 0.6131,
+      "citywide_10": 0.6106,
+      "count_moves_10": 0.6184,
+      "count_moves_20": 0.6184,
+      "add_5_move": 0.6324,
+      "count_add_5_move": 0.6069,
+      "add_5_new": 0.6375,
+      "count_add_5_new": 0.5194,
+      "recorded": 0.4863
+    },
+    "Enfield": {
+      "today": 0.5251,
+      "rule_b_target_10": 0.5499,
+      "rule_b_target_20": 0.5499,
+      "citywide_10": 0.5499,
+      "count_moves_10": 0.5499,
+      "count_moves_20": 0.5499,
+      "add_5_move": 0.5949,
+      "count_add_5_move": 0.5924,
+      "add_5_new": 0.6097,
+      "count_add_5_new": 0.6049,
+      "recorded": 0.5147
+    },
+    "Bromley": {
+      "today": 0.49,
+      "rule_b_target_10": 0.5116,
+      "rule_b_target_20": 0.555,
+      "citywide_10": 0.4972,
+      "count_moves_10": 0.5383,
+      "count_moves_20": 0.5862,
+      "add_5_move": 0.5511,
+      "count_add_5_move": 0.5522,
+      "add_5_new": 0.5511,
+      "count_add_5_new": 0.5591,
+      "recorded": 0.4799
+    },
+    "Redbridge": {
+      "today": 0.558,
+      "rule_b_target_10": 0.6845,
+      "rule_b_target_20": 0.6755,
+      "citywide_10": 0.6307,
+      "count_moves_10": 0.6586,
+      "count_moves_20": 0.6586,
+      "add_5_move": 0.5579,
+      "count_add_5_move": 0.6358,
+      "add_5_new": 0.558,
+      "count_add_5_new": 0.7056,
+      "recorded": 0.5271
+    }
+  }
+}

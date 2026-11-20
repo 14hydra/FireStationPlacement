@@ -78,11 +78,45 @@ both sides and should largely cancel (argued, not tested directly; the 2014 clos
 drive > 6 minutes, 2.5 % of predictions). This is what a point model does; it does not bias the average.
 - "Prediction + sampled spread" is the simplest form of the eMentor's statistical model: each trip's prediction is
   multiplied by a random recorded/predicted ratio drawn from January to June trips with a similar predicted time (20 bins).
-  Tested on July to December, it reproduces the real distribution almost exactly, tail included. (1.1d is a fuller
+  Tested on July to December, it reproduces the real distribution almost exactly, tail included. (1.1e is a fuller
   version built from road-class pace PDFs; it has a larger point error than LightGBM.)
 - What this shows and does not: the simulated distribution matches the real one as a whole; it does not make any single
   trip's prediction more accurate. The over-6-minute counts in 5.9 use recorded times plus a modelled change, so they are not
   affected by the point model's narrow tail.
+
+### 1.1b3 Per-street statistical simulator (exploratory, 2026-11-18; production model unchanged)
+
+Asked for at the second eMentor meeting. Source: `scripts/explore_street_pdf_model.py`,
+`data/figures/analysis/street_pdf_model/` (summary.json, percentiles.csv, street_pdf_model.png, run.log).
+
+- **Street means.** Every street segment's time comes from the learned street speeds (1.4), and each street then gets its
+  own offset, learned from the 2021-2023 trips that drove it (ridge regression on trip residuals, strength chosen on
+  January to June 2024; 158,001 streets). The offsets are small: 90 % lie within -4 % to +5 % of the street's time.
+- **Trip spread.** LFB records whole-trip times, not times per street, so the spread cannot be estimated street by street.
+  It is the empirical distribution of recorded / street-route time, learned on 2024 trips, by rush hour x first engine
+  from home x 6 route-length bins. A trip's time = street-route time x a ratio drawn from its group.
+- Scored on 2025 trips, never used for fitting. "LightGBM + spread" applies the same sampling to LightGBM's prediction.
+
+| 2025, placement trips (87,937) | LightGBM point | LightGBM + spread | Street PDF simulator | Recorded |
+|---|---:|---:|---:|---:|
+| Average error per trip (s) | **45.5** | 45.5 | 48.0 | - |
+| Gap to recorded distribution (s) | 19.3 | 1.7 | 1.8 | - |
+| Over 6 minutes of driving | 2.2 % | 7.6 % | 7.6 % | 7.6 % |
+| CRPS (s, lower is better) | - | **35.1** | 36.6 | - |
+| 50 % / 80 % ranges contain the trip | - | 40 % / 74 % | **49 % / 79 %** | - |
+
+All 2025 trips: average error 57.6 / 57.5 / 61.6 s; distribution gap 22.7 / 2.1 / 2.3 s; CRPS 44.5 (LightGBM + spread)
+vs 47.1 (simulator); ranges 40 % / 74 % vs 49 % / 79 %. Street speeds alone 65.9 s, with each street's own offset 62.0 s.
+
+- The street simulator reproduces the recorded distribution (percentiles within a few seconds up to the 99th, 7.6 % over
+  6 minutes in both) and its ranges are honest per trip (49 % / 79 % against 50 % / 80 %).
+- Per trip it is 2.5 s less accurate than LightGBM (48.0 vs 45.5 s). Giving each street its own offset closes about half
+  the gap from the street speeds alone.
+- LightGBM + spread scores slightly better on CRPS but its ranges are too narrow, because its spread is learned on 2024,
+  which is inside LightGBM's training years (its 2024 errors are smaller than its errors on new data). The street simulator
+  has no such leak, which is why its ranges come out right.
+- The model is interpretable (every street has a speed) and transfers to another city by swapping its street speeds and
+  spread table. It does not replace LightGBM for placement, where the per-trip error matters.
 
 ### 1.1c Normalized error + full residual histogram (advisor validation)
 
@@ -1122,6 +1156,31 @@ which backs the decision to target the slowest boroughs.
 - Hillingdon calls over 8 minutes rise slightly (583 to 592, LightGBM) even though its average improves.
 - Limitation: every call in a 0.9 km cell gets the same change, so this does not model which single calls get faster.
 
+**Independent recount with the street PDF simulator (2026-11-19).** Source: `scripts/simulate_calls_over_6min.py`,
+`data/figures/placement/simulated_over_6min/` (counts.csv, summary.json). Every 2026 call is simulated from scratch, today
+and under each layout, with the per-street simulator of 1.1b3 (responder = nearest open station by simulator time, or the
+second-nearest with the Part 2 Erlang busy chance; drive = street-route time x a drawn ratio; turnout = station median + a
+drawn deviation). 200 paired draws per call; ranges are 95 % over draws. It shares only the busy model with LightGBM.
+
+| Calls over 6 minutes | Recorded today | Simulated today | Main layout, simulator | Main layout, recorded + LightGBM change (L / R / K) |
+|---|---:|---:|---:|---:|
+| 5 target boroughs | 5,629 | 5,440 | **-596** [-648, -544] (-11 %) | -504 / -545 / -402 |
+| London | 29,227 | 27,918 | -827 [-891, -765] | -635 / -667 / -497 |
+| Redbridge | 871 | 814 | -233 | -192 (L) |
+| Havering | 1,031 | 965 | -188 | -193 (L) |
+| Hillingdon | 1,443 | 1,424 | -70 | -81 (L) |
+| Enfield | 1,040 | 1,018 | -53 | -6 (L) |
+| Bromley | 1,244 | 1,220 | -52 | -32 (L) |
+
+Other layouts, target boroughs / London: Rule B up to 20 -683 / -937; Citywide Move 10 -387 / -1,509.
+
+- The simulator reproduces today's count within 3 % (5,440 against 5,629 recorded) without being fitted to it; its
+  average is 14 s low, the known outer-London under-prediction (5.7).
+- The two methods agree on direction, size and which boroughs gain: about a 9-11 % cut in the target boroughs, largest
+  in Redbridge and Havering, small in Hillingdon, Enfield and Bromley. The simulator's cut is somewhat larger.
+- The targeting result holds under the simulator too: targeted Move 10 cuts -596 in the target boroughs against -387 for
+  the London-wide Move 10, which in turn cuts more across London (-1,509 against -827).
+
 **Can more calls be brought under 6 minutes?** Source: `scripts/explore_calls_under_6min.py`,
 `data/figures/placement/calls_under_6min/` (scores.csv and layouts). Exploratory search on 2024 calls, scored on the same 2026
 calls. "count" layouts aim directly at the number of target-borough calls over 360 s (smoothed) instead of borough averages.
@@ -1147,6 +1206,58 @@ fixed); "new engines" adds one per station. Calls over 6 minutes in the 5 target
   its gain in Redbridge, Bromley and Hillingdon instead.
 - Exploratory search, not proof of the best layout. Land, cost and staffing of new stations are not modelled; "engines from
   elsewhere" leaves the donor station with one engine.
+
+**Second, independent check on every threshold result (street PDF simulator, 2026-11-20).** Source:
+`scripts/simulate_threshold_checks.py`, `data/figures/placement/simulated_thresholds/` (counts.csv, comparison.csv,
+cell_chance.csv, summary.json, chance_within_6min_map.png). Same simulator, busy model, calls and paired draws as the recount
+above (the main layout reproduces it exactly); every layout in this section, pumps as in Part 2 or by the same rule
+(PumpPlan; it matches Part 2's saved pumps on 100 % of stations). Calls over 6 minutes, change from today:
+
+| Layout | 5 target boroughs: recorded + change (L / R / K) | Simulator [95 %] | London: recorded + change (L / R / K) | Simulator |
+|---|---|---|---|---|
+| Main layout, Move 10 (5.8) | -504 / -545 / -402 | **-596** [-648, -544] | -635 / -667 / -497 | -827 |
+| Rule B targeted, up to 20 | -635 / -661 / -484 | -683 [-743, -630] | -806 / -810 / -622 | -937 |
+| Citywide Move 10 | -225 / -299 / -246 | -387 [-435, -342] | -1,082 / -1,137 / -932 | -1,509 |
+| Move 10, aimed at the call count | -509 / -520 / -436 | -667 [-726, -617] | -662 / -658 / -585 | -959 |
+| Move 20, aimed at the call count | -618 / -645 / -543 | -781 [-844, -717] | -869 / -873 / -767 | -1,205 |
+| Add 5, engines from elsewhere, averages | -583 / -627 / -592 | -770 [-808, -731] | -462 / -503 / -528 | -690 |
+| Add 5, engines from elsewhere, call count | -680 / -688 / -628 | -709 [-764, -657] | -729 / -742 / -703 | -887 |
+| Add 5, new engines, averages | -759 / -795 / -720 | -923 [-965, -878] | -971 / -999 / -916 | -1,248 |
+| Add 5, new engines, call count | -833 / -863 / -766 | **-966** [-1,012, -910] | -886 / -914 / -820 | -1,076 |
+
+Over 8 and 10 minutes, 5 target boroughs (main layout): simulator -269 [-312, -227] and -68 [-97, -38], against
+-149 / -200 / -110 and -60 / -69 / -45.
+
+- **Every threshold result is confirmed in direction.** All 9 layouts cut calls over 6 minutes under both methods, and the
+  borough-level pattern matches (for example Redbridge and Havering gain most from the main layout; the count-aimed new-engine
+  layout leaves Havering unchanged under both).
+- **The simulator's cuts are larger in every case** than recorded + modelled change: 4-32 % above LightGBM in the target
+  boroughs for 8 of 9 layouts, and 72 % for Citywide Move 10 (-387 against -225). A likely reason: recorded + change gives every call in a 0.9 km cell the same shift, while the simulator lets
+  individual calls near the line cross it. Report the recorded + change numbers as the main figures (more conservative) and
+  the simulator as the check.
+- **Rankings agree, with one exception.** Under the simulator, Add 5 with engines from elsewhere aimed at averages (-770)
+  edges out the call-count version (-709), the reverse of LightGBM. The call-count version is still preferred: it is the one
+  with no borough worse (the averages version makes Hounslow 13-15 s slower). Targeting beats citywide under both.
+- **Caveat on the slow tail.** The simulator under-counts today's slowest calls: over 8 minutes 2,059 against 2,356
+  recorded, over 10 minutes 663 against 1,004 (5 target boroughs). Its over-6-minute count is close (within 3 %), so the
+  6-minute check is solid; the 8- and 10-minute checks are weaker.
+
+**Chance of arrival within 6 minutes, maps** (`chance_within_6min_map.png`; per 0.9 km cell, the share of its 2026 calls x
+200 draws arriving within 360 s). The single prediction can't give this; the simulator can.
+
+| Chance within 6 min | Recorded | Simulated today | Main layout | Add 5 new engines (call count) |
+|---|---:|---:|---:|---:|
+| 5 target boroughs | 48.8 % | 50.5 % | 55.9 % | 59.3 % |
+| London | 63.8 % | 65.4 % | 66.4 % | 66.7 % |
+| Redbridge / Havering | 52.7 / 48.6 % | 55.8 / 51.9 % | 68.5 / 61.3 % | 70.6 / 51.9 % |
+| Hillingdon / Enfield / Bromley | 44.7 / 51.5 / 48.0 % | 45.4 / 52.5 / 49.0 % | 48.1 / 55.0 / 51.2 % | 59.2 / 60.5 / 55.9 % |
+
+- The main layout raises the chance in the target boroughs from about 51 % to 56 %. Cells with more than 1 point gain hold
+  8,501 calls (average +12.6 points; up to +54 points).
+- **Not every area gains.** Cells next to a station that moves away lose: 2,513 calls sit in cells more than 1 point worse,
+  on average -10.3 points (worst -44). They are in Enfield (908), Havering (603), Barking and Dagenham (539), Redbridge
+  (226), Hillingdon (160) and Waltham Forest (77). Part 2's "no borough worse" protects borough averages, not every street;
+  the maps make this visible, and it should be stated alongside the headline.
 
 ---
 

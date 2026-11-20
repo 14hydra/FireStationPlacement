@@ -1,0 +1,9 @@
+trips,series,p5,p10,p25,p50,p75,p90,p95,p99
+all_2025_trips,recorded,107.0,136.0,193.0,271.0,371.0,490.0,582.0,808.0
+all_2025_trips,lightgbm_point,122.1,147.2,196.3,261.7,344.0,436.0,500.2,642.6
+all_2025_trips,street_pdf_sim,104.6,133.3,191.3,269.6,369.2,486.7,574.9,800.0
+all_2025_trips,lightgbm_plus_spread_sim,105.3,133.9,192.1,270.2,369.6,485.2,572.6,794.1
+placement_trips,recorded,87.0,110.0,153.0,207.0,270.0,340.0,392.0,550.0
+placement_trips,lightgbm_point,101.8,120.7,156.7,200.8,248.4,297.2,328.1,389.5
+placement_trips,street_pdf_sim,87.3,107.4,150.1,205.1,269.2,339.0,392.3,551.6
+placement_trips,lightgbm_plus_spread_sim,88.0,107.8,150.6,205.5,269.5,339.7,391.5,544.5

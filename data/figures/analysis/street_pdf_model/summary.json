@@ -1,0 +1,118 @@
+{
+  "doc": "Exploratory (eMentor meeting 2): a per-street statistical travel time model that samples trip times from distributions.\n\nNothing in the pipeline is replaced; this only compares the simulator with the production LightGBM model on 2025 trips.\n\nModel (\"street PDF simulator\"):\n  1. Street means. Every street segment e has a mean time t_e from the learned street speeds (section 1.4: pace from the\n     street's road class and features). Each segment then gets its own multiplier (1 + u_e), learned from 2021-2023 trips\n     that drove it (ridge regression on the trip residuals, so streets with few trips stay near their class average).\n     The ridge strength is chosen on January to June 2024 trips.\n  2. Trip spread. LFB records whole-trip times, not times per street (no GPS), so the spread cannot be estimated street by\n     street. It is an empirical distribution of recorded / mean-route time, learned on 2024 trips (not used in step 1),\n     separately for each regime: rush hour or not x first engine from its home station or not x 6 route-length bins.\n  3. A trip's time = start-up + off-graph hop + sum over its route of t_e (1 + u_e), times a ratio drawn from its regime.\n     200 draws per trip give a distribution; its median is the point guess.\n\nScored on 2025 (all trips, and the trips placement uses): point MAE, the distribution against the recorded one\n(percentiles, Wasserstein gap, KS, share over 6 minutes), CRPS and 50 % / 80 % interval coverage. Compared with LightGBM\n(one prediction per trip) and LightGBM + sampled spread (scripts/travel_time_distribution.py, learned the same way on 2024).\n\nWrites data/figures/analysis/street_pdf_model/ (summary.json, percentiles.csv, test_samples.npz).\nRun:  PYTHONPATH=src .venv/bin/python scripts/explore_street_pdf_model.py\n",
+  "ridge_tuning_mae_s": {
+    "30.0": 59.70775520449402,
+    "100.0": 59.391937591254006,
+    "300.0": 59.92772154115541,
+    "1000.0": 61.068736796511395
+  },
+  "ridge_chosen": 100.0,
+  "streets_with_own_offset": 158001,
+  "street_multiplier_spread": {
+    "p5": -0.042,
+    "p95": 0.047
+  },
+  "all_2025_trips": {
+    "trips": 200624,
+    "mean_recorded_s": 297.9,
+    "point_mae_s": {
+      "lightgbm": 57.6,
+      "street_speeds_alone": 65.9,
+      "street_speeds_with_own_street_offsets": 62.0,
+      "street_pdf_median_of_draws": 61.6,
+      "lightgbm_plus_spread_median_of_draws": 57.5
+    },
+    "distribution_vs_recorded": {
+      "recorded": {
+        "wasserstein_s": 0.0,
+        "ks": 0.0,
+        "sd_s": 150.8,
+        "over_360s_pct": 27.0
+      },
+      "lightgbm_point": {
+        "wasserstein_s": 22.7,
+        "ks": 0.058,
+        "sd_s": 117.7,
+        "over_360s_pct": 21.4
+      },
+      "street_pdf_sim": {
+        "wasserstein_s": 2.3,
+        "ks": 0.008,
+        "sd_s": 150.7,
+        "over_360s_pct": 26.8
+      },
+      "lightgbm_plus_spread_sim": {
+        "wasserstein_s": 2.1,
+        "ks": 0.006,
+        "sd_s": 149.5,
+        "over_360s_pct": 26.8
+      }
+    },
+    "crps_s": {
+      "street_pdf": 47.1,
+      "lightgbm_plus_spread": 44.5
+    },
+    "coverage_50_80": {
+      "street_pdf": [
+        0.49,
+        0.788
+      ],
+      "lightgbm_plus_spread": [
+        0.397,
+        0.739
+      ]
+    }
+  },
+  "placement_trips": {
+    "trips": 87937,
+    "mean_recorded_s": 220.5,
+    "point_mae_s": {
+      "lightgbm": 45.5,
+      "street_speeds_alone": 51.8,
+      "street_speeds_with_own_street_offsets": 48.5,
+      "street_pdf_median_of_draws": 48.0,
+      "lightgbm_plus_spread_median_of_draws": 45.5
+    },
+    "distribution_vs_recorded": {
+      "recorded": {
+        "wasserstein_s": 0.0,
+        "ks": 0.0,
+        "sd_s": 101.7,
+        "over_360s_pct": 7.6
+      },
+      "lightgbm_point": {
+        "wasserstein_s": 19.3,
+        "ks": 0.082,
+        "sd_s": 68.9,
+        "over_360s_pct": 2.2
+      },
+      "street_pdf_sim": {
+        "wasserstein_s": 1.8,
+        "ks": 0.014,
+        "sd_s": 101.8,
+        "over_360s_pct": 7.6
+      },
+      "lightgbm_plus_spread_sim": {
+        "wasserstein_s": 1.7,
+        "ks": 0.012,
+        "sd_s": 101.2,
+        "over_360s_pct": 7.6
+      }
+    },
+    "crps_s": {
+      "street_pdf": 36.6,
+      "lightgbm_plus_spread": 35.1
+    },
+    "coverage_50_80": {
+      "street_pdf": [
+        0.493,
+        0.79
+      ],
+      "lightgbm_plus_spread": [
+        0.401,
+        0.74
+      ]
+    }
+  },
+  "minutes": 6.7
+}
