@@ -1,0 +1,51 @@
+{
+  "city_id": "tokyo",
+  "city_name": "Tokyo",
+  "midday": {
+    "n_cells": 323,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 310.19689202495834,
+      "average_s_plan": 277.5995610421553,
+      "delta_s": -32.59733098280305,
+      "within_6min_today": 0.7391098484848485,
+      "within_6min_plan": 0.8944805194805197
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -33.2058574670233,
+      "average_delta_s_p10": -35.6525941810505,
+      "average_delta_s_p50": -33.12254540695292,
+      "average_delta_s_p90": -30.740447004758416,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.691486742424242,
+      "within_6min_plan_mean": 0.7972991071428568,
+      "within_6min_lift_mean": 0.10581236471861494,
+      "within_6min_lift_p10": 0.09053706709956715,
+      "within_6min_lift_p90": 0.1251285173160178
+    }
+  },
+  "rush_hour": {
+    "n_cells": 323,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 310.19689202495834,
+      "average_s_plan": 277.5995610421553,
+      "delta_s": -32.59733098280305,
+      "within_6min_today": 0.7391098484848485,
+      "within_6min_plan": 0.8944805194805197
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -34.36933115560577,
+      "average_delta_s_p10": -36.53857485462767,
+      "average_delta_s_p50": -34.2946999362573,
+      "average_delta_s_p90": -32.03990347961973,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.6568871753246748,
+      "within_6min_plan_mean": 0.7646929112554107,
+      "within_6min_lift_mean": 0.10780573593073611,
+      "within_6min_lift_p10": 0.09191017316017301,
+      "within_6min_lift_p90": 0.12215909090909112
+    }
+  },
+  "caveat": "London transfer PDF ratios on Kolesar megacity point times; proxy demand; not validated on local fire attendance."
+}

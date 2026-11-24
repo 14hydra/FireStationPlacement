@@ -1,0 +1,51 @@
+{
+  "city_id": "cairo",
+  "city_name": "Cairo",
+  "midday": {
+    "n_cells": 216,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 281.22811930568014,
+      "average_s_plan": 254.1940750672191,
+      "delta_s": -27.034044238460993,
+      "within_6min_today": 0.8555870899610587,
+      "within_6min_plan": 0.9293115965942842
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -26.892120789058485,
+      "average_delta_s_p10": -29.091416937060057,
+      "average_delta_s_p50": -26.870828117343876,
+      "average_delta_s_p90": -24.866798661211885,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.7954319846874793,
+      "within_6min_plan_mean": 0.8590977493234766,
+      "within_6min_lift_mean": 0.06366576463599749,
+      "within_6min_lift_p10": 0.04497392911358984,
+      "within_6min_lift_p90": 0.08813279651508148
+    }
+  },
+  "rush_hour": {
+    "n_cells": 216,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 281.22811930568014,
+      "average_s_plan": 254.1940750672191,
+      "delta_s": -27.034044238460993,
+      "within_6min_today": 0.8555870899610587,
+      "within_6min_plan": 0.9293115965942842
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -28.21703042410388,
+      "average_delta_s_p10": -30.9403421393776,
+      "average_delta_s_p50": -28.033740003437572,
+      "average_delta_s_p90": -25.210359604125006,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.765470926011484,
+      "within_6min_plan_mean": 0.8353389215233313,
+      "within_6min_lift_mean": 0.06986799551184729,
+      "within_6min_lift_p10": 0.050359712230215715,
+      "within_6min_lift_p90": 0.08695795657052315
+    }
+  },
+  "caveat": "London transfer PDF ratios on Kolesar megacity point times; proxy demand; not validated on local fire attendance."
+}

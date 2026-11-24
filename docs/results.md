@@ -147,7 +147,17 @@ coverage onto target. Production median MAE on the same placement trips: 46.6 s 
 essentially tied). Detail: `docs/travel_time_intervals.md`. Figure:
 `data/figures/analysis/travel_time_intervals/coverage.png`.
 
-### 1.1e Advisor-style PDF travel-time model (vs LightGBM / Kolesar)
+### 1.1e Megacity layouts scored with transferable trip-spread PDF
+
+Source: `data/figures/megacities/pdf_eval/summary.csv` (`scripts/megacity_pdf_evaluate.py`).
+Placement still uses **Kolesar** point times. After the fact, London 2024
+`drive / Kolesar` residual ratios (rush × length bin — the transferable part of
+Ricky’s street PDF simulator) are applied to each city’s cell drives. Across all
+listed megacities the PDF median Δ matches the point Δ within a few seconds and
+**P(plan faster) = 1.00** on 100 paired draws (midday). Full street-edge offsets
+are London-only and are not used here. See `docs/megacities.md`.
+
+### 1.1f Advisor-style PDF travel-time model (vs LightGBM / Kolesar)
 
 Source: `data/figures/analysis/pdf_travel_time/summary.json`
 (`scripts/compare_pdf_travel_time.py`, `firestation.street_time_pdf`). Same 2021–2024 /

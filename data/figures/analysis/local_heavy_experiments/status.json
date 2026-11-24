@@ -1,0 +1,122 @@
+{
+  "doc": "Local heavy-experiment batch (own computer).",
+  "pid": 91773,
+  "started_at": "2026-11-23T05:11:30Z",
+  "updated_at": "2026-11-23T06:32:41Z",
+  "current": null,
+  "steps": [
+    {
+      "step": "batch",
+      "state": "running",
+      "at": "2026-11-23T05:11:30Z",
+      "detail": "started"
+    },
+    {
+      "step": "megacity_pdf_evaluate",
+      "state": "ok",
+      "at": "2026-11-23T05:11:31Z",
+      "detail": "1s"
+    },
+    {
+      "step": "megacity_map_html",
+      "state": "ok",
+      "at": "2026-11-23T05:11:31Z",
+      "detail": "0s"
+    },
+    {
+      "step": "placement_robustness",
+      "state": "fail",
+      "at": "2026-11-23T05:11:36Z",
+      "detail": "rc=1 after 5s"
+    },
+    {
+      "step": "outer_error_check",
+      "state": "running",
+      "at": "2026-11-23T05:11:36Z",
+      "detail": ""
+    },
+    {
+      "step": "batch",
+      "state": "running",
+      "at": "2026-11-23T05:14:31Z",
+      "detail": "resume after income/planner fix"
+    },
+    {
+      "step": "placement_robustness",
+      "state": "fail",
+      "at": "2026-11-23T05:16:53Z",
+      "detail": "rc=1 after 142s"
+    },
+    {
+      "step": "outer_error_check",
+      "state": "ok",
+      "at": "2026-11-23T05:17:08Z",
+      "detail": "15s"
+    },
+    {
+      "step": "nyc_fdny_validation",
+      "state": "ok",
+      "at": "2026-11-23T05:17:11Z",
+      "detail": "3s"
+    },
+    {
+      "step": "neutral_siting",
+      "state": "ok",
+      "at": "2026-11-23T05:18:32Z",
+      "detail": "81s"
+    },
+    {
+      "step": "travel_time_variants",
+      "state": "ok",
+      "at": "2026-11-23T05:27:17Z",
+      "detail": "525s"
+    },
+    {
+      "step": "placement_tradeoff_busy",
+      "state": "fail",
+      "at": "2026-11-23T05:30:56Z",
+      "detail": "rc=1 after 219s"
+    },
+    {
+      "step": "batch",
+      "state": "done",
+      "at": "2026-11-23T05:30:57Z",
+      "detail": ""
+    },
+    {
+      "step": "batch",
+      "state": "running",
+      "at": "2026-11-23T05:31:55Z",
+      "detail": "rerun failed steps after regime_bias fix"
+    },
+    {
+      "step": "placement_robustness",
+      "state": "ok",
+      "at": "2026-11-23T05:40:20Z",
+      "detail": "505s"
+    },
+    {
+      "step": "placement_tradeoff_busy",
+      "state": "ok",
+      "at": "2026-11-23T06:24:31Z",
+      "detail": "2651s"
+    },
+    {
+      "step": "batch",
+      "state": "done",
+      "at": "2026-11-23T06:24:31Z",
+      "detail": ""
+    },
+    {
+      "step": "placement_robustness",
+      "state": "ok",
+      "at": "2026-11-23T06:32:41Z",
+      "detail": "370s income rerun"
+    }
+  ],
+  "finished_at": "2026-11-23T06:32:41Z",
+  "summary": {
+    "ok": 8,
+    "fail": 0
+  }
+}

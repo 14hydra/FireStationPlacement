@@ -1,0 +1,51 @@
+{
+  "city_id": "mumbai",
+  "city_name": "Mumbai",
+  "midday": {
+    "n_cells": 38,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 199.7897519415987,
+      "average_s_plan": 132.25463618727866,
+      "delta_s": -67.53511575432005,
+      "within_6min_today": 1.0,
+      "within_6min_plan": 1.0
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -65.14193737967312,
+      "average_delta_s_p10": -74.2338638646465,
+      "average_delta_s_p50": -64.32184104840302,
+      "average_delta_s_p90": -56.01812979073881,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.9552856407617089,
+      "within_6min_plan_mean": 0.9816778178075143,
+      "within_6min_lift_mean": 0.026392177045805473,
+      "within_6min_lift_p10": 0.0,
+      "within_6min_lift_p90": 0.0627380339680908
+    }
+  },
+  "rush_hour": {
+    "n_cells": 38,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 199.7897519415987,
+      "average_s_plan": 132.25463618727866,
+      "delta_s": -67.53511575432005,
+      "within_6min_today": 1.0,
+      "within_6min_plan": 1.0
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -65.6572178991944,
+      "average_delta_s_p10": -74.35204756367752,
+      "average_delta_s_p50": -64.94442602747081,
+      "average_delta_s_p90": -56.23015955636784,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.9571796191456511,
+      "within_6min_plan_mean": 0.9813793103448276,
+      "within_6min_lift_mean": 0.024199691199176553,
+      "within_6min_lift_p10": 0.0,
+      "within_6min_lift_p90": 0.0627380339680908
+    }
+  },
+  "caveat": "London transfer PDF ratios on Kolesar megacity point times; proxy demand; not validated on local fire attendance."
+}

@@ -1,0 +1,51 @@
+{
+  "city_id": "new_york",
+  "city_name": "New York",
+  "midday": {
+    "n_cells": 186,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 281.39245295229466,
+      "average_s_plan": 252.98151528635154,
+      "delta_s": -28.41093766594313,
+      "within_6min_today": 0.8729002226269986,
+      "within_6min_plan": 0.9672131147540985
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -28.380009497767464,
+      "average_delta_s_p10": -30.668108593552716,
+      "average_delta_s_p50": -28.32063282363076,
+      "average_delta_s_p90": -26.11330520205331,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.8001531403899342,
+      "within_6min_plan_mean": 0.8709863050664505,
+      "within_6min_lift_mean": 0.0708331646765162,
+      "within_6min_lift_p10": 0.05110976185657436,
+      "within_6min_lift_p90": 0.09162112932604724
+    }
+  },
+  "rush_hour": {
+    "n_cells": 186,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 281.39245295229466,
+      "average_s_plan": 252.98151528635154,
+      "delta_s": -28.41093766594313,
+      "within_6min_today": 0.8729002226269986,
+      "within_6min_plan": 0.9672131147540985
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -29.667226530914895,
+      "average_delta_s_p10": -32.37642114385228,
+      "average_delta_s_p50": -29.712108014651562,
+      "average_delta_s_p90": -27.11925574503811,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.7723733387303513,
+      "within_6min_plan_mean": 0.8506402212777437,
+      "within_6min_lift_mean": 0.0782668825473925,
+      "within_6min_lift_p10": 0.05905012480604439,
+      "within_6min_lift_p90": 0.10018889563516159
+    }
+  },
+  "caveat": "London transfer PDF ratios on Kolesar megacity point times; proxy demand; not validated on local fire attendance."
+}

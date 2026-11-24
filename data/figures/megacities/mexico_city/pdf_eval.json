@@ -1,0 +1,51 @@
+{
+  "city_id": "mexico_city",
+  "city_name": "Mexico City",
+  "midday": {
+    "n_cells": 190,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 293.0954471995383,
+      "average_s_plan": 259.20481107671867,
+      "delta_s": -33.89063612281956,
+      "within_6min_today": 0.8483029801324504,
+      "within_6min_plan": 0.9234961368653423
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -33.99350406796863,
+      "average_delta_s_p10": -36.89586382246596,
+      "average_delta_s_p50": -33.99877273104869,
+      "average_delta_s_p90": -31.139449116952886,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.7577586920529795,
+      "within_6min_plan_mean": 0.8343639624724059,
+      "within_6min_lift_mean": 0.07660527041942607,
+      "within_6min_lift_p10": 0.056098233995584924,
+      "within_6min_lift_p90": 0.0996274834437087
+    }
+  },
+  "rush_hour": {
+    "n_cells": 190,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 293.0954471995383,
+      "average_s_plan": 259.20481107671867,
+      "delta_s": -33.89063612281956,
+      "within_6min_today": 0.8483029801324504,
+      "within_6min_plan": 0.9234961368653423
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -35.177398931053986,
+      "average_delta_s_p10": -38.725778532185714,
+      "average_delta_s_p50": -34.88069136472592,
+      "average_delta_s_p90": -32.42099387814479,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.7265480132450327,
+      "within_6min_plan_mean": 0.8093612030905074,
+      "within_6min_lift_mean": 0.08281318984547464,
+      "within_6min_lift_p10": 0.06216887417218545,
+      "within_6min_lift_p90": 0.10250413907284761
+    }
+  },
+  "caveat": "London transfer PDF ratios on Kolesar megacity point times; proxy demand; not validated on local fire attendance."
+}

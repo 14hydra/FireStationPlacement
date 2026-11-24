@@ -16,6 +16,24 @@ a Google Maps viewer.
   unreachable, the station builder falls back to a **synthetic lattice**
   (`source=synthetic_fallback` in `stations_meta.json`) so the run still completes.
 
+## PDF transfer scoring (Ricky street-PDF idea)
+
+**Use the PDF for evaluation, not for choosing moves.** The placement solver stays on
+Kolesar (point times). After each city, we optionally score the layout with a
+**London trip-spread PDF**: empirical `drive_s / Kolesar` ratios by rush × length bin
+(the transferable part of `scripts/explore_street_pdf_model.py`). That gives a
+distribution of average savings and within-6-minute lift under travel-time noise.
+
+Full London street-edge offsets do **not** transfer (no local GPS / street graph fit).
+`--no-pdf-eval` skips this step.
+
+```bash
+PYTHONPATH=src .venv/bin/python scripts/megacity_pdf_evaluate.py --refit
+```
+
+Outputs: `data/figures/megacities/<id>/pdf_eval.json`,
+`data/figures/megacities/pdf_eval/summary.csv`.
+
 ## Cities
 
 Tokyo, Delhi, Shanghai, Dhaka, Cairo, São Paulo, Mexico City, Beijing, Mumbai, Osaka, plus **London** and **New York**  

@@ -1,0 +1,51 @@
+{
+  "city_id": "osaka",
+  "city_name": "Osaka",
+  "midday": {
+    "n_cells": 120,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 255.89588842712857,
+      "average_s_plan": 219.612121772955,
+      "delta_s": -36.28376665417359,
+      "within_6min_today": 0.9377114427860697,
+      "within_6min_plan": 0.9859701492537313
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -36.088582185624844,
+      "average_delta_s_p10": -40.31679878099746,
+      "average_delta_s_p50": -35.63187995084604,
+      "average_delta_s_p90": -32.23759721722974,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.861133333333333,
+      "within_6min_plan_mean": 0.9186606965174127,
+      "within_6min_lift_mean": 0.05752736318407968,
+      "within_6min_lift_p10": 0.03746268656716437,
+      "within_6min_lift_p90": 0.0839601990049751
+    }
+  },
+  "rush_hour": {
+    "n_cells": 120,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 255.89588842712857,
+      "average_s_plan": 219.612121772955,
+      "delta_s": -36.28376665417359,
+      "within_6min_today": 0.9377114427860697,
+      "within_6min_plan": 0.9859701492537313
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -36.95134623679086,
+      "average_delta_s_p10": -40.89534329247461,
+      "average_delta_s_p50": -36.719015365159166,
+      "average_delta_s_p90": -33.15447457909494,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.8495482587064673,
+      "within_6min_plan_mean": 0.9113771144278603,
+      "within_6min_lift_mean": 0.061828855721393135,
+      "within_6min_lift_p10": 0.039283582089552495,
+      "within_6min_lift_p90": 0.08519402985074626
+    }
+  },
+  "caveat": "London transfer PDF ratios on Kolesar megacity point times; proxy demand; not validated on local fire attendance."
+}

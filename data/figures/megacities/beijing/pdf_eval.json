@@ -1,0 +1,51 @@
+{
+  "city_id": "beijing",
+  "city_name": "Beijing",
+  "midday": {
+    "n_cells": 254,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 341.3744213760315,
+      "average_s_plan": 296.25742444435355,
+      "delta_s": -45.11699693167786,
+      "within_6min_today": 0.589619143916414,
+      "within_6min_plan": 0.7803842264914056
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -46.17786899599003,
+      "average_delta_s_p10": -49.09209526646122,
+      "average_delta_s_p50": -46.21954206614035,
+      "average_delta_s_p90": -43.42665631004346,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.5805237613751267,
+      "within_6min_plan_mean": 0.72835187057634,
+      "within_6min_lift_mean": 0.14782810920121345,
+      "within_6min_lift_p10": 0.12850690933602954,
+      "within_6min_lift_p90": 0.1655611729019212
+    }
+  },
+  "rush_hour": {
+    "n_cells": 254,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 341.3744213760315,
+      "average_s_plan": 296.25742444435355,
+      "delta_s": -45.11699693167786,
+      "within_6min_today": 0.589619143916414,
+      "within_6min_plan": 0.7803842264914056
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -48.13389864797482,
+      "average_delta_s_p10": -51.42035632681048,
+      "average_delta_s_p50": -47.87694588785865,
+      "average_delta_s_p90": -45.35597495440549,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.5427017189079881,
+      "within_6min_plan_mean": 0.6905055611729024,
+      "within_6min_lift_mean": 0.14780384226491408,
+      "within_6min_lift_p10": 0.12832490731378488,
+      "within_6min_lift_p90": 0.17162790697674424
+    }
+  },
+  "caveat": "London transfer PDF ratios on Kolesar megacity point times; proxy demand; not validated on local fire attendance."
+}

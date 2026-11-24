@@ -415,8 +415,14 @@ def main() -> int:
     ap.add_argument("--solver", choices=["exact", "genetic"], default="genetic")
     ap.add_argument("--solver-time", type=float, default=45.0)
     ap.add_argument("--n-cells", type=int, default=1800)
+    ap.add_argument(
+        "--no-pdf-eval",
+        action="store_true",
+        help="Skip post-placement Monte Carlo with London transfer PDF (on by default)",
+    )
     args = ap.parse_args()
     skip_graph = not args.with_graph
+    do_pdf = not args.no_pdf_eval
 
     rows = []
     failed = []
@@ -454,6 +460,21 @@ def main() -> int:
     write_cities_index()
     print("Wrote", FIG_ROOT / "summary.csv")
     print("Viewer index", WEB_DATA / "cities.json")
+
+    if do_pdf:
+        print("\n=== PDF transfer evaluation (Ricky-style trip spread) ===", flush=True)
+        sys.path.insert(0, str(ROOT / "scripts"))
+        from megacity_pdf_evaluate import ensure_pdf, eval_city  # noqa: E402
+
+        bundle = ensure_pdf(refit=False)
+        for c in iter_megacities([args.city] if args.city else None):
+            if c.id in failed:
+                continue
+            try:
+                eval_city(c.id, bundle, n_draws=100, seed=0)
+            except Exception as exc:  # noqa: BLE001
+                print(f"{c.id}: PDF eval failed: {exc}", file=sys.stderr)
+
     return 1 if failed else 0
 
 

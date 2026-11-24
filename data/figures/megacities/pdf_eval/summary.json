@@ -1,0 +1,140 @@
+{
+  "doc": "Score megacity Move-10 layouts with Ricky's transferable trip-spread PDF.\n\nPlacement stays on Kolesar (point optimizer). This script adds a Monte Carlo check:\nLondon 2024 drive/Kolesar residual ratios (rush \u00d7 length bin) are applied to each\ncity's cell drive times so we can report a *distribution* of average savings and\nP(within 6 minutes) \u2014 the advisor-style PDF use case for transfer cities.\n\nDoes not modify data/figures/final/.\n\nRun:\n  PYTHONPATH=src .venv/bin/python scripts/megacity_pdf_evaluate.py\n  PYTHONPATH=src .venv/bin/python scripts/megacity_pdf_evaluate.py --city tokyo --refit\n",
+  "pdf_model": "/Users/sarpakalin/git/EMVRouteOptimization/data/processed/models/street_pdf_transfer.joblib",
+  "n_fit": 232818,
+  "n_pdf": 86184,
+  "cities": [
+    {
+      "city_id": "tokyo",
+      "city_name": "Tokyo",
+      "point_delta_s": -32.59733098280305,
+      "pdf_delta_p50_s": -33.12254540695292,
+      "pdf_delta_p10_s": -35.6525941810505,
+      "pdf_delta_p90_s": -30.740447004758416,
+      "prob_plan_faster": 1.0,
+      "within_6min_lift_mean": 0.10581236471861494,
+      "point_within_6min_lift": 0.15537067099567115
+    },
+    {
+      "city_id": "delhi",
+      "city_name": "Delhi",
+      "point_delta_s": -21.77906976980738,
+      "pdf_delta_p50_s": -22.082517760560023,
+      "pdf_delta_p10_s": -23.348616680336495,
+      "pdf_delta_p90_s": -20.88446736974865,
+      "prob_plan_faster": 1.0,
+      "within_6min_lift_mean": 0.0722687041902915,
+      "point_within_6min_lift": 0.11001244641128483
+    },
+    {
+      "city_id": "shanghai",
+      "city_name": "Shanghai",
+      "point_delta_s": -50.61088993246066,
+      "pdf_delta_p50_s": -51.982838483106946,
+      "pdf_delta_p10_s": -54.57473599620689,
+      "pdf_delta_p90_s": -48.49473492786336,
+      "prob_plan_faster": 1.0,
+      "within_6min_lift_mean": 0.15566560097952523,
+      "point_within_6min_lift": 0.2088293313380042
+    },
+    {
+      "city_id": "dhaka",
+      "city_name": "Dhaka",
+      "point_delta_s": -30.62254212848972,
+      "pdf_delta_p50_s": -30.06405452743411,
+      "pdf_delta_p10_s": -33.52717358973391,
+      "pdf_delta_p90_s": -27.282557331562636,
+      "prob_plan_faster": 1.0,
+      "within_6min_lift_mean": 0.05703022428884026,
+      "point_within_6min_lift": 0.061405908096280104
+    },
+    {
+      "city_id": "cairo",
+      "city_name": "Cairo",
+      "point_delta_s": -27.034044238460993,
+      "pdf_delta_p50_s": -26.870828117343876,
+      "pdf_delta_p10_s": -29.091416937060057,
+      "pdf_delta_p90_s": -24.866798661211885,
+      "prob_plan_faster": 1.0,
+      "within_6min_lift_mean": 0.06366576463599749,
+      "point_within_6min_lift": 0.0737245066332255
+    },
+    {
+      "city_id": "sao_paulo",
+      "city_name": "S\u00e3o Paulo",
+      "point_delta_s": -38.08153374274171,
+      "pdf_delta_p50_s": -38.238118459122546,
+      "pdf_delta_p10_s": -41.333585768214235,
+      "pdf_delta_p90_s": -36.41134261281908,
+      "prob_plan_faster": 1.0,
+      "within_6min_lift_mean": 0.12022629677595262,
+      "point_within_6min_lift": 0.17824279190239245
+    },
+    {
+      "city_id": "mexico_city",
+      "city_name": "Mexico City",
+      "point_delta_s": -33.89063612281956,
+      "pdf_delta_p50_s": -33.99877273104869,
+      "pdf_delta_p10_s": -36.89586382246596,
+      "pdf_delta_p90_s": -31.139449116952886,
+      "prob_plan_faster": 1.0,
+      "within_6min_lift_mean": 0.07660527041942607,
+      "point_within_6min_lift": 0.07519315673289184
+    },
+    {
+      "city_id": "beijing",
+      "city_name": "Beijing",
+      "point_delta_s": -45.11699693167786,
+      "pdf_delta_p50_s": -46.21954206614035,
+      "pdf_delta_p10_s": -49.09209526646122,
+      "pdf_delta_p90_s": -43.42665631004346,
+      "prob_plan_faster": 1.0,
+      "within_6min_lift_mean": 0.14782810920121345,
+      "point_within_6min_lift": 0.19076508257499158
+    },
+    {
+      "city_id": "mumbai",
+      "city_name": "Mumbai",
+      "point_delta_s": -67.53511575432005,
+      "pdf_delta_p50_s": -64.32184104840302,
+      "pdf_delta_p10_s": -74.2338638646465,
+      "pdf_delta_p90_s": -56.01812979073881,
+      "prob_plan_faster": 1.0,
+      "within_6min_lift_mean": 0.026392177045805473,
+      "point_within_6min_lift": 0.0
+    },
+    {
+      "city_id": "osaka",
+      "city_name": "Osaka",
+      "point_delta_s": -36.28376665417359,
+      "pdf_delta_p50_s": -35.63187995084604,
+      "pdf_delta_p10_s": -40.31679878099746,
+      "pdf_delta_p90_s": -32.23759721722974,
+      "prob_plan_faster": 1.0,
+      "within_6min_lift_mean": 0.05752736318407968,
+      "point_within_6min_lift": 0.048258706467661616
+    },
+    {
+      "city_id": "london",
+      "city_name": "London",
+      "point_delta_s": -14.388828845045332,
+      "pdf_delta_p50_s": -14.423116687735586,
+      "pdf_delta_p10_s": -16.0749268169985,
+      "pdf_delta_p90_s": -13.365772244948948,
+      "prob_plan_faster": 1.0,
+      "within_6min_lift_mean": 0.0420808231232657,
+      "point_within_6min_lift": 0.05442361064103429
+    },
+    {
+      "city_id": "new_york",
+      "city_name": "New York",
+      "point_delta_s": -28.41093766594313,
+      "pdf_delta_p50_s": -28.32063282363076,
+      "pdf_delta_p10_s": -30.668108593552716,
+      "pdf_delta_p90_s": -26.11330520205331,
+      "prob_plan_faster": 1.0,
+      "within_6min_lift_mean": 0.0708331646765162,
+      "point_within_6min_lift": 0.09431289212709992
+    }
+  ]
+}

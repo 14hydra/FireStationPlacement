@@ -165,9 +165,17 @@ def main() -> int:
     for b in sorted(set(borough) - {"NAN", ""}):
         groups[("borough", b)] = borough == b
 
-    quint, _ = income_quintile(ev["dest_lat"].to_numpy(float), ev["dest_lon"].to_numpy(float))
-    for q in QUINTILES:
-        groups[("income", q)] = quint == q
+    income_path = INCOME / "ons_msoa_income_fye2020.xlsx"
+    centroid_path = INCOME / "ons_msoa2011_population_weighted_centroids.csv"
+    if income_path.exists() and centroid_path.exists():
+        quint, _ = income_quintile(ev["dest_lat"].to_numpy(float), ev["dest_lon"].to_numpy(float))
+        for q in QUINTILES:
+            groups[("income", q)] = quint == q
+    else:
+        print(
+            f"Skipping income split — need {income_path.name} and {centroid_path.name} in {INCOME}/",
+            flush=True,
+        )
 
     turn_tab, turn_new = recorded_station_turnout([2024])
     norm = {k.upper(): v for k, v in turn_tab.items()}

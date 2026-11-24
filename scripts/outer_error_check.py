@@ -68,6 +68,8 @@ def main() -> int:
     del df
     te = attach_weather(te, load_weather(ROOT / "data" / "processed" / "weather_hourly_london.csv"))
     bundle = joblib.load(ROOT / "data" / "processed" / "models" / "travel_time_lfb.joblib")
+    if bundle.get("regime_bias") and not bundle.get("regime_bias_out_of_sample"):
+        bundle = {**bundle, "regime_bias": None}
     te["p"] = np.concatenate([predict(bundle, te.iloc[i:i + 50000]) for i in range(0, len(te), 50000)])
     te["y"] = te["drive_s"].astype(float)
     te["b"] = te["borough"].astype(str).str.upper()

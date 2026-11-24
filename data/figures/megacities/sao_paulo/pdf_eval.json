@@ -1,0 +1,51 @@
+{
+  "city_id": "sao_paulo",
+  "city_name": "S\u00e3o Paulo",
+  "midday": {
+    "n_cells": 270,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 312.85511281707863,
+      "average_s_plan": 274.77357907433685,
+      "delta_s": -38.08153374274171,
+      "within_6min_today": 0.7227864494581148,
+      "within_6min_plan": 0.9010292413605072
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -38.542398210861414,
+      "average_delta_s_p10": -41.333585768214235,
+      "average_delta_s_p50": -38.238118459122546,
+      "average_delta_s_p90": -36.41134261281908,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.6782182536977709,
+      "within_6min_plan_mean": 0.7984445504737235,
+      "within_6min_lift_mean": 0.12022629677595262,
+      "within_6min_lift_p10": 0.09659191602481093,
+      "within_6min_lift_p90": 0.14518437734305767
+    }
+  },
+  "rush_hour": {
+    "n_cells": 270,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 312.85511281707863,
+      "average_s_plan": 274.77357907433685,
+      "delta_s": -38.08153374274171,
+      "within_6min_today": 0.7227864494581148,
+      "within_6min_plan": 0.9010292413605072
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -40.032609891681204,
+      "average_delta_s_p10": -43.08536083635926,
+      "average_delta_s_p50": -39.7970460233727,
+      "average_delta_s_p90": -37.12992032059142,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.6467493695044645,
+      "within_6min_plan_mean": 0.7700381705405221,
+      "within_6min_lift_mean": 0.12328880103605762,
+      "within_6min_lift_p10": 0.09892986163179054,
+      "within_6min_lift_p90": 0.1445163928839207
+    }
+  },
+  "caveat": "London transfer PDF ratios on Kolesar megacity point times; proxy demand; not validated on local fire attendance."
+}

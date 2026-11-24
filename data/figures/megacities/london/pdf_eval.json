@@ -1,0 +1,51 @@
+{
+  "city_id": "london",
+  "city_name": "London",
+  "midday": {
+    "n_cells": 404,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 301.01760454464886,
+      "average_s_plan": 286.62877569960347,
+      "delta_s": -14.388828845045332,
+      "within_6min_today": 0.807012793609964,
+      "within_6min_plan": 0.8614364042509983
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -14.581045960851432,
+      "average_delta_s_p10": -16.0749268169985,
+      "average_delta_s_p50": -14.423116687735586,
+      "average_delta_s_p90": -13.365772244948948,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.7425614296351454,
+      "within_6min_plan_mean": 0.7846422527584112,
+      "within_6min_lift_mean": 0.0420808231232657,
+      "within_6min_lift_p10": 0.030393285047045516,
+      "within_6min_lift_p90": 0.052880254518378245
+    }
+  },
+  "rush_hour": {
+    "n_cells": 404,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 301.01760454464886,
+      "average_s_plan": 286.62877569960347,
+      "delta_s": -14.388828845045332,
+      "within_6min_today": 0.807012793609964,
+      "within_6min_plan": 0.8614364042509983
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -15.262579015857746,
+      "average_delta_s_p10": -16.557044586397428,
+      "average_delta_s_p50": -15.31007314327752,
+      "average_delta_s_p90": -13.897373817335756,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.7028078250863062,
+      "within_6min_plan_mean": 0.7479570838692211,
+      "within_6min_lift_mean": 0.045149258782915064,
+      "within_6min_lift_p10": 0.035585189196507196,
+      "within_6min_lift_p90": 0.05337439924185984
+    }
+  },
+  "caveat": "London transfer PDF ratios on Kolesar megacity point times; proxy demand; not validated on local fire attendance."
+}

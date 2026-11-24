@@ -1,0 +1,51 @@
+{
+  "city_id": "dhaka",
+  "city_name": "Dhaka",
+  "midday": {
+    "n_cells": 159,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 275.53992562388896,
+      "average_s_plan": 244.9173834953993,
+      "delta_s": -30.62254212848972,
+      "within_6min_today": 0.9292943107221006,
+      "within_6min_plan": 0.9907002188183807
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -30.240654067135484,
+      "average_delta_s_p10": -33.52717358973391,
+      "average_delta_s_p50": -30.06405452743411,
+      "average_delta_s_p90": -27.282557331562636,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.8262335886214446,
+      "within_6min_plan_mean": 0.8832638129102848,
+      "within_6min_lift_mean": 0.05703022428884026,
+      "within_6min_lift_p10": 0.03438867614879654,
+      "within_6min_lift_p90": 0.07782412472647701
+    }
+  },
+  "rush_hour": {
+    "n_cells": 159,
+    "n_draws": 100,
+    "point_kolesar": {
+      "average_s_today": 275.53992562388896,
+      "average_s_plan": 244.9173834953993,
+      "delta_s": -30.62254212848972,
+      "within_6min_today": 0.9292943107221006,
+      "within_6min_plan": 0.9907002188183807
+    },
+    "pdf_transfer": {
+      "average_delta_s_mean": -31.535247791933667,
+      "average_delta_s_p10": -34.188437739134045,
+      "average_delta_s_p50": -31.344452261016926,
+      "average_delta_s_p90": -29.042835877913223,
+      "prob_plan_faster": 1.0,
+      "within_6min_today_mean": 0.7989264223194751,
+      "within_6min_plan_mean": 0.8691172045951862,
+      "within_6min_lift_mean": 0.07019078227571113,
+      "within_6min_lift_p10": 0.04963758205689287,
+      "within_6min_lift_p90": 0.08815645514223217
+    }
+  },
+  "caveat": "London transfer PDF ratios on Kolesar megacity point times; proxy demand; not validated on local fire attendance."
+}

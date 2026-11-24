@@ -7,97 +7,97 @@
     "colsample_bytree": 0.7,
     "subsample": 0.85,
     "reg_lambda": 3.0,
-    "n_estimators": 2110
+    "n_estimators": 900
   },
   "seed": 42,
   "n_test_2025": 200624,
   "mae_by_variant_and_slice": {
     "A production": {
-      "all": 57.8,
-      "dense_short (central)": 49.4,
-      "long_sparse (outer)": 78.78,
-      "over 6 km": 103.3,
-      "rush hour": 58.46
+      "all": 58.68,
+      "dense_short (central)": 50.1,
+      "long_sparse (outer)": 79.98,
+      "over 6 km": 105.64,
+      "rush hour": 59.42
     },
     "B + interactions": {
-      "all": 57.85,
-      "dense_short (central)": 49.43,
-      "long_sparse (outer)": 78.83,
-      "over 6 km": 103.55,
-      "rush hour": 58.45
+      "all": 58.66,
+      "dense_short (central)": 50.11,
+      "long_sparse (outer)": 79.96,
+      "over 6 km": 105.57,
+      "rush hour": 59.36
     },
     "C + sample weights": {
-      "all": 57.82,
-      "dense_short (central)": 49.41,
-      "long_sparse (outer)": 78.7,
-      "over 6 km": 103.69,
-      "rush hour": 58.44
+      "all": 58.89,
+      "dense_short (central)": 50.24,
+      "long_sparse (outer)": 80.04,
+      "over 6 km": 105.52,
+      "rush hour": 59.58
     },
     "D + both (embedding model)": {
-      "all": 57.82,
-      "dense_short (central)": 49.42,
-      "long_sparse (outer)": 78.64,
-      "over 6 km": 103.37,
-      "rush hour": 58.44
+      "all": 58.9,
+      "dense_short (central)": 50.26,
+      "long_sparse (outer)": 79.97,
+      "over 6 km": 105.51,
+      "rush hour": 59.55
     },
     "E D + in-sample correction": {
-      "all": 57.8,
-      "dense_short (central)": 49.42,
-      "long_sparse (outer)": 78.51,
-      "over 6 km": 103.3,
-      "rush hour": 58.4
+      "all": 58.87,
+      "dense_short (central)": 50.26,
+      "long_sparse (outer)": 79.75,
+      "over 6 km": 105.39,
+      "rush hour": 59.5
     },
     "F D + honest correction": {
-      "all": 57.85,
-      "dense_short (central)": 49.42,
-      "long_sparse (outer)": 78.92,
-      "over 6 km": 103.53,
-      "rush hour": 58.42
+      "all": 58.93,
+      "dense_short (central)": 50.26,
+      "long_sparse (outer)": 80.22,
+      "over 6 km": 105.63,
+      "rush hour": 59.52
     }
   },
   "overall": {
     "A production": {
-      "mae_s": 57.8,
-      "medae_s": 35.48,
-      "bias_s": -17.68
+      "mae_s": 58.68,
+      "medae_s": 35.99,
+      "bias_s": -19.07
     },
     "B + interactions": {
-      "mae_s": 57.85,
-      "medae_s": 35.55,
-      "bias_s": -17.73
+      "mae_s": 58.66,
+      "medae_s": 35.89,
+      "bias_s": -19.14
     },
     "C + sample weights": {
-      "mae_s": 57.82,
-      "medae_s": 35.47,
-      "bias_s": -17.23
+      "mae_s": 58.89,
+      "medae_s": 36.1,
+      "bias_s": -18.77
     },
     "D + both (embedding model)": {
-      "mae_s": 57.82,
-      "medae_s": 35.43,
-      "bias_s": -17.16
+      "mae_s": 58.9,
+      "medae_s": 36.13,
+      "bias_s": -18.85
     },
     "E D + in-sample correction": {
-      "mae_s": 57.8,
-      "medae_s": 35.49,
-      "bias_s": -16.47
+      "mae_s": 58.87,
+      "medae_s": 36.22,
+      "bias_s": -17.95
     },
     "F D + honest correction": {
-      "mae_s": 57.85,
-      "medae_s": 35.6,
-      "bias_s": -15.57
+      "mae_s": 58.93,
+      "medae_s": 36.38,
+      "bias_s": -16.96
     }
   },
   "in_sample_bias": {
     "dense_short": 0.0,
-    "long_sparse": -5.72893294710474,
+    "long_sparse": -7.407410385030152,
     "rush_other": 0.0,
     "other": 0.0
   },
   "honest_bias": {
     "dense_short": 0.0,
-    "long_sparse": -13.162118216468734,
+    "long_sparse": -15.599678065050703,
     "rush_other": 0.0,
     "other": 0.0
   },
-  "minutes": 51.1
+  "minutes": 8.7
 }
